@@ -14,12 +14,9 @@ Other teams will build a vitals dashboard and bolt on a body map (the brief sugg
 
 ## Proposed product
 
-**Name (shortlist):**
-1. **VIGIL** — the onboard health watch. *Recommended.*
-2. **AEGIS** — astronaut health shield.
-3. **HALO** — health autonomy for long-duration operations.
+**Name:** **ORBIT** — the onboard health watch.
 
-**One-liner:** *VIGIL turns a crew's own health data into a daily decision — and a clean handover for the next time Earth picks up the phone.*
+**One-liner:** *ORBIT turns a crew's own health data into a daily decision — and a clean handover for the next time Earth picks up the phone.*
 
 **Core loop:** Sense → Interpret → Act → Handover.
 
@@ -68,3 +65,6 @@ Stretch: EVA readiness check, SANS vision self-test, orthostatic stand test.
 | 2026-11-14 | Organize by HRP risk taxonomy, not by metric | Defensible validity, distinct from a generic dashboard |
 | 2026-11-14 | Lead with distance-from-Earth / comms delay | Strongest narrative + clearest differentiator |
 | 2026-11-14 | Deterministic rules engine, no AI triage | Validity with NASA judges; demo reliability |
+| 2026-11-14 | Name: **ORBIT** | Short, mission-native, works as a verb and a noun |
+| 2026-11-14 | Rules use personal baselines + spaceflight adjustments | "Space fever" and lower in-flight BP make terrestrial cutoffs wrong |
+| 2026-11-14 | Add cluster rules C1–C4 | HRP states hazards interact; clusters are the differentiated demo moment |

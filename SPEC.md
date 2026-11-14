@@ -128,7 +128,7 @@ The evidence screen. Built on real, unaltered NASA UTMB bed-rest data.
 
 ### Talk to the doctor
 
-Inside the shell, in two parts. The doctor is simulated: answers are put together on the device from the viewer's readings, check-ins, and the rules in `judge.ts` (`app/src/lib/doctor.ts`). No model or server is called.
+Inside the shell, in two parts. The doctor is simulated and runs on the device. When [Ollama](https://ollama.com) is running on the same machine, answers are written by its language model (`app/src/lib/localModel.ts`), which is given the viewer's readings, their status, and the findings from the rules in `judge.ts` and told to use nothing else. Sentences are spoken as they arrive. When no model is running or it does not answer, the doctor uses its built-in answers (`app/src/lib/doctor.ts`). The opening read and the answer to urgent words are always the built-in ones. Nothing is sent off the device.
 
 1. **Call stage.** The doctor's tile with a "Simulated" tag, its state (Speaking, Listening, Ready), and its latest sentence as a caption. The viewer's own camera sits in the corner. Controls: "Start call" (voice and camera together), "Voice", "Camera", and "End call".
 2. **Conversation.** The doctor opens with a read of today: "Your results look fine", or "Something seems off with your chest" followed by what was observed and the next action. Messages carry the status shape and buttons such as "Repeat reading". Four suggested questions and a text box work with voice off.

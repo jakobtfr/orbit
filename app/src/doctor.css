@@ -44,7 +44,7 @@
   0%, 100% { box-shadow: 0 0 0 3px var(--status-ok), 0 0 0 3px rgba(48, 209, 88, 0.25); }
   50% { box-shadow: 0 0 0 3px var(--status-ok), 0 0 0 18px rgba(48, 209, 88, 0); }
 }
-.doctor-id { display: flex; align-items: center; gap: 8px; }
+.doctor-id { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
 .doctor-id strong { font: 600 20px/1.3 var(--font-sans); letter-spacing: -0.01em; color: var(--text-primary); }
 .doctor-phase { color: var(--text-muted); font-size: 13px; }
 .is-listening .doctor-phase { color: var(--accent); }

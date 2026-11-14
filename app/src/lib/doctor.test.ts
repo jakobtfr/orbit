@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
-import { assessment, opening, reply, speakable } from './doctor'
+import { assessment, briefing, isUrgent, opening, reply, speakable } from './doctor'
 import { now } from './judge'
 import { applyHealthSystem } from './store'
 import type { AppState, Reading } from './types'
@@ -63,5 +63,20 @@ describe('virtual doctor', () => {
 
   it('reads units aloud in words', () => {
     expect(speakable('Blood pressure: 110/66 mmHg, 3 h ago. 58 bpm.')).toBe('Blood pressure: 110 over 66 millimetres of mercury, 3 hours ago. 58 beats per minute.')
+  })
+
+  it('gives the on-device model the findings, not just the numbers', () => {
+    const b = briefing(highPressure(), LENA)
+    expect(b).toContain('Blood pressure: 148/94 mmHg')
+    expect(b).toContain('Status: Warning.')
+    expect(b).toContain('Something is off with your chest')
+    expect(b).toContain('Samir Haddad')
+    expect(b).not.toMatch(/Mood:|NaN|undefined/)
+  })
+
+  it('keeps urgent words away from the model', () => {
+    expect(isUrgent('I can’t breathe')).toBe(true)
+    expect(isUrgent('My chest is tight')).toBe(true)
+    expect(isUrgent('How is my heart?')).toBe(false)
   })
 })

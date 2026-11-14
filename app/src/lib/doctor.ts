@@ -1,7 +1,8 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
-import { INDICATORS, formatValue } from './indicators'
-import { actionFor, attention, judge, now, regionIndicators, type AttentionItem } from './judge'
+import { STATUS } from '../components/Status'
+import { INDICATORS, INDICATOR_ORDER, formatValue } from './indicators'
+import { actionFor, activeSymptoms, attention, judge, now, regionIndicators, type AttentionItem } from './judge'
 import type { AppState, IndicatorKey, Person, Reading, RegionKey, StatusKey } from './types'
 
 /**
@@ -167,6 +168,11 @@ function rank(s: StatusKey): number {
 const RED_FLAGS =
   /chest (pain|hurts|is tight|tightness|pressure)|pain in (my|the) chest|(can'?t|cannot|can ?not|hard to|trouble|struggling to) breath|short(ness)? of breath|faint(ed|ing)?\b|pass(ed|ing) out|black(ed|ing)? out|collaps|(can'?t|cannot) see|lost my (vision|sight)|sudden(ly)? (lost|loss|weak|numb)|numb(ness)? in|worst headache|coughing (up )?blood|seizure|heart attack|stroke/
 
+/** True when what was said must go to a person at once. These are never left to a language model. */
+export function isUrgent(said: string): boolean {
+  return RED_FLAGS.test(said.toLowerCase().replace(/[’‘]/g, "'"))
+}
+
 interface Topic {
   match: RegExp
   keys: IndicatorKey[]
@@ -213,7 +219,7 @@ export function reply(state: AppState, person: Person, said: string): DoctorRepl
   const base = `/body/${person.id}`
   if (!q) return { text: 'I did not catch that. Could you say it once more?' }
 
-  if (RED_FLAGS.test(q)) {
+  if (isUrgent(q)) {
     return {
       urgent: true,
       status: 'warning',
@@ -303,4 +309,32 @@ export function speakable(text: string): string {
     .replace(/(\d) kg\b/g, '$1 kilograms')
     .replace(/−/g, 'minus ')
     .replace(/ORBIT/g, 'Orbit')
+}
+
+/**
+ * What the on-device language model is told before the conversation. It gets the same findings the
+ * built-in answers use, so it can choose the words but not the facts.
+ */
+export function briefing(state: AppState, person: Person): string {
+  const readings = INDICATOR_ORDER.filter((k) => k !== 'mood').map((key) => {
+    const def = INDICATORS[key]
+    const j = judge(state, person, key)
+    if (j.status === 'unavailable') return `- ${def.name}: cannot be measured here. ${j.reason ?? ''}`.trim()
+    if (!j.latest) return `- ${def.name}: no reading yet.`
+    const pre = person.preflight[key]
+    const before = pre && key !== 'vision' ? `, before flight ${formatValue(key, pre)}` : ''
+    const line = `- ${def.name}: ${withUnit(key, j.latest)}, taken ${age(now(state), j.latest.t)}${before}. Status: ${STATUS[j.status].label}.`
+    if (j.status === 'ok') return line
+    const a = actionFor(state, person, { kind: 'indicator', key, status: j.status, label: def.name })
+    return `${line} Finding: ${a.observed} Next step: ${a.next}`
+  })
+  const symptoms = activeSymptoms(state, person.id).map((s) => s.name.toLowerCase())
+  return [
+    `You are the ORBIT doctor, a simulated doctor on a video call with ${person.name} (${person.role}), a crew member on a long space mission. It is mission day ${state.day}. You are a simulation, not a real clinician, and you say so if asked.`,
+    'How to talk: warm, calm, and plain, like a good family doctor who knows this person. Your words are read aloud, so answer in two to four short sentences with no lists, no headings, no markdown, and no emojis. Ask at most one follow-up question.',
+    `Rules: every number and finding you mention must come from the readings below. Never invent a value; if something is not listed, say it is not measured. Go by the status given for each reading: it is judged against this person's own normal, not against Earth limits. Do not name a diagnosis and do not suggest medicines or doses. If something sounds serious, tell them to call ${medicalLead()}. Mood and the diary are private and you cannot see them. If asked about something unrelated, answer briefly and come back to how they are.`,
+    `Your overall read of today: ${assessment(state, person).text}`,
+    `Readings:\n${readings.join('\n')}`,
+    `Symptoms logged in the last two days: ${symptoms.length ? symptoms.join(', ') : 'none'}.`,
+  ].join('\n\n')
 }

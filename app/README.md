@@ -46,7 +46,8 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | `src/data/demo.ts` | Lena's scripted readings and the crew names |
 | `src/data/utmb-replay.json` | Daily vitals and baselines of 29 NASA UTMB bed-rest volunteers, made by `scripts/replay_data.py` |
 | `src/data/utmb-residuals.json` | Day-to-day variation from four UTMB volunteers, used as noise on Lena's series |
-| `src/lib/doctor.ts` | The virtual doctor's answers, built from the readings and the rules in `judge.ts` |
+| `src/lib/doctor.ts` | The virtual doctor's built-in answers and the briefing given to the local model, both from the readings and the rules in `judge.ts` |
+| `src/lib/localModel.ts` | Talks to a language model on this machine through Ollama (`http://localhost:11434`) |
 | `public/licenses/` | Licence texts for Inter, Geist Mono (installed, no longer used), and react-body-map |
 | `src/styles.css`, `src/dashboard.css`, `src/research.css` | Tokens and base styles; workspace layout; Deep Data. The look follows apple.com, see `../DESIGN.md` |
 
@@ -61,7 +62,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 - Lena's values are scripted. Only the Replay data and the day-to-day variation of four vital signs come from real ground data.
 - Bed rest is a ground stand-in for flight, and its data has no confirmed illness.
 - Status rules and review bands are simplified from published values and have not been reviewed by a clinician.
-- The virtual doctor is simulated and rule-based. Its wording has not been reviewed by a clinician. Voice mode needs a browser with speech recognition (Chrome, Edge, Safari), which may send audio to the browser's speech service.
+- The virtual doctor is simulated. To let a local model write its answers, run [Ollama](https://ollama.com) with any chat model (`ollama pull llama3.2`); a Llama model is preferred when several are installed. Without it the doctor uses built-in answers. Ollama only accepts calls from pages on `localhost`, so this works with `npm run dev` or `npm run preview`, not from a hosted copy. A local model can still make mistakes. Its wording has not been reviewed by a clinician. Voice mode needs a browser with speech recognition (Chrome, Edge, Safari), which may send audio to the browser's speech service.
 - Mission/demo state lives in memory. Diary entries and videos use device-local IndexedDB storage.
 
 

@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Mark } from '../components/Shell'
 import { StatusShape } from '../components/Status'
-import { SUGGESTIONS, opening, reply, speakable, type DoctorReply } from '../lib/doctor'
+import { SUGGESTIONS, briefing, isUrgent, opening, reply, speakable, type DoctorReply } from '../lib/doctor'
+import { chat, findModel, warm, type ChatMessage } from '../lib/localModel'
 import { useStore } from '../lib/store'
 import '../doctor.css'
 
@@ -11,7 +12,7 @@ interface Line extends DoctorReply {
   from: 'doctor' | 'you'
 }
 
-type Phase = 'idle' | 'speaking' | 'listening'
+type Phase = 'idle' | 'thinking' | 'speaking' | 'listening'
 
 /** The part of the browser's speech recognition that is used here. It is not in every TypeScript DOM library. */
 interface Recognition {
@@ -35,7 +36,12 @@ function sentences(text: string): string[] {
   return text.match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g)?.map((s) => s.trim()).filter(Boolean) ?? [text]
 }
 
-const PHASE_LABEL: Record<Phase, string> = { idle: 'Ready', speaking: 'Speaking', listening: 'Listening' }
+const PHASE_LABEL: Record<Phase, string> = { idle: 'Ready', thinking: 'Thinking', speaking: 'Speaking', listening: 'Listening' }
+
+/** Removes the markdown a language model may add, since the text is shown plainly and read aloud. */
+function tidy(text: string): string {
+  return text.replace(/[*_#`]/g, '').trimStart()
+}
 
 export function Doctor() {
   const { state, viewer } = useStore()
@@ -46,6 +52,8 @@ export function Doctor() {
   const [phase, setPhase] = useState<Phase>('idle')
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [notice, setNotice] = useState('')
+  /** The language model on this device, when one is running. Without it the doctor uses its built-in answers. */
+  const [model, setModel] = useState<string | null>(null)
 
   const voiceOn = useRef(false)
   const phaseNow = useRef<Phase>('idle')
@@ -53,6 +61,10 @@ export function Doctor() {
   /** Goes up each time speech is started or stopped, so callbacks from an older utterance do nothing. */
   const turn = useRef(0)
   const misses = useRef(0)
+  const modelNow = useRef<string | null>(null)
+  const asking = useRef<AbortController | null>(null)
+  /** Sentences handed to the speech voice in the current turn, and whether more are still to come. */
+  const speech = useRef({ queued: 0, done: 0, closed: true })
   const nextId = useRef(1)
   const video = useRef<HTMLVideoElement>(null)
   const streamNow = useRef<MediaStream | null>(null)
@@ -114,36 +126,103 @@ export function Doctor() {
     try { r.start() } catch { go('idle') }
   }, [])
 
-  const speak = useCallback((text: string) => {
-    const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined
+  const settle = () => { if (speech.current.closed && speech.current.done >= speech.current.queued) listen() }
+
+  /** Opens a speaking turn. Sentences are added with sayPart as they become known, then speakEnd closes the turn. */
+  const speakBegin = (first: Phase = 'speaking') => {
     stopListening()
-    const mine = ++turn.current
-    if (!synth) { listen(); return }
-    synth.cancel()
-    go('speaking')
-    const parts = sentences(speakable(text))
+    turn.current++
+    if (typeof window !== 'undefined') window.speechSynthesis?.cancel()
+    speech.current = { queued: 0, done: 0, closed: false }
+    go(first)
+  }
+  const sayPart = (part: string) => {
+    const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined
+    if (!synth || !voiceOn.current || !part.trim()) return
+    const mine = turn.current
+    const q = speech.current
     const english = synth.getVoices().filter((v) => v.lang.startsWith('en'))
     const chosen = english.find((v) => v.default) ?? english.find((v) => v.localService) ?? english[0]
-    parts.forEach((part, i) => {
-      const u = new SpeechSynthesisUtterance(part)
-      u.lang = chosen?.lang ?? 'en-US'
-      if (chosen) u.voice = chosen
-      u.rate = 0.98
-      if (i === parts.length - 1) {
-        const done = () => { if (turn.current === mine) listen() }
-        u.onend = done
-        u.onerror = done
-      }
-      synth.speak(u)
-    })
-  }, [listen])
+    const u = new SpeechSynthesisUtterance(speakable(part.trim()))
+    u.lang = chosen?.lang ?? 'en-US'
+    if (chosen) u.voice = chosen
+    u.rate = 0.98
+    const done = () => { if (turn.current !== mine) return; q.done++; settle() }
+    u.onend = done
+    u.onerror = done
+    q.queued++
+    go('speaking')
+    synth.speak(u)
+  }
+  const speakEnd = () => { speech.current.closed = true; settle() }
+  const speak = (text: string) => { speakBegin(); sentences(text).forEach(sayPart); speakEnd() }
 
-  const send = useCallback((text: string) => {
-    const answer = reply(state, viewer, text)
-    setLines((ls) => [...ls, { id: nextId.current++, from: 'you', text }, { id: nextId.current++, from: 'doctor', ...answer }])
-    if (voiceOn.current) speak(answer.text)
-  }, [state, viewer, speak])
-  useEffect(() => { sendRef.current = send }, [send])
+  const send = (text: string) => {
+    asking.current?.abort()
+    const rule = reply(state, viewer, text)
+    const you: Line = { id: nextId.current++, from: 'you', text }
+    const using = modelNow.current
+    // Urgent words always get the fixed answer. So does everything when no model is running.
+    if (!using || isUrgent(text)) {
+      setLines((ls) => [...ls, you, { id: nextId.current++, from: 'doctor', ...rule }])
+      if (voiceOn.current) speak(rule.text)
+      return
+    }
+
+    const id = nextId.current++
+    const write = (t: string) => setLines((ls) => ls.map((l) => (l.id === id ? { ...l, text: t } : l)))
+    const messages: ChatMessage[] = [
+      { role: 'system', content: briefing(state, viewer) },
+      ...lines.slice(-10).filter((l) => l.text).map((l): ChatMessage => ({ role: l.from === 'doctor' ? 'assistant' : 'user', content: l.text })),
+      { role: 'user', content: text },
+    ]
+    setLines((ls) => [...ls, you, { id, from: 'doctor', text: '', status: rule.status, actions: rule.actions }])
+    const ctl = new AbortController()
+    asking.current = ctl
+    const aloud = voiceOn.current
+    if (aloud) speakBegin('thinking')
+    else go('thinking')
+    const mine = turn.current
+    let full = ''
+    let saidUpTo = 0
+    let gaveUp = false
+    const timer = window.setTimeout(() => { if (!full) { gaveUp = true; ctl.abort() } }, 25000)
+    const fallBack = () => {
+      write(rule.text)
+      if (voiceOn.current) speak(rule.text)
+      else go('idle')
+    }
+    chat(using, messages, (piece) => {
+      full += piece
+      const clean = tidy(full)
+      write(clean)
+      // Say each sentence as soon as it is complete, so the voice starts before the answer is finished.
+      const ready = aloud && turn.current === mine ? clean.slice(saidUpTo).match(/^[\s\S]*[.!?](?=\s)/) : null
+      if (ready) { sayPart(ready[0]); saidUpTo += ready[0].length }
+    }, ctl.signal).then(() => {
+      const clean = tidy(full).trimEnd()
+      if (!clean) { fallBack(); return }
+      write(clean)
+      if (aloud && turn.current === mine) { sayPart(clean.slice(saidUpTo)); speakEnd() }
+      else if (phaseNow.current === 'thinking') go('idle')
+    }).catch(() => {
+      if (ctl.signal.aborted && !gaveUp) return
+      if (full.trim() && !gaveUp) { if (aloud && turn.current === mine) speakEnd(); else if (phaseNow.current === 'thinking') go('idle'); return }
+      fallBack()
+    }).finally(() => window.clearTimeout(timer))
+  }
+  useEffect(() => { sendRef.current = send })
+
+  useEffect(() => {
+    let active = true
+    findModel().then((m) => {
+      if (!active || !m) return
+      modelNow.current = m
+      setModel(m)
+      warm(m)
+    })
+    return () => { active = false }
+  }, [])
 
   const quiet = () => {
     turn.current++
@@ -185,6 +264,7 @@ export function Doctor() {
   useEffect(() => () => {
     voiceOn.current = false
     turn.current++
+    asking.current?.abort()
     const r = recognition.current
     recognition.current = null
     if (r) { r.onend = null; r.abort() }
@@ -210,9 +290,10 @@ export function Doctor() {
           <div className="doctor-id">
             <strong>ORBIT doctor</strong>
             <span className="tag">Simulated</span>
+            <span className="tag">{model ? `On this device · ${model}` : 'Built-in answers'}</span>
           </div>
-          <p className="doctor-phase" role="status">{voice ? PHASE_LABEL[phase] : 'Voice is off'}</p>
-          {spoken && <p className="doctor-caption">{spoken.text}</p>}
+          <p className="doctor-phase" role="status">{voice || phase === 'thinking' ? PHASE_LABEL[phase] : 'Voice is off'}</p>
+          {spoken && <p className="doctor-caption">{spoken.text || '…'}</p>}
 
           <div className={`doctor-self ${stream ? 'is-on' : ''}`}>
             {stream
@@ -231,7 +312,7 @@ export function Doctor() {
         </div>
         {notice && <p className="body-sm doctor-notice" role="alert">{notice}</p>}
         <p className="card-note">
-          A simulated doctor, not a real clinician. Answers are put together on this device from your own readings and check-ins.
+          A simulated doctor, not a real clinician. {model ? 'Answers are written by a language model running on this device, from your own readings and check-ins. It can make mistakes.' : 'Answers are put together on this device from your own readings and check-ins.'}
           Your camera picture is only shown to you and is not recorded. In voice mode, your browser's speech service turns what you say into text and may send the audio online to do it.
         </p>
       </section>
@@ -245,7 +326,7 @@ export function Doctor() {
           {lines.map((l) => (
             <li key={l.id} className={`doctor-line from-${l.from} ${l.urgent ? 'is-urgent' : ''}`}>
               <span className="label">{l.from === 'doctor' ? <>{l.status && <StatusShape status={l.status} size={11} />} Doctor</> : 'You'}</span>
-              <p>{l.text}</p>
+              <p>{l.text || '…'}</p>
               {l.actions && (
                 <div className="doctor-actions">
                   {l.actions.map((a) => <Link key={a.to} className="tag tag-link" to={a.to}>{a.label}</Link>)}

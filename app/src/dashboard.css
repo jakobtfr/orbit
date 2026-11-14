@@ -1,5 +1,5 @@
 /*
- * Workspace screens (Dashboard, Deep Data, Mental Health) in the apple.com style:
+ * Workspace screens (Dashboard, Measurements, Mental Health) in the apple.com style:
  * black canvas, neutral rounded tiles, no borders or gradients, colour only for status.
  */
 
@@ -22,26 +22,11 @@
 .brand { gap: 10px; color: var(--text-primary); }
 .wordmark { font: 600 17px/1 var(--font-sans); letter-spacing: 0.04em; }
 .header-system { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; }
-.system-dot { display: none; }
 .header-day { padding-left: 8px; color: var(--text-muted); font-size: 13px; }
 .header-day::before { content: '·'; margin-right: 8px; }
 .viewer { display: flex; align-items: baseline; gap: 6px; }
 .viewer-name { font: 500 14px/1 var(--font-sans); color: var(--text-primary); }
 .health-header .viewer .label { font-size: 13px; color: var(--text-muted); }
-
-.header-settings { position: relative; }
-.settings-button { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--text-muted); }
-.settings-button:hover, .settings-button[aria-expanded='true'] { color: var(--text-primary); background: var(--bg-raised); }
-.settings-popover { position: absolute; right: 0; top: 46px; width: min(320px, calc(100vw - 32px)); padding: 20px; border-radius: var(--radius-lg); background: var(--bg-raised); box-shadow: var(--shadow-dialog); }
-.settings-popover h2 { font: 600 17px/1.3 var(--font-sans); color: var(--text-primary); margin-bottom: 14px; }
-.settings-popover fieldset { padding: 0; margin: 0; border: 0; }
-.settings-popover legend { color: var(--text-muted); font-size: 13px; margin-bottom: 8px; }
-.settings-popover label { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; cursor: pointer; }
-.settings-popover label:hover { background: var(--bg-hover); }
-.settings-popover label.selected { background: var(--bg-hover); }
-.settings-popover input { accent-color: var(--accent-fill); }
-.settings-popover strong { display: block; color: var(--text-primary); font-size: 15px; font-weight: 500; }
-.settings-popover small { display: block; color: var(--text-muted); font-size: 13px; margin-top: 2px; }
 
 /* Segmented navigation, centred under the header. */
 .planet-nav { display: flex; flex: none; align-self: center; gap: 2px; padding: 3px; margin: 16px 12px 0; border-radius: var(--radius-full); background: var(--bg-surface); }
@@ -163,7 +148,7 @@
 .limits-link { display: flex; justify-content: space-between; gap: 8px; color: var(--accent); font-size: 14px; }
 .limits-link:hover { text-decoration: underline; }
 
-/* ---------- Deep Data and Mental Health pages ---------- */
+/* ---------- Measurements and Mental Health pages ---------- */
 
 .planet-page { width: 100%; max-width: 1440px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 24px; }
 .planet-page-title { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }

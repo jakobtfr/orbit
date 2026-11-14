@@ -28,7 +28,7 @@ const GROUPS: { title: string; keys: IndicatorKey[] }[] = [
 
 const EXPLORABLE = GROUPS.flatMap((group) => group.keys)
 
-export function DeepData() {
+export function Measurements() {
   const { state, viewer } = useStore()
   const [key, setKey] = useState<IndicatorKey>('hr')
   const [days, setDays] = useState(28)
@@ -65,7 +65,7 @@ export function DeepData() {
     <div className="planet-page research-page">
       <header className="planet-page-title">
         <div>
-          <h1>Deep Data</h1>
+          <h1>Measurements</h1>
           <p className="research-lead">Your measurements, compared with your own normal.</p>
         </div>
         <div className="data-page-actions">
@@ -88,7 +88,9 @@ export function DeepData() {
               <h2>{def.name}</h2>
               <StatusMark status={judged.status} />
             </header>
-            {def.chart ? (
+            {judged.status === 'unavailable' ? (
+              <p className="paper-empty">{judged.reason}</p>
+            ) : def.chart ? (
               <Chart k={key} readings={readingsFor(state, viewer.id, key)} guide={guide} baselines={base} from={from} to={t} decimals={def.decimals} />
             ) : (
               <p className="paper-empty">{latest ? `${formatValue(key, latest)} ${def.unit}`.trim() : 'No readings yet.'} This check is stored as a result, without a daily trend.</p>
@@ -100,12 +102,11 @@ export function DeepData() {
               {change && <span>{change} from before flight</span>}
             </footer>
           </article>
-          <p className="research-note">
-            {judged.status === 'unavailable' && judged.reason ? `${judged.reason} ` : ''}
+          {judged.status !== 'unavailable' && <p className="research-note">
             {def.provenance === 'MODELLED' ? 'Estimated, not measured. ' : ''}
             The line is your readings. A band is your normal, a solid mark is your personal limit, and a dashed mark is the Earth cutoff.
             {' '}<span>{def.source}.</span>
-          </p>
+          </p>}
         </section>
         <aside className="research-sidebar" aria-label="Your measurements">
           <section className="clinical-summary">

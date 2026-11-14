@@ -2,22 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { metrics } from './dashboard'
 import { judge } from './judge'
-import { applyHealthSystem } from './store'
+import { phaseFor } from './mission'
 
-describe('health system selection', () => {
-  it('changes environment and its rules without rewriting recorded measurements', () => {
-    const original = initialState()
-    const planet = applyHealthSystem(original, 'planet')
-    expect(planet.place).toBe('surface')
-    expect(planet.day).toBe(original.day)
-    expect(planet.readings).toBe(original.readings)
-    expect(planet.checkins).toBe(original.checkins)
-    expect(judge(planet, LENA, 'standing').status).toBe('stale')
-    expect(metrics(planet, LENA).find((m) => m.key === 'radiation')?.warning).toBe(.9)
-    const flight = applyHealthSystem(planet, 'flight')
-    expect(flight.place).toBe('spacecraft')
-    expect(judge(flight, LENA, 'standing').status).toBe('unavailable')
-    expect(metrics(flight, LENA).find((m) => m.key === 'radiation')?.warning).toBe(1.3)
-    expect(flight.readings).toBe(original.readings)
+describe('mission place', () => {
+  it('follows the mission day, so day 100 is the outbound spacecraft', () => {
+    const state = initialState()
+    expect(state.place).toBe(phaseFor(state.day).place)
+    expect(state.place).toBe('spacecraft')
+    expect(judge(state, LENA, 'standing').status).toBe('unavailable')
+    expect(metrics(state, LENA).find((m) => m.key === 'radiation')?.warning).toBe(1.3)
   })
 })

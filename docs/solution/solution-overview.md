@@ -70,7 +70,7 @@ Around the loop:
 
 - **Emergency flow.** One tap from the top right of every screen. Fixed steps, one per screen, for chest pain or collapse. It branches on whether the person breathes normally, adapts CPR to weightlessness, cites a guideline for every step, and shows the patient's readings to the crewmate who responds (H4).
 - **Trends.** Charts from before flight to today, so slow changes are seen early (H5).
-- **Environment switch.** The planet or flight health system turns checks on and off, such as the standing blood pressure test that needs gravity.
+- **Place.** Taken from the mission day. The standing blood pressure test needs gravity, so it is unavailable while the crew is travelling.
 - **Replay.** Real NASA bed-rest data judged by Earth's limits and by ORBIT side by side, so anyone can check the core claim (H2).
 
 ## What the crew sees
@@ -83,7 +83,7 @@ The home screen is a personal dashboard for the astronaut.
 - **Regions.** Head (headache, vision, thinking), chest (heart, blood pressure, breathing, blood oxygen), skin (rashes), hips and spine (bone and muscle), whole body (temperature, weight).
 - **Daily activity.** Exercise against the plan, sleep, resting heart rate, blood oxygen, and one list of risks and checks, each with its next action.
 - **Trends.** Trend plots for heart rate, core temperature, and radiation dose rate. Above the plots, a card shows one real bed-rest volunteer judged by Earth's limits (54 alarms in 90 days) and by their own normal (1), linking to the full Replay.
-- **Deep Data and Mental Health.** Lena's own measurements, explored against her normal; a private mood, energy, and journal check-in.
+- **Measurements and Mental Health.** Lena's own measurements, explored against her normal; a private mood, energy, and journal check-in.
 
 The brief suggests a body like this: "a human figure where each part of the body is clickable and displays information about its function and health status."
 

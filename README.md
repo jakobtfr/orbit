@@ -31,8 +31,8 @@ The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). 
 - **How to measure.** Step-by-step instructions for each reading, and a two-minute daily symptom check-in.
 - **Talk to the doctor.** One tap from the top right of every screen. A simulated doctor reads your own readings and check-ins and tells you in plain words whether your results look fine or something seems off, for example with your chest, and what to do next. You can talk to it by voice with your camera on, like a video call, or type. It runs on the device, with a local language model through Ollama when one is installed and built-in answers when not, so it works without contact with Earth.
 - **Replay.** The full bed-rest comparison: pick any of the 29 volunteers and watch both rule sets judge the same days.
-- **Deep Data and Mental Health.** Lena's own measurements, explored one indicator at a time against her normal, with CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
-- **Environment.** Settings switch between the planet and the flight health system. Checks that need gravity, and the radiation reference, follow the setting.
+- **Measurements and Mental Health.** Lena's own measurements, explored one indicator at a time against her normal, with CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
+- **Place.** The mission day sets it. Outbound and return are the spacecraft; the stay on Mars is the surface. The standing test needs gravity, and the radiation review line follows the place.
 
 ## Run it
 

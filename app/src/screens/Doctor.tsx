@@ -5,6 +5,7 @@ import { StatusShape } from '../components/Status'
 import { SUGGESTIONS, briefing, isUrgent, opening, reply, speakable, type DoctorReply } from '../lib/doctor'
 import { chat, findModel, warm, type ChatMessage } from '../lib/localModel'
 import { useStore } from '../lib/store'
+import { doctorVoice } from '../lib/voices'
 import '../doctor.css'
 
 interface Line extends DoctorReply {
@@ -62,6 +63,7 @@ export function Doctor() {
   const turn = useRef(0)
   const misses = useRef(0)
   const modelNow = useRef<string | null>(null)
+  const voiceNow = useRef<SpeechSynthesisVoice | undefined>(undefined)
   const asking = useRef<AbortController | null>(null)
   /** Sentences handed to the speech voice in the current turn, and whether more are still to come. */
   const speech = useRef({ queued: 0, done: 0, closed: true })
@@ -141,8 +143,7 @@ export function Doctor() {
     if (!synth || !voiceOn.current || !part.trim()) return
     const mine = turn.current
     const q = speech.current
-    const english = synth.getVoices().filter((v) => v.lang.startsWith('en'))
-    const chosen = english.find((v) => v.default) ?? english.find((v) => v.localService) ?? english[0]
+    const chosen = voiceNow.current
     const u = new SpeechSynthesisUtterance(speakable(part.trim()))
     u.lang = chosen?.lang ?? 'en-US'
     if (chosen) u.voice = chosen
@@ -212,6 +213,16 @@ export function Doctor() {
     }).finally(() => window.clearTimeout(timer))
   }
   useEffect(() => { sendRef.current = send })
+
+  // The browser fills its voice list late, so read it now and again when it changes.
+  useEffect(() => {
+    const synth = window.speechSynthesis
+    if (!synth) return
+    const load = () => { voiceNow.current = doctorVoice(synth.getVoices()) }
+    load()
+    synth.addEventListener('voiceschanged', load)
+    return () => synth.removeEventListener('voiceschanged', load)
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -292,7 +303,7 @@ export function Doctor() {
             <span className="tag">Simulated</span>
             <span className="tag">{model ? `On this device · ${model}` : 'Built-in answers'}</span>
           </div>
-          <p className="doctor-phase" role="status">{voice || phase === 'thinking' ? PHASE_LABEL[phase] : 'Voice is off'}</p>
+          <p className="doctor-phase" role="status">{voice || phase !== 'idle' ? PHASE_LABEL[phase] : 'Voice is off'}</p>
           {spoken && <p className="doctor-caption">{spoken.text || '…'}</p>}
 
           <div className={`doctor-self ${stream ? 'is-on' : ''}`}>

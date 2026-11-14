@@ -2,10 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { assessment, briefing, isUrgent, opening, reply, speakable } from './doctor'
 import { now } from './judge'
-import { applyHealthSystem } from './store'
 import type { AppState, Reading } from './types'
 
-const base = () => applyHealthSystem(initialState(), 'planet')
+const base = initialState
 
 /** The demo state with blood pressure high on the last two readings. */
 function highPressure(): AppState {

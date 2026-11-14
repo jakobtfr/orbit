@@ -1,5 +1,5 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { DeepData } from './screens/DeepData'
+import { Measurements } from './screens/Measurements'
 import { Doctor } from './screens/Doctor'
 import { MentalHealth } from './screens/MentalHealth'
 import { Shell } from './components/Shell'
@@ -25,7 +25,8 @@ export function App() {
           <Route path="/doctor" element={<Doctor />} />
           <Route path="/emergency" element={<Navigate to="/doctor" replace />} />
           <Route path="/replay" element={<Replay />} />
-          <Route path="/deep-data" element={<DeepData />} />
+          <Route path="/measurements" element={<Measurements />} />
+          <Route path="/deep-data" element={<Navigate to="/measurements" replace />} />
           <Route path="/mental-health" element={<MentalHealth />} />
           <Route path="/body/:pid" element={<Body />} />
           <Route path="/body/:pid/muscle/:muscleId" element={<Muscle />} />

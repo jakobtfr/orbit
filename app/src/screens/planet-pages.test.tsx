@@ -3,19 +3,22 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import { Shell } from '../components/Shell'
 import { StoreProvider } from '../lib/store'
-import { DeepData } from './DeepData'
+import { Measurements } from './Measurements'
 import { MentalHealth } from './MentalHealth'
 
 function page(path: string) {
-  return renderToStaticMarkup(<MemoryRouter initialEntries={[path]}><StoreProvider><Routes><Route element={<Shell />}><Route path="/deep-data" element={<DeepData />} /><Route path="/mental-health" element={<MentalHealth />} /></Route></Routes></StoreProvider></MemoryRouter>)
+  return renderToStaticMarkup(<MemoryRouter initialEntries={[path]}><StoreProvider><Routes><Route element={<Shell />}><Route path="/measurements" element={<Measurements />} /><Route path="/mental-health" element={<MentalHealth />} /></Route></Routes></StoreProvider></MemoryRouter>)
 }
 
 describe('Planet workspace pages', () => {
   it('provides all three destinations and measured data context', () => {
-    const html = page('/deep-data')
-    expect(html).toContain('Planet health navigation')
+    const html = page('/measurements')
+    expect(html).toContain('Health navigation')
+    expect(html).toContain('Outbound to Mars')
     expect(html).toContain('href="/body/lena"')
-    expect(html).toContain('href="/deep-data"')
+    expect(html).toContain('href="/measurements"')
+    expect(html).toContain('>Measurements<')
+    expect(html).not.toContain('Settings')
     expect(html).toContain('href="/mental-health"')
     expect(html).toContain('Your measurements')
     expect(html).toContain('Heart rate at rest')

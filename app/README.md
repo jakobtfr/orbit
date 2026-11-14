@@ -20,12 +20,12 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | --- | --- | --- |
 | Dashboard | `#/body/lena` | Three columns: body map; daily activity with risks and checks; health trends, starting with the "Earth limits vs. your normal" card |
 | Region, Muscle group, Indicator, Symptoms, Measure, Check-in | `#/body/lena/...` | Reached from the dashboard |
-| Deep Data | `#/deep-data` | Lena's own measurements: pick any indicator and see its trend against her normal, with CSV export |
+| Measurements | `#/measurements` | Lena's own measurements: pick any indicator and see its trend against her normal, with CSV export |
 | My Personal Diary | `#/mental-health` | Private mood, energy, separation reflections, family videos, and local recording |
 | Replay | `#/replay` | Real NASA bed-rest data judged by Earth limits and personal rules. `?s=UTMB-40` opens a volunteer |
 | Talk to the doctor | `#/doctor` | Button at the top right of every screen |
 
-**Settings** (gear icon in the header) switches between the planet health system (default, surface, with the Dashboard / Deep Data / My Personal Diary navigation) and the flight health system (spacecraft). The setting changes which checks are available and the radiation reference; readings and mission day stay the same.
+The header shows the mission phase for the current day. Outbound and return are the spacecraft; the stay on Mars is the surface. That place decides the standing test and the radiation review line. Readings and the mission day stay as scripted.
 
 ## Layout
 
@@ -34,28 +34,28 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | `src/screens/` | One file per screen |
 | `src/components/` | App shell, status shapes and tags, tiles, chart, anatomical SVG body |
 | `src/components/dashboard/` | Dashboard columns: activity, risks and checks, trend plots, limits card |
-| `src/components/research/` | Paper-style plots for Deep Data |
+| `src/components/research/` | Paper-style plots of the bed-rest figures |
 | `src/components/anatomy/` | Front and back SVG paths adapted from Kacmisz/react-body-map (MIT), attribution in `NOTICE.md` |
 | `src/lib/judge.ts` | Status rules (simplified from R1 to R12), next actions |
 | `src/lib/replay.ts` | Earth cutoffs against personal rules on the real bed-rest days |
 | `src/lib/dashboard.ts` | Dashboard metrics, statistics, review bands and their references |
-| `src/lib/research.ts` | Rolling means, SD bands, and the medical draft for Deep Data |
+| `src/lib/research.ts` | Rolling means, SD bands, and CSV download |
 | `src/lib/indicators.ts`, `src/lib/anatomy.ts` | Indicators, body regions, muscle groups, and their texts |
 | `src/lib/mission.ts` | Mission phase and place for a mission day |
-| `src/lib/store.tsx` | App state: readings, check-ins, health system, mental-health entries |
+| `src/lib/store.tsx` | App state: readings, check-ins, mental-health entries |
 | `src/data/demo.ts` | Lena's scripted readings and the crew names |
 | `src/data/utmb-replay.json` | Daily vitals and baselines of 29 NASA UTMB bed-rest volunteers, made by `scripts/replay_data.py` |
 | `src/data/utmb-residuals.json` | Day-to-day variation from four UTMB volunteers, used as noise on Lena's series |
 | `src/lib/doctor.ts` | The virtual doctor's built-in answers and the briefing given to the local model, both from the readings and the rules in `judge.ts` |
 | `src/lib/localModel.ts` | Talks to a language model on this machine through Ollama (`http://localhost:11434`) |
 | `public/licenses/` | Licence texts for Inter, Geist Mono (installed, no longer used), and react-body-map |
-| `src/styles.css`, `src/dashboard.css`, `src/research.css` | Tokens and base styles; workspace layout; Deep Data. The look follows apple.com, see `../DESIGN.md` |
+| `src/styles.css`, `src/dashboard.css`, `src/research.css` | Tokens and base styles; workspace layout; Measurements. The look follows apple.com, see `../DESIGN.md` |
 
 ## Methods
 
 - **Replay.** Earth limits: pulse over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on any single day. Personal: pulse 20% over the volunteer's own pre-bed-rest mean, blood pressure 20/15 over, or temperature 0.5 °C over, on two days in a row. Tests reproduce 25.5% and 5.9% of days with an alarm.
 - **Dashboard plots.** Daily observations with trailing seven-day mean ±1 SD; radiation dose rate from cumulative-dose differences over elapsed time. Thresholds, references, and caveats are in [dashboard methodology](../docs/solution/dashboard-methodology.md).
-- **Deep Data.** Lena's own series, the same personal limits and Earth cutoffs as the indicator charts, over 7, 28, or 90 days or the whole mission. The NASA volunteer comparison is Replay, not this screen.
+- **Measurements.** Lena's own series, the same personal limits and Earth cutoffs as the indicator charts, over 7, 28, or 90 days or the whole mission. The NASA volunteer comparison is Replay, not this screen.
 
 ## Limits
 

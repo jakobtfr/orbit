@@ -4,7 +4,7 @@ Written 2026-11-14, rewritten the same day to match the app as built. What the a
 
 **How to use this file.** This file says *what* each screen contains and does. [`DESIGN.md`](DESIGN.md) says *how* it looks and reads. If they disagree, `DESIGN.md` wins on look and wording, this file wins on content and behaviour. The reasons behind the product are in [`solution-overview.md`](docs/solution/solution-overview.md); the science rules (SH1 to SH10) are in [`scientific-constraints.md`](docs/research/scientific-constraints.md).
 
-**What changed from version 1.** The 3D body became an anatomical body map on a three-column personal dashboard, styled after apple.com. The Flight, Sources, and Crew screens and the orbit model were removed. Replay, Deep Data, Mental Health, and the planet/flight setting were added. The emergency first-aid flow was replaced by a virtual doctor the viewer can talk to about their own results, opened from a button at the top right of every screen. The `SIMULATED` tag was removed.
+**What changed from version 1.** The 3D body became an anatomical body map on a three-column personal dashboard, styled after apple.com. The Flight, Sources, and Crew screens and the orbit model were removed. Replay, Measurements, and Mental Health were added. The emergency first-aid flow was replaced by a virtual doctor the viewer can talk to about their own results, opened from a button at the top right of every screen. The `SIMULATED` tag was removed.
 
 ## The one idea
 
@@ -18,7 +18,7 @@ ORBIT judges each reading against the astronaut's own normal, not Earth's. The a
 | One astronaut, Lena Brandt, seen from her own point of view | Switching between crew members |
 | Scripted readings for Lena; real NASA UTMB bed-rest data in Replay | Real device connections |
 | A simulated doctor that talks about the viewer's own results, by voice or text | Step-by-step first aid for a crewmate; a doctor that examines the camera picture |
-| A planet and a flight health system | A moving mission day or orbit model |
+| Place taken from the mission day: spacecraft while travelling, surface on Mars | A control that overrides where the crew is |
 | Desktop, tablet, and phone widths | Translations, light theme |
 
 ## Words used in this spec
@@ -32,8 +32,8 @@ ORBIT judges each reading against the astronaut's own normal, not Earth's. The a
 ## Screen map
 
 ```
-Header (every screen): ORBIT · health system · day · viewer · Settings · Talk to the doctor
-Navigation (planet system): Dashboard · Deep Data · Mental Health
+Header (every screen): ORBIT · mission phase · day · viewer · Talk to the doctor
+Navigation: Dashboard · Measurements · Mental Health
 
 Dashboard ──► Region ──► Indicator ──► Measure
     │    └──► Muscle group
@@ -52,7 +52,7 @@ Talk to the doctor (from the header, on every screen)
 | Symptoms | `#/body/lena/symptoms/:region` | What did I report for this part of the body? |
 | Measure | `#/body/lena/measure/:key` | How do I take this reading? |
 | Check-in | `#/body/lena/check-in` | How do I feel today? |
-| Deep Data | `#/deep-data` | What do my own measurements look like over time? |
+| Measurements | `#/measurements` | What do my own measurements look like over time? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
 | Talk to the doctor | `#/doctor` | Are my results fine, and what should I do? |
@@ -61,11 +61,10 @@ The app opens on the Dashboard.
 
 ## App shell
 
-**Header**, left to right: the ORBIT mark and wordmark (links to the Dashboard), the active health system and mission day, the viewer's name and role, a Settings button, and the **Talk to the doctor** button.
+**Header**, left to right: the ORBIT mark and wordmark (links to the Dashboard), the mission phase and day, the viewer's name and role, and the **Talk to the doctor** button.
 
-- **Settings** chooses the planet health system (surface, gravity checks) or the flight health system (spacecraft, microgravity). The choice sets the place used by the rules: the standing blood pressure test is Unavailable in the spacecraft, and the radiation reference changes. Readings and the mission day stay the same. Planet is the default.
-- **Talk to the doctor** is always at the top right, an accent pill. On narrow screens the system label and viewer name hide so the button stays visible.
-- **Navigation** (planet system only): a floating bar with Dashboard, Deep Data, and Mental Health.
+- **Talk to the doctor** is always at the top right, an accent pill. On narrow screens the phase label and viewer name hide so the button stays visible.
+- **Navigation:** a floating bar with Dashboard, Measurements, and Mental Health. `#/deep-data` redirects to Measurements.
 - No NASA insignia anywhere (14 CFR 1221).
 
 ## Screens
@@ -105,7 +104,7 @@ Special cases: Unavailable shows the reason ("The standing test needs gravity.")
 - **Measure:** where the value comes from, three to five numbered steps, activity and time context (SH7), a value input, and "Save reading". Saving returns to Indicator.
 - **Check-in:** four steps: how you feel, symptoms (with where and how bad for pain), mood ("Only you can see this."), and a summary with a next action if a symptom was logged.
 
-### Deep Data
+### Measurements
 
 Lena's own measurements, for exploring the record. A list of every indicator, grouped by part of the body, with the latest value and status. Choosing one draws its trend for 7, 28, or 90 days, or the whole mission, using the same chart as Indicator: her readings, her normal, her personal limit, and the Earth cutoff where one exists. The footer shows the latest value, how many readings fall in the window, and the change from before flight. "Open this measurement" goes to that indicator. CSV export covers every measurement in the window. The NASA bed-rest comparison stays on Replay.
 
@@ -177,7 +176,7 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 | Judging a reading | Against the personal normal and flight-adjusted limits in `lib/judge.ts`, simplified from rules R1 to R12. |
 | One odd reading | Spot readings out of range once show Repeat reading; a confirming reading makes it Caution or Warning (SH6). Readings dangerous on their own, such as blood oxygen below 90%, skip the repeat. |
 | Old readings | Older than the maximum age shows No recent data, never green (SH8). |
-| Place | Set by the health system. The standing test is Unavailable in the spacecraft (SH4). |
+| Place | Set by the mission day. The standing test is Unavailable in the spacecraft (SH4). The radiation review line is 0.9 mSv/day on the surface and 1.3 mSv/day in free space. |
 | Saving a reading | Added to the record and judged at once. |
 | Finishing a check-in | Logged symptoms mark their region; the check-in shows as done for the day. |
 | Replay | `lib/replay.ts`: Earth cutoffs on any single day against personal rules on two days in a row. Tests reproduce 25.5% and 5.9%. |

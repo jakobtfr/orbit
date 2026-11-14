@@ -24,20 +24,12 @@ function reducer(state: AppState, a: Act): AppState {
   }
 }
 
-export type HealthSystem = 'planet' | 'flight'
-
-export function applyHealthSystem(state: AppState, system: HealthSystem): AppState {
-  return { ...state, place: system === 'planet' ? 'surface' : 'spacecraft' }
-}
-
 export interface MentalEntry { id: string; day: number; mood: number; energy: number; note: string; createdAt?: string; answers?: ConnectionAnswers }
 
 interface Store {
   mentalStorageStatus: 'loading' | 'ready' | 'unavailable'
   mentalEntries: MentalEntry[]
   setMentalEntries: Dispatch<React.SetStateAction<MentalEntry[]>>
-  healthSystem: HealthSystem
-  setHealthSystem: (system: HealthSystem) => void
   state: AppState
   dispatch: Dispatch<Act>
   viewer: Person
@@ -47,7 +39,6 @@ const Ctx = createContext<Store | null>(null)
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, initialState)
-  const [healthSystem, setHealthSystem] = useState<HealthSystem>('planet')
   const [mentalEntries, setMentalEntries] = useState<MentalEntry[]>([])
   const [mentalStorageStatus, setMentalStorageStatus] = useState<'loading' | 'ready' | 'unavailable'>('loading')
   useEffect(() => {
@@ -59,7 +50,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }).catch(() => { if (active) setMentalStorageStatus('unavailable') })
     return () => { active = false }
   }, [])
-  const store = useMemo(() => ({ state: applyHealthSystem(state, healthSystem), dispatch, viewer: LENA, healthSystem, setHealthSystem, mentalEntries, setMentalEntries, mentalStorageStatus }), [state, healthSystem, mentalEntries, mentalStorageStatus])
+  const store = useMemo(() => ({ state, dispatch, viewer: LENA, mentalEntries, setMentalEntries, mentalStorageStatus }), [state, mentalEntries, mentalStorageStatus])
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>
 }
 

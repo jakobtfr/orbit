@@ -2,7 +2,7 @@
 
 Written 2026-11-14, updated the same day for version 2. One dark theme, no light theme yet.
 
-**Style.** ORBIT follows the look of apple.com in its dark sections: a black canvas, neutral rounded tiles without borders, the system font, pill-shaped buttons and controls, generous spacing, and no gradients, glows, or tinted panels. Colour is kept for status and for the one primary action. Tokens live in `app/src/styles.css`; the workspace screens (Dashboard, Deep Data, Mental Health) are laid out in `app/src/dashboard.css` and `app/src/research.css` with the same tokens.
+**Style.** ORBIT follows the look of apple.com in its dark sections: a black canvas, neutral rounded tiles without borders, the system font, pill-shaped buttons and controls, generous spacing, and no gradients, glows, or tinted panels. Colour is kept for status and for the one primary action. Tokens live in `app/src/styles.css`; the workspace screens (Dashboard, Measurements, Mental Health) are laid out in `app/src/dashboard.css` and `app/src/research.css` with the same tokens.
 
 How ORBIT looks and reads. Every screen, the demo video, and the slide deck follow this file. Copy-paste values are in [Tokens](#tokens).
 

@@ -1,129 +1,90 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Scene } from '../components/guides/Scene'
+import { Link, useParams } from 'react-router-dom'
+import { Astronaut } from '../components/Astronaut'
 import { BackLink } from '../components/Shell'
-import { Tag } from '../components/Status'
-import { GUIDES, guideById, hasGravity, stepsFor, type Guide, type GuideStep } from '../lib/guides'
+import { StatusShape } from '../components/Status'
+import { useCall } from '../lib/call'
+import { activeProcedures, allProcedures, measureProcedures, sceneFor, type Procedure } from '../lib/procedures'
 import { useStore } from '../lib/store'
 import { ScreenTitle } from './common'
 import '../guides.css'
 
-function GuideTags({ guide, steps }: { guide: Guide; steps: number }) {
-  const { state } = useStore()
-  return <div className="tags">
-    {guide.emergency && <span className="tag is-emergency">Emergency</span>}
-    <Tag>{steps} steps</Tag>
-    {guide.needs === 'gravity' && !hasGravity(state.place) && <Tag>For after a landing</Tag>}
-  </div>
+function ProcedureCard({ p }: { p: Procedure }) {
+  return (
+    <Link className="resource-card" to={`/resources/${p.id}`}>
+      <Astronaut scene={sceneFor(p.steps[0])} size={72} still />
+      <span>
+        <strong>{p.title}</strong>
+        <small>{p.status && <StatusShape status={p.status} size={10} />}{p.steps.length} steps</small>
+      </span>
+    </Link>
+  )
 }
 
+/** Every procedure on board: what is needed today, and how to take each reading. */
 export function Resources() {
-  const { state } = useStore()
+  const { state, viewer } = useStore()
+  const today = activeProcedures(state, viewer)
+  const measuring = measureProcedures(state, viewer)
   return (
     <div className="screen">
-      <ScreenTitle sub="Short animated refreshers for situations you trained for long ago. They run on this device, need no contact with Earth, and follow where you are now: weightless or in gravity.">
+      <ScreenTitle sub="Every procedure on board, one animated step at a time. It is all stored on this device, so it works without contact with Earth.">
         Resources
       </ScreenTitle>
-      <div className="guide-grid">
-        {GUIDES.map((guide) => (
-          <Link key={guide.id} className="guide-card" to={`/resources/${guide.id}`}>
-            <Scene scene={guide.cover} />
-            <strong>{guide.title}</strong>
-            <p>{guide.when}</p>
-            <GuideTags guide={guide} steps={stepsFor(guide, state.place).length} />
-          </Link>
-        ))}
-      </div>
-      <p className="label">A refresher, not a replacement for training. The steps follow the published guidelines listed in each guide and have not been reviewed by a clinician.</p>
+      {today.length > 0 && (
+        <section aria-label="Needed today">
+          <h2 className="title-3">Needed today</h2>
+          <div className="guide-grid">{today.map((p) => <ProcedureCard key={p.id} p={p} />)}</div>
+        </section>
+      )}
+      <section aria-label="How to measure">
+        <h2 className="title-3">How to measure</h2>
+        <div className="guide-grid">{measuring.map((p) => <ProcedureCard key={p.id} p={p} />)}</div>
+      </section>
     </div>
   )
 }
 
-/** Counts a beat aloud on screen, in sets, and hands each count to the scene so the two stay together. */
-function Pace({ pace, onBeat }: { pace: NonNullable<GuideStep['pace']>; onBeat: (n: number) => void }) {
-  const [n, setN] = useState<number | null>(null)
-  useEffect(() => {
-    if (n === null) return
-    const id = setTimeout(() => { const next = (n % pace.count) + 1; setN(next); onBeat(next) }, 60000 / pace.perMinute)
-    return () => clearTimeout(id)
-  }, [n, pace, onBeat])
-  return <div className="guide-pace">
-    <button className="btn btn-secondary" onClick={() => { setN(n === null ? 1 : null); onBeat(1) }}>{n === null ? `Start the beat: ${pace.perMinute} a minute` : 'Stop the beat'}</button>
-    {n !== null && <span className="guide-count" role="status" aria-live="off">{n}</span>}
-    {n !== null && <span className="label">of {pace.count}</span>}
-  </div>
-}
-
-function Countdown({ seconds }: { seconds: number }) {
-  const [left, setLeft] = useState<number | null>(null)
-  useEffect(() => {
-    if (left === null || left <= 0) return
-    const id = setTimeout(() => setLeft(left - 1), 1000)
-    return () => clearTimeout(id)
-  }, [left])
-  const name = seconds >= 120 ? `${seconds / 60} minutes` : `${seconds} seconds`
-  return <div className="guide-pace">
-    <button className="btn btn-secondary" onClick={() => setLeft(left === null ? seconds : null)}>{left === null ? `Count ${name}` : 'Stop'}</button>
-    {left !== null && <span className="guide-count" role="status" aria-live="off">{left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}` : 'Time'}</span>}
-  </div>
-}
-
-export function GuidePlayer() {
+/** One procedure, with the astronaut acting out the step that is showing. */
+export function ProcedurePlayer() {
   const { id } = useParams()
-  const { state } = useStore()
-  const nav = useNavigate()
-  const guide = guideById(id)
+  const { state, viewer } = useStore()
+  const { openCall } = useCall()
   const [at, setAt] = useState(0)
-  const [beat, setBeat] = useState(0)
   useEffect(() => { setAt(0) }, [id])
-  const steps = guide ? stepsFor(guide, state.place) : []
+  const p = allProcedures(state, viewer).find((x) => x.id === id)
+  const count = p?.steps.length ?? 0
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') setAt((a) => Math.min(a + 1, steps.length - 1))
+      if (e.key === 'ArrowRight') setAt((a) => Math.min(a + 1, count - 1))
       if (e.key === 'ArrowLeft') setAt((a) => Math.max(a - 1, 0))
     }
     document.addEventListener('keydown', key)
     return () => document.removeEventListener('keydown', key)
-  }, [steps.length])
-  if (!guide) return <Resources />
-  const step = steps[Math.min(at, steps.length - 1)]
-  const last = at >= steps.length - 1
+  }, [count])
+  if (!p) return <Resources />
+  const i = Math.min(at, p.steps.length - 1)
+  const last = i === p.steps.length - 1
   return (
     <div className="screen">
       <BackLink to="/resources">Resources</BackLink>
-      <ScreenTitle sub={guide.when}>{guide.title}</ScreenTitle>
-      <div className="tags">
-        {guide.emergency && <span className="tag is-emergency">Emergency</span>}
-        {!guide.needs && <Tag>{hasGravity(state.place) ? 'Steps for gravity' : 'Steps for weightlessness'}</Tag>}
-        {guide.needs === 'gravity' && !hasGravity(state.place) && <Tag>For after a landing</Tag>}
-      </div>
+      <ScreenTitle sub={p.intro}>{p.kind === 'measure' ? `How to measure: ${p.title.toLowerCase()}` : p.title}</ScreenTitle>
       <div className="guide-player">
-        <div className="guide-stage"><Scene key={`${at}-${step.scene}`} scene={step.scene} beat={beat} label={step.title} /></div>
+        <div className="guide-stage"><Astronaut key={i} scene={sceneFor(p.steps[i])} size={420} /></div>
         <div className="guide-step">
           <div className="guide-bar" role="group" aria-label="Steps">
-            {steps.map((s, i) => <button key={s.title} className={i < at ? 'is-done' : i === at ? 'is-now' : ''} aria-label={`Step ${i + 1}: ${s.title}`} aria-current={i === at ? 'step' : undefined} onClick={() => setAt(i)} />)}
+            {p.steps.map((s, n) => <button key={s} className={n < i ? 'is-done' : n === i ? 'is-now' : ''} aria-label={`Step ${n + 1}`} aria-current={n === i ? 'step' : undefined} onClick={() => setAt(n)} />)}
           </div>
-          <span className="label">Step {at + 1} of {steps.length}</span>
-          <h2 className="title-2" aria-live="polite">{step.title}</h2>
-          <p className="body">{step.text}</p>
-          {step.pace && <Pace key={at} pace={step.pace} onBeat={setBeat} />}
-          {step.seconds && <Countdown key={at} seconds={step.seconds} />}
-          {step.link && <Link className="btn btn-secondary" to={`/resources/${step.link.guide}`}>{step.link.label}</Link>}
+          <span className="label">Step {i + 1} of {p.steps.length}</span>
+          <h2 className="title-2" aria-live="polite">{p.steps[i]}</h2>
           <div className="guide-nav">
-            {at > 0 && <button className="btn btn-secondary" onClick={() => setAt(at - 1)}>Back</button>}
-            {last
-              ? <button className="btn btn-primary" onClick={() => nav('/resources')}>Finish</button>
-              : <button className="btn btn-primary" onClick={() => setAt(at + 1)}>Next step</button>}
+            {i > 0 && <button className="btn btn-secondary" onClick={() => setAt(i - 1)}>Back</button>}
+            {!last && <button className="btn btn-primary" onClick={() => setAt(i + 1)}>Next step</button>}
+            {last && p.button && <Link className="btn btn-primary" to={p.button.to}>{p.button.label}</Link>}
+            {p.kind === 'now' && <button className="btn btn-secondary" onClick={() => openCall(p.about)}>Call the doctor</button>}
           </div>
         </div>
       </div>
-      <section>
-        <h2 className="title-3">Sources</h2>
-        <ul className="guide-sources">
-          {guide.sources.map((s) => <li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.label}</a></li>)}
-        </ul>
-        <p className="label">A refresher, not a replacement for training. Not reviewed by a clinician.</p>
-      </section>
     </div>
   )
 }

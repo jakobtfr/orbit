@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { age } from '../lib/format'
 import { INDICATORS, formatValue } from '../lib/indicators'
 import { actionSteps, activeSymptoms, judge, now, symptomStatus } from '../lib/judge'
+import { procedureFor, sceneFor } from '../lib/procedures'
 import { useStore } from '../lib/store'
 import type { Action, IndicatorKey, Person, Reading, RegionKey } from '../lib/types'
+import { Astronaut } from './Astronaut'
 import { STATUS, StatusMark, Tag } from './Status'
 
 export function ValueLine({ k, reading, arrow, status, size = 'reading' }: {
@@ -72,8 +74,9 @@ function StepTimer({ minutes }: { minutes: number }) {
 
 /** The next action, walked through one step at a time, with a timer where a step says to wait. */
 export function NextActionCard({ action }: { action: Action }) {
-  const { state, stepAt, setStepAt } = useStore()
+  const { state, viewer, stepAt, setStepAt } = useStore()
   const steps = actionSteps(action)
+  const reference = procedureFor(state, viewer, action)
   const id = `${state.day}|${action.next}`
   const at = Math.min(stepAt[id] ?? 0, steps.length)
   const finished = at === steps.length
@@ -94,7 +97,7 @@ export function NextActionCard({ action }: { action: Action }) {
       <p className="body">{action.observed}</p>
       {finished
         ? <p className="title-3" role="status">Done. The status clears when the next reading is back in range.</p>
-        : <p className="title-3" key={step} aria-live="polite">{step}</p>}
+        : <div className="action-step"><p className="title-3" key={step} aria-live="polite">{step}</p><Astronaut key={step} scene={sceneFor(step)} size={132} /></div>}
       {wait && <StepTimer key={step} minutes={Number(wait[1])} />}
       {action.risk && <p className="label">Spaceflight risk this bears on: {action.risk}</p>}
       <div className="action-buttons">
@@ -103,6 +106,7 @@ export function NextActionCard({ action }: { action: Action }) {
           : steps.length > 1 && <button className="btn btn-primary" onClick={() => setStepAt(id, at + 1)}>{last ? 'Done' : 'Done, next step'}</button>)}
         {finished && action.button && <Link className="btn btn-primary" to={action.button.to}>{action.button.label}</Link>}
         {at > 0 && <button className="btn btn-quiet" onClick={() => setStepAt(id, finished ? 0 : at - 1)}>{finished ? 'Start again' : 'Back'}</button>}
+        <Link className="action-reference" to={reference ? `/resources/${reference.id}` : '/resources'}>{reference ? 'Open in Resources' : 'All procedures in Resources'}</Link>
       </div>
     </section>
   )

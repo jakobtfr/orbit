@@ -53,7 +53,7 @@ Call the doctor (a pop-up, from the Dashboard prompt or the header)
 | Measure | `#/body/lena/measure/:key` | How do I take this reading? |
 | Check-in | `#/body/lena/check-in` | How do I feel today? |
 | Measurements | `#/measurements` | What do my own measurements look like over time? |
-| Resources | `#/resources`, `#/resources/:guide` | What do I do in this situation? |
+| Resources | `#/resources`, `#/resources/:id` | How do I do this, step by step? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
 | Call the doctor | pop-up, no route | Something is off: what do I do about it? |
@@ -111,7 +111,7 @@ Lena's own measurements, for exploring the record. A list of every indicator, gr
 
 ### Resources
 
-Animated refresher guides that run on the device: a crewmate collapses (CPR), chest pain, choking, heavy bleeding, and feeling faint after landing. The list shows one card per guide. A guide plays one step at a time: an animated pictogram, the step in one or two sentences, and Back and Next (also the arrow keys). The compressions step has a beat to follow at 110 a minute, counted in sets of 30, which drives the animation; steps that say to wait have a countdown. Steps and wording follow the place: in weightlessness the collapse guide adds securing the person and the rescuer, with gravity it says to lay them flat. Each guide lists its published sources. The guides are in `app/src/lib/guides.ts` and the pictograms in `app/src/components/guides/Scene.tsx`. The wording has not been reviewed by a clinician.
+Every procedure on board, stored on the device: what is needed today (one entry for each risk or open check, built from the rules) and how to take each reading. The list shows one card per procedure. A procedure opens as a player: one step at a time, with a progress bar, Back and Next, and arrow keys. See [Resources and the astronaut](#resources-and-the-astronaut).
 
 ### Mental Health
 
@@ -146,6 +146,10 @@ The doctor is simulated and its wording has not been reviewed by a clinician. Th
 ### Body map colours and muscle screens
 
 The body map is coloured by status: each part takes the worst status of its health region and of the indicators watched for it (for the legs, hips and back that includes exercise and bone protection). The status shape is shown in the caption on hover, in the list of groups, and in a legend under the figure. A muscle screen shows that status, how the part fares without gravity, everything ORBIT watches that bears on it (symptoms, the region's indicators, and its own), and how it is trained. Nothing is measured per muscle; the screen says so.
+
+### Resources and the astronaut
+
+One tab, **Resources**, holds every procedure on board: what is needed today (one entry for each risk or open check, built from the rules) and how to take each reading. Each opens as a player with one step at a time. Every step is acted out by a small animated astronaut: resting, drinking, taking a reading, calling on the radio, exercising, sheltering. The picture is chosen from the wording of the step, The same astronaut appears beside the current step in each Next action card, with a link to the procedure in Resources. With reduced motion the astronaut holds the pose and does not move.
 
 ## Indicators
 

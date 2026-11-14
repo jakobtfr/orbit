@@ -1,0 +1,205 @@
+/* The astronaut that acts out a step. Poses are set as plain transforms, so they hold when motion is reduced. */
+
+.astro { display: block; flex: none; overflow: visible; }
+.astro-leg path, .astro-arm path { fill: none; stroke: #e8e8ed; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+.astro-torso, .astro-helmet { fill: #f5f5f7; }
+.astro-pack { fill: #a1a1a6; }
+.astro-panel { fill: var(--accent); }
+.astro-visor { fill: #0b2540; stroke: var(--accent); stroke-width: 1.5; }
+.astro-glint { fill: none; stroke: #8fc7ff; stroke-width: 2; stroke-linecap: round; }
+
+.astro-figure { transform-origin: 100px 92px; animation: astro-bob 4.5s ease-in-out infinite; }
+.astro-arm-l { transform-origin: 82px 78px; }
+.astro-arm-r { transform-origin: 118px 78px; }
+.astro-leg-l { transform-origin: 91px 110px; }
+.astro-leg-r { transform-origin: 109px 110px; }
+.astro.is-still *, .astro.is-still { animation: none !important; }
+@keyframes astro-bob { 0%, 100% { translate: 0 -3px; } 50% { translate: 0 3px; } }
+
+/* float: a slow wave */
+.scene-float .astro-arm-r { transform: rotate(-120deg); animation: astro-wave 2.4s ease-in-out infinite; }
+@keyframes astro-wave { 0%, 100% { transform: rotate(-105deg); } 50% { transform: rotate(-135deg); } }
+
+/* rest: leaning back, legs loose, a timer running */
+.scene-rest .astro-figure { rotate: -14deg; }
+.scene-rest .astro-leg-l { transform: rotate(16deg); }
+.scene-rest .astro-leg-r { transform: rotate(8deg); }
+.scene-rest .astro-arm-l { transform: rotate(-10deg); }
+.astro-timer { fill: none; stroke: var(--status-ok); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 72 100; rotate: -90deg; transform-origin: 166px 30px; transform-box: view-box; animation: astro-timer 6s linear infinite; }
+@keyframes astro-timer { from { stroke-dasharray: 0 100; } to { stroke-dasharray: 100 100; } }
+
+/* drink: the pouch goes up to the helmet and back */
+.astro-pouch { fill: var(--accent); }
+.scene-drink .astro-arm-r { transform: rotate(-126deg); animation: astro-drink 3.4s ease-in-out infinite; }
+@keyframes astro-drink { 0%, 100% { transform: rotate(-30deg); } 35%, 72% { transform: rotate(-126deg); } }
+
+/* measure: arm held out, cuff pulsing, a pulse line drawing */
+.scene-measure .astro-arm-l { transform: rotate(48deg); }
+.astro-cuff { stroke: var(--accent) !important; stroke-width: 15 !important; animation: astro-cuff 1.2s ease-in-out infinite; }
+@keyframes astro-cuff { 0%, 100% { stroke-width: 13; } 50% { stroke-width: 17; } }
+.astro-pulse { fill: none; stroke: var(--status-ok); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 110; animation: astro-draw 1.8s linear infinite; }
+@keyframes astro-draw { from { stroke-dashoffset: 110; } 60%, 100% { stroke-dashoffset: 0; } }
+
+/* report: hand at the helmet, radio waves going out */
+.scene-report .astro-arm-r { transform: rotate(-126deg); }
+.astro-radio path { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; animation: astro-radio 1.8s ease-out infinite; }
+.astro-radio path:nth-child(2) { animation-delay: 0.3s; }
+.astro-radio path:nth-child(3) { animation-delay: 0.6s; }
+@keyframes astro-radio { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+
+/* exercise: arms and legs swinging */
+.scene-exercise .astro-figure { animation-duration: 0.9s; }
+.scene-exercise .astro-arm-l { transform: rotate(30deg); animation: astro-swing-a 0.9s ease-in-out infinite; }
+.scene-exercise .astro-arm-r { transform: rotate(30deg); animation: astro-swing-b 0.9s ease-in-out infinite; }
+.scene-exercise .astro-leg-l { transform: rotate(-22deg); animation: astro-swing-b 0.9s ease-in-out infinite; }
+.scene-exercise .astro-leg-r { transform: rotate(-22deg); animation: astro-swing-a 0.9s ease-in-out infinite; }
+@keyframes astro-swing-a { 0%, 100% { transform: rotate(32deg); } 50% { transform: rotate(-32deg); } }
+@keyframes astro-swing-b { 0%, 100% { transform: rotate(-32deg); } 50% { transform: rotate(32deg); } }
+
+/* shelter: a dome closes over, particles stop at it */
+.scene-shelter .astro-figure { scale: 0.82; translate: 0 18px; animation: none; }
+.astro-dome { fill: rgba(74, 163, 255, 0.08); stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 250; animation: astro-dome 3.6s ease-out infinite; }
+@keyframes astro-dome { 0% { stroke-dashoffset: 250; } 40%, 100% { stroke-dashoffset: 0; } }
+.astro-ray { fill: var(--status-warning); animation: astro-ray 1.8s ease-in infinite; }
+.astro-ray-1 { --dx: 34px; --dy: 62px; }
+.astro-ray-2 { --dx: 0px; --dy: 76px; animation-delay: 0.5s; }
+.astro-ray-3 { --dx: -32px; --dy: 60px; animation-delay: 1s; }
+@keyframes astro-ray { 0% { translate: 0 0; opacity: 1; } 80% { opacity: 1; } 100% { translate: var(--dx) var(--dy); opacity: 0; } }
+
+/* sleep: lying down */
+.scene-sleep .astro-figure { rotate: -90deg; animation-duration: 6s; }
+.astro-zzz text { fill: var(--text-muted); font: 600 15px var(--font-sans); animation: astro-zzz 3s ease-in-out infinite; }
+.astro-zzz text:nth-child(2) { font-size: 18px; animation-delay: 0.5s; }
+.astro-zzz text:nth-child(3) { font-size: 22px; animation-delay: 1s; }
+@keyframes astro-zzz { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+
+/* air: air moving through the cabin */
+.astro-air path { fill: none; stroke: var(--status-stale); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 12 8; animation: astro-air 1.6s linear infinite; }
+@keyframes astro-air { to { stroke-dashoffset: -40; } }
+
+/* look: reading down a chart */
+.scene-look .astro-arm-r { transform: rotate(-70deg); }
+.astro-chart rect { fill: var(--bg-raised); stroke: var(--border-control); stroke-width: 1.5; }
+.astro-chart path { fill: none; stroke: var(--text-secondary); stroke-width: 2.5; stroke-linecap: round; }
+.astro-chart .astro-scan { stroke: var(--accent); stroke-width: 6; opacity: 0.35; animation: astro-scan 3s ease-in-out infinite; }
+@keyframes astro-scan { 0%, 100% { translate: 0 0; } 50% { translate: 0 27px; } }
+
+/* ---------- scenes with a crewmate being helped ---------- */
+
+.astro-patient { transform-origin: 100px 92px; }
+.astro-patient .astro-torso, .astro-patient .astro-helmet { fill: #b9b9c0; }
+.astro-patient .astro-leg path, .astro-patient .astro-arm path { stroke: #a9a9b0; }
+.astro-patient .astro-pack { fill: #77777c; }
+.astro-patient .astro-panel { fill: #6f6f76; }
+.astro-patient .astro-visor { stroke: #77777c; }
+
+/* lying flat along the bottom, head to the left */
+.scene-respond .astro-patient, .scene-breathing .astro-patient, .scene-restrain .astro-patient, .scene-compress .astro-patient,
+.scene-aed .astro-patient, .scene-press .astro-patient, .scene-bandage .astro-patient { rotate: -90deg; translate: 0 50px; }
+.scene-respond .astro-patient .astro-arm-l, .scene-breathing .astro-patient .astro-arm-l, .scene-restrain .astro-patient .astro-arm-l, .scene-compress .astro-patient .astro-arm-l,
+.scene-aed .astro-patient .astro-arm-l, .scene-press .astro-patient .astro-arm-l, .scene-bandage .astro-patient .astro-arm-l { transform: rotate(-28deg); }
+.scene-respond .astro-patient .astro-arm-r, .scene-breathing .astro-patient .astro-arm-r, .scene-restrain .astro-patient .astro-arm-r, .scene-compress .astro-patient .astro-arm-r,
+.scene-aed .astro-patient .astro-arm-r, .scene-press .astro-patient .astro-arm-r, .scene-bandage .astro-patient .astro-arm-r { transform: rotate(28deg); }
+
+/* the helper above them: smaller, legs apart, arms straight down */
+.scene-respond .astro-figure, .scene-breathing .astro-figure, .scene-compress .astro-figure, .scene-press .astro-figure, .scene-bandage .astro-figure { scale: 0.62; translate: 0 5px; animation: none; }
+.scene-respond .astro-figure .astro-arm-l, .scene-breathing .astro-figure .astro-arm-l, .scene-compress .astro-figure .astro-arm-l, .scene-press .astro-figure .astro-arm-l, .scene-bandage .astro-figure .astro-arm-l { transform: rotate(-50deg) scale(1.32); }
+.scene-respond .astro-figure .astro-arm-r, .scene-breathing .astro-figure .astro-arm-r, .scene-compress .astro-figure .astro-arm-r, .scene-press .astro-figure .astro-arm-r, .scene-bandage .astro-figure .astro-arm-r { transform: rotate(50deg) scale(1.32); }
+.scene-respond .astro-figure .astro-leg-l, .scene-breathing .astro-figure .astro-leg-l, .scene-compress .astro-figure .astro-leg-l, .scene-press .astro-figure .astro-leg-l, .scene-bandage .astro-figure .astro-leg-l { transform: rotate(38deg); }
+.scene-respond .astro-figure .astro-leg-r, .scene-breathing .astro-figure .astro-leg-r, .scene-compress .astro-figure .astro-leg-r, .scene-press .astro-figure .astro-leg-r, .scene-bandage .astro-figure .astro-leg-r { transform: rotate(-38deg); }
+
+/* respond: at the shoulders, shaking and calling */
+.scene-respond .astro-figure { translate: -30px 5px; animation: astro-shake 0.5s ease-in-out infinite; }
+.scene-respond .astro-radio { translate: -30px 16px; }
+@keyframes astro-shake { 0%, 100% { translate: -33px 5px; } 50% { translate: -27px 5px; } }
+
+/* breathing: leaning over the face, counting ten seconds */
+.scene-breathing .astro-figure { translate: -36px 8px; rotate: -22deg; }
+
+/* restrain: straps go on */
+.astro-straps path { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; animation: astro-strap 2.4s ease-out infinite; }
+.astro-straps path:nth-child(2) { animation-delay: 0.3s; }
+.astro-straps path:nth-child(3) { animation-delay: 0.6s; }
+@keyframes astro-strap { 0% { opacity: 0; } 25%, 100% { opacity: 1; } }
+
+/* compress: straight arms on the centre of the chest, 110 pushes a minute */
+.scene-compress .astro-figure { animation: astro-push 0.545s ease-in-out infinite; }
+@keyframes astro-push { 0%, 100% { translate: 0 -2px; } 45% { translate: 0 8px; } }
+
+/* aed: pads on, nobody touching */
+.astro-pad { fill: var(--accent); }
+.astro-lead { fill: none; stroke: var(--text-muted); stroke-width: 2; }
+.astro-aed-box { fill: var(--bg-raised); stroke: var(--status-ok); stroke-width: 2.5; }
+.astro-bolt { fill: var(--status-caution); animation: astro-flash 1.4s steps(1, end) infinite; }
+@keyframes astro-flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+/* press and bandage: both hands on the wound, on the leg */
+.scene-press .astro-figure, .scene-bandage .astro-figure { translate: 36px 5px; }
+.scene-press .astro-figure { animation: astro-press 2s ease-in-out infinite; }
+@keyframes astro-press { 0%, 100% { translate: 36px 4px; } 50% { translate: 36px 8px; } }
+.astro-wound { fill: var(--status-warning); }
+.astro-bandage path { fill: none; stroke: #f5f5f7; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 46; animation: astro-wrap 2.6s ease-out infinite; }
+.astro-bandage path:nth-child(2) { animation-delay: 0.35s; }
+.astro-bandage path:nth-child(3) { animation-delay: 0.7s; }
+@keyframes astro-wrap { 0% { stroke-dashoffset: 46; } 35%, 100% { stroke-dashoffset: 0; } }
+.scene-bandage .astro-figure { translate: 36px 5px; }
+
+/* cough */
+.scene-cough .astro-figure { rotate: 10deg; animation: astro-cough 1.1s ease-in-out infinite; }
+.scene-cough .astro-arm-r { transform: rotate(-118deg); }
+@keyframes astro-cough { 0%, 100% { rotate: 6deg; } 40% { rotate: 14deg; } }
+.astro-cough path { fill: none; stroke: var(--text-muted); stroke-width: 2.5; stroke-linecap: round; animation: astro-radio 1.1s ease-out infinite; }
+
+/* back blows and thrusts: the helper behind, the choking crewmate in front */
+.scene-backblows .astro-patient, .scene-thrusts .astro-patient { scale: 0.74; translate: -34px 8px; }
+.scene-backblows .astro-figure, .scene-thrusts .astro-figure { scale: 0.74; translate: 34px 8px; animation: none; }
+.scene-backblows .astro-patient { rotate: -30deg; }
+.scene-backblows .astro-figure .astro-arm-l { transform: rotate(40deg); animation: astro-blow 0.9s ease-in infinite; }
+@keyframes astro-blow { 0%, 100% { transform: rotate(-20deg); } 45%, 60% { transform: rotate(46deg); } }
+.astro-hit path { fill: none; stroke: var(--status-caution); stroke-width: 2.5; stroke-linecap: round; animation: astro-hit 0.9s ease-in infinite; }
+@keyframes astro-hit { 0%, 40% { opacity: 0; } 50%, 70% { opacity: 1; } 100% { opacity: 0; } }
+.scene-thrusts .astro-patient { translate: -8px 8px; }
+.scene-thrusts .astro-figure { translate: 18px 8px; }
+.scene-thrusts .astro-figure .astro-arm-l { transform: rotate(52deg); }
+.scene-thrusts .astro-figure .astro-arm-r { transform: rotate(108deg); }
+.scene-thrusts .astro-figure, .scene-thrusts .astro-patient { animation: astro-thrust 1s ease-in infinite; }
+@keyframes astro-thrust { 0%, 100% { transform: translate(0, 0); } 40%, 55% { transform: translate(5px, -6px); } }
+
+/* legs up: flat on the back, legs on a box */
+.astro-box { fill: var(--bg-raised); stroke: var(--border-control); stroke-width: 1.5; }
+.scene-legsup .astro-figure { rotate: -90deg; translate: -22px 50px; animation: none; }
+.scene-legsup .astro-leg-l, .scene-legsup .astro-leg-r { transform: rotate(-34deg); }
+
+/* stages: sit first, then stand */
+.scene-stages .astro-leg-l, .scene-stages .astro-leg-r { transform: rotate(-80deg); animation: astro-stand 4s ease-in-out infinite; }
+.scene-stages .astro-figure { animation: astro-rise 4s ease-in-out infinite; }
+@keyframes astro-stand { 0%, 35% { transform: rotate(-80deg); } 60%, 90% { transform: rotate(0deg); } 100% { transform: rotate(-80deg); } }
+@keyframes astro-rise { 0%, 35% { translate: 0 14px; } 60%, 90% { translate: 0 0; } 100% { translate: 0 14px; } }
+
+/* where the astronaut appears */
+.action-step { align-self: stretch; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.action-step > p { flex: 1; min-width: 0; }
+.action-reference { color: var(--accent); font-size: 13px; }
+.action-reference:hover { text-decoration: underline; }
+
+.resource-card { display: flex; align-items: center; gap: var(--space-3); padding: 14px 18px 14px 8px; border-radius: var(--radius-md); background: var(--bg-surface); transition: background var(--duration-fast) ease-out; }
+.resource-card:hover { background: var(--bg-raised); }
+.resource-card strong { display: block; color: var(--text-primary); font: 500 15px/1.35 var(--font-sans); }
+.resource-card small { display: flex; align-items: center; gap: 6px; margin-top: 3px; color: var(--text-muted); font-size: 13px; }
+.guide-stage .astro { max-height: 380px; }
+
+.procedure { display: grid; grid-template-columns: minmax(260px, 380px) minmax(0, 1fr); gap: var(--space-5); align-items: start; }
+.procedure-stage { position: sticky; top: 16px; display: flex; flex-direction: column; align-items: center; gap: var(--space-3); padding: 28px 20px 20px; border-radius: var(--radius-lg); background: var(--bg-surface); text-align: center; }
+.procedure-stage p { color: var(--text-primary); font: 600 20px/1.3 var(--font-sans); letter-spacing: -0.01em; }
+.procedure-stage .choice-row { justify-content: center; }
+.procedure-steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; counter-reset: step; }
+.procedure-steps button { counter-increment: step; display: flex; gap: 14px; width: 100%; padding: 14px 16px; border-radius: var(--radius-md); color: var(--text-secondary); font: 400 15px/1.5 var(--font-sans); text-align: left; cursor: pointer; }
+.procedure-steps button::before { content: counter(step); flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--bg-raised); color: var(--text-muted); font: 500 13px/1 var(--font-sans); }
+.procedure-steps button:hover { background: var(--bg-surface); }
+.procedure-steps button[aria-current='step'] { background: var(--bg-surface); color: var(--text-primary); }
+.procedure-steps button[aria-current='step']::before { background: var(--text-primary); color: #000; }
+@media (max-width: 800px) {
+  .procedure { grid-template-columns: minmax(0, 1fr); }
+  .procedure-stage { position: static; }
+  .action-step .astro { display: none; }
+}

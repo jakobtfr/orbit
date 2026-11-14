@@ -23,17 +23,16 @@ export function Body() {
   const summaries = regionSummaries(state, person)
   const base = `/body/${person.id}`
   return <div className="screen dashboard-screen">
-    <header className="dashboard-header"><div><p className="eyebrow">CREW HEALTH / PERSONAL OVERVIEW</p><h1>Your health, in orbit<span>.</span></h1><p>A little perspective. A clearer next step.</p></div><div className="dashboard-header-meta"><span className="simulation-label"><i /> SIMULATED MISSION</span><span>MISSION DAY <strong>{String(state.day).padStart(3, '0')}</strong></span></div></header>
+    <header className="dashboard-header"><div><p className="eyebrow">ORBIT / CREW HEALTH MONITORING</p><h1>Health overview</h1><p>{person.name} · {person.role}</p></div><div className="dashboard-header-meta"><span className="simulation-label"><i /> SIMULATED MISSION</span><span>MISSION DAY <strong>{String(state.day).padStart(3, '0')}</strong></span></div></header>
     <div className="dashboard-grid">
-      <section className="dashboard-column body-column" aria-label="Interactive body map"><div className="column-label"><span>01 / BODY OVERVIEW</span><span>Personal</span></div>
+      <section className="dashboard-column body-column" aria-label="Interactive body map"><div className="column-label"><span>01 / BODY MAP</span><span>Personal</span></div>
         <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} />
         <div className="body-region-links">{summaries.map((s) => <Link key={s.region} to={`${base}/region/${s.region}`} className={active === s.region ? 'is-active' : ''} onMouseEnter={() => setActive(s.region)} onMouseLeave={() => setActive(null)} onFocus={() => setActive(s.region)} onBlur={() => setActive(null)}><StatusShape status={s.status} size={10} /><span>{REGIONS[s.region].name}</span><span aria-hidden="true">↗</span></Link>)}</div>
-        <div className="body-context"><span className="eyebrow">YOUR BASELINE IS PERSONAL</span><p>Select a body region to explore its measurements, symptoms, and changes since before flight.</p><Link to={`${base}/indicator/mood`}>Private mood check-in <span>↗</span></Link></div>
       </section>
       <ActivityPanel state={state} person={person} />
       <WeeklySummary state={state} person={person} />
-      <section className="dashboard-column science-column" aria-label="Five health trend plots"><div className="column-label"><span>04 / HEALTH TELEMETRY</span><div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d}D</button>)}</div></div>
-        <div className="science-header"><p>Trends, with context.</p><span>Means ±1 SD · {days / 7}-day bins · simulated</span><div className="plot-legend"><span><i className="green" />Within bands</span><span><i className="amber" />Review</span><span><i className="red" />High concern</span></div></div>
+      <section className="dashboard-column science-column" aria-label="Five health trend plots"><div className="column-label"><span>04 / HEALTH TRENDS</span><div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d}D</button>)}</div></div>
+        <div className="science-header"><p>Physiological measurements</p><span>Means ±1 SD · {days / 7}-day bins · simulated</span><div className="plot-legend"><span><i className="green" />Within bands</span><span><i className="amber" />Review</span><span><i className="red" />High concern</span></div></div>
         {metrics(state, person).map((m) => <ScientificPlot key={m.key} metric={m} state={state} person={person} days={days} />)}
         <p className="science-note">Bars show sample variability, not measurement uncertainty. Dashed lines show review thresholds; open each reference for its scope.</p>
       </section>

@@ -62,8 +62,8 @@ export function Shell() {
     <div className="shell">
       <header className="topbar">
         <Link className="brand" to={`/body/${viewer.id}`} aria-label="ORBIT, go to your body view">
-          <Mark />
-          <span className="wordmark">ORBIT</span>
+          <img className="nasa-logo" src={`${import.meta.env.BASE_URL}nasa-logo.svg`} width="48" height="40" alt="NASA" />
+          <span className="brand-text"><span className="wordmark">ORBIT</span><span className="brand-subtitle">Space Apps prototype</span></span>
         </Link>
         <Link className="topbar-where" to="/flight" aria-label="Mission day and phase, open Flight">
           <Tag>Day {state.day}</Tag>

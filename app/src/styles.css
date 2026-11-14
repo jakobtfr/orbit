@@ -16,8 +16,8 @@
   --text-secondary: #c8ccd4;
   --text-muted: #9da3ae;
 
-  --accent: #a3a6ff;
-  --accent-fill: #4f52c4;
+  --accent: #c2c8d0;
+  --accent-fill: #454c56;
   --text-on-accent: #ffffff;
 
   --status-ok: #3fbf6f;
@@ -147,7 +147,7 @@ button {
   transition: background var(--duration-fast) ease-out, border-color var(--duration-fast) ease-out;
 }
 .btn-primary { background: var(--accent-fill); color: var(--text-on-accent); }
-.btn-primary:hover { background: #5b5ed0; }
+.btn-primary:hover { background: #555e6a; }
 .btn-secondary { background: var(--bg-raised); border: 1px solid var(--border); color: var(--text-primary); }
 .btn-secondary:hover { background: var(--bg-hover); }
 .btn-quiet { color: var(--accent); padding: 0 var(--space-2); }

@@ -49,34 +49,34 @@ export function BodyFigure({ summaries, active, onActive, onSelect }: BodyProps)
         <svg className="anatomy-figure" viewBox="0 60 724 1370" aria-label={`${side} body map. Select a region to explore its health indicators.`}>
           <defs>
             <linearGradient id={`${uid}-surface`} x1="0" x2="1">
-              <stop offset="0" stopColor="#8b7747" /><stop offset=".18" stopColor="#292a26" />
-              <stop offset=".48" stopColor="#101417" /><stop offset=".78" stopColor="#34352c" />
-              <stop offset="1" stopColor="#a48a50" />
+              <stop offset="0" stopColor="#757b83" /><stop offset=".18" stopColor="#2c3036" />
+              <stop offset=".48" stopColor="#171a1e" /><stop offset=".78" stopColor="#393e45" />
+              <stop offset="1" stopColor="#858b93" />
             </linearGradient>
             <radialGradient id={`${uid}-muscle`} cx="38%" cy="24%" r="85%">
-              <stop stopColor="#655f43" stopOpacity=".85" /><stop offset=".45" stopColor="#383a30" stopOpacity=".72" />
-              <stop offset="1" stopColor="#101518" stopOpacity=".9" />
+              <stop stopColor="#666c75" stopOpacity=".85" /><stop offset=".45" stopColor="#3d434b" stopOpacity=".72" />
+              <stop offset="1" stopColor="#161a20" stopOpacity=".9" />
             </radialGradient>
             <linearGradient id={`${uid}-gold`} x1="0" y1="0" x2=".8" y2="1">
-              <stop stopColor="#fff1b1" /><stop offset=".45" stopColor="#c9a956" /><stop offset="1" stopColor="#786032" />
+              <stop stopColor="#d8dde3" /><stop offset=".45" stopColor="#8c959f" /><stop offset="1" stopColor="#555d68" />
             </linearGradient>
             <radialGradient id={`${uid}-lit`} cx="40%" cy="25%" r="80%">
-              <stop stopColor="#fff0b0" stopOpacity=".8" /><stop offset=".45" stopColor="#b2944e" stopOpacity=".6" />
-              <stop offset="1" stopColor="#49412a" stopOpacity=".45" />
+              <stop stopColor="#e1e6ed" stopOpacity=".8" /><stop offset=".45" stopColor="#8d98a5" stopOpacity=".6" />
+              <stop offset="1" stopColor="#454d59" stopOpacity=".45" />
             </radialGradient>
             <radialGradient id={`${uid}-floor`}>
-              <stop stopColor="#d9bd71" stopOpacity=".28" /><stop offset="1" stopColor="#d9bd71" stopOpacity="0" />
+              <stop stopColor="#a5adb8" stopOpacity=".28" /><stop offset="1" stopColor="#a5adb8" stopOpacity="0" />
             </radialGradient>
             <pattern id={`${uid}-grid`} width="48" height="48" patternUnits="userSpaceOnUse">
-              <path d="M48 0H0V48" fill="none" stroke="#cbb26e" strokeOpacity=".055" />
+              <path d="M48 0H0V48" fill="none" stroke="#969da7" strokeOpacity=".055" />
             </pattern>
           </defs>
           <g aria-hidden="true" pointerEvents="none">
             <rect x="50" y="90" width="624" height="1280" fill={ref('grid')} />
-            <path d="M362 90V1370" stroke="#e2c77f" strokeOpacity=".13" strokeDasharray="3 12" />
-            {Array.from({ length: 25 }, (_, i) => <path key={i} d={`M80 ${120 + i * 50}h${i % 5 === 0 ? 19 : 8} M644 ${120 + i * 50}h${i % 5 === 0 ? -19 : -8}`} stroke="#b8a16a" opacity=".28" />)}
+            <path d="M362 90V1370" stroke="#b2bac5" strokeOpacity=".13" strokeDasharray="3 12" />
+            {Array.from({ length: 25 }, (_, i) => <path key={i} d={`M80 ${120 + i * 50}h${i % 5 === 0 ? 19 : 8} M644 ${120 + i * 50}h${i % 5 === 0 ? -19 : -8}`} stroke="#8e98a5" opacity=".28" />)}
             <ellipse cx="362" cy="1372" rx="190" ry="40" fill={ref('floor')} />
-            <ellipse cx="362" cy="1372" rx="158" ry="23" fill="none" stroke="#bfa363" strokeOpacity=".25" />
+            <ellipse cx="362" cy="1372" rx="158" ry="23" fill="none" stroke="#929aa6" strokeOpacity=".25" />
           </g>
           <g transform={side === 'back' ? 'translate(-724 0)' : undefined}>
             <path d={outlines[side]} fill={ref('surface')} stroke={ref('gold')} strokeWidth="1.6" pointerEvents="none" />

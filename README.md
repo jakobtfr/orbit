@@ -13,6 +13,7 @@ This repo holds the source data for the challenge: the official brief, the offic
 | [`docs/resources.md`](docs/resources.md) | Official HRP/CSA resources, distilled: five hazards, 17 risks, current research, CSA findings |
 | [`docs/operations.md`](docs/operations.md) | What NASA actually does today: roles, cadence, countermeasures, medical event rates, exploration gap |
 | [`docs/clinical-thresholds.md`](docs/clinical-thresholds.md) | Published clinical values and spaceflight adjustments, with sources and confidence notes |
+| [`docs/judging.md`](docs/judging.md) | Official 2026 judging criteria, three-phase process, 10 awards, eligibility gates |
 
 ## Challenge links
 

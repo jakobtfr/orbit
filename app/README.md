@@ -11,14 +11,15 @@ npm run build    # type-check and build to dist/
 npm test         # checks the scripted demo statuses and the fake logic
 ```
 
-The app is always shown as Lena Brandt. For testing, `?viewer=samir` before the `#` opens as the medical lead, and `?flat` forces the flat body figure.
+The app is shown as Lena Brandt. The anatomical body map uses SVG and works without WebGL. Switch between Front and Back, then select a region with the pointer or keyboard to open its health indicators.
 
 ## Layout
 
 | Path | Contents |
 | --- | --- |
 | `src/screens/` | The ten screens in the spec, plus a symptoms screen per body region |
-| `src/components/` | Status shapes and tags, tiles, next-action card, chart, 3D body (built from cross-sections in `bodyShape.ts`), trajectory view, app shell |
+| `src/components/` | Status shapes and tags, tiles, next-action card, chart, interactive anatomical SVG body, trajectory view, app shell |
+| `src/components/anatomy/` | Front/back SVG paths adapted from Kacmisz/react-body-map, with attribution in `NOTICE.md` |
 | `src/lib/indicators.ts` | The indicators, body regions, and their texts |
 | `src/lib/judge.ts` | The fake logic: status rules, who sees what, next actions |
 | `src/lib/mission.ts` | The mission plan and a simple orbit model: phase, place, position, distance, and signal delay for any day |

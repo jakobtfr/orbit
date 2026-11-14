@@ -63,6 +63,10 @@ All other values shown for the demo astronaut, Lena Brandt, are scripted. The fu
 - No flight hardware is connected. Device feeds are scripted.
 - Emergency steps follow published first-aid guidelines but still need review by a medical professional.
 
+## AI assistance
+
+The team used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests, to search and summarise published sources, and to draft documentation. The team chose the challenge, framed the problem, and made the product decisions. Every figure shown in the app is recomputed from the source data by automated tests. No images, video, or audio were generated with AI.
+
 ## Repository
 
 | Path | Contents |

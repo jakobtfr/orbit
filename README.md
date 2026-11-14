@@ -78,3 +78,5 @@ The team used Claude (Anthropic), an AI coding assistant, to help write and refa
 | [`docs/research/`](docs/research/) | How NASA handles crew health today, clinical thresholds, scientific constraints, open datasets |
 | [`docs/solution/`](docs/solution/) | Problems and hypotheses, the solution overview, dashboard methodology |
 | [`SPEC.md`](SPEC.md), [`DESIGN.md`](DESIGN.md) | What the app contains and how it looks |
+| [`docs/demo/orbit-demo.pdf`](docs/demo/orbit-demo.pdf) | The 7-slide project demo |
+| [`docs/submission.md`](docs/submission.md) | Text for the Space Apps submission form |

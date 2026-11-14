@@ -20,7 +20,9 @@ ORBIT puts this into a dashboard any crew member can read: a body map, daily act
 
 ## Link to Project Demo
 
-`<paste the public link to the demo deck>`
+https://github.com/jakobtfr/orbit/blob/main/docs/demo/orbit-demo.pdf
+
+A 7-slide deck (PDF). Source: [`demo/deck.html`](demo/deck.html), screenshots of the running app in `demo/img/`. Re-export with Chrome: open the HTML and print to PDF, or `chrome --headless --print-to-pdf=orbit-demo.pdf deck.html`.
 
 ## Link to Final Project
 

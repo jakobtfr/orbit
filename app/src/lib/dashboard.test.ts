@@ -33,6 +33,13 @@ describe('dashboard scientific statistics', () => {
       expect(binSamples(samples, 100, 28).every((b) => b.n === 4)).toBe(true)
     }
   })
+  it('preserves radiation precision without whole-unit rate jumps', () => {
+    const state = initialState()
+    const rates = windowSamples(metricSamples(state, LENA, 'radiation'), state, 28)
+    expect(rates.every((r) => r.v > 0)).toBe(true)
+    expect(rates.slice(1).every((r, i) => Math.abs(r.v - rates[i].v) < .2)).toBe(true)
+    expect(new Set(rates.map((r) => r.v.toFixed(3))).size).toBeGreaterThan(15)
+  })
   it('uses reversed sleep bands, low-pulse alerts, and environment-specific radiation references', () => {
     const state = initialState()
     const all = metrics(state, LENA)

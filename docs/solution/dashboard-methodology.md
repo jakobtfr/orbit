@@ -6,25 +6,30 @@ All displayed dashboard readings are simulated. Heart-rate and temperature varia
 inherits the existing UTMB-derived demo series; those displayed values are not actual
 flight measurements. Sleep, exercise, cabin CO2, and radiation are scripted.
 
-The plots use the last 14 or 28 mission calendar days up to the current demo time.
-They contain seven disjoint bins, each spanning 2 or 4 days. Each square is the
-arithmetic mean. Error bars are ±1 sample standard deviation, computed with n−1.
-Empty bins have no point; a single sample has no error bar. Missing intervals are not
-connected by a line. Footer SD and sample variance describe the entire selected
-window; variance has squared physical units. Per-bin values and sample counts are
-available in each plot's expandable table. No confidence intervals or measurement
-uncertainty are claimed. Time-series observations may be correlated.
+The dashboard displays heart rate, core temperature, and radiation dose rate over
+14 or 28 mission calendar days. Each point and connecting line shows an individual daily observation. Error bars
+show the trailing seven-day mean ±1 sample SD (n−1 denominator). Windows overlap, so adjacent points are correlated.
+No future observations are included. A single sample has no error bar. Missing daily
+intervals are not connected when separated by more than 1.5 days.
+
+The headline value is the latest individual reading. Daily means, sample counts,
+standard deviations, variance, and source information appear in expandable Details.
+SD describes temporal sample variability, not instrument uncertainty or a confidence
+interval. Solid threshold lines bound faintly tinted review bands. Aggregation can
+hide individual excursions. Sleep and cabin CO2 remain available on their existing
+indicator screens; the source references below document those metrics as well.
 
 Radiation is plotted as dose rate, calculated from consecutive cumulative-dose
 readings divided by their elapsed time. Counter resets and duplicate timestamps are
-excluded. The demo's constant dose rate can produce zero sample SD; this does not
-mean real dose estimation has zero uncertainty. Cabin data are defined as one
+excluded. The demo includes seeded correlated exposure drift. Cumulative dose retains three
+decimal places to avoid artificial integer-rounding steps in daily rates. This is
+illustrative variation, not a validated environmental forecast. Cabin data are defined as one
 simulated daily sample of a one-hour mean partial pressure.
 
 ## References and interpretation
 
 Colors indicate review bands, not a diagnosis or a guaranteed safe state. Points and
-connecting segments use binned means; the header classifies the latest sample and
+connecting segments use individual daily readings; the header classifies the latest sample and
 shows its mission day. Binned averages can hide individual excursions. Existing
 indicator detail screens retain their own prototype confirmation rules; a dashboard
 review band is not automatically a confirmed clinical alert.

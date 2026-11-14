@@ -9,7 +9,7 @@ import residuals from './utmb-residuals.json'
  *
  * The day-to-day variation of heart rate, blood pressure, temperature, and weight
  * is replayed from a NASA UTMB bed-rest subject (data/utmb/daily_vitals.csv).
- * Levels, trends, and all other indicators are invented.
+ * Levels, trends, correlated drift, and all other indicators are invented.
  */
 
 export const FIRST_DAY = -30
@@ -82,7 +82,7 @@ function reading(key: IndicatorKey, t: number, v: number, v2?: number): Reading 
   const def = INDICATORS[key]
   return {
     t,
-    v: round(v, def.decimals),
+    v: round(v, key === 'radiation' ? 3 : def.decimals),
     v2: v2 === undefined ? undefined : Math.round(v2),
     activity: 'rest',
     source: def.source,
@@ -105,11 +105,18 @@ function buildReadings(p: Person): Partial<Record<IndicatorKey, Reading[]>> {
     radiation: [],
   }
   let dose = pf.radiation!.v
+  // Illustrative correlated drift, not a calibrated physiology or radiation model.
+  let recoveryDrift = 0
+  let thermalDrift = 0
+  let exposureDrift = 0
   for (let d = FIRST_DAY; d <= LAST_DAY; d++) {
     const flight = d >= 0
     const settle = flight ? 1 - Math.exp(-d / 10) : 0
 
-    const hr = pf.hr!.v + (flight ? 2 : 0) + noise('hr', d, 0.4, 3)
+    recoveryDrift = .78 * recoveryDrift + (rand(d, 21) - .5) * 3.2
+    thermalDrift = .82 * thermalDrift + (rand(d, 22) - .5) * .14
+    exposureDrift = .85 * exposureDrift + (rand(d, 23) - .5) * .075
+    const hr = pf.hr!.v + (flight ? 2 : 0) + noise('hr', d, 0.55, 4) + recoveryDrift
     out.hr!.push(reading('hr', d + 0.3125, hr))
 
     // Blood pressure runs lower in flight.
@@ -120,7 +127,7 @@ function buildReadings(p: Person): Partial<Record<IndicatorKey, Reading[]>> {
     out.spo2!.push(reading('spo2', d + 0.3125, 97 + Math.floor(rand(d, 1) * 3)))
 
     // Body temperature rises about 1 °C in flight and levels off near day 75.
-    let temp = pf.temp!.v + (flight ? 1.0 * (1 - Math.exp(-d / 22)) : 0) + noise('temp', d, 0.4, 0.15)
+    let temp = pf.temp!.v + (flight ? 1.0 * (1 - Math.exp(-d / 22)) : 0) + noise('temp', d, 0.4, 0.15) + thermalDrift
     if (d === SCENE_DAY) temp = 38.0
     out.temp!.push(reading('temp', d + 0.3, temp))
 
@@ -139,7 +146,7 @@ function buildReadings(p: Person): Partial<Record<IndicatorKey, Reading[]>> {
     if (d >= 1) out.exercise!.push(reading('exercise', d, 118 + Math.floor(rand(d, 3) * 30)))
 
     // Radiation adds up: faster in deep space, slower on the surface of Mars.
-    dose += doseRate(d)
+    dose += doseRate(d) * (1 + exposureDrift)
     out.radiation!.push(reading('radiation', d, dose))
 
     // The standing test is only done where there is gravity, once a week.

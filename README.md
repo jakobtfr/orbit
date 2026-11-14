@@ -12,12 +12,14 @@ Their bodies also change in flight: core temperature runs about 1 °C higher, bl
 
 ## What we found in NASA data
 
-We replayed NASA's UTMB head-down bed-rest study, the standard way to imitate weightlessness on the ground: 29 healthy volunteers, 2,184 days of daily vital signs. Every day was judged twice.
+We replayed NASA's UTMB head-down bed-rest study, the standard way to imitate weightlessness on the ground: 29 healthy volunteers, 2,184 days of daily vital signs. Every day was judged with the same rule on both sides: an alarm only when two days in a row are over the line.
 
-| Rule set | Days with an alarm | Alarms per person in 6 months |
+| Rule set, 2 days in a row | Days with an alarm | Alarms per person in 6 months |
 | --- | --- | --- |
-| Earth limits (pulse > 100, BP ≥ 130/80, temperature ≥ 38.0 °C) | **25.5%** | **46** |
-| ORBIT: the person's own pre-bed-rest values, confirmed on two days | **5.9%** | **11** |
+| Earth limits (pulse > 100, BP ≥ 130/80, temperature ≥ 38.0 °C) | **13.5%** | **24** |
+| ORBIT: the person's own pre-bed-rest values | **5.9%** | **11** |
+
+That is 2.3 times fewer alarms. Counted on single days instead, Earth limits alarm on 25.5% of days and ORBIT on 16.5%. A stricter Earth cutoff of 140/90 alarms on 5.4% of single days, but it is still one line for everyone and misses the slow rise below.
 
 The personal rule also sees what Earth's limits miss. One volunteer's resting heart rate drifted from 55 to about 75 bpm during bed rest. That never reaches Earth's line of 100, so Earth limits stay silent; ORBIT flags a rise of more than 20%.
 

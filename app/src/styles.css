@@ -469,6 +469,9 @@ a.tile:hover { background: var(--bg-hover); }
 .replay-totals { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4) !important; }
 .replay-totals-note { grid-column: 1 / -1; }
 .replay-total .reading-xl { margin: var(--space-1) 0; }
+.replay-compare { grid-column: 1 / -1; }
+.replay-compare caption { text-align: left; padding-bottom: var(--space-2); }
+.replay-compare th[scope='row'] { font-weight: 400; }
 .replay-select { width: auto; height: 44px; font: 500 15px/1.2 var(--font-sans); }
 .replay-player { gap: var(--space-4) !important; padding: var(--space-4); background: var(--bg-surface); border-radius: var(--radius-lg); }
 .replay-controls { display: flex; align-items: center; gap: var(--space-4); }

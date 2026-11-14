@@ -62,7 +62,7 @@ One loop runs every day. Most of it is automatic.
 | --- | --- | --- |
 | **1. Collect** | Readings arrive from the onboard equipment. For anything not automatic, ORBIT prompts when it is due and explains how to take it. | The brief asks for prompts and instructions. Automatic collection is what makes the record complete. |
 | **2. Check in** | A two-minute set of questions: how you feel, any symptoms. | In our bed-rest data, vital signs were no more abnormal on days with a complaint than on other days. Devices alone miss most events (H1). |
-| **3. Judge** | Each reading is compared with your values from before flight, your recent values in flight, and limits adjusted for flight and mission day. One odd reading leads to "repeat", not an alarm. | Earth limits raised an alert on 25.5% of days in healthy volunteers; personal limits on 5.9% (H2). |
+| **3. Judge** | Each reading is compared with your values from before flight, your recent values in flight, and limits adjusted for flight and mission day. One odd reading leads to "repeat", not an alarm. | With the same two-day rule, Earth limits raised an alert on 13.5% of days in healthy volunteers; personal limits on 5.9% (H2). |
 | **4. Show** | The body map and the dashboard show where attention is needed. | A non-doctor sees at a glance where to look. |
 | **5. Act** | One next action: carry on, repeat, apply a countermeasure, or contact the ground. | A non-doctor needs a decision, not a number (H3). |
 
@@ -82,7 +82,7 @@ The home screen is a personal dashboard for the astronaut.
 - **Body map.** An anatomical figure, front and back. A region is marked only when it needs attention, with a colour, a shape, and a word together. Tapping a region opens what is watched there and why it matters in space, then each reading against your own normal, then its trend and the source of the rule. Tapping a muscle group explains what it does and links to exercise and bone load.
 - **Regions.** Head (headache, vision, thinking), chest (heart, blood pressure, breathing, blood oxygen), skin (rashes), hips and spine (bone and muscle), whole body (temperature, weight).
 - **Daily activity.** Exercise against the plan, sleep, resting heart rate, blood oxygen, and one list of risks and checks, each with its next action.
-- **Trends.** Trend plots for heart rate, core temperature, and radiation dose rate. Above the plots, a card shows one real bed-rest volunteer judged by Earth's limits (54 alarms in 90 days) and by their own normal (1), linking to the full Replay.
+- **Trends.** Trend plots for heart rate, core temperature, and radiation dose rate. Above the plots, the Replay shows one real bed-rest volunteer judged by Earth's limits (30 alarms in 90 days with the same two-day rule) and by their own normal (1).
 - **Measurements and Mental Health.** Lena's own measurements, explored against her normal; a private mood, energy, and journal check-in.
 
 The brief suggests a body like this: "a human figure where each part of the body is clickable and displays information about its function and health status."
@@ -101,7 +101,7 @@ This follows how agencies work today: medical talks are private, and details rea
 ### What makes it different
 
 - **Your normal, not Earth's normal.** The yardstick is your own body, starting from before flight.
-- **Shown on NASA data.** On NASA bed-rest data, Earth limits raised an alarm on 25.5% of days, ORBIT's personal rules on 5.9%. The app replays this, and its tests reproduce the numbers.
+- **Shown on NASA data.** On NASA bed-rest data, with the same two-day rule on both sides, Earth limits raised an alarm on 13.5% of days, ORBIT's personal rules on 5.9%. The app replays this, and its tests reproduce the numbers.
 - **Devices and feelings together.** The equipment gives the numbers; the check-in catches the common problems that numbers miss.
 - **Where, then what to do.** A body to see the problem, and one action to handle it, written for someone with about 40 hours of medical training.
 - **No new hardware.** It joins up equipment that is already on board.
@@ -112,7 +112,7 @@ Each line says how solid the claim is.
 
 | Who benefits | Impact | How solid |
 | --- | --- | --- |
-| Crew, every day | About four times fewer false alarms: from 46 to 11 per person per 180 days. Fewer false alarms means the real ones are believed. | Measured on bed-rest data, not in flight. Reproduced in the app's Replay. |
+| Crew, every day | 2.3 times fewer false alarms with the same two-day rule: from 24 to 11 per person per 180 days. Fewer false alarms means the real ones are believed. | Measured on bed-rest data, not in flight. Reproduced in the app's Replay. |
 | Crew, every day | A place to catch and handle the roughly 40 minor events expected for a crew of four over three years, most of which devices miss. | Rate from station records; the total is our arithmetic. |
 | Crew, every day | Less time spent on health admin, because readings arrive on their own. | Expected, not measured. |
 | Crew, in an emergency | A first correct action within one minute, taken by a crewmate with the patient's record in front of them, for the roughly one serious event expected per Mars mission. | Target, not yet tested with people. |

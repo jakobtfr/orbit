@@ -53,7 +53,7 @@ The header shows the mission phase for the current day. Outbound and return are 
 
 ## Methods
 
-- **Replay.** Earth limits: pulse over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on any single day. Personal: pulse 20% over the volunteer's own pre-bed-rest mean, blood pressure 20/15 over, or temperature 0.5 °C over, on two days in a row. Tests reproduce 25.5% and 5.9% of days with an alarm.
+- **Replay.** Earth limits: pulse over 100, blood pressure 130/80 or more, temperature 38.0 °C or more. Personal: pulse 20% over the volunteer's own pre-bed-rest mean, blood pressure 20/15 over, or temperature 0.5 °C over. Both are counted on two days in a row (the headline: 13.5% vs 5.9% of days) and on single days (25.5% vs 16.5%); a stricter Earth cutoff of 140/90 gives 5.4%. Tests reproduce every figure.
 - **Dashboard plots.** Daily observations with trailing seven-day mean ±1 SD; radiation dose rate from cumulative-dose differences over elapsed time. Thresholds, references, and caveats are in [dashboard methodology](../docs/solution/dashboard-methodology.md).
 - **Measurements.** Lena's own series, the same personal limits and Earth cutoffs as the indicator charts, over 7, 28, or 90 days or the whole mission. The NASA volunteer comparison is Replay, not this screen.
 

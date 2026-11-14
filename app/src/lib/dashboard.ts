@@ -1,4 +1,4 @@
-import { baselines, now, readingsFor } from './judge'
+import { baselines, hrLimit, now, readingsFor, tempLimit } from './judge'
 import type { Action, AppState, IndicatorKey, Person, Reading } from './types'
 
 export type Level = 'ok' | 'caution' | 'warning'
@@ -39,18 +39,20 @@ export interface Metric {
   source: string; sourceLabel: string; note: string
 }
 export function metrics(state: AppState, person: Person): Metric[] {
-  const base = baselines(state, person, 'temp').recent
+  // The amber lines follow the person's normal for the mission phase, the same values judge.ts uses.
+  const hrB = baselines(state, person, 'hr')
+  const tempB = baselines(state, person, 'temp')
   const surface = state.place === 'surface'
   const radiationLimit = surface ? .9 : 1.3
   return [
     { key: 'hr', title: 'Resting heart rate', unit: 'bpm', decimals: 0, hazard: 'Altered gravity', domain: [35, 130], low: 40,
-      caution: Math.min(100, (person.preflight.hr?.v ?? 83.34) * 1.2), warning: 120,
-      source: 'https://www.heart.org/en/health-topics/high-blood-pressure/the-facts-about-high-blood-pressure/all-about-heart-rate-pulse', sourceLabel: 'American Heart Association',
-      note: 'AHA adult resting reference: 60–100 bpm; trained people may be lower. Amber at +20% of preflight baseline (or 100 bpm); red below 40 or above 120 are ORBIT prototype review bands, not diagnostic cutoffs.' },
+      caution: hrLimit(hrB), warning: 120,
+      source: 'https://doi.org/10.83263/wjw1-ta27', sourceLabel: 'NASA UTMB bed-rest study',
+      note: `Amber at +20% of your normal for this phase (${hrB.normal?.label ?? 'before flight'}): your pre-flight value plus the change NASA bed-rest data shows, learned from your own readings. Wider while the body adapts to a new gravity. Red below 40 or above 120 are fixed ORBIT review bands, not diagnostic cutoffs.` },
     { key: 'temp', title: 'Core temperature', unit: '°C', decimals: 1, hazard: 'Health autonomy', domain: [36.5, 40],
-      caution: Math.min(38.5, (base ?? 38) + .5), warning: 39.5,
-      source: 'https://www.nature.com/articles/s41598-017-15560-w', sourceLabel: 'Stahn et al., Scientific Reports, 2017',
-      note: 'Simulated core temperature, not smart-shirt skin temperature. In-flight baseline differs from Earth. Amber at +0.5 °C from the preceding 7-day baseline or 38.5 °C; red at 39.5 °C. These are prototype review bands, not validated flight fever thresholds.' },
+      caution: tempLimit(tempB), warning: 39.5,
+      source: 'https://www.nature.com/articles/s41598-017-15560-w', sourceLabel: 'Stahn et al., Scientific Reports, 2017 (outside NASA)',
+      note: 'Simulated core temperature, not smart-shirt skin temperature. In flight the normal rises about 1 °C over 75 days (ESA/Charité ISS study; NASA bed-rest data shows no rise, so this value is outside NASA data). Amber at +0.5 °C from your normal for this phase; red at 39.5 °C. These are prototype review bands, not validated flight fever thresholds.' },
     { key: 'sleep', title: 'Sleep duration', unit: 'h', decimals: 1, hazard: 'Isolation & confinement', domain: [2, 9], lowerIsWorse: true, caution: 6, warning: 4,
       source: 'https://www.nasa.gov/reference/6-0-medical-operations/', sourceLabel: 'NASA medical standard',
       note: 'One sleep-duration observation per night. Under 6 h / under 4 h are ORBIT review bands, not NASA clinical limits. Repeated short nights and symptoms matter; the demo goal is 8 h. Binned means may hide individual short nights.' },

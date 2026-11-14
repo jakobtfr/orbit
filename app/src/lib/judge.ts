@@ -1,4 +1,5 @@
 import { BESIDE, INDICATORS, INDICATOR_ORDER, REGIONS, REGION_ORDER } from './indicators'
+import { personalNormal, widen, type Normal } from './phases'
 import { RISKS, risksForIndicator, risksForSymptoms, type Risk } from './risks'
 import type {
   Action,
@@ -82,6 +83,12 @@ export interface Baselines {
   recent2?: number
   /** Mean of the 30 days before the latest reading. */
   month?: number
+  /** The person's normal for the mission phase of the latest reading (phases.ts). For blood pressure, the upper value. */
+  normal?: Normal
+  /** The lower blood pressure value's normal. */
+  normal2?: Normal
+  /** How much wider personal limits are while the body adapts to a new gravity. */
+  widen?: number
 }
 
 export function baselines(state: AppState, person: Person, key: IndicatorKey): Baselines {
@@ -98,6 +105,15 @@ export function baselines(state: AppState, person: Person, key: IndicatorKey): B
     if (key === 'bp') b.recent2 = mean(week.map((r) => r.v2 ?? NaN))
   }
   if (month.length) b.month = mean(month.map((r) => r.v))
+  if (pre && (key === 'hr' || key === 'bp' || key === 'temp')) {
+    const t = latest.t
+    b.normal = personalNormal(key === 'bp' ? 'sys' : key, pre.v, all.map((r) => ({ t: r.t, v: r.v })), t)
+    if (key === 'bp' && pre.v2 !== undefined) {
+      const lower = all.filter((r) => r.v2 !== undefined).map((r) => ({ t: r.t, v: r.v2! }))
+      b.normal2 = personalNormal('dia', pre.v2, lower, t)
+    }
+    b.widen = widen(t)
+  }
   return b
 }
 
@@ -109,22 +125,45 @@ export interface Level {
 }
 
 /** Judges one reading on its own against limits and the person's baselines. */
+/**
+ * The heart-rate caution line: 20% above the person's normal for the phase (30% while adapting).
+ * Shared by classify, chartGuide and the dashboard, so all three agree. Without any personal value
+ * the old fixed line of 100 bpm applies.
+ */
+export function hrLimit(b: Baselines): number {
+  const base = b.normal?.value ?? b.pre
+  return base !== undefined ? base * (1 + 0.2 * (b.widen ?? 1)) : 100
+}
+
+/** The temperature caution line: 0.5 °C above the normal for the phase (0.75 while adapting). Without any personal value, 38.5 °C. */
+export function tempLimit(b: Baselines): number {
+  const base = b.normal?.value ?? b.recent
+  return base !== undefined ? base + 0.5 * (b.widen ?? 1) : 38.5
+}
+
 export function classify(key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>, b: Baselines): Level {
   const v = r.v
+  const w = b.widen ?? 1
   switch (key) {
+    // Danger values are fixed and never move with the person or the phase. They are the team's
+    // values from docs/research/clinical-thresholds.md: NASA-STD-3001 sets no vital-sign limits.
+    // Everything else is judged against the person's normal for the mission phase, with wider
+    // limits while the body adapts to a new gravity (phases.ts).
     case 'hr': {
       if (v > 120) return { level: 'warning', arrow: '↑' }
       if (v < 40) return { level: 'warning', arrow: '↓' }
-      if (v > 100 || (b.pre !== undefined && v >= b.pre * 1.2)) return { level: 'caution', arrow: '↑' }
+      if (v >= hrLimit(b)) return { level: 'caution', arrow: '↑' }
       return { level: 'ok' }
     }
     case 'bp': {
-      const d = r.v2 ?? 0
+      const d = r.v2
       if (v < 80) return { level: 'warning', arrow: '↓', immediate: true }
-      if (v >= 140 || d >= 90) return { level: 'warning', arrow: '↑' }
-      const risen = b.pre !== undefined && b.pre2 !== undefined && (v >= b.pre + 20 || d >= b.pre2 + 15)
-      if (v >= 130 || d >= 80 || risen) return { level: 'caution', arrow: '↑' }
-      if (v < 90 || (d > 0 && d < 60)) return { level: 'caution', arrow: '↓' }
+      if (v >= 140 || (d !== undefined && d >= 90)) return { level: 'warning', arrow: '↑' }
+      const up = b.normal?.value ?? b.pre
+      const down = b.normal2?.value ?? b.pre2
+      if ((up !== undefined && v >= up + 20 * w) || (d !== undefined && down !== undefined && d >= down + 15 * w)) return { level: 'caution', arrow: '↑' }
+      if (v < 90) return { level: 'caution', arrow: '↓' }
+      if ((up !== undefined && v <= up - 20 * w) || (d !== undefined && down !== undefined && d <= down - 15 * w)) return { level: 'caution', arrow: '↓' }
       return { level: 'ok' }
     }
     case 'standing':
@@ -151,7 +190,7 @@ export function classify(key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>, b: Bas
       return { level: 'ok' }
     case 'temp': {
       if (v >= 39.5) return { level: 'warning', arrow: '↑', immediate: true }
-      if (v >= 38.5 || (b.recent !== undefined && v - b.recent >= 0.5)) return { level: 'caution', arrow: '↑' }
+      if (v >= tempLimit(b)) return { level: 'caution', arrow: '↑' }
       return { level: 'ok' }
     }
     case 'weight': {
@@ -465,7 +504,9 @@ function baseAction(state: AppState, person: Person, item: AttentionItem): Actio
   switch (key) {
     case 'hr':
       return {
-        observed: `Resting heart rate has stayed above the before-flight value of ${b.pre?.toFixed(0)} bpm by 20% or more for at least 2 days.`,
+        observed: b.normal
+          ? `Resting heart rate has been ${Math.round(20 * (b.widen ?? 1))}% or more above your normal in this phase (${b.normal.label}: ${b.normal.value.toFixed(0)} bpm) on two readings in a row.`
+          : `Resting heart rate has stayed above the before-flight value of ${b.pre?.toFixed(0)} bpm by 20% or more for at least 2 days.`,
         next: 'Rest for 10 minutes and repeat the reading. Tell the medical lead today.',
         button: measure,
       }
@@ -474,7 +515,9 @@ function baseAction(state: AppState, person: Person, item: AttentionItem): Actio
         return {
           observed: item.status === 'warning'
             ? 'Blood pressure is very low: the upper value is under 80.'
-            : 'Blood pressure has been below 90 over 60 on two readings in a row.',
+            : b.normal && b.normal2
+              ? `Blood pressure has been well below your normal in this phase (${b.normal.label}: about ${b.normal.value.toFixed(0)}/${b.normal2.value.toFixed(0)}) on two readings in a row.`
+              : 'Blood pressure has been below your usual range on two readings in a row.',
           next: 'Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today.',
           button: measure,
         }
@@ -492,7 +535,9 @@ function baseAction(state: AppState, person: Person, item: AttentionItem): Actio
       }
     case 'temp':
       return {
-        observed: `Body temperature is 0.5 °C or more above the recent in-flight readings (${b.recent?.toFixed(1)} °C).`,
+        observed: b.normal
+          ? `Body temperature is ${(0.5 * (b.widen ?? 1)).toFixed(2).replace(/0$/, '')} °C or more above your normal in this phase (${b.normal.label}: ${b.normal.value.toFixed(1)} °C).`
+          : `Body temperature is at or above ${tempLimit(b).toFixed(1)} °C.`,
         next: 'Rest, drink water, and repeat the reading in one hour. Tell the medical lead.',
         button: measure,
       }
@@ -614,32 +659,45 @@ export interface ChartGuide {
   earth?: { v: number; label: string }
 }
 
+/** Names the band after the phase, e.g. "Your normal · Outbound to Mars". */
+function normalLabel(b: Baselines, fallback = 'Your normal'): string {
+  if (!b.normal) return fallback
+  return `Your normal · ${b.normal.label}${b.normal.adapting ? ' (adapting)' : ''}`
+}
+
 export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {
   switch (key) {
-    case 'hr':
+    case 'hr': {
+      const n = b.normal?.value ?? b.pre
       return {
-        band: b.pre !== undefined ? [b.pre - 6, b.pre + 6] : undefined,
-        bandLabel: 'Your normal',
-        limits: b.pre !== undefined ? [{ v: b.pre * 1.2, label: 'Your limit' }] : [],
+        band: n !== undefined ? [n - 6, n + 6] : undefined,
+        bandLabel: normalLabel(b),
+        limits: [{ v: hrLimit(b), label: n !== undefined ? 'Your limit' : '100' }],
         earth: { v: 100, label: 'Earth 100' },
       }
-    case 'bp':
+    }
+    case 'bp': {
+      const n = b.normal?.value ?? b.pre
       return {
-        band: b.pre !== undefined ? [b.pre - 6, b.pre + 6] : undefined,
-        bandLabel: 'Your normal',
-        limits: b.pre !== undefined ? [{ v: b.pre + 20, label: 'Your limit' }] : [],
+        band: n !== undefined ? [n - 6, n + 6] : undefined,
+        bandLabel: normalLabel(b),
+        limits: n !== undefined ? [{ v: n + 20 * (b.widen ?? 1), label: 'Your limit' }] : [],
         earth: { v: 130, label: 'Earth 130' },
       }
+    }
     case 'standing':
       return { limits: [{ v: 20, label: 'Drop of 20' }] }
     case 'spo2':
       return { limits: [{ v: 95, label: '95%' }] }
     case 'temp':
-      return {
-        band: b.recent !== undefined ? [b.recent - 0.4, b.recent + 0.4] : undefined,
-        bandLabel: 'Your last 7 days',
-        limits: b.recent !== undefined ? [{ v: b.recent + 0.5, label: 'Your limit' }] : [],
-        earth: { v: 38.0, label: 'Earth 38.0' },
+      {
+        const n = b.normal?.value ?? b.recent
+        return {
+          band: n !== undefined ? [n - 0.4, n + 0.4] : undefined,
+          bandLabel: normalLabel(b, 'Your last 7 days'),
+          limits: [{ v: tempLimit(b), label: n !== undefined ? 'Your limit' : '38.5' }],
+          earth: { v: 38.0, label: 'Earth 38.0' },
+        }
       }
     case 'weight': {
       const base = b.month ?? b.pre

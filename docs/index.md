@@ -39,13 +39,23 @@ Where each piece of information lives. Start here when you need a specific fact.
 | Green / amber / red values, flight adjustments, evidence, and confidence for 12 indicators | [`clinical-thresholds.md`](research/clinical-thresholds.md#rule-table) |
 | One specific indicator | All in the rule table: **R1** heart rate · **R2** blood pressure · **R3** blood pressure on standing (orthostatic check) · **R4** core temperature · **R5** blood oxygen · **R6** sleep · **R7** mood · **R8** radiation · **R9** bone load · **R10** nutrition and weight · **R11** cabin carbon dioxide · **R12** vision and eye changes (SANS) — [`clinical-thresholds.md`](research/clinical-thresholds.md#rule-table) |
 
+## Problems and hypotheses
+
+| What you need | Where to look |
+| --- | --- |
+| Where the need comes from: the sourced chain from longer missions to an onboard decision-support tool, and which brief line drives which problem | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#where-the-need-comes-from) |
+| How NASA's five hazards map to our problems, and how well we cover each | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#the-five-hazards-behind-the-problems) |
+| The seven problems, with numbers, ranked, and what we leave out | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#problems-ranked) |
+| The five hypotheses, how to test each, and what would prove it wrong | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#hypotheses) |
+| Alert rates and symptom-versus-vitals results from replaying the bed-rest tables | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#what-the-data-check-showed) |
+
 ## Scientific constraints
 
 | What you need | Where to look |
 | --- | --- |
 | What the health logic must respect to be valid in flight: hard and soft constraints | [`scientific-constraints.md`](solution/scientific-constraints.md) |
 | Spaceflight facts that are still unconfirmed | [`scientific-constraints.md`](solution/scientific-constraints.md#verify-before-relying-on-it) |
-| One test per hard constraint to run against the prototype | [`scientific-constraints.md`](solution/scientific-constraints.md#validity-tests) |
+| One test per hard constraint to run against the prototype | [`scientific-constraints.md`](solution/scientific-constraints.md#hard-constraints) |
 
 ## Open data and extracted tables
 

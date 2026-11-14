@@ -153,6 +153,7 @@ export function CheckIn() {
           </ul>
           {tense && (
             <NextActionCard
+              title="Tension in the crew"
               action={{
                 observed: 'Working with the crew has felt tense on two check-ins in a row. Only you can see this.',
                 next: 'Raise it early and in person. If it does not ease, ask the commander for a crew talk or the medical lead for a private one.',
@@ -161,6 +162,7 @@ export function CheckIn() {
           )}
           {symptoms.length > 0 && (
             <NextActionCard
+              title={symptoms.map((x) => x.name).join(', ')}
               action={{
                 observed: `Logged: ${symptoms.map((s) => s.name.toLowerCase()).join(', ')}. ${symptoms.length === 1 ? 'It' : 'They'} will be marked on your body.`,
                 next: symptomNext(symptoms.map((s) => s.name)),

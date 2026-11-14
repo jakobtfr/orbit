@@ -26,10 +26,16 @@ function reducer(state: AppState, a: Act): AppState {
 
 export interface MentalEntry { id: string; day: number; mood: number; energy: number; note: string; createdAt?: string; answers?: ConnectionAnswers }
 
+/** A next action that was carried out to the end. */
+export interface DoneAction { title: string; steps: number; day: number }
+
 interface Store {
   /** How far the person is through each next action in this session: the number of steps finished. */
   stepAt: Record<string, number>
   setStepAt: (action: string, step: number) => void
+  /** Next actions the person has finished, by action id, so they can be shown as done. */
+  actionLog: Record<string, DoneAction>
+  logAction: (id: string, entry: DoneAction) => void
   mentalStorageStatus: 'loading' | 'ready' | 'unavailable'
   mentalEntries: MentalEntry[]
   setMentalEntries: Dispatch<React.SetStateAction<MentalEntry[]>>
@@ -55,7 +61,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [])
   const [stepAt, setSteps] = useState<Record<string, number>>({})
   const setStepAt = useCallback((action: string, step: number) => setSteps((all) => ({ ...all, [action]: step })), [])
-  const store = useMemo(() => ({ state, dispatch, viewer: LENA, mentalEntries, setMentalEntries, mentalStorageStatus, stepAt, setStepAt }), [state, mentalEntries, mentalStorageStatus, stepAt, setStepAt])
+  const [actionLog, setActionLog] = useState<Record<string, DoneAction>>({})
+  const logAction = useCallback((id: string, entry: DoneAction) => setActionLog((all) => ({ ...all, [id]: entry })), [])
+  const store = useMemo(() => ({ state, dispatch, viewer: LENA, mentalEntries, setMentalEntries, mentalStorageStatus, stepAt, setStepAt, actionLog, logAction }), [state, mentalEntries, mentalStorageStatus, stepAt, setStepAt, actionLog, logAction])
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>
 }
 

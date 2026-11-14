@@ -110,6 +110,7 @@
 .reminder-icon { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; background: var(--bg-raised); color: var(--text-muted); font-size: 13px; }
 .reminder-row strong { display: block; color: var(--text-primary); font-size: 15px; font-weight: 500; line-height: 1.35; }
 .reminder-row small { display: block; margin-top: 2px; color: var(--text-muted); font-size: 13px; line-height: 1.45; }
+.reminder-row em.is-done { color: var(--status-ok); }
 .reminder-row em { display: block; margin-top: 4px; color: var(--text-muted); font-size: 12px; font-style: normal; }
 .check-arrow { margin-left: auto; padding-top: 4px; color: var(--text-muted); font-size: 13px; }
 .reminder-row.is-check .reminder-icon { background: transparent; box-shadow: inset 0 0 0 1.5px var(--border-control); }

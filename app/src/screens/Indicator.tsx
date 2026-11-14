@@ -115,7 +115,7 @@ export function Indicator() {
         </section>
       )}
 
-      {action && <NextActionCard action={action} />}
+      {action && <NextActionCard action={action} title={def.name} />}
       {action && (j.status === 'caution' || j.status === 'warning') && <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => openCall(k)}>Call the doctor about this</button>}
 
       {def.chart && j.status !== 'unavailable' && (
@@ -196,7 +196,7 @@ export function Symptoms() {
           <Tag>From your check-in</Tag>
         </div>
       </section>
-      {action && <NextActionCard action={{ ...action, button: undefined }} />}
+      {action && <NextActionCard action={{ ...action, button: undefined }} title={act.map((s) => s.name).join(', ')} />}
       <section>
         <h2 className="title-3">Reported</h2>
         {all.length === 0 ? (

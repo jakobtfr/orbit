@@ -96,6 +96,16 @@ export function allProcedures(state: AppState, person: Person): Procedure[] {
   return [...activeProcedures(state, person), ...measureProcedures(state, person)]
 }
 
+/** The id a next action is tracked under: one per day and action. */
+export function actionId(day: number, action: Action): string {
+  return `${day}|${action.next}`
+}
+
+/** True once every step of the action has been ticked off today. */
+export function actionDone(day: number, action: Action, stepAt: Record<string, number>): boolean {
+  return (stepAt[actionId(day, action)] ?? 0) >= actionSteps(action).length
+}
+
 /** The Resources entry that holds the steps of a next-action card. */
 export function procedureFor(state: AppState, person: Person, action: Action): Procedure | undefined {
   return activeProcedures(state, person).find((p) => p.intro === action.observed && p.steps.join(' ') === actionSteps(action).join(' '))

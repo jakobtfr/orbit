@@ -149,7 +149,7 @@ The body map is coloured by status: each part takes the worst status of its heal
 
 ### Resources and the astronaut
 
-One tab, **Resources**, holds every procedure on board: what is needed today (one entry for each risk or open check, built from the rules) and how to take each reading. Each opens as a player with one step at a time. Every step is acted out by a small animated astronaut: resting, drinking, taking a reading, calling on the radio, exercising, sheltering. The picture is chosen from the wording of the step, The same astronaut appears beside the current step in each Next action card, with a link to the procedure in Resources. With reduced motion the astronaut holds the pose and does not move.
+One tab, **Resources**, holds every procedure on board: what is needed today (one entry for each risk or open check, built from the rules) and how to take each reading. Each opens as a player with one step at a time. Every step is acted out by a small animated astronaut: resting, drinking, taking a reading, calling on the radio, exercising, sheltering. The picture is chosen from the wording of the step, The same astronaut appears beside the current step in each Next action card. When the last step of a Next action is done, the card goes away and the action is listed under "Done today" in Resources, where "Do again" brings it back; on the Dashboard its risk row shows "Steps done today" until the reading is back in range. With reduced motion the astronaut holds the pose and does not move.
 
 ## Indicators
 

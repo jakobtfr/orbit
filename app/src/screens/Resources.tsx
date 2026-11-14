@@ -23,8 +23,9 @@ function ProcedureCard({ p }: { p: Procedure }) {
 
 /** Every procedure on board: what is needed today, and how to take each reading. */
 export function Resources() {
-  const { state, viewer } = useStore()
+  const { state, viewer, actionLog, stepAt, setStepAt } = useStore()
   const today = activeProcedures(state, viewer)
+  const done = Object.entries(actionLog).filter(([id, a]) => a.day === state.day && (stepAt[id] ?? 0) >= a.steps)
   const measuring = measureProcedures(state, viewer)
   return (
     <div className="screen">
@@ -35,6 +36,20 @@ export function Resources() {
         <section aria-label="Needed today">
           <h2 className="title-3">Needed today</h2>
           <div className="guide-grid">{today.map((p) => <ProcedureCard key={p.id} p={p} />)}</div>
+        </section>
+      )}
+      {done.length > 0 && (
+        <section aria-label="Done today">
+          <h2 className="title-3">Done today</h2>
+          <ul className="done-list">
+            {done.map(([id, a]) => (
+              <li key={id}>
+                <span className="done-tick" aria-hidden="true">✓</span>
+                <span><strong>{a.title}</strong><small>{a.steps === 1 ? '1 step' : `All ${a.steps} steps`} done</small></span>
+                <button className="btn btn-quiet" onClick={() => setStepAt(id, 0)}>Do again</button>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
       <section aria-label="How to measure">

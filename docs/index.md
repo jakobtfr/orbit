@@ -107,3 +107,4 @@ Where each piece of information lives. Start here when you need a specific fact.
 | What has NASA or a partner agency stated, and what research is running? | [`resources.md`](challenge/resources.md) |
 | Which real data table should I use for an indicator? | [`open-data.md`](research/open-data.md#mapping-indicators-to-sources) and [`../data/README.md`](../data/README.md) |
 | What are the submission rules and judging criteria? | [`judging.md`](challenge/judging.md) |
+| What do we paste into the submission form? | [`submission.md`](submission.md) |

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ORBIT — Project Demo</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  :root {
+    --bg: #000; --tile: #1d1d1f; --raised: #2c2c2e;
+    --text: #f5f5f7; --muted: #a1a1a6;
+    --red: #ff6961; --green: #30d158; --blue: #4aa3ff;
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; }
+  .slide { position: relative; width: 1920px; height: 1080px; padding: 120px 120px 96px; display: flex; flex-direction: column; overflow: hidden; page-break-after: always; break-after: page; }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  h1 { font-size: 72px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; }
+  h2 { font-size: 64px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.08; max-width: 1500px; }
+  p, li { font-size: 30px; line-height: 1.4; color: var(--muted); }
+  .lead { margin-top: 28px; max-width: 1300px; }
+  .num { position: absolute; right: 120px; bottom: 56px; font-size: 20px; color: var(--muted); }
+  .mark { display: inline-flex; align-items: center; gap: 22px; font-size: 40px; font-weight: 600; letter-spacing: 0.04em; }
+  .shot { border-radius: 28px; background: var(--tile); overflow: hidden; }
+  .shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+  em { font-style: normal; color: var(--text); }
+
+  /* 1 */
+  .title { justify-content: center; }
+  .title h1 { font-size: 120px; margin-top: 56px; max-width: 1500px; }
+  .title h1 span { color: var(--muted); }
+  .title p { margin-top: 48px; font-size: 28px; }
+
+  /* 2 */
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 120px; }
+  .fact { padding: 40px; border-radius: 28px; background: var(--tile); }
+  .fact strong { display: block; font-size: 72px; font-weight: 600; letter-spacing: -0.03em; color: var(--text); }
+  .fact p { margin-top: 12px; font-size: 26px; }
+
+  /* 3 */
+  .evidence { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 56px; }
+  .stat { padding: 48px; border-radius: 28px; background: var(--tile); }
+  .stat .label { font-size: 26px; color: var(--muted); }
+  .stat strong { display: block; margin: 12px 0 8px; font-size: 140px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+  .stat.earth strong { color: var(--red); }
+  .stat p { font-size: 26px; }
+  .foot { margin-top: 56px; font-size: 26px; max-width: 1500px; }
+
+  /* 4–6 */
+  .split { display: grid; grid-template-columns: 600px 1fr; gap: 72px; height: 100%; }
+  .split .text { display: flex; flex-direction: column; justify-content: center; }
+  .split h2 { font-size: 56px; }
+  .split ul { margin-top: 36px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 18px; }
+  .split li { font-size: 27px; padding-left: 28px; position: relative; }
+  .split li::before { content: ''; position: absolute; left: 0; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+  .wide { padding: 72px 72px 72px 120px; }
+  .wide .split { grid-template-columns: 520px 1fr; gap: 56px; }
+
+  /* 7 */
+  .close { justify-content: center; }
+  .close ul { margin-top: 48px; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .close li { padding: 40px; border-radius: 28px; background: var(--tile); font-size: 26px; }
+  .close li strong { display: block; margin-bottom: 12px; font-size: 34px; font-weight: 600; color: var(--text); }
+  .link { margin-top: 64px; font-size: 34px; color: var(--blue); }
+  .limits { margin-top: 20px; font-size: 22px; }
+</style>
+</head>
+<body>
+
+<section class="slide title">
+  <div class="mark">
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.5"/><circle cx="17.66" cy="6.34" r="2.25" fill="#f5f5f7"/></svg>
+    ORBIT
+  </div>
+  <h1>Your normal, <span>not Earth’s.</span></h1>
+  <p class="lead">Health monitoring for astronauts that judges every reading against the astronaut’s own body, and says what to do next.</p>
+  <p>NASA Space Apps Challenge 2026 · Create Health Monitoring Software for Astronauts on Space Missions</p>
+  <span class="num">1 / 7</span>
+</section>
+
+<section class="slide">
+  <h2>Halfway to Mars, nobody can double-check an alarm.</h2>
+  <p class="lead">The body changes in space, so Earth’s medical limits raise alarms for healthy astronauts again and again. A crew that gets false alarms stops trusting them, and then misses the real one.</p>
+  <div class="facts">
+    <div class="fact"><strong>40+ min</strong><p>for a question to a doctor on Earth and its answer</p></div>
+    <div class="fact"><strong>+1 °C</strong><p>higher resting body temperature in flight; blood pressure drops</p></div>
+    <div class="fact"><strong>~40 h</strong><p>of medical training for the crew member who has to decide</p></div>
+  </div>
+  <span class="num">2 / 7</span>
+</section>
+
+<section class="slide">
+  <h2>We tested it on real NASA data.</h2>
+  <p class="lead">29 healthy volunteers, 2,184 days of NASA head-down bed rest, the standard way to imitate weightlessness on the ground. Every day judged twice.</p>
+  <div class="evidence">
+    <div class="stat earth"><span class="label">Earth’s fixed limits</span><strong>25.5%</strong><p>of days raised an alarm · about <em>46 alarms</em> per person in 6 months</p></div>
+    <div class="stat"><span class="label">ORBIT, against each person’s own normal</span><strong>5.9%</strong><p>of days raised an alarm · about <em>11 alarms</em> per person in 6 months</p></div>
+  </div>
+  <p class="foot">ORBIT also caught a slow heart-rate rise from 55 to about 75 bpm that never reached Earth’s line of 100. Reproduced by automated tests from the raw data.</p>
+  <span class="num">3 / 7</span>
+</section>
+
+<section class="slide wide">
+  <div class="split">
+    <div class="text">
+      <h2>One dashboard any crew member can read.</h2>
+      <ul>
+        <li>A body map: tap a region to see what is watched there</li>
+        <li>Activity, sleep, and heart rate at a glance</li>
+        <li>One list of risks and checks, each with a next step</li>
+        <li>Real NASA data, judged both ways, on the home screen</li>
+      </ul>
+    </div>
+    <div class="shot" style="align-self: center; height: auto; background: none"><img src="img/dashboard.png" alt="ORBIT dashboard" style="height: auto; border-radius: 28px"></div>
+  </div>
+  <span class="num">4 / 7</span>
+</section>
+
+<section class="slide wide">
+  <div class="split">
+    <div class="text">
+      <h2>38.0 °C: a fever on Earth. Normal for her in flight.</h2>
+      <ul>
+        <li>Every reading is compared with before flight and the last 7 days</li>
+        <li>Earth’s limit is drawn next to the personal one</li>
+        <li>One odd reading asks for a repeat, not an alarm</li>
+        <li>Clear steps for how to take each measurement</li>
+      </ul>
+    </div>
+    <div class="shot"><img src="img/temperature.png" alt="Body temperature screen" style="object-position: top center"></div>
+  </div>
+  <span class="num">5 / 7</span>
+</section>
+
+<section class="slide wide">
+  <div class="split">
+    <div class="text">
+      <h2>“My crewmate just collapsed.”</h2>
+      <ul>
+        <li>One red button on every screen</li>
+        <li>One step at a time, with a timer</li>
+        <li>Branches on breathing; CPR adapted to weightlessness</li>
+        <li>Every step cites a published resuscitation guideline</li>
+      </ul>
+    </div>
+    <div class="shot"><img src="img/emergency.png" alt="Emergency flow, chest compressions step"></div>
+  </div>
+  <span class="num">6 / 7</span>
+</section>
+
+<section class="slide close">
+  <h2>Alarms a crew can trust.</h2>
+  <ul>
+    <li><strong>4× fewer false alarms</strong>on real NASA bed-rest data, so the alarms that remain are believed</li>
+    <li><strong>No new hardware</strong>built for equipment already on board and a two-minute daily check-in</li>
+    <li><strong>Useful on Earth too</strong>for anyone far from a doctor: remote communities, ships, polar stations</li>
+  </ul>
+  <p class="link">github.com/jakobtfr/orbit</p>
+  <p class="limits">Prototype, not a medical device. Bed rest is a ground stand-in for flight; limits and emergency steps are not yet reviewed by a clinician. The demo astronaut’s readings are scripted.</p>
+  <span class="num">7 / 7</span>
+</section>
+
+</body>
+</html>

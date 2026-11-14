@@ -6,8 +6,8 @@ https://github.com/Kacmisz/react-body-map at commit
 The upstream README and package metadata declare the MIT license.
 Package author: Hashan Wickramasinghe.
 
-ORBIT supplies its own renderer, region mapping, gradients, decorative guides,
-and keyboard interactions. Muscle paths are retained. Head geometry is adapted with smaller integrated ears.
+ORBIT supplies its own renderer, region mapping, flat styling, and keyboard
+interactions. Muscle paths are retained. Head geometry is adapted with smaller integrated ears.
 
 ## MIT License
 

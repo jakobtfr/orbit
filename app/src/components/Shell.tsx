@@ -25,7 +25,7 @@ export function Shell() {
   return <div className="shell">
     <header className="topbar health-header">
       <Link className="brand" to={`/body/${viewer.id}`} aria-label="ORBIT, health overview">
-        <img className="nasa-logo" src={`${import.meta.env.BASE_URL}nasa-logo.svg`} width="48" height="40" alt="NASA" />
+        <Mark size={28} />
         <span className="brand-text"><span className="wordmark">ORBIT</span><span className="brand-subtitle">Space Apps prototype</span></span>
       </Link>
       <div className="header-system"><span className="system-dot" />{healthSystem === 'planet' ? 'Planet health system' : 'Flight health system'}<span className="header-day">Day {state.day}</span></div>
@@ -42,6 +42,10 @@ export function Shell() {
           </fieldset>
         </div>}
       </div>
+      <Link className="emergency-button" to="/emergency">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M10 2.5 17.5 10 10 17.5 2.5 10Z" /><path d="M10 6.5v4M10 13.2v.3" /></svg>
+        Emergency
+      </Link>
     </header>
     <div className="shell-body">
       {healthSystem === 'planet' && <nav className="planet-nav" aria-label="Planet health navigation">
@@ -51,6 +55,31 @@ export function Shell() {
       </nav>}
       <main className="main" ref={mainRef}><Outlet /></main></div>
   </div>
+}
+
+export function Mark({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="17.66" cy="6.34" r="2.25" fill="currentColor" />
+    </svg>
+  )
+}
+
+export function Dialog({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    document.addEventListener('keydown', k)
+    return () => document.removeEventListener('keydown', k)
+  }, [onClose])
+  return (
+    <div className="dialog-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="dialog" role="dialog" aria-modal="true" aria-label={title}>
+        <h2 className="title-3">{title}</h2>
+        {children}
+      </div>
+    </div>
+  )
 }
 
 export function BackLink({ to, children }: { to: string; children: React.ReactNode }) {

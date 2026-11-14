@@ -1,4 +1,0 @@
-NASA insignia
-Source: https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo.svg
-Brand information: https://www.nasa.gov/nasa-brand-center/
-Used in this locally developed Space Apps prototype at the user's request.

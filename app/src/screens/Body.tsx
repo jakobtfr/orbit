@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
 import { WeeklySummary } from '../components/dashboard/WeeklySummary'
+import { WhyOrbit } from '../components/dashboard/WhyOrbit'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
 import { metrics } from '../lib/dashboard'
 import { regionSummaries } from '../lib/judge'
@@ -21,6 +22,7 @@ export function Body() {
   const summaries = regionSummaries(state, person)
   const base = `/body/${person.id}`
   return <div className="screen dashboard-screen">
+    <WhyOrbit />
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map"><div className="column-label"><span>01 / BODY MAP</span><span>Personal</span></div>
         <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />

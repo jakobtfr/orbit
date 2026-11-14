@@ -23,11 +23,11 @@ The app is shown as Lena Brandt. The anatomical body map uses SVG and works with
 | `src/components/anatomy/` | Front/back SVG paths adapted from Kacmisz/react-body-map, with attribution in `NOTICE.md` |
 | `src/lib/indicators.ts` | The indicators, body regions, and their texts |
 | `src/lib/judge.ts` | The fake logic: status rules, who sees what, next actions |
-| `src/lib/mission.ts` | The mission plan and a simple orbit model: phase, place, position, distance, and signal delay for any day |
+| `src/lib/mission.ts` | The mission plan: phase and place for a mission day |
 | `src/lib/store.tsx` | App state: mission day, readings, check-ins |
 | `src/data/demo.ts` | The four scripted crew members and their readings |
 | `src/data/utmb-residuals.json` | Day-to-day variation taken from four NASA UTMB bed-rest subjects (`../data/utmb/daily_vitals.csv`), used as noise on the scripted series |
-| `src/data/devices.ts` | Device metadata used by indicator details |
+| `src/data/emergency.ts` | Chest pain or collapse steps, each citing ERC 2021, AHA 2020, or the DGLRM/ESAM-SMG microgravity CPR guideline |
 | `public/licenses/` | SIL Open Font License texts for Inter and Geist Mono |
 
 ## Limits
@@ -35,6 +35,7 @@ The app is shown as Lena Brandt. The anatomical body map uses SVG and works with
 - Every value is demo data. Levels and trends are invented; only the day-to-day variation of four vital signs is replayed from real ground data.
 - The status rules are simplified forms of R1 to R12 and have not been reviewed by a clinician.
 - State lives in memory. Reloading the page resets the demo.
+- Emergency steps follow published first-aid guidelines but have not been reviewed by a clinician.
 
 ## Personal dashboard
 
@@ -63,7 +64,7 @@ follow this selection. Recorded readings and mission day are preserved; selectin
 an environment does not manufacture new measurements. The selection lasts for the
 current browser session until reload, like the rest of the demo state.
 
-Flight, Sources, and Emergency pages and their navigation have been removed.
+Flight and Sources pages have been removed. Emergency is a button at the top right of every screen.
 Scientific references remain available in each plot's Details.
 
 ## Planet workspace

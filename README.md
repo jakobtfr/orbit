@@ -26,6 +26,7 @@ Looking for a specific fact? Start with the [data index](docs/index.md).
 | [`docs/research/operations.md`](docs/research/operations.md) | What NASA actually does today: roles, cadence, countermeasures, medical event rates, exploration gap |
 | [`docs/research/clinical-thresholds.md`](docs/research/clinical-thresholds.md) | Published clinical values and spaceflight adjustments, with sources and confidence notes |
 | [`docs/solution/problems-and-hypotheses.md`](docs/solution/problems-and-hypotheses.md) | Where the need comes from, ranked problems, the cut, five testable hypotheses, and the bed-rest data check |
+| [`app/`](app/README.md) | The version 1 web app: ten screens, 3D body, scripted demo data. `cd app && npm install && npm run dev` |
 | [`SPEC.md`](SPEC.md) | Version 1 build spec: screens, components, fake data, and done-when checks. Read with `DESIGN.md` |
 | [`docs/solution/solution-overview.md`](docs/solution/solution-overview.md) | High-level solution: what ORBIT solves, how it works, and the impact |
 | [`docs/solution/scientific-constraints.md`](docs/solution/scientific-constraints.md) | What the health logic must respect to be scientifically valid in flight, with a test per hard constraint |

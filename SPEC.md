@@ -1,6 +1,6 @@
 # ORBIT Spec, Version 1
 
-Written 2026-11-14. What to build for the first version of ORBIT: the screens, the components, how they connect, and the fake data behind them.
+Written 2026-11-14, revised the same day after the first build. What to build for the first version of ORBIT: the screens, the components, how they connect, and the fake data behind them.
 
 **How to use this file.** This file says *what* each screen contains and does. [`DESIGN.md`](DESIGN.md) says *how* it looks and reads. Build from both. If they disagree, `DESIGN.md` wins on look and wording, this file wins on content and behaviour. The reasons behind the product are in [`solution-overview.md`](docs/solution/solution-overview.md); the science rules (SH1 to SH10) are in [`scientific-constraints.md`](docs/research/scientific-constraints.md).
 
@@ -10,12 +10,13 @@ Version 1 is a front end only. It must look and behave like the real product on 
 
 | In | Out |
 | --- | --- |
-| All ten screens below, connected and clickable | A real server, accounts, or login |
+| All nine screens below, connected and clickable | A real server, accounts, or login |
 | A 3D body as the home screen | Real device connections |
 | Fake data loaded from local files | Real health logic beyond the few rules in [Fake logic](#fake-logic) |
 | One complete emergency scenario | More than one emergency scenario |
 | One dark theme, tablet and desktop | Light theme, phone layout, translations |
-| A demo panel to change mission day and place | Notifications, gamification, sound |
+| A mission simulation: the app knows the day, phase, and position of the spacecraft | Notifications, gamification, sound |
+| One fixed viewer (Lena Brandt) | Switching between users |
 
 **Build assumptions.** A single-page web app that runs in a browser with no network. Designed for a tablet in landscape (1024 × 768) and scaling up to a laptop (1440 × 900). Touch first; everything also works with mouse and keyboard. The framework is the builder's choice.
 
@@ -42,15 +43,14 @@ The five design principles in `DESIGN.md` decide every screen. In this spec they
 ## Screen map
 
 ```
-Top bar (on every screen): ORBIT · mission time · place · viewer · Emergency
+Top bar (on every screen): ORBIT · mission day · phase · time · viewer name
 
 Crew ──► Body ──► Region ──► Indicator ──► Measure
           │                      
-          ├──► Check-in
-          └──► Before flight
+          └──► Check-in
 Flight
 Sources
-Emergency (from the top bar, any screen)
+Emergency (from the navigation, any screen)
 ```
 
 | # | Screen | The question it answers | Primary button |
@@ -61,7 +61,6 @@ Emergency (from the top bar, any screen)
 | 4 | Indicator | Is this reading normal for me? | The next action, if there is one |
 | 5 | Measure | How do I take this reading? | "Save reading" |
 | 6 | Check-in | How do I feel today? | "Next", then "Finish check-in" |
-| 7 | Before flight | What were my values on Earth? | None |
 | 8 | Flight | Where are we, and which checks apply here? | None |
 | 9 | Sources | Where does each rule come from? | None |
 | 10 | Emergency | What do I do right now? | The current step's action |
@@ -75,14 +74,12 @@ Present on every screen except inside the emergency flow.
 **Top bar**, left to right:
 
 1. The mark and wordmark. Tapping it goes to Body for the viewer.
-2. Mission time as a tag: `MET 100/08:15:00`.
-3. Place as a tag: `SPACECRAFT`, `STATION`, `SURFACE BASE`, or `AFTER LANDING`.
-4. Viewer name and role. Tapping it opens a list to switch viewer (demo only; there is no login).
-5. **Emergency** button: Secondary style, with a diamond shape in `status-warning` before the word. This is the one place a status colour is used outside a status. Always visible, same position on every screen.
+2. Three tags that link to Flight: mission day (`DAY 100`), phase (`OUTBOUND TO MARS`), and time of day (`08:15`). Plain words are used instead of NASA's `MET` format, which was not understood without explanation.
+3. The viewer's name and role, as plain text. The app is always shown from one person's point of view. There is no login and no switch.
 
-**Navigation**, four items with icon and label: Crew, Body, Flight, Sources. The current item uses `accent`.
+**Navigation**, with icon and label: Crew, Body, Flight, Sources, and at the bottom, Emergency. The current item uses `accent`. Emergency is styled like the other items: no status colour outside the flow itself.
 
-**Demo banner.** A single line under the top bar on every screen: "Demo data. Replayed from ground studies or simulated. Not flight measurements." In `body-sm`, `text-muted`. It cannot be dismissed (SH5, SH10).
+There is no demo banner. Values still carry the `SIMULATED` tag (SH5).
 
 ## Screens
 
@@ -96,7 +93,7 @@ Shows every crew member side by side.
 - **Overall status** is the most serious status among the person's indicators, in this order: Warning, Caution, Repeat reading, No recent data, In range. Unavailable is ignored.
 - All in range: every card is greyscale apart from a small green circle.
 
-**Who sees what.** The viewer sees their own full record. The medical lead sees everyone's full record. Any other viewer opening a crewmate sees the overall status and the Body with only shared indicators marked, plus one line: "Other details are private to [name] and the medical lead." Mood is never shown to anyone but its author. In the emergency flow, the patient's full record is open to whoever responds.
+**Who sees what.** The viewer is always Lena Brandt, who is not the medical lead. The rules below still apply to every crewmate she opens. The viewer sees their own full record. The medical lead sees everyone's full record. Any other viewer opening a crewmate sees the overall status and the Body with only shared indicators marked, plus one line: "Other details are private to [name] and the medical lead." Mood is never shown to anyone but its author. In the emergency flow, the patient's full record is open to whoever responds.
 
 ### 2. Body
 
@@ -118,7 +115,7 @@ The home screen. One person's health as a map.
 
 **Next-action card.** Shows the single most important action for this person. If nothing needs attention, the card is replaced by one line, "Everything is in range", and the primary button is "Start check-in" (or "Check-in done today" as plain text once completed).
 
-**Other links.** Quiet buttons: "Before flight" and "All indicators" (opens Region for Whole body with every indicator listed).
+**Explore your measurements.** Below the next-action row, a grid of status tiles for every indicator the viewer may see, the ones that need attention first. Each opens its Indicator screen. Mood is left out; it stays in its private row.
 
 ### 3. Region
 
@@ -138,7 +135,8 @@ Top to bottom:
 5. **Chart:** from before flight to today, following the chart rules in `DESIGN.md`. A vertical line marks launch. Range buttons: 7 days, 30 days, Whole mission.
 6. **Why it matters in space:** one paragraph.
 7. **Readings:** a table of the last ten readings: time, value, provenance, source.
-8. Quiet buttons: "How to measure" (opens Measure) and "Source" (opens Sources at this rule).
+8. **Where the limits come from:** the rule ID, its published basis, and its confidence, with a line that the colour bands were not reviewed by a clinician.
+9. Quiet buttons: "How to measure" (opens Measure) and "Device" (opens Sources at this device).
 
 Special cases:
 
@@ -171,24 +169,37 @@ Four steps, one per screen, with a step counter ("2 of 4") and a Back button. It
 
 Primary button: "Next" on steps 1 to 3, "Finish check-in" on step 4. Finishing returns to Body. A logged symptom marks its region on the body.
 
-### 7. Before flight
+### 7. Before flight (removed)
 
-A plain table of the selected person's values measured on Earth: indicator, value, date, and how many readings it is based on. One line at the top explains why it exists: "Your readings in flight are compared with these."
+There is no separate screen. Values measured on Earth appear only where they are used: in "Compared with you" on the Indicator screen, on the chart before the launch line, and in the emergency patient panel.
 
 ### 8. Flight
 
-- **Mission:** mission day, phase (Launch, Cruise, Surface, Return), and place.
-- **Cabin:** status tiles for carbon dioxide and radiation dose rate.
+ORBIT knows where the mission is. Everything on this screen follows from the mission day.
+
+- **The mission plan:** out to Mars (day 0 to 259), on Mars (day 259 to 713), back to Earth (day 713 to 972), then a short recovery on Earth. Place and phase are derived from the day; they are never chosen by hand.
+- **Where we are:** a top-down picture of the Sun, the orbits of Earth and Mars, both planets, and the spacecraft. The path already flown is a solid line; the planned path is dashed. A dotted line joins the spacecraft to Earth. Greyscale only.
+- **Facts beside it:** mission day, phase, place, distance from Earth in million km, one-way signal delay with the time for a question and its answer, and the next milestone with days remaining.
+- **Timeline:** the four phases as a bar with a marker for today, and a slider to move the simulation to any mission day. A button returns to day 100, where the scripted events happen.
+- **Cabin:** status tiles for carbon dioxide and radiation dose rate. The dose rate is higher in deep space than on the surface of Mars.
 - **Checks here:** two lists, "Available here" and "Not available here", each item with a one-line reason.
-- **Demo controls**, in a clearly separated box titled "Demo controls": a mission-day slider (0 to 900), a place selector, and a "Reset demo" button. Changing either updates every screen at once.
 
 ### 9. Sources
 
-A table of the rules R1 to R12: rule ID, indicator, where the limits come from, confidence. Content is taken from [`clinical-thresholds.md`](docs/research/clinical-thresholds.md#rule-table). A line at the top: "Colour bands were made for this prototype and have not been reviewed by a clinician."
+The equipment ORBIT reads from, so the link between a device and a reading is visible.
+
+- One table with a fixed set of columns, so every row lines up: Source (name and a one-line description), Status, Power, Last reading, Feeds.
+- Three groups of rows: "Yours" (smart shirt, wrist tracker, radiation monitor), "Shared on board" (thermometer, body mass device, exercise machines, cabin monitor), and "No device" (daily check-in, reading card, blood pressure cuff).
+- **Status:** Connected, Ready, Needs charging, No recent data, or Not in use here, each with a shape and a word, plus whether it sends readings on its own or is entered by hand.
+- **Power:** battery percent with a bar and how long a charge lasts, or cabin power.
+- **Feeds:** the indicators the source supplies, each with its latest value, linking to the Indicator screen.
+- The device tag on an Indicator screen links here and highlights its row.
+
+The published basis of each rule (R1 to R12) is no longer listed here. It is shown on the Indicator screen under "Where the limits come from".
 
 ### 10. Emergency
 
-Follows the Emergency flow rules in `DESIGN.md`. The app shell is replaced by the warning header.
+Follows the Emergency flow rules in `DESIGN.md`. It is opened from the navigation. The app shell is replaced by the warning header.
 
 1. **Who needs help?** The crew as large buttons.
 2. **What is happening?** One choice is fully built: "Chest pain or collapse". Others are listed as "Not in this version".
@@ -248,9 +259,10 @@ All data is local files loaded at start. No server calls.
 
 - **Crew:** four invented people with a name, a role, and one marked as medical lead. Do not use real astronauts' names.
 - **Before-flight values:** per person, per indicator.
-- **Readings:** per person, per indicator, daily from 30 days before launch to mission day 100. Heart rate, blood pressure, temperature, and weight may be replayed from `data/utmb/daily_vitals.csv`; the rest is invented.
+- **Readings:** per person, per indicator, daily from 30 days before launch to the end of the simulated mission (day 990). The scripted events below happen on day 100, the day the app opens on; a week later everyone is back in range. Heart rate, blood pressure, temperature, and weight may be replayed from `data/utmb/daily_vitals.csv`; the rest is invented.
 - **Text:** per indicator: why it matters in space, how to measure, and next-action wording. Per region: the intro paragraph. Per rule: source and confidence.
-- **Flight:** mission day, phase, place, cabin values.
+- **Flight:** the mission plan and a simple model of the orbits (circular, in one plane, with a Hohmann transfer each way), which gives position, distance, and signal delay for any day.
+- **Devices:** name, power, description, and the indicators each one feeds. Battery levels are simulated.
 
 Each indicator's status may be stored in the data instead of calculated, except where [Fake logic](#fake-logic) says otherwise.
 
@@ -260,7 +272,7 @@ The four people are scripted so that every state appears somewhere.
 
 | Person | What their data shows | What it proves |
 | --- | --- | --- |
-| A, the viewer by default | Everything in range. Temperature is 38.0 °C against a personal 37.8 °C on mission day 100, shown as In range. | The quiet screen (D1); no false fever alarm (SH2) |
+| A, the viewer | Everything in range. Temperature is 38.0 °C against a personal 37.8 °C on mission day 100, shown as In range. | The quiet screen (D1); no false fever alarm (SH2) |
 | B | Heart rate rising slowly for 30 days: Caution on Chest. One reported headache: marker on Head. | Trend against before-flight values (SH3); symptoms on the body |
 | C | One blood pressure reading of 145/92 with no symptoms: Repeat reading. Weight not measured for 12 days: No recent data. | Repeat instead of alarm (SH6); old data is not green (SH8) |
 | D, medical lead | Sleep under 6 hours for three nights: Caution. Bone load shown as estimated. | Trends; modelled values (SH5); the medical lead's view of everyone |
@@ -272,10 +284,10 @@ Only these behaviours are calculated live. Everything else is read from the data
 | Behaviour | Rule |
 | --- | --- |
 | Saving a reading outside its limits | Status becomes Repeat reading. A second out-of-range reading makes it Caution. An in-range reading returns it to In range. |
-| Moving mission day forward | Any indicator whose latest reading is older than its maximum age becomes No recent data. |
-| Changing place | Standing blood pressure test is Unavailable in Spacecraft and Station, available in Surface base and After landing. |
+| Moving the mission day | Phase, place, position, distance, signal delay, and dose rate follow the day. Readings later than the day are hidden. |
+| Place | Standing blood pressure test is Unavailable in the spacecraft, available on the surface of Mars and after landing. |
+| Old readings | Any indicator whose latest reading is older than its maximum age becomes No recent data. |
 | Finishing a check-in | Logged symptoms appear on the body and in the region; the check-in shows as done for that mission day. |
-| Switching viewer | Applies the "who sees what" rules. |
 | Overall status | The most serious status, as defined under Crew. |
 
 Maximum ages for the prototype (our own choice, not sourced): cabin air 1 hour; heart rate, blood pressure, blood oxygen, temperature, sleep, exercise, radiation 1 day; weight 7 days; vision check 30 days.
@@ -296,8 +308,9 @@ Maximum ages for the prototype (our own choice, not sourced): cabin air 1 hour; 
 - [ ] From opening the app, the viewer can reach any indicator's detail in three taps: region, tile, done.
 - [ ] A check-in can be completed in under two minutes and its symptom appears on the body.
 - [ ] The emergency flow can be started from every screen in one tap, and the first step is on screen within three taps.
-- [ ] Changing mission day or place in Flight changes what Body and Indicator show.
-- [ ] Switching viewer changes what is visible for a crewmate, and mood is never visible to anyone else.
+- [ ] Moving the mission day in Flight moves the spacecraft, changes phase and place, and changes what Body and Indicator show.
+- [ ] A crewmate's private details are not visible to the viewer, and mood is never visible to anyone else.
+- [ ] Every device in Sources lists the indicators it feeds, and each indicator links back to its device.
 
 **Science rules visible in the UI**
 
@@ -305,9 +318,8 @@ Maximum ages for the prototype (our own choice, not sourced): cabin air 1 hour; 
 - [ ] Person A's 38.0 °C shows In range (SH2).
 - [ ] Person C's single high blood pressure shows Repeat reading, not Caution or Warning (SH6).
 - [ ] Person C's weight shows No recent data, not green (SH8).
-- [ ] In Spacecraft, the standing test shows Unavailable with its reason; in Surface base it is available (SH4).
+- [ ] In the spacecraft, the standing test shows Unavailable with its reason; on Mars it is available (SH4).
 - [ ] No guidance text names a diagnosis as fact (SH9).
-- [ ] The demo banner is on every screen (SH10).
 
 **Design**
 
@@ -318,7 +330,9 @@ Maximum ages for the prototype (our own choice, not sourced): cabin air 1 hour; 
 
 ## Open points
 
+- **No demo banner.** It was removed on request. Values still carry `SIMULATED`, but no screen says in words that the data is not from a flight. This weakens SH10; say it in the pitch and on the submission page.
 - **Who sees what** follows the proposal in the solution overview and is not yet confirmed.
 - **Emergency step text and all guidance wording** are drafts until each has a source.
-- **The Emergency button** uses a status colour outside a status. Add this exception to `DESIGN.md` or change the button.
+- **Radiation late in the mission.** With the published dose rates, the total passes the 600 mSv career limit around day 460, so everyone shows a radiation Warning for the rest of the mission. This matches the published finding but is a permanent alarm; decide whether to keep it.
+- **Mission time format.** `DESIGN.md` still asks for NASA's `MET` format; the app now shows plain words.
 - **Maximum ages** are our own values.

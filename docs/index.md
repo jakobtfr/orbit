@@ -66,6 +66,7 @@ Where each piece of information lives. Start here when you need a specific fact.
 | --- | --- |
 | What to build in version 1: screens, components, fake data, done-when checks | [`../SPEC.md`](../SPEC.md) |
 | How it looks and reads: colours, type, components, wording | [`../DESIGN.md`](../DESIGN.md) |
+| The version 1 web app and how to run it | [`../app/README.md`](../app/README.md) |
 
 ## Scientific constraints
 

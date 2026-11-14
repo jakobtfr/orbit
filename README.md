@@ -9,6 +9,7 @@ This repo holds the source data for the challenge: the official brief, the offic
 | File | What it contains |
 | --- | --- |
 | [`docs/challenge-brief.md`](docs/challenge-brief.md) | Full official challenge text and considerations |
+| [`docs/video-transcript.md`](docs/video-transcript.md) | Timestamped transcript of the official intro video (Rodrigo Leonardi, Brazilian Space Agency) |
 | [`docs/resources.md`](docs/resources.md) | Official HRP/CSA resources, distilled: five hazards, 17 risks, current research, CSA findings |
 | [`docs/operations.md`](docs/operations.md) | What NASA actually does today: roles, cadence, countermeasures, medical event rates, exploration gap |
 | [`docs/clinical-thresholds.md`](docs/clinical-thresholds.md) | Published clinical values and spaceflight adjustments, with sources and confidence notes |
@@ -16,7 +17,7 @@ This repo holds the source data for the challenge: the official brief, the offic
 ## Challenge links
 
 - Official page: https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/
-- Intro video: https://www.youtube.com/watch?v=RERG3gEmdC8
+- Intro video: https://www.youtube.com/watch?v=RERG3gEmdC8 ([transcript](docs/video-transcript.md))
 - Skills: Human Exploration · Software · Space Exploration
 
 ## Use notes

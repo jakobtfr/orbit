@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
-import { StatusShape } from '../components/Status'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
 import { WeeklySummary } from '../components/dashboard/WeeklySummary'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
 import { metrics } from '../lib/dashboard'
-import { REGIONS } from '../lib/indicators'
 import { regionSummaries } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { RegionKey } from '../lib/types'
@@ -26,8 +24,7 @@ export function Body() {
     <header className="dashboard-header"><div><p className="eyebrow">ORBIT / CREW HEALTH MONITORING</p><h1>Health overview</h1><p>{person.name} · {person.role}</p></div><div className="dashboard-header-meta"><span className="simulation-label"><i /> SIMULATED MISSION</span><span>MISSION DAY <strong>{String(state.day).padStart(3, '0')}</strong></span></div></header>
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map"><div className="column-label"><span>01 / BODY MAP</span><span>Personal</span></div>
-        <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} />
-        <div className="body-region-links">{summaries.map((s) => <Link key={s.region} to={`${base}/region/${s.region}`} className={active === s.region ? 'is-active' : ''} onMouseEnter={() => setActive(s.region)} onMouseLeave={() => setActive(null)} onFocus={() => setActive(s.region)} onBlur={() => setActive(null)}><StatusShape status={s.status} size={10} /><span>{REGIONS[s.region].name}</span><span aria-hidden="true">↗</span></Link>)}</div>
+        <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />
       </section>
       <ActivityPanel state={state} person={person} />
       <WeeklySummary state={state} person={person} />

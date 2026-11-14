@@ -15,8 +15,8 @@
 .brand-subtitle { color: #9299a3; font: 9px/1.2 var(--font-mono); letter-spacing: .02em; }
 .topbar { height: 68px; background: #1a1d22; border-bottom-color: #373c44; }
 .brand { gap: 12px; }
-.nav { background: #1a1d22; border-right-color: #373c44; }
-.nav a.active { color: #eef0f3; background: #30353d; }
+.shell .nav { background: #1a1d22; border-right-color: #373c44; }
+.shell .nav a.active { color: #eef0f3; background: #30353d; }
 .dashboard-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .eyebrow { color: #969da7; font: 10px/1.5 var(--font-mono); letter-spacing: .06em; }
 .dashboard-header h1 { color: #f0f2f5; font-size: 28px; font-weight: 500; letter-spacing: -.02em; line-height: 1.2; margin: 8px 0; }
@@ -177,5 +177,50 @@
   .topbar-where { gap: 4px; padding: 0; }.topbar-where .tag { font-size: 9px; }
   .brand { gap: 5px; padding-right: 0; }.brand-subtitle { display: none; }
   .nasa-logo { width: 38px; height: 34px; }.wordmark { font-size: 12px; }
-  .viewer-name { font-size: 10px; }.nav { width: 56px; padding: 8px 3px; }.nav a { font-size: 9px; }
+  .viewer-name { font-size: 10px; }.shell .nav { width: 56px; padding: 8px 3px; }.shell .nav a { font-size: 9px; }
 }
+
+/* Equal-width instrument columns and a floating navigation header. */
+.dashboard-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.shell { background: #131518; }
+.shell .shell-body { flex-direction: column; }
+.topbar { border: 0; background: #131518; padding: 0 24px; }
+.shell .nav {
+  flex-direction: row;
+  align-self: center;
+  align-items: center;
+  width: auto;
+  gap: 6px;
+  padding: 5px;
+  margin: 6px 16px 16px;
+  border: 1px solid #ffffff20;
+  border-radius: 18px;
+  background: #30343ac9;
+  backdrop-filter: blur(24px) saturate(115%);
+  box-shadow: 0 8px 24px #0003, inset 0 1px 0 #ffffff0d;
+}
+.shell .nav a { flex-direction: row; gap: 8px; min-height: 38px; padding: 0 18px; border-radius: 13px; font-size: 12px; }
+.shell .nav a.active { background: #ffffff12; box-shadow: inset 0 0 0 1px #ffffff12; }
+.shell .nav-space { display: none; }
+.anatomy-blood-flow { stroke: #c78484; stroke-opacity: .45; stroke-dasharray: 9 24; animation: blood-flow 2.5s linear infinite; }
+.dashboard-screen .anatomy-region.is-active { filter: drop-shadow(0 0 7px #bcc8db40); }
+@keyframes blood-flow { to { stroke-dashoffset: -66; } }
+@media (prefers-reduced-motion: reduce) { .anatomy-blood-flow { animation: none; } }
+@media (max-width: 1250px) { .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+  .shell .nav { gap: 2px; margin: 4px 8px 8px; }
+  .shell .nav a { padding: 0 10px; font-size: 10px; gap: 5px; }
+  .shell .nav a svg { width: 16px; }
+  .topbar { padding: 0 10px; }
+}
+
+.shell .nav { display: flex; flex-flow: row nowrap; flex: none; width: max-content; max-width: calc(100% - 24px); }
+.shell .nav a { display: inline-flex; flex-flow: row nowrap; flex: none; white-space: nowrap; }
+.muscle-group-list { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #343941; }
+.muscle-group-list button { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px; text-align: left; border-bottom: 1px solid #30353d; min-width: 0; }
+.muscle-group-list button:nth-child(odd) { border-right: 1px solid #30353d; }
+.muscle-group-list button:hover, .muscle-group-list button.is-active { background: #30363f; }
+.muscle-group-list strong { display: block; font-size: 11px; font-weight: 500; color: #d8dfe8; }
+.muscle-group-list small { display: block; margin-top: 4px; color: #939eae; font-size: 9px; }
+.muscle-group-list button > span:last-child { color: #8895a6; }

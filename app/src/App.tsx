@@ -7,6 +7,7 @@ import { Emergency } from './screens/Emergency'
 import { Flight } from './screens/Flight'
 import { Indicator, Symptoms } from './screens/Indicator'
 import { Measure } from './screens/Measure'
+import { Muscle } from './screens/Muscle'
 import { Region } from './screens/Region'
 import { Sources } from './screens/Sources'
 
@@ -22,6 +23,7 @@ export function App() {
         <Route path="/emergency" element={<Emergency />} />
         <Route element={<Shell />}>
           <Route path="/body/:pid" element={<Body />} />
+          <Route path="/body/:pid/muscle/:muscleId" element={<Muscle />} />
           <Route path="/body/:pid/region/:rid" element={<Region />} />
           <Route path="/body/:pid/indicator/:key" element={<Indicator />} />
           <Route path="/body/:pid/symptoms/:rid" element={<Symptoms />} />

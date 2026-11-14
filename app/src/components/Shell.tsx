@@ -72,7 +72,7 @@ export function Shell() {
       <div className="shell-body">
         <nav className="nav" aria-label="Main">
           <NavLink to={`/body/${viewer.id}`} className={() => (pathname.startsWith('/body') ? 'active' : '')}>
-            <NavIcon name="body" /><span>Body</span>
+            <NavIcon name="body" /><span>Overview</span>
           </NavLink>
           <NavLink to="/replay"><NavIcon name="replay" /><span>Replay</span></NavLink>
           <div className="nav-space" />

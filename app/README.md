@@ -12,14 +12,15 @@ npm test         # checks the fake logic and that the replay reproduces the bed-
 uv run scripts/replay_data.py   # regenerates src/data/utmb-replay.json from ../data/utmb/
 ```
 
-The app is always shown as Lena Brandt. For testing, `?viewer=samir` before the `#` opens as the medical lead, and `?flat` forces the flat body figure.
+The app is shown as Lena Brandt. The anatomical body map uses SVG and works without WebGL. Switch between Front and Back, then select a region with the pointer or keyboard to open its health indicators.
 
 ## Layout
 
 | Path | Contents |
 | --- | --- |
 | `src/screens/` | Body, region, indicator, measure, check-in, emergency, and Replay |
-| `src/components/` | Status shapes and tags, tiles, next-action card, chart, 3D body (built from cross-sections in `bodyShape.ts`), app shell |
+| `src/components/` | Status shapes and tags, tiles, next-action card, chart, interactive anatomical SVG body, dashboard panels, app shell |
+| `src/components/anatomy/` | Front/back SVG paths adapted from Kacmisz/react-body-map, with attribution in `NOTICE.md` |
 | `src/lib/indicators.ts` | The indicators, body regions, and their texts |
 | `src/lib/judge.ts` | The fake logic: status rules, who sees what, next actions |
 | `src/lib/mission.ts` | The mission plan: phase and place for a mission day |
@@ -38,3 +39,21 @@ The app is always shown as Lena Brandt. For testing, `?viewer=samir` before the 
 - The status rules are simplified forms of R1 to R12 and have not been reviewed by a clinician.
 - Emergency steps and all guidance wording are drafts without a source.
 - State lives in memory. Reloading the page resets the demo.
+
+## Personal dashboard
+
+The home screen has four desktop columns: interactive anatomy; activity rings and
+reminders; a mock weekly brief and review outlook; and five scientific-style plots.
+At smaller widths the layout switches to two columns, then one.
+
+- Heart rate, core temperature, nightly sleep, radiation dose rate, and cabin CO2.
+- 14/28-day controls; seven non-overlapping bins with mean ±1 sample SD.
+- Window SD, sample variance, sample count, threshold lines, and expandable tables
+  and references. SD is variability in the demo series, not measurement uncertainty.
+- Radiation rates are calculated from cumulative dose differences divided by elapsed
+  days. A constant simulated rate legitimately has zero sample SD.
+- The AI brief is a template over demo values; no illness or solar-event prediction
+  model is connected. Reminder times are explicitly a demo schedule.
+
+See [dashboard methodology](../docs/solution/dashboard-methodology.md) for threshold
+scope, source links, hazard mapping, and validation.

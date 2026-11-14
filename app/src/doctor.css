@@ -1,0 +1,137 @@
+/* The virtual doctor: a calm call with yourself in the corner and the conversation beside it. */
+
+.screen.doctor-screen {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  height: 100%;
+  min-height: 560px;
+  padding: 24px;
+}
+.doctor-stage, .doctor-talk { min-width: 0; min-height: 0; }
+
+.doctor-tile {
+  position: relative;
+  flex: 1;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 32px 32px 150px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  text-align: center;
+  overflow: hidden;
+}
+.doctor-avatar {
+  display: grid;
+  place-items: center;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: var(--bg-raised);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow var(--duration-base) ease-out;
+}
+.is-listening .doctor-avatar { box-shadow: 0 0 0 3px var(--accent); }
+.is-speaking .doctor-avatar { animation: doctor-voice 1.4s ease-in-out infinite; }
+@keyframes doctor-voice {
+  0%, 100% { box-shadow: 0 0 0 3px var(--status-ok), 0 0 0 3px rgba(48, 209, 88, 0.25); }
+  50% { box-shadow: 0 0 0 3px var(--status-ok), 0 0 0 18px rgba(48, 209, 88, 0); }
+}
+.doctor-id { display: flex; align-items: center; gap: 8px; }
+.doctor-id strong { font: 600 20px/1.3 var(--font-sans); letter-spacing: -0.01em; color: var(--text-primary); }
+.doctor-phase { color: var(--text-muted); font-size: 13px; }
+.is-listening .doctor-phase { color: var(--accent); }
+.is-speaking .doctor-phase { color: var(--status-ok); }
+.doctor-caption {
+  max-width: 560px;
+  max-height: 7.75em;
+  overflow-y: auto;
+  color: var(--text-secondary);
+  font: 400 17px/1.55 var(--font-sans);
+}
+
+.doctor-self {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: grid;
+  place-items: center;
+  width: 200px;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  background: var(--bg-raised);
+  color: var(--text-muted);
+  font-size: 13px;
+  overflow: hidden;
+}
+.doctor-self video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.doctor-self-name {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.doctor-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.doctor-controls .btn[aria-pressed='true'] { background: var(--bg-hover); box-shadow: inset 0 0 0 1px var(--border-control); }
+.doctor-controls .doctor-end { color: var(--status-warning); }
+.doctor-notice { color: var(--status-caution); }
+
+.doctor-talk { padding: 24px; border-radius: var(--radius-lg); background: var(--bg-surface); }
+.doctor-talk-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.doctor-lines {
+  flex: 1;
+  min-height: 160px;
+  margin: 0;
+  padding: 0 4px 0 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+.doctor-line { display: flex; flex-direction: column; gap: 4px; max-width: 92%; }
+.doctor-line .label { display: inline-flex; align-items: center; gap: 5px; }
+.doctor-line p { padding: 10px 14px; border-radius: 16px; background: var(--bg-raised); color: var(--text-primary); font: 400 15px/1.5 var(--font-sans); overflow-wrap: anywhere; }
+.doctor-line.from-you { align-self: flex-end; align-items: flex-end; }
+.doctor-line.from-you p { background: var(--accent-fill); color: var(--text-on-accent); }
+.doctor-line.is-hearing p { opacity: 0.6; }
+.doctor-line.is-urgent p { box-shadow: inset 0 0 0 1px var(--status-warning); }
+.doctor-actions, .doctor-suggest { display: flex; flex-wrap: wrap; gap: 6px; }
+.doctor-suggest .tag, .doctor-actions .tag { min-height: 30px; padding: 0 12px; font-size: 13px; }
+
+.doctor-form { display: flex; gap: 8px; }
+.doctor-form input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--bg-raised);
+  color: var(--text-primary);
+  font: 400 15px/1 var(--font-sans);
+}
+.doctor-form input::placeholder { color: var(--text-muted); }
+
+/* The way in, at the top right of every screen. */
+.doctor-button { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: var(--radius-full); background: var(--accent-fill); color: var(--text-on-accent); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.doctor-button:hover { background: #0068d6; }
+
+@media (max-width: 900px) {
+  .screen.doctor-screen { grid-template-columns: minmax(0, 1fr); height: auto; padding: 16px 12px 48px; }
+  .doctor-tile { padding-bottom: 32px; }
+  .doctor-self { position: relative; right: auto; bottom: auto; width: min(100%, 260px); }
+  .doctor-lines { max-height: 50vh; }
+}

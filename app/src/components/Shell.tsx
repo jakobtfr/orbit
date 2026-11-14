@@ -42,9 +42,9 @@ export function Shell() {
           </fieldset>
         </div>}
       </div>
-      <Link className="emergency-button" to="/emergency">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M10 2.5 17.5 10 10 17.5 2.5 10Z" /><path d="M10 6.5v4M10 13.2v.3" /></svg>
-        Emergency
+      <Link className="doctor-button" to="/doctor">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="10.5" height="10" rx="2.5" /><path d="m13 9 4.5-2.5v7L13 11" /></svg>
+        Talk to the doctor
       </Link>
     </header>
     <div className="shell-body">

@@ -23,7 +23,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | Deep Data | `#/deep-data` | Paper-style figures of real NASA UTMB bed-rest records (heart rate, systolic pressure, temperature) with a drafted medical summary, SVG and CSV export |
 | My Personal Diary | `#/mental-health` | Private mood, energy, separation reflections, family videos, and local recording |
 | Replay | `#/replay` | Real NASA bed-rest data judged by Earth limits and personal rules. `?s=UTMB-40` opens a volunteer |
-| Emergency | `#/emergency` | Button at the top right of every screen |
+| Talk to the doctor | `#/doctor` | Button at the top right of every screen |
 
 **Settings** (gear icon in the header) switches between the planet health system (default, surface, with the Dashboard / Deep Data / My Personal Diary navigation) and the flight health system (spacecraft). The setting changes which checks are available and the radiation reference; readings and mission day stay the same.
 
@@ -46,7 +46,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | `src/data/demo.ts` | Lena's scripted readings and the crew names |
 | `src/data/utmb-replay.json` | Daily vitals and baselines of 29 NASA UTMB bed-rest volunteers, made by `scripts/replay_data.py` |
 | `src/data/utmb-residuals.json` | Day-to-day variation from four UTMB volunteers, used as noise on Lena's series |
-| `src/data/emergency.ts` | Emergency steps, each citing ERC 2021, AHA 2020, or the DGLRM/ESAM-SMG microgravity CPR guideline |
+| `src/lib/doctor.ts` | The virtual doctor's answers, built from the readings and the rules in `judge.ts` |
 | `public/licenses/` | Licence texts for Inter, Geist Mono (installed, no longer used), and react-body-map |
 | `src/styles.css`, `src/dashboard.css`, `src/research.css` | Tokens and base styles; workspace layout; Deep Data. The look follows apple.com, see `../DESIGN.md` |
 
@@ -61,7 +61,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 - Lena's values are scripted. Only the Replay data and the day-to-day variation of four vital signs come from real ground data.
 - Bed rest is a ground stand-in for flight, and its data has no confirmed illness.
 - Status rules and review bands are simplified from published values and have not been reviewed by a clinician.
-- Emergency steps follow published first-aid guidelines but have not been reviewed by a clinician.
+- The virtual doctor is simulated and rule-based. Its wording has not been reviewed by a clinician. Voice mode needs a browser with speech recognition (Chrome, Edge, Safari), which may send audio to the browser's speech service.
 - Mission/demo state lives in memory. Diary entries and videos use device-local IndexedDB storage.
 
 

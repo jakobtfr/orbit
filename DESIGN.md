@@ -91,7 +91,7 @@ Rules:
 - Status colour goes on the shape, the label, and an arrow after the value (`↑` above the limit, `↓` below). It never fills a tile.
 - "No recent data" is its own state. Never show it as a dimmed green.
 - "Repeat reading" is deliberately uncoloured: an unconfirmed reading is not a caution yet.
-- Filled status backgrounds with black text are reserved for the emergency flow and its entry button (see [Emergency flow](#emergency-flow)), and for the small round icons of urgent items in Risks & checks.
+- Filled status backgrounds with black text are reserved for the small round icons of urgent items in Risks & checks.
 - **One exception to D2:** the two activity rings on the Dashboard use green (movement) and blue (weekly plan), as in Apple Fitness. They show progress, not status, and always carry a number and a word.
 
 ## Typography
@@ -191,20 +191,21 @@ Shown when an indicator needs something from the crew. On `bg-raised`:
 - Only points outside a limit take a status colour, with the matching shape.
 - No tinted review bands, area fills, gradients, or smoothing that invents values between readings.
 
-### Emergency flow
+### Talk to the doctor
 
-The only place where the quiet rules are suspended.
+A calm call, not an alarm. It follows the quiet rules.
 
-- Entry: an **Emergency** button at the top right of the header on every screen: a `status-warning` pill with black text and the warning diamond (7.4:1). It is the only status colour in the header.
-- A full-width header with `status-warning` background and black text (7.4:1).
-- One step per screen in `title-2`, with one primary button. Completed steps stay visible in `text-muted`.
-- The header shape may flash at 0.8 Hz, on for 70% of each cycle. The crew can stop it, and it does not flash when the device asks for reduced motion. Text itself never flashes.
+- Entry: a **Talk to the doctor** button at the top right of the header on every screen: an `accent-fill` pill with white text and a camera icon. The header carries no status colour.
+- The doctor's tile is `bg-surface` with the ORBIT mark as its face and a "Simulated" tag beside the name. Its latest sentence is shown as a caption in `body-lg`.
+- State is shown on the ring around the mark and in words: a steady `accent` ring while listening, a `status-ok` ring that pulses while speaking, none when ready. With reduced motion the ring does not pulse.
+- The viewer's camera is a small mirrored tile in the corner with their name.
+- Messages are bubbles: the doctor's in `bg-raised` with the status shape beside the label, the viewer's in `accent-fill`. A message that sends the viewer to a crewmate has a 1 px `status-warning` outline.
 
 ## Motion
 
 - Transitions last 120 to 200 ms with ease-out. Use them for state changes only: opening, closing, selecting.
 - No decorative or looping animation. Nothing moves on a screen where nothing has changed.
-- Flashing is reserved for the emergency flow.
+- Nothing flashes. The one looping animation is the ring around the virtual doctor while it speaks, because it shows a state.
 - One exception to "nothing moves": the "Earth limits vs. your normal" card on the Dashboard fills its 90 days once on load (about 1.6 s) and again on click. With reduced motion it shows the end state at once.
 
 ## Wording

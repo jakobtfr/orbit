@@ -1,6 +1,6 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { DeepData } from './screens/DeepData'
-import { Emergency } from './screens/Emergency'
+import { Doctor } from './screens/Doctor'
 import { MentalHealth } from './screens/MentalHealth'
 import { Shell } from './components/Shell'
 import { useStore } from './lib/store'
@@ -21,8 +21,9 @@ export function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/emergency" element={<Emergency />} />
         <Route element={<Shell />}>
+          <Route path="/doctor" element={<Doctor />} />
+          <Route path="/emergency" element={<Navigate to="/doctor" replace />} />
           <Route path="/replay" element={<Replay />} />
           <Route path="/deep-data" element={<DeepData />} />
           <Route path="/mental-health" element={<MentalHealth />} />

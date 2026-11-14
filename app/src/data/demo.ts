@@ -26,7 +26,7 @@ export const LENA: Person = {
   preflight: pre({ hr: 62, sys: 120, dia: 72, temp: 36.8, weight: 68.4, sleep: 7.4, dose: 0 }),
 }
 
-/** Everyone on board, by name only. Used to say who needs help in an emergency. */
+/** Everyone on board, by name only. The virtual doctor uses it to name the medical lead. */
 export const CREW: CrewMember[] = [
   LENA,
   { id: 'tomas', name: 'Tomás Rivera', role: 'Flight engineer' },

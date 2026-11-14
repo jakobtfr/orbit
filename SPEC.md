@@ -4,7 +4,7 @@ Written 2026-11-14, rewritten the same day to match the app as built. What the a
 
 **How to use this file.** This file says *what* each screen contains and does. [`DESIGN.md`](DESIGN.md) says *how* it looks and reads. If they disagree, `DESIGN.md` wins on look and wording, this file wins on content and behaviour. The reasons behind the product are in [`solution-overview.md`](docs/solution/solution-overview.md); the science rules (SH1 to SH10) are in [`scientific-constraints.md`](docs/research/scientific-constraints.md).
 
-**What changed from version 1.** The 3D body became an anatomical body map on a three-column personal dashboard, styled after apple.com. The Flight, Sources, and Crew screens and the orbit model were removed. Replay, Deep Data, Mental Health, and the planet/flight setting were added. Emergency moved to a button at the top right and its steps now cite published guidelines. The `SIMULATED` tag was removed.
+**What changed from version 1.** The 3D body became an anatomical body map on a three-column personal dashboard, styled after apple.com. The Flight, Sources, and Crew screens and the orbit model were removed. Replay, Deep Data, Mental Health, and the planet/flight setting were added. The emergency first-aid flow was replaced by a virtual doctor the viewer can talk to about their own results, opened from a button at the top right of every screen. The `SIMULATED` tag was removed.
 
 ## The one idea
 
@@ -17,7 +17,7 @@ ORBIT judges each reading against the astronaut's own normal, not Earth's. The a
 | A front end that runs in the browser with no server or network | Accounts, login, a real server |
 | One astronaut, Lena Brandt, seen from her own point of view | Switching between crew members |
 | Scripted readings for Lena; real NASA UTMB bed-rest data in Replay | Real device connections |
-| One emergency scenario: chest pain or collapse | Other emergency scenarios (listed as "Not in this version") |
+| A simulated doctor that talks about the viewer's own results, by voice or text | Step-by-step first aid for a crewmate; a doctor that examines the camera picture |
 | A planet and a flight health system | A moving mission day or orbit model |
 | Desktop, tablet, and phone widths | Translations, light theme |
 
@@ -32,7 +32,7 @@ ORBIT judges each reading against the astronaut's own normal, not Earth's. The a
 ## Screen map
 
 ```
-Header (every screen): ORBIT · health system · day · viewer · Settings · Emergency
+Header (every screen): ORBIT · health system · day · viewer · Settings · Talk to the doctor
 Navigation (planet system): Dashboard · Deep Data · Mental Health
 
 Dashboard ──► Region ──► Indicator ──► Measure
@@ -40,7 +40,7 @@ Dashboard ──► Region ──► Indicator ──► Measure
     ├──► Check-in
     └──► Replay  (also from Deep Data)
 Mental Health
-Emergency (from the header, on every screen)
+Talk to the doctor (from the header, on every screen)
 ```
 
 | Screen | Route | The question it answers |
@@ -55,16 +55,16 @@ Emergency (from the header, on every screen)
 | Deep Data | `#/deep-data` | What do real bed-rest records look like in detail? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
-| Emergency | `#/emergency` | What do I do right now? |
+| Talk to the doctor | `#/doctor` | Are my results fine, and what should I do? |
 
 The app opens on the Dashboard.
 
 ## App shell
 
-**Header**, left to right: the ORBIT mark and wordmark (links to the Dashboard), the active health system and mission day, the viewer's name and role, a Settings button, and the **Emergency** button.
+**Header**, left to right: the ORBIT mark and wordmark (links to the Dashboard), the active health system and mission day, the viewer's name and role, a Settings button, and the **Talk to the doctor** button.
 
 - **Settings** chooses the planet health system (surface, gravity checks) or the flight health system (spacecraft, microgravity). The choice sets the place used by the rules: the standing blood pressure test is Unavailable in the spacecraft, and the radiation reference changes. Readings and the mission day stay the same. Planet is the default.
-- **Emergency** is always at the top right, outlined in `status-warning`. On narrow screens the system label and viewer name hide so the button stays visible.
+- **Talk to the doctor** is always at the top right, an accent pill. On narrow screens the system label and viewer name hide so the button stays visible.
 - **Navigation** (planet system only): a floating bar with Dashboard, Deep Data, and Mental Health.
 - No NASA insignia anywhere (14 CFR 1221).
 
@@ -126,21 +126,17 @@ The evidence screen. Built on real, unaltered NASA UTMB bed-rest data.
 5. **Chart** of one vital at a time with Earth's limit, the volunteer's own normal, and their personal limit.
 6. The rules, the source DOI, and the limit of the evidence: fewer false alarms, not proof that real problems are caught.
 
-### Emergency
+### Talk to the doctor
 
-Full screen; the shell is replaced by the warning header with a timer and "Stop flashing".
+Inside the shell, in two parts. The doctor is simulated: answers are put together on the device from the viewer's readings, check-ins, and the rules in `judge.ts` (`app/src/lib/doctor.ts`). No model or server is called.
 
-1. **Who needs help?** The four crew members.
-2. **What is happening?** "Chest pain or collapse"; other scenarios are listed as "Not in this version".
-3. **Steps,** one per screen, with "Done, next". Completed steps stay listed with their times. Each step shows its source.
-   - Check for a response. Call for help and send for the defibrillator.
-   - **Is the person breathing normally?** (10 seconds at most.)
-   - **No:** chest compressions at once (Evetts–Russomano position when alone), defibrillator, move to the medical restraint and continue from a handstand, report to the ground and keep going.
-   - **Yes:** keep at rest and note when the pain started, take readings, report to the ground. "Breathing stopped: start CPR" switches to the CPR steps at any time.
-4. **Patient panel** beside the steps when the patient is the viewer: heart rate, blood pressure, blood oxygen, with before-flight values.
-5. **End:** a summary and "Close and return". "Leave emergency" asks for confirmation.
+1. **Call stage.** The doctor's tile with a "Simulated" tag, its state (Speaking, Listening, Ready), and its latest sentence as a caption. The viewer's own camera sits in the corner. Controls: "Start call" (voice and camera together), "Voice", "Camera", and "End call".
+2. **Conversation.** The doctor opens with a read of today: "Your results look fine", or "Something seems off with your chest" followed by what was observed and the next action. Messages carry the status shape and buttons such as "Repeat reading". Four suggested questions and a text box work with voice off.
+3. **Voice mode.** The doctor speaks each answer, then listens, then answers again. Units are read as words ("110 over 66"). If the browser cannot listen, the doctor still speaks and the viewer types.
+4. **What it answers.** How the results look; one part of the body or one indicator; what to do next; a symptom the viewer describes, which it relates to the readings and sends to the check-in. Mood and the diary are private and are not read.
+5. **Urgent words** (chest pain, cannot breathe, fainting, sudden loss of vision) are never handled by the doctor: it tells the viewer to stay still and call the medical lead now, and gives the latest heart rate, blood pressure, and blood oxygen to pass on.
 
-Sources: ERC 2021 and AHA 2020 basic life support; Hinkelbein et al. 2020, CPR in microgravity; AHA heart-attack warning signs. Step text lives in `app/src/data/emergency.ts`. It has not been reviewed by a clinician.
+The camera picture is shown only to the viewer and is not recorded or analysed. Speech recognition is the browser's own and may process audio online. The wording has not been reviewed by a clinician.
 
 ## Indicators
 
@@ -170,8 +166,7 @@ Maximum ages are our own prototype values, not sourced.
 | Bed-rest vitals and baselines of 29 volunteers | `app/src/data/utmb-replay.json`, made by `app/scripts/replay_data.py` from `data/utmb/` | Real, unaltered |
 | Day-to-day variation of Lena's vital signs | `app/src/data/utmb-residuals.json` | Real variation from four UTMB volunteers |
 | Lena's levels, trends, sleep, exercise, radiation, cabin air | `app/src/data/demo.ts` | Scripted, with illustrative drift |
-| Crew names for the emergency flow | `app/src/data/demo.ts` | Invented; no real astronauts |
-| Emergency steps and sources | `app/src/data/emergency.ts` | From published guidelines |
+| Crew names, used by the doctor to name the medical lead | `app/src/data/demo.ts` | Invented; no real astronauts |
 
 Lena's readings run daily from 30 days before launch to the end of the mission. The app opens on mission day 100, where her temperature reads 38.0 °C.
 
@@ -202,13 +197,12 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 - [x] Replay reproduces 25.5% and 5.9% from the raw data, checked by tests.
 - [x] Indicator charts show Earth's limit next to the personal one for heart rate, blood pressure, and temperature.
 - [x] Lena's 38.0 °C shows In range (SH2).
-- [x] Emergency opens from every screen in one tap; the first step is on screen within three taps.
-- [x] Every emergency step cites a source, checked by tests (SH9).
+- [x] The doctor opens from every screen in one tap and starts with a read of today's results.
+- [x] Urgent words are handed to the medical lead, never answered by the doctor; checked by tests.
 - [x] In the flight system the standing test shows Unavailable with its reason (SH4).
 - [x] No NASA insignia in the app.
-- [ ] The emergency step text is reviewed by someone with medical training.
+- [ ] The doctor's wording is reviewed by someone with medical training.
 - [ ] Three outsiders reach the right next action in under three minutes using only the app (H3).
-- [ ] A crewmate reaches the first correct emergency action within one minute (H4).
 
 ## Open points
 

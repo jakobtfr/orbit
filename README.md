@@ -29,7 +29,7 @@ The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). 
 - **Your normal, not Earth's.** Every indicator is judged against the astronaut's own values from before flight and in flight. Indicator charts draw Earth's limit next to the personal one, so the difference is visible.
 - **One next action.** When something is off, ORBIT says what to do next in plain words: repeat the reading, apply a countermeasure, or contact the ground.
 - **How to measure.** Step-by-step instructions for each reading, and a two-minute daily symptom check-in.
-- **Emergency.** One tap from the top right of every screen. A step-by-step flow for chest pain or collapse that branches on breathing, with CPR adapted for weightlessness. Every step cites a published guideline.
+- **Talk to the doctor.** One tap from the top right of every screen. A simulated doctor reads your own readings and check-ins and tells you in plain words whether your results look fine or something seems off, for example with your chest, and what to do next. You can talk to it by voice with your camera on, like a video call, or type. Answers are put together on the device, so it works without contact with Earth.
 - **Replay.** The full bed-rest comparison: pick any of the 29 volunteers and watch both rule sets judge the same days.
 - **Deep Data and Mental Health.** Figures of real bed-rest records with a drafted medical summary and SVG/CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
 - **Environment.** Settings switch between the planet and the flight health system. Checks that need gravity, and the radiation reference, follow the setting.
@@ -53,7 +53,6 @@ The app runs in the browser with no server and no network.
 | NASA Life Sciences Portal, UTMB bed rest case report forms ([DOI 10.83263/wjw1-ta27](https://doi.org/10.83263/wjw1-ta27)) | The Replay, the home-screen result, and the day-to-day variation of the demo vital signs |
 | NASA-STD-3001, NASA OCHMO technical briefs, NASA Human Research Program | Radiation, CO₂, and sleep references; the five hazards |
 | Published flight physiology, e.g. [Stahn et al. 2017](https://www.nature.com/articles/s41598-017-15560-w) | Flight adjustments to temperature and other limits |
-| ERC 2021 and AHA 2020 resuscitation guidelines; [Hinkelbein et al. 2020](https://doi.org/10.1186/s13049-020-00793-y), CPR in microgravity | Emergency steps |
 
 All other values shown for the demo astronaut, Lena Brandt, are scripted. The full source lists are in [`data/README.md`](data/README.md), [`clinical-thresholds.md`](docs/research/clinical-thresholds.md#source-list), and [`dashboard-methodology.md`](docs/solution/dashboard-methodology.md).
 
@@ -61,7 +60,7 @@ All other values shown for the demo astronaut, Lena Brandt, are scripted. The fu
 
 - A prototype, not a medical device. Status rules are simplified from published values and have not been reviewed by a clinician.
 - No flight hardware is connected. Device feeds are scripted.
-- Emergency steps follow published first-aid guidelines but still need review by a medical professional.
+- The virtual doctor is simulated. It repeats what the prototype rules find in your readings; it does not diagnose, and its wording still needs review by a medical professional. Anything that sounds urgent is handed to the medical lead.
 
 ## AI assistance
 

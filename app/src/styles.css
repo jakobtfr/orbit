@@ -434,55 +434,6 @@ a.tile:hover { background: var(--bg-hover); }
 }
 .dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-2); }
 
-/* ---------- emergency: the one place the quiet rules are suspended ---------- */
-
-.emergency { display: flex; flex-direction: column; height: 100%; }
-.em-header {
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  min-height: 56px;
-  padding: 0 var(--space-4);
-  background: var(--status-warning);
-  color: var(--bg-canvas);
-}
-.em-shape { display: inline-flex; }
-.em-shape path { fill: var(--bg-canvas); }
-.em-shape.is-flashing { animation: flash 1.25s steps(1, end) infinite; }
-@keyframes flash {
-  0% { opacity: 1; }
-  70% { opacity: 0; }
-}
-.em-title { flex: 1; font: 600 20px/1.3 var(--font-sans); letter-spacing: -0.01em; }
-.em-timer { font: 500 20px/1 var(--font-mono); }
-.em-btn { min-height: 44px; padding: 0 var(--space-3); border: 1px solid var(--bg-canvas); border-radius: var(--radius-sm); font: 500 15px/1.2 var(--font-sans); color: var(--bg-canvas); }
-.em-body { flex: 1; display: flex; min-height: 0; }
-.em-main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-6) var(--space-5); }
-.em-main > * { max-width: 640px; }
-.em-person { flex-direction: row; }
-.em-done { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); color: var(--text-muted); }
-.em-done li { display: flex; justify-content: space-between; gap: var(--space-3); }
-.em-done li::before { content: '✓'; margin-right: var(--space-2); }
-.em-done li span:first-child { flex: 1; }
-.em-step { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
-.em-leave { align-self: flex-start; margin-top: auto; }
-.em-panel {
-  flex: none;
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-5);
-  background: var(--bg-surface);
-  border-left: 1px solid var(--border-subtle);
-  overflow-y: auto;
-}
-.em-reading { display: flex; flex-direction: column; gap: var(--space-1); padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); }
-
-.em-sources a { color: var(--accent); }
-.em-disclaimer { color: var(--text-muted); }
-
 /* ---------- small screens and reduced motion ---------- */
 
 @media (max-width: 1100px) {

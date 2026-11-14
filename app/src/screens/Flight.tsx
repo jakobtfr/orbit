@@ -2,8 +2,6 @@ import { StatusMark, Tag } from '../components/Status'
 import { StatusTile } from '../components/Tiles'
 import { Trajectory } from '../components/Trajectory'
 import { SCENE_DAY } from '../data/demo'
-import { INDICATORS, INDICATOR_ORDER } from '../lib/indicators'
-import { unavailableReason } from '../lib/judge'
 import { LANDING_DAY, PHASES, SIM_END, doseRate, nextMilestone, phaseFor, positionAt } from '../lib/mission'
 import { useStore } from '../lib/store'
 import { ScreenTitle } from './common'
@@ -13,20 +11,12 @@ export function Flight() {
   const phase = phaseFor(state.day)
   const pos = positionAt(state.day)
   const next = nextMilestone(state.day)
-  const keys = INDICATOR_ORDER.filter((k) => k !== 'mood')
-  const off = keys.filter((k) => unavailableReason(k, state.place))
-  const on = keys.filter((k) => !unavailableReason(k, state.place))
-  const how = (k: (typeof keys)[number]) => {
-    const d = INDICATORS[k]
-    if (d.provenance === 'MODELLED') return 'Estimated from exercise. Bone cannot be scanned in flight.'
-    return d.auto ? `Arrives on its own from the ${d.source.toLowerCase()}.` : 'Entered by hand.'
-  }
   const rate = doseRate(state.day)
   const delay = pos.delayMin < 1 ? 'Under 1 min' : `${pos.delayMin.toFixed(0)} min`
 
   return (
     <div className="screen">
-      <ScreenTitle sub="Where the mission is today, how far help is, and which checks apply here.">Flight</ScreenTitle>
+      <ScreenTitle sub="Where the mission is today and how far help is.">Flight</ScreenTitle>
 
       <section className="flight-now">
         <Trajectory day={state.day} />
@@ -80,31 +70,6 @@ export function Flight() {
         </div>
       </section>
 
-      <section>
-        <h2 className="title-3">Checks here</h2>
-        <div className="checks">
-          <div>
-            <div className="label">Available here</div>
-            <ul className="check-list">
-              {on.map((k) => (
-                <li key={k}><span className="check-name">{INDICATORS[k].name}</span><span className="body-sm">{how(k)}</span></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="label">Not available here</div>
-            {off.length === 0 ? (
-              <p className="empty-line">Every check is available here.</p>
-            ) : (
-              <ul className="check-list">
-                {off.map((k) => (
-                  <li key={k}><span className="check-name">{INDICATORS[k].name}</span><span className="body-sm">{unavailableReason(k, state.place)}</span></li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

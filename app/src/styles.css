@@ -222,7 +222,6 @@ button {
 .screen-sub { max-width: 640px; }
 .back { align-self: flex-start; margin: calc(var(--space-2) * -1) 0 calc(var(--space-3) * -1) calc(var(--space-2) * -1); }
 .empty-line { color: var(--text-secondary); }
-.privacy-line { color: var(--text-muted); font-size: 13px; }
 .note { color: var(--text-muted); max-width: 640px; }
 .section-label { margin-bottom: var(--space-1); }
 
@@ -424,10 +423,6 @@ a.tile:hover { background: var(--bg-hover); }
 .timeline-part.is-current .label { color: var(--text-primary); }
 .timeline-now { position: absolute; top: -4px; bottom: 0; width: 2px; background: var(--text-primary); pointer-events: none; }
 .screen input[type='range'] { width: 100%; height: 44px; accent-color: var(--accent); }
-.checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
-.check-list { list-style: none; padding: 0; margin-top: var(--space-2); }
-.check-list li { display: flex; flex-direction: column; padding: var(--space-2) 0; border-bottom: 1px solid var(--border-subtle); }
-.check-name { color: var(--text-primary); }
 
 /* ---------- sources ---------- */
 

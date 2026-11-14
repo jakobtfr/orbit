@@ -182,7 +182,6 @@ ORBIT knows where the mission is. Everything on this screen follows from the mis
 - **Facts beside it:** mission day, phase, place, distance from Earth in million km, one-way signal delay with the time for a question and its answer, and the next milestone with days remaining.
 - **Timeline:** the four phases as a bar with a marker for today, and a slider to move the simulation to any mission day. A button returns to day 100, where the scripted events happen.
 - **Cabin:** status tiles for carbon dioxide and radiation dose rate. The dose rate is higher in deep space than on the surface of Mars.
-- **Checks here:** two lists, "Available here" and "Not available here", each item with a one-line reason.
 
 ### 9. Sources
 

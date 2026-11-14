@@ -295,11 +295,6 @@ export function attention(state: AppState, person: Person): AttentionItem[] {
   return items.sort((a, b) => SEVERITY[b.status] - SEVERITY[a.status])
 }
 
-/** The most serious status of anything that needs attention. */
-export function overallStatus(state: AppState, person: Person): StatusKey {
-  return worst(attention(state, person).map((i) => i.status))
-}
-
 export function lastCheckIn(state: AppState, personId: string): CheckIn | undefined {
   const t = now(state)
   const list = (state.checkins[personId] ?? []).filter((c) => c.t <= t)

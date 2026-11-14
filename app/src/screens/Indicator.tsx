@@ -6,6 +6,7 @@ import { StatusMark, Tag } from '../components/Status'
 import { NextActionCard, ValueLine } from '../components/Tiles'
 import { FIRST_DAY } from '../data/demo'
 import { age, signed, stamp } from '../lib/format'
+import { radiationToday } from '../lib/dashboard'
 import { INDICATORS, REGIONS, formatValue } from '../lib/indicators'
 import { useCall } from '../lib/call'
 import { actionFor, activeSymptoms, baselines, chartGuide, judge, now, readingsFor, symptomStatus, symptomsFor } from '../lib/judge'
@@ -26,6 +27,8 @@ export function Indicator() {
   const { state } = useStore()
   const { openCall } = useCall()
   const [range, setRange] = useState(30)
+  // Which indicator the full list of readings is open for, so it closes again on another indicator.
+  const [allFor, setAllFor] = useState<string | null>(null)
   if (!person || !key || !(key in INDICATORS)) return <Missing />
 
   const k = key as IndicatorKey
@@ -42,7 +45,9 @@ export function Indicator() {
   const all = readingsFor(state, person.id, k)
   const pre = person.preflight[k]
   const needsAction = j.status !== 'ok' && j.status !== 'unavailable'
-  const action = needsAction ? actionFor(state, person, { kind: 'indicator', key: k, status: j.status, label: def.name }) : undefined
+  // Radiation has two limits: the mission total, judged above, and today's dose, which the dashboard flags.
+  const daily = k === 'radiation' && !needsAction ? radiationToday(state, person) : undefined
+  const action = needsAction ? actionFor(state, person, { kind: 'indicator', key: k, status: j.status, label: def.name }) : daily?.action
   const from = range ? t - range : FIRST_DAY
   const diff = (base?: number, base2?: number) => {
     if (!j.latest || base === undefined) return ''
@@ -50,6 +55,7 @@ export function Indicator() {
     return k === 'bp' && base2 !== undefined ? `${d1}/${signed((j.latest.v2 ?? 0) - base2, 0)}` : d1
   }
   const canMeasure = def.inputLabel !== ''
+  const showAll = allFor === k
 
   return (
     <div className="screen indicator-screen">
@@ -66,7 +72,8 @@ export function Indicator() {
           <ValueLine k={k} reading={j.latest} arrow={j.arrow} status={j.status} size="reading-xl" />
         )}
         {def.provenance === 'MODELLED' && <p className="body-sm">Estimated, not measured.</p>}
-        <StatusMark status={j.status} size={16} />
+        <StatusMark status={daily ? 'warning' : j.status} size={16} />
+        {daily && <p className="body-sm">The mission total is in range. Today’s dose of {daily.rate.toFixed(2)} mSv is over the daily limit of {daily.limit}.</p>}
         <div className="tags">
           {j.latest && <Tag>{age(t, j.latest.t)}</Tag>}
           <Tag>{j.latest?.source ?? def.source}</Tag>
@@ -137,7 +144,7 @@ export function Indicator() {
               <tr><th>Time</th><th>Value</th><th>Context</th><th>Source</th></tr>
             </thead>
             <tbody>
-              {all.slice(-10).reverse().map((r, i) => (
+              {(showAll ? all : all.slice(-10)).slice().reverse().map((r, i) => (
                 <tr key={`${r.t}-${i}`}>
                   <td>{stamp(r.t)}</td>
                   <td className="cell-value">{formatValue(k, r)} {def.unit}</td>
@@ -147,6 +154,11 @@ export function Indicator() {
               ))}
             </tbody>
           </table>
+        )}
+        {all.length > 10 && (
+          <button className="btn btn-quiet" style={{ alignSelf: 'flex-start' }} aria-expanded={showAll} onClick={() => setAllFor(showAll ? null : k)}>
+            {showAll ? 'Show the last 10 only' : `Show all ${all.length} readings`}
+          </button>
         )}
       </section>
 

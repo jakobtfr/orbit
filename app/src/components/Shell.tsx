@@ -34,6 +34,7 @@ function ShellFrame() {
       <nav className="planet-nav" aria-label="Health navigation">
         <NavLink to={`/body/${viewer.id}`} className={() => pathname.startsWith('/body') ? 'active' : ''}><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1" /><rect x="12" y="3" width="5" height="5" rx="1" /><rect x="3" y="12" width="5" height="5" rx="1" /><rect x="12" y="12" width="5" height="5" rx="1" /></svg>Dashboard</NavLink>
         <NavLink to="/measurements"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3v14h14M6 12l3-4 3 2 4-6" /></svg>Measurements</NavLink>
+        <NavLink to="/resources"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 5c-2-1.5-4.500-2-7-2v12c2.500 0 5 .5 7 2 2-1.500 4.500-2 7-2V3c-2.500 0-5 .5-7 2Zm0 0v12" /></svg>Resources</NavLink>
         <NavLink to="/mental-health"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17S2 12 2 7a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5-8 10-8 10Z" /></svg>My Personal Diary</NavLink>
       </nav>
       <main className="main" ref={mainRef}><Outlet /></main></div>

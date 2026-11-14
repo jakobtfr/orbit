@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { age } from '../lib/format'
 import { INDICATORS, formatValue } from '../lib/indicators'
-import { activeSymptoms, judge, now, symptomStatus } from '../lib/judge'
+import { actionSteps, activeSymptoms, judge, now, symptomStatus } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { Action, IndicatorKey, Person, Reading, RegionKey } from '../lib/types'
 import { STATUS, StatusMark, Tag } from './Status'
@@ -56,20 +57,53 @@ export function SymptomTile({ person, region }: { person: Person; region: Region
   )
 }
 
+/** A countdown for a step that says to wait or rest for some minutes. */
+function StepTimer({ minutes }: { minutes: number }) {
+  const [left, setLeft] = useState<number | null>(null)
+  useEffect(() => {
+    if (left === null || left <= 0) return
+    const id = setTimeout(() => setLeft(left - 1), 1000)
+    return () => clearTimeout(id)
+  }, [left])
+  if (left === null) return <button className="step-timer" onClick={() => setLeft(minutes * 60)}>Start {minutes}-minute timer</button>
+  if (left <= 0) return <span className="step-timer is-up" role="status">Time is up</span>
+  return <button className="step-timer is-running" aria-label="Stop timer" onClick={() => setLeft(null)}>{Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')} · stop</button>
+}
+
+/** The next action, walked through one step at a time, with a timer where a step says to wait. */
 export function NextActionCard({ action }: { action: Action }) {
+  const { state, stepAt, setStepAt } = useStore()
+  const steps = actionSteps(action)
+  const id = `${state.day}|${action.next}`
+  const at = Math.min(stepAt[id] ?? 0, steps.length)
+  const finished = at === steps.length
+  const last = at === steps.length - 1
+  const step = steps[at]
+  const wait = step?.match(/(?:for|after) (\d+) minutes/)
   return (
     <section className="action-card" aria-label="Next action">
       <div className="action-head">
         <span className="label">Next action</span>
+        {steps.length > 1 && <span className="label action-progress">{finished ? 'Done' : `Step ${at + 1} of ${steps.length}`}</span>}
       </div>
-      <p className="body">{action.observed}</p>
-      <p className="title-3">{action.next}</p>
-      {action.risk && <p className="label">Spaceflight risk this bears on: {action.risk}</p>}
-      {action.button && (
-        <Link className="btn btn-primary" to={action.button.to}>
-          {action.button.label}
-        </Link>
+      {steps.length > 1 && (
+        <div className="action-bar" aria-hidden="true">
+          {steps.map((s, i) => <span key={s} className={i < at ? 'is-done' : i === at ? 'is-now' : ''} />)}
+        </div>
       )}
+      <p className="body">{action.observed}</p>
+      {finished
+        ? <p className="title-3" role="status">Done. The status clears when the next reading is back in range.</p>
+        : <p className="title-3" key={step} aria-live="polite">{step}</p>}
+      {wait && <StepTimer key={step} minutes={Number(wait[1])} />}
+      {action.risk && <p className="label">Spaceflight risk this bears on: {action.risk}</p>}
+      <div className="action-buttons">
+        {!finished && (last && action.button
+          ? <Link className="btn btn-primary" to={action.button.to} onClick={() => setStepAt(id, steps.length)}>{action.button.label}</Link>
+          : steps.length > 1 && <button className="btn btn-primary" onClick={() => setStepAt(id, at + 1)}>{last ? 'Done' : 'Done, next step'}</button>)}
+        {finished && action.button && <Link className="btn btn-primary" to={action.button.to}>{action.button.label}</Link>}
+        {at > 0 && <button className="btn btn-quiet" onClick={() => setStepAt(id, finished ? 0 : at - 1)}>{finished ? 'Start again' : 'Back'}</button>}
+      </div>
     </section>
   )
 }

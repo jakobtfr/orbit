@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react'
 import { readDiary, type ConnectionAnswers } from './diary'
 import { LENA, initialState } from '../data/demo'
 import type { AppState, CheckIn, IndicatorKey, Person, Reading } from './types'
@@ -27,6 +27,9 @@ function reducer(state: AppState, a: Act): AppState {
 export interface MentalEntry { id: string; day: number; mood: number; energy: number; note: string; createdAt?: string; answers?: ConnectionAnswers }
 
 interface Store {
+  /** How far the person is through each next action in this session: the number of steps finished. */
+  stepAt: Record<string, number>
+  setStepAt: (action: string, step: number) => void
   mentalStorageStatus: 'loading' | 'ready' | 'unavailable'
   mentalEntries: MentalEntry[]
   setMentalEntries: Dispatch<React.SetStateAction<MentalEntry[]>>
@@ -50,7 +53,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }).catch(() => { if (active) setMentalStorageStatus('unavailable') })
     return () => { active = false }
   }, [])
-  const store = useMemo(() => ({ state, dispatch, viewer: LENA, mentalEntries, setMentalEntries, mentalStorageStatus }), [state, mentalEntries, mentalStorageStatus])
+  const [stepAt, setSteps] = useState<Record<string, number>>({})
+  const setStepAt = useCallback((action: string, step: number) => setSteps((all) => ({ ...all, [action]: step })), [])
+  const store = useMemo(() => ({ state, dispatch, viewer: LENA, mentalEntries, setMentalEntries, mentalStorageStatus, stepAt, setStepAt }), [state, mentalEntries, mentalStorageStatus, stepAt, setStepAt])
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>
 }
 

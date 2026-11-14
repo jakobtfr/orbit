@@ -1,5 +1,5 @@
 import { baselines, now, readingsFor } from './judge'
-import type { AppState, IndicatorKey, Person, Reading } from './types'
+import type { Action, AppState, IndicatorKey, Person, Reading } from './types'
 
 export type Level = 'ok' | 'caution' | 'warning'
 export interface Sample { t: number; v: number }
@@ -61,6 +61,26 @@ export function metrics(state: AppState, person: Person): Metric[] {
       source: 'https://www.nasa.gov/ochmo-tb-004-carbon-dioxide-2/', sourceLabel: 'NASA carbon dioxide limits',
       note: 'Demo samples represent one 1-hour mean ppCO₂ per day. NASA limits the 1-hour mean to 3 mmHg. The red 5 mmHg line is an ORBIT heuristic, not a NASA limit. Multi-day averaging cannot establish continuous compliance.' },
   ]
+}
+/**
+ * Today's radiation dose against the daily design limit for the place, with what to do when it is over.
+ * Undefined when it is within the limit. The mission total is judged separately in judge.ts.
+ */
+export function radiationToday(state: AppState, person: Person): { rate: number; limit: number; action: Action } | undefined {
+  const rate = metricSamples(state, person, 'radiation').at(-1)?.v
+  const limit = metrics(state, person).find((m) => m.key === 'radiation')?.warning
+  if (rate === undefined || limit === undefined || rate < limit) return undefined
+  const total = readingsFor(state, person.id, 'radiation').at(-1)?.v
+  return {
+    rate,
+    limit,
+    action: {
+      observed: `Today’s dose is ${rate.toFixed(2)} mSv, above the design limit of ${limit} mSv a day ${state.place === 'surface' ? 'on the surface' : 'in free space'}.${total === undefined ? '' : ` Your mission total is ${total.toFixed(0)} mSv of the 600 mSv career limit.`}`,
+      next: 'Spend rest and sleep in the best shielded quarters, keep time in the least shielded modules short, and report the daily dose to the ground at the next contact.',
+      steps: ['Move today’s rest and sleep to the best shielded quarters.', 'Keep time in the least shielded modules short today.', 'Report the daily dose to the ground at the next contact.'],
+      risk: 'Radiation and cancer',
+    },
+  }
 }
 export function metricLevel(metric: Metric, value: number): Level {
   if (metric.low !== undefined && value < metric.low) return 'warning'

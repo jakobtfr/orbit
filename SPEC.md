@@ -17,7 +17,7 @@ ORBIT judges each reading against the astronaut's own normal, not Earth's. The a
 | A front end that runs in the browser with no server or network | Accounts, login, a real server |
 | One astronaut, Lena Brandt, seen from her own point of view | Switching between crew members |
 | Scripted readings for Lena; real NASA UTMB bed-rest data in Replay | Real device connections |
-| A simulated doctor that talks about the viewer's own results, by voice or text | Step-by-step first aid for a crewmate; a doctor that examines the camera picture |
+| A simulated doctor that talks about the viewer's own results, by voice or text | A doctor that examines the camera picture |
 | Place taken from the mission day: spacecraft while travelling, surface on Mars | A control that overrides where the crew is |
 | Desktop, tablet, and phone widths | Translations, light theme |
 
@@ -33,7 +33,7 @@ ORBIT judges each reading against the astronaut's own normal, not Earth's. The a
 
 ```
 Header (every screen): ORBIT · mission phase · day · viewer · Talk to the doctor
-Navigation: Dashboard · Measurements · Risks · Mental Health
+Navigation: Dashboard · Measurements · Resources · Mental Health
 
 Dashboard ──► Region ──► Indicator ──► Measure
     │    └──► Muscle group
@@ -53,7 +53,7 @@ Call the doctor (a pop-up, from the Dashboard prompt or the header)
 | Measure | `#/body/lena/measure/:key` | How do I take this reading? |
 | Check-in | `#/body/lena/check-in` | How do I feel today? |
 | Measurements | `#/measurements` | What do my own measurements look like over time? |
-| Risks | `#/risks` | Which spaceflight risks is ORBIT watching for me, and what can I do about each? |
+| Resources | `#/resources`, `#/resources/:guide` | What do I do in this situation? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
 | Call the doctor | pop-up, no route | Something is off: what do I do about it? |
@@ -109,16 +109,9 @@ Special cases: Unavailable shows the reason ("The standing test needs gravity.")
 
 Lena's own measurements, for exploring the record. A list of every indicator, grouped by part of the body, with the latest value and status. Choosing one draws its trend for 7, 28, or 90 days, or the whole mission, using the same chart as Indicator: her readings, her normal, her personal limit, and the Earth cutoff where one exists. The footer shows the latest value, how many readings fall in the window, and the change from before flight. "Open this measurement" goes to that indicator. CSV export covers every measurement in the window. The NASA bed-rest comparison stays on Replay.
 
-### Risks
+### Resources
 
-All 17 risks of human spaceflight named by NASA's Human Research Program (https://www.nasa.gov/hrp/risks/), grouped as Body; Mind, crew, and performance; Radiation. Each row shows the worst status of what ORBIT watches for that risk and opens to: what the risk is, the indicators watched (with status, linking to Indicator), the check-in symptoms that point to it, and what the crew member can do. Rows that need attention start open. The mapping and wording are in `app/src/lib/risks.ts`.
-
-| Watched through | Risks |
-| --- | --- |
-| Readings, with symptoms where they exist | Immune, balance and motion sickness, heart and circulation, microbes, low oxygen, nutrition, fitness, eye and brain changes, bone, sleep, radiation |
-| Check-in symptoms only | Decompression sickness, injury during suit work, injury at launch and landing (with the next launch or landing from the mission plan) |
-| Private check-in answers, two low answers in a row | Mood and mental health, working as a crew |
-| Cabin readings and explanation only | Running the systems alone: ORBIT covers only the health side |
+Animated refresher guides that run on the device: a crewmate collapses (CPR), chest pain, choking, heavy bleeding, and feeling faint after landing. The list shows one card per guide. A guide plays one step at a time: an animated pictogram, the step in one or two sentences, and Back and Next (also the arrow keys). The compressions step has a beat to follow at 110 a minute, counted in sets of 30, which drives the animation; steps that say to wait have a countdown. Steps and wording follow the place: in weightlessness the collapse guide adds securing the person and the rescuer, with gravity it says to lay them flat. Each guide lists its published sources. The guides are in `app/src/lib/guides.ts` and the pictograms in `app/src/components/guides/Scene.tsx`. The wording has not been reviewed by a clinician.
 
 ### Mental Health
 
@@ -206,6 +199,7 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 | Place | Set by the mission day. The standing test and the balance test are Unavailable in the spacecraft (SH4). The radiation review line is 0.9 mSv/day on the surface and 1.3 mSv/day in free space. |
 | Saving a reading | Added to the record and judged at once. |
 | Finishing a check-in | Logged symptoms mark their region; the check-in shows as done for the day. |
+| Spaceflight risks | `lib/risks.ts` maps all 17 risks named by NASA's Human Research Program (https://www.nasa.gov/hrp/risks/) to what ORBIT measures or asks: indicators, check-in symptoms, or the private mood and crew answers. There is no risks screen. A next action names the risk its finding bears on, the doctor is told which risks have a finding behind them, and two low crew answers in a row give a private note at the end of the check-in. Decompression sickness, injury during suit work, and injury at launch and landing rest on check-in symptoms only. Hearing maps to no HRP risk. |
 | Replay | `lib/replay.ts`: Earth cutoffs on any single day against personal rules on two days in a row. Tests reproduce 25.5% and 5.9%. |
 
 ## States every screen must handle
@@ -215,7 +209,7 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 - **Nothing to show:** an empty line, never a blank area.
 - **Private:** mood and journal entries are never shown outside Mental Health and the check-in.
 - **Keyboard focus:** a visible ring on every control, in a sensible order.
-- **Reduced motion:** no transitions, no flashing, no filling animation.
+- **Reduced motion:** no transitions, no flashing, no filling animation; the Resources pictograms stand still.
 
 ## Done when
 

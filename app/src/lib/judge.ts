@@ -285,10 +285,15 @@ export function symptomLevel(name: string): 'caution' | 'warning' {
 const SYMPTOM_NEXT_DEFAULT = 'Rest, drink water, and log how it feels at the next check-in. Tell the medical lead if it gets worse or lasts 3 days.'
 /** Next actions for symptoms where rest and water are the wrong advice. Draft wording, most urgent first. */
 const SYMPTOM_NEXT: [string, string][] = [
-  ['Joint pain after suit work', 'Stop work and tell the medical lead now. Joint pain after a pressure change can be decompression sickness, which is treated with oxygen and pressure, not rest.'],
+  ['Joint pain after suit work', 'Stop work and tell the medical lead now: joint pain after a pressure change can be decompression sickness, which is treated with oxygen and pressure, not rest.'],
   ['Injury', 'Clean and cover any wound, rest the injured part, and tell the medical lead today.'],
-  ['Nausea or motion sickness', 'Move your head slowly, fix your eyes on one point, and sip water. It usually passes within 3 days of a change in gravity. Tell the medical lead if you cannot keep fluids down.'],
+  ['Nausea or motion sickness', 'Move your head slowly, fix your eyes on one point, and sip water; it usually passes within 3 days of a change in gravity. Tell the medical lead if you cannot keep fluids down.'],
 ]
+
+/** A next action as steps to walk through one at a time: its own list, or one step per sentence. */
+export function actionSteps(action: Action): string[] {
+  return action.steps ?? action.next.split(/(?<=[.!?])\s+/).filter(Boolean)
+}
 
 export function symptomNext(names: string[]): string {
   return SYMPTOM_NEXT.find(([name]) => names.includes(name))?.[1] ?? SYMPTOM_NEXT_DEFAULT
@@ -504,7 +509,7 @@ function baseAction(state: AppState, person: Person, item: AttentionItem): Actio
     case 'exercise':
       return {
         observed: 'Exercise has been under 80% of the plan for 3 days in a row.',
-        next: 'Book today’s session now. Exercise is the main protection for bone and muscle.',
+        next: 'Book today’s session now: exercise is the main protection for bone and muscle.',
       }
     case 'bone':
       return {
@@ -526,8 +531,8 @@ function baseAction(state: AppState, person: Person, item: AttentionItem): Actio
       }
     case 'mood':
       return {
-        observed: 'Mood has been 2 of 5 or lower for 2 check-ins in a row.',
-        next: 'This entry stays private. Consider asking the medical lead for a private talk.',
+        observed: 'Mood has been 2 of 5 or lower for 2 check-ins in a row. This entry stays private.',
+        next: 'Consider asking the medical lead for a private talk.',
       }
     case 'vision':
       return {
@@ -588,7 +593,7 @@ function baseAction(state: AppState, person: Person, item: AttentionItem): Actio
     case 'water':
       return {
         observed: j.arrow === '↑' ? 'The biocide in the drinking water is high.' : 'The biocide in the drinking water is too low to hold microbes back.',
-        next: 'Do not ignore a failed water sample. Use the reserve water and tell the ground.',
+        next: 'Switch to the reserve water. Tell the ground at the next contact.',
       }
     default:
       return {

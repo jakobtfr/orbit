@@ -10,6 +10,7 @@ import { Measure } from './screens/Measure'
 import { Muscle } from './screens/Muscle'
 import { Replay } from './screens/Replay'
 import { Region } from './screens/Region'
+import { GuidePlayer, Resources } from './screens/Resources'
 
 function Home() {
   const { viewer } = useStore()
@@ -22,6 +23,8 @@ export function App() {
       <Routes>
         <Route element={<Shell />}>
           <Route path="/replay" element={<Replay />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/resources/:id" element={<GuidePlayer />} />
           <Route path="/measurements" element={<Measurements />} />
           <Route path="/deep-data" element={<Navigate to="/measurements" replace />} />
           <Route path="/mental-health" element={<MentalHealth />} />

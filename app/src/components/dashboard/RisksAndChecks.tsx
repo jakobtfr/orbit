@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useCall } from '../../lib/call'
-import { metricSamples, metrics } from '../../lib/dashboard'
+import { radiationToday } from '../../lib/dashboard'
 import { EXERCISE_PLAN_MIN, actionFor, attention, checkedInToday, readingsFor } from '../../lib/judge'
 import type { AppState, Person } from '../../lib/types'
 
@@ -31,10 +31,9 @@ export function risksAndChecks(state: AppState, person: Person): Row[] {
   }
 
   // Today's radiation against the daily limit. The career total is judged separately, above.
-  const rate = metricSamples(state, person, 'radiation').at(-1)?.v
-  const limit = metrics(state, person).find((m) => m.key === 'radiation')?.warning
-  if (rate !== undefined && limit !== undefined && rate >= limit && !rows.some((r) => r.about === 'radiation')) {
-    rows.push({ kind: 'warning', title: 'Radiation exposure', detail: `${rate.toFixed(2)} mSv today · limit ${limit} a day`, hint: 'Review shielding plan', to: `${base}/indicator/radiation` })
+  const dose = radiationToday(state, person)
+  if (dose && !rows.some((r) => r.about === 'radiation')) {
+    rows.push({ kind: 'warning', title: 'Radiation exposure', detail: `${dose.rate.toFixed(2)} mSv today · limit ${dose.limit} a day`, hint: 'See what to do', to: `${base}/indicator/radiation` })
   }
 
   const exercised = readingsFor(state, person.id, 'exercise').filter((r) => Math.floor(r.t) === state.day).reduce((sum, r) => sum + r.v, 0)

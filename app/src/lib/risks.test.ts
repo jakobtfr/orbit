@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { briefing } from './doctor'
 import { INDICATORS, INDICATOR_ORDER } from './indicators'
-import { actionFor, attention, riskStatus, risksAtAttention } from './judge'
+import { actionFor, actionSteps, attention, riskStatus, risksAtAttention } from './judge'
 import { RISKS, risksForIndicator } from './risks'
 
 const risk = (id: string) => RISKS.find((r) => r.id === id)!
@@ -16,8 +16,8 @@ describe('HRP risks in the logic', () => {
       for (const k of r.indicators) expect(INDICATORS[k], `${r.id}: ${k}`).toBeDefined()
     }
   })
-  it('ties every indicator to at least one risk', () => {
-    for (const k of INDICATOR_ORDER) expect(risksForIndicator(k).length, k).toBeGreaterThan(0)
+  it('ties every indicator to at least one risk, except hearing, which no HRP risk covers', () => {
+    for (const k of INDICATOR_ORDER) expect(risksForIndicator(k).length > 0, k).toBe(k !== 'hearing')
   })
   it('raises decompression sickness to a warning when joint pain follows suit work, and tells the doctor', () => {
     const s = initialState()
@@ -31,6 +31,12 @@ describe('HRP risks in the logic', () => {
     expect(action.next).toContain('medical lead now')
     expect(action.risk).toContain('Decompression sickness')
     expect(briefing(s, LENA)).toContain('Decompression sickness')
+  })
+  it('breaks a next action into steps to tick off', () => {
+    const s = initialState()
+    const action = actionFor(s, LENA, { kind: 'indicator', key: 'hr', status: 'caution', label: 'Heart rate at rest' })
+    expect(actionSteps(action)).toEqual(['Rest for 10 minutes and repeat the reading.', 'Tell the medical lead today.'])
+    expect(actionSteps({ observed: '', next: 'One. Two.', steps: ['Only this.'] })).toEqual(['Only this.'])
   })
   it('names the risk a reading bears on in its next action', () => {
     const s = initialState()

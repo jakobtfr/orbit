@@ -8,8 +8,6 @@ import type { IndicatorKey } from './types'
  * The wording is ours and has not been reviewed by a clinician.
  */
 
-export const HRP_RISKS_URL = 'https://www.nasa.gov/hrp/risks/'
-
 export type RiskGroup = 'body' | 'mind' | 'radiation'
 
 export interface Risk {

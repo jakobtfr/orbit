@@ -36,7 +36,7 @@ export function rankVoices<T extends VoiceLike>(voices: T[]): T[] {
     .map((x) => x.v)
 }
 
-/** The doctor's voice: Google UK English Male where the browser has it (Chrome), otherwise the most natural English voice. */
+/** The doctor's voice: the plain Google US English voice where the browser has it (Chrome), otherwise the most natural English voice. */
 export function doctorVoice<T extends VoiceLike>(voices: T[]): T | undefined {
-  return voices.find((v) => v.name === 'Google UK English Male') ?? rankVoices(voices)[0]
+  return voices.find((v) => v.name === 'Google US English') ?? rankVoices(voices)[0]
 }

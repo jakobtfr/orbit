@@ -18,6 +18,8 @@ export interface DoctorReply {
   actions?: { label: string; to: string }[]
   /** The reply tells the person to get a crewmate now. */
   urgent?: boolean
+  /** The reply asks where the trouble is, so the call can offer the parts of the body to pick from. */
+  ask?: 'where'
 }
 
 export const SUGGESTIONS = ['How are my results?', 'What should I do next?', 'I have a headache', 'Can you look at this rash?']
@@ -90,7 +92,7 @@ export function assessment(state: AppState, person: Person): DoctorReply {
   if (!items.length) {
     return {
       status: 'ok',
-      text: 'Your results look fine. Everything I can see is in your usual range, and nothing was reported in your check-ins.',
+      text: 'Your results look fine. Everything is in your usual range.',
     }
   }
 
@@ -99,7 +101,7 @@ export function assessment(state: AppState, person: Person): DoctorReply {
     parts[0] = parts[0].charAt(0).toLowerCase() + parts[0].slice(1)
     return {
       status: 'ok',
-      text: `Your results look fine. Nothing I can see is outside your usual range. ${minor.length === 1 ? 'One small thing' : 'A few small things'}: ${parts.join(' ')} It is worth sorting out when you have a moment.`,
+      text: `Your results look fine. ${minor.length === 1 ? 'One small thing' : 'A few small things'}: ${parts.join(' ')}`,
       actions: buttons(state, person, minor),
     }
   }
@@ -117,6 +119,17 @@ export function assessment(state: AppState, person: Person): DoctorReply {
   }
 }
 
+/** A problem the person might be calling about, to pick from when the call opens: a reading that is off or a symptom they logged. */
+export interface Problem { label: string; about: string }
+
+/** What a call opened from the header starts with: an open question, and the problems the readings point to, to pick from. */
+export function greeting(state: AppState, person: Person): { text: string; problems: Problem[] } {
+  const problems = attention(state, person)
+    .filter((i) => isOff(i.status) || i.status === 'repeat')
+    .flatMap((i) => { const about = i.key ?? i.region; return about ? [{ label: i.label, about }] : [] })
+  return { text: `Hello ${firstName(person)}. What is the problem?`, problems: problems.filter((p, n) => problems.findIndex((x) => x.about === p.about) === n).slice(0, 3) }
+}
+
 /** What the doctor says when the conversation opens. */
 export function opening(state: AppState, person: Person, focus?: Focus): DoctorReply {
   if (focus) {
@@ -124,12 +137,12 @@ export function opening(state: AppState, person: Person, focus?: Focus): DoctorR
     const last = focus.key && latest ? ` Your last reading was ${withUnit(focus.key, latest)}, ${age(now(state), latest.t)}.` : ''
     return {
       status: focus.status,
-      text: `Hello ${firstName(person)}. I am here about ${focus.title}. ${focus.finding}${last} Let us sort it out together, one step at a time. ${focus.steps[0]}`,
+      text: `Hello ${firstName(person)}. I am here about ${focus.title}. ${focus.finding}${last} ${focus.steps[0]}`,
     }
   }
   const a = assessment(state, person)
   const ask = a.status === 'ok' ? 'How are you feeling today?' : 'How do you feel right now?'
-  return { ...a, text: `Hello ${firstName(person)}. I have looked at your readings for day ${state.day}. ${a.text} ${ask}` }
+  return { ...a, text: `Hello ${firstName(person)}. ${a.text} ${ask}` }
 }
 
 function withUnit(key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>): string {
@@ -297,11 +310,11 @@ export function reply(state: AppState, person: Person, said: string): DoctorRepl
   }
 
   if (/are you (real|human|a real|an ai|a robot|a doctor)|who are you|what are you/.test(q)) {
-    return { text: `I am ORBIT’s virtual doctor: a simulation, not a real clinician. I read your own readings and check-ins on this device and tell you what stands out and what to do next. For anything serious, ${medicalLead()}, and the ground are the ones to ask.` }
+    return { text: `I am ORBIT’s virtual doctor, a simulation. I go by your readings and the procedures on board, and say what is likely and what to do next. ${medicalLead().replace(/^t/, 'T')}, checks my recommendations afterwards.` }
   }
 
   if (/not (so |very |too |feeling )?(good|great|well|right|ok|okay|fine)|unwell|(?<!not )\bbad\b|awful|terrible|\bsick\b|\bill\b|something('?s| is) (wrong|off)|\bhurts?\b|\bpain\b|\bache/.test(q)) {
-    return { status: 'caution', text: 'I am sorry. Tell me where: is it your head, your chest, your stomach, your skin, or more a tired, feverish feeling?' }
+    return { status: 'caution', ask: 'where', text: 'Where is it: your head, your chest, your stomach, your skin, or more a tired, feverish feeling?' }
   }
 
   if (/\b(i'?m|i am|i feel|feeling|doing) (fine|good|great|ok|okay|well|alright|all right)\b|^(fine|good|great|ok|okay|all good|not bad)\b/.test(q)) {
@@ -362,9 +375,9 @@ export function briefing(state: AppState, person: Person, call: { focus?: Focus;
   const symptoms = activeSymptoms(state, person.id).map((s) => s.name.toLowerCase())
   const atRisk = risksAtAttention(state, person)
   return [
-    `You are the ORBIT doctor, a simulated doctor on a video call with ${person.name} (${person.role}), a crew member on a long space mission. It is mission day ${state.day}. You are a simulation, not a real clinician, and you say so if asked.`,
-    'How to talk: warm, calm, and plain, like a good family doctor who knows this person. Your words are read aloud, so answer in two or three short sentences with no lists, no headings, no markdown, and no emojis. Ask at most one question. Do not repeat advice you have already given in this call, and do not read their readings back unless they ask or one has changed.',
-    `Rules: every number and finding you mention must come from the readings below. Never invent a value; if something is not listed, say it is not measured. Go by the status given for each reading: it is judged against this person's own normal, not against Earth limits. Do not name a diagnosis and do not suggest medicines or doses. If something sounds serious, tell them to call ${medicalLead()}. Mood and the diary are private and you cannot see them. If asked about something unrelated, answer briefly and come back to how they are.`,
+    `You are the ORBIT doctor, a simulated doctor on a video call with ${person.name} (${person.role}), a crew member on a long space mission. It is mission day ${state.day}. You are a simulation, not a real clinician. Say so only when they ask whether you are real, and never give it as a reason not to answer.`,
+    'How to talk: neutral, calm, and matter-of-fact. Plain words, no small talk, no reassurance for its own sake, and no filler such as "I understand" or "great question". Your words are read aloud, so answer in one or two short sentences, 30 words at most, with no lists, no headings, no markdown, and no emojis. Lead with the answer. You lead the call: every answer ends with the one next thing, a single question or an action. When your question has a few likely answers, end your answer with [[options: A | B | C]], two to four answers of one to three words each, which they can tap. Ask at most one question. Do not repeat advice you have already given in this call, and do not read their readings back unless they ask or one has changed.',
+    `Rules: every number and finding you mention must come from the readings below. Never invent a value; if something is not listed, say it is not measured. Go by the status given for each reading: it is judged against this person's own normal, not against Earth limits. When they describe a problem or ask what it could be, say what is most likely and what that is based on: the reading, the finding, or the procedure on board. Give it as a recommendation from the resources on board, likely rather than certain, and say once that ${medicalLead()}, will check it over later. Never answer that you cannot diagnose, and never refuse to say what is likely. Say it in your own spoken words, for example: "Most likely it is your low blood pressure, going by your last two readings. That is my recommendation from what is on board, and the medical lead will check it later." Never quote the labels used below, such as "Finding", "Next step", "Status", or "Spaceflight risk it bears on". Do not suggest medicines or doses. If something sounds serious, tell them to call ${medicalLead()}. Mood and the diary are private and you cannot see them. If asked about something unrelated, answer briefly and come back to how they are.`,
     `Your overall read of today: ${assessment(state, person).text}`,
     `Readings:\n${readings.join('\n')}`,
     `Symptoms logged in the last two days: ${symptoms.length ? symptoms.join(', ') : 'none'}.`,
@@ -374,7 +387,7 @@ export function briefing(state: AppState, person: Person, call: { focus?: Focus;
       ? `This call was opened about ${call.focus.title}. ${call.focus.finding} The usual next step for it: ${call.focus.next} Start there, but help just as readily with anything else they raise.`
       : '',
     call.camera === 'picture'
-      ? 'Their latest message comes with one still picture from their camera, because they are showing you something. Say plainly what you can actually see in it: where it is, its colour, its rough size, how a sensor or dressing sits. If the picture is dark, blurred, or does not show what they mean, say so and ask them to hold it closer or turn towards the light. Describe, do not diagnose, and never judge their health from how they look.'
+      ? 'Their latest message comes with one still picture from their camera, because they are showing you something. Say plainly what you can actually see in it: where it is, its colour, its rough size, how a sensor or dressing sits. If the picture is dark, blurred, or does not show what they mean, say so and ask them to hold it closer or turn towards the light. Then say what it most likely is, as likely rather than certain. Never judge their general health from how they look.'
       : call.camera === 'on'
         ? 'Their camera is on, but you only get a picture when they show you something. Do not describe or guess what they look like. If something is worth seeing, ask them to hold it up to the camera.'
         : 'Their camera is off, so you cannot see them. If something is worth seeing, ask them to turn the camera on, or to describe it.',
@@ -465,8 +478,8 @@ export function withReading(state: AppState, person: Person, key: IndicatorKey, 
 export function afterReading(state: AppState, person: Person, key: IndicatorKey): DoctorReply {
   const j = judge(state, person, key)
   const value = j.latest ? withUnit(key, j.latest) : 'that'
-  if (j.status === 'ok') return { status: 'ok', text: `Thank you. ${value} is back in your usual range. Take it easy for the next hour, get up slowly, and check again this evening.` }
-  return { status: j.status, text: `Thank you. ${value} is still outside your usual range. Stay resting and tell ${medicalLead()}, today. I will be here if anything changes.` }
+  if (j.status === 'ok') return { status: 'ok', text: `Thank you. ${value} is back in your usual range. Take it easy for an hour and check again this evening.` }
+  return { status: j.status, text: `Thank you. ${value} is still outside your usual range. Stay resting and tell ${medicalLead()}, today.` }
 }
 
 /** The built-in doctor's next step in a focused call, when no language model is running. */
@@ -474,7 +487,7 @@ export function nextStep(focus: Focus, index: number): DoctorReply {
   const step = focus.steps[index]
   return step
     ? { status: focus.status, text: index === focus.steps.length - 1 ? `Last step. ${step}` : `Good. ${step}` }
-    : { text: 'That is the whole plan. Tell me the new reading whenever you have it, or ask me anything else.' }
+    : { text: 'That is the whole plan. Tell me the new reading when you have it.' }
 }
 
 /**
@@ -485,4 +498,69 @@ export function wantsLook(said: string, doctorSaid = ''): boolean {
   const q = said.toLowerCase()
   if (/\b(look|see|seeing|show|showing|camera|picture|visible|here it is|like this|this (rash|bump|spot|cut|mark|lump|bruise|swelling|sensor|cuff))\b/.test(q)) return true
   return /\b(show me|let me see|hold (it|that|the|your)[^.?!]*\b(up|camera)|to the camera|can i see|turn (it|towards))\b/i.test(doctorSaid)
+}
+
+/* ---------- going through a procedure ---------- */
+
+export type GuideCommand = 'next' | 'back' | 'repeat' | 'stop'
+
+/** What the person means while the doctor is going through a procedure with them: "done", "go back", "say that again". */
+export function guideCommand(said: string): GuideCommand | undefined {
+  const q = said.toLowerCase().replace(/[’‘]/g, "'").replace(/[.,!]/g, '').trim()
+  if (/\b(stop|cancel|quit|leave|end) (the |this )?(procedure|guide|steps|task)\b|^(stop|cancel)$/.test(q)) return 'stop'
+  if (/\b(go back|previous|step back|back a step|one back)\b|^back$/.test(q)) return 'back'
+  if (/\b(repeat|say (that|it) again|once more|what was that|pardon)\b|^again$/.test(q)) return 'repeat'
+  if (/^(ok(ay)?|yes|yep|yeah|done|next|ready|continue|go on|finished|got it|all done|that'?s done|did (it|that)|i('?m| am) (done|ready|finished)|i did (it|that)|i have done (it|that))( (ok(ay)?|done|next|now|next step|doctor|thanks|thank you))*$|\bnext (step|one)\b/.test(q)) return 'next'
+  return undefined
+}
+
+const PROCEDURE_ASK = /walk me through|talk me through|guide me|take me through|go through|show me how|step by step|\bprocedure\b|\bthe steps\b|how (do|can|should|would) (i|we) (measure|take|check|do|test)|help me (measure|take|check|do|test)|^(ok(ay)? )?(yes )?(let'?s |please )?(start|begin|go ahead)\b/
+
+/**
+ * The procedure the person is asking the doctor to go through with them, by id. They can name it
+ * ("walk me through blood pressure") or just say "start", which means the one that is next.
+ */
+export function wantsProcedure(said: string, procedures: { id: string; title: string; kind: 'now' | 'measure' }[], next?: string): string | undefined {
+  const q = said.toLowerCase().replace(/[’‘]/g, "'").replace(/[.,!?]/g, '').trim()
+  if (!PROCEDURE_ASK.test(q)) return undefined
+  const measuring = /\b(measure|take|check|test|how)\b/.test(q)
+  let best: { id: string; score: number } | undefined
+  for (const p of procedures) {
+    const words = p.title.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2 && !['the', 'and', 'rate', 'level'].includes(w))
+    const hit = words.filter((w) => new RegExp(`\\b${w}`).test(q)).length
+    if (!hit) continue
+    // The whole name said counts most; after that, how to measure it when they ask how, the action for today when not.
+    const score = hit * 4 + (hit === words.length ? 2 : 0) + ((p.kind === 'measure') === measuring ? 1 : 0)
+    if (!best || score > best.score) best = { id: p.id, score }
+  }
+  return best?.id ?? next
+}
+
+const DECLINE = /\b(do not|don'?t|dont|rather not|won'?t|not going to) (really )?((want|wanna|need|have|wish|care|like)( to)? |feel like )?(talk(ing)?|speak(ing)?|discuss(ing)?|go(ing)? (through|over|into)|do(ing)? (it|this|that)|measur(e|ing)|deal(ing)?|continu(e|ing)|carry(ing)? on|hear(ing)?|bother(ing)?|get(ting)? into)\b|\b(skip|forget about|forget) (it|this|that|the|my)\b|\b(leave|drop) (it|this|that)( out| for now)?$|\b(not now|not today|not interested|never ?mind|another time|some other time|maybe later|change the (subject|topic))\b|\b(talk|speak|ask|discuss|do|about|on to) (about )?something else\b|^something else\b|\b(stop|enough) (talking|asking|going on) about\b/
+
+/** The thing a procedure is about, whichever way it is dealt with: "bp" for both `now-bp` and `measure-bp`. */
+export function topicOf(id: string): string {
+  return id.replace(/^(now|measure)-/, '')
+}
+
+/**
+ * What the person turns down, as procedure ids: "I don't want to talk about blood pressure", "skip this",
+ * "not now". A thing they name is the one meant; with nothing named it is `current`, the procedure in hand
+ * or the one just offered. Empty when they are not turning anything down.
+ */
+export function declined(said: string, procedures: { id: string; title: string }[], current?: string): string[] {
+  const q = said.toLowerCase().replace(/[’‘]/g, "'").replace(/[.,!?]/g, '').trim()
+  if (!DECLINE.test(q)) return []
+  const named = procedures.filter((p) => {
+    const words = p.title.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2 && !['the', 'and', 'rate', 'level'].includes(w))
+    return words.length > 0 && words.every((w) => new RegExp(`\\b${w}`).test(q))
+  })
+  const topics = new Set((named.length ? named.map((p) => p.id) : current ? [current] : []).map(topicOf))
+  if (!topics.size) return []
+  return [...new Set([...procedures.filter((p) => topics.has(topicOf(p.id))).map((p) => p.id), ...(named.length || !current ? [] : [current])])]
+}
+
+/** What the doctor says for one step of a procedure. */
+export function stepLine(steps: string[], at: number): string {
+  return at === steps.length - 1 && steps.length > 1 ? `Last step. ${steps[at]}` : `Step ${at + 1} of ${steps.length}. ${steps[at]}`
 }

@@ -196,7 +196,7 @@ Shown when an indicator needs something from the crew. On `bg-raised`:
 A phone call, not a page and not an alarm.
 
 - **Prompt:** a compact alert near the top of the Dashboard, 600 px wide, 12 px radius, 1 px hairline border. One title line with the status shape, one line of finding in `text-muted`, an X in the corner, and two 32 px buttons at the right: the usual next action (outlined) and "Call the doctor" (white fill, black text). No other text.
-- **Call:** a 420 px wide pop-up with 32 px corners over a blurred backdrop. The ORBIT mark is the doctor's face. State is on the ring around it and in one word below: a ring that expands while calling, a steady `accent` ring while listening, a `status-ok` ring that pulses while speaking. With reduced motion the rings do not move.
+- **Call:** a 420 px wide pop-up with 32 px corners over a blurred backdrop. It can be minimised to a 340 px bar in the bottom right corner with the caption and the controls, and then there is no backdrop. During a procedure the astronaut acting out the step takes the place of the doctor's face, and what the doctor did shows as a small `accent` note under its words. The ORBIT mark is the doctor's face. State is on the ring around it and in one word below: a ring that expands while calling, a steady `accent` ring while listening, a `status-ok` ring that pulses while speaking. With reduced motion the rings do not move.
 - What the doctor says is one caption in `body-lg`; the viewer's last words sit above it in `text-muted`. No transcript, no suggestions.
 - Four round 54 px controls: mute, camera, type, and end call in red. A control that is switched on is white.
 - The viewer's camera is a small mirrored tile at the top right.

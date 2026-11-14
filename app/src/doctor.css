@@ -1,4 +1,4 @@
-/* The call with the virtual doctor: a phone call in a pop-up, and the prompt that offers it. */
+/* The call with the virtual doctor: a phone call in a pop-up, which can be minimised to a bar in the corner. And the prompt that offers it. */
 
 .doctor-backdrop {
   position: fixed;
@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   width: min(420px, 100%);
   height: min(720px, 100%);
   padding: 20px 24px 18px;
@@ -27,14 +27,19 @@
   text-align: center;
   overflow: hidden;
 }
-.doctor-call-head { align-self: stretch; display: flex; justify-content: space-between; align-items: baseline; color: var(--text-secondary); font: 500 13px/1.3 var(--font-sans); }
+.doctor-call-head { align-self: stretch; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--text-secondary); font: 500 13px/1.3 var(--font-sans); }
+.doctor-call-head > span:first-child { margin-right: auto; }
+.doctor-size { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; color: var(--text-muted); cursor: pointer; }
+.doctor-size:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-primary); }
+.doctor-size svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .doctor-call-head em { margin-left: 6px; color: var(--text-muted); font-style: normal; font-weight: 400; }
 .doctor-clock { color: var(--text-muted); font-variant-numeric: tabular-nums; }
 
-.doctor-self { position: absolute; top: 52px; right: 16px; width: 92px; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; background: var(--bg-raised); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); }
+.doctor-self { position: absolute; top: 52px; right: 16px; width: 84px; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; background: var(--bg-raised); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); }
 .doctor-self video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
 .doctor-face { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 36px; }
+.doctor-scene { display: grid; place-items: center; width: 190px; height: 190px; margin-top: -24px; border-radius: 24px; background: var(--bg-surface); overflow: hidden; }
 .doctor-avatar {
   display: grid;
   place-items: center;
@@ -66,6 +71,7 @@
 .doctor-caption.is-urgent { padding: 12px 14px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--status-warning); }
 .doctor-said { color: var(--text-muted); font: 400 14px/1.45 var(--font-sans); }
 .doctor-said::before { content: 'You: '; }
+.doctor-saved.is-did { background: rgba(74, 163, 255, 0.16); color: var(--accent); }
 .doctor-saved { align-self: center; padding: 4px 10px; border-radius: var(--radius-full); background: rgba(48, 209, 88, 0.14); color: var(--status-ok); font-size: 12px; }
 .doctor-notice { color: var(--status-caution); font-size: 13px; line-height: 1.4; }
 
@@ -78,12 +84,39 @@
 .doctor-round { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: var(--bg-raised); color: var(--text-primary); cursor: pointer; transition: background var(--duration-fast) ease-out; }
 .doctor-round:hover { background: var(--bg-hover); }
 .doctor-round:disabled { opacity: 0.4; cursor: default; }
-.doctor-round svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.doctor-round svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .doctor-round[aria-pressed='true'] { background: var(--text-primary); color: #000; }
 .doctor-round.doctor-end { background: #ff453a; color: #fff; }
 .doctor-round.doctor-end:hover { background: #ff6961; }
 .doctor-round.doctor-end svg { fill: currentColor; stroke: none; }
 .doctor-fine { color: var(--text-muted); font-size: 11px; line-height: 1.4; }
+
+.doctor-live { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: var(--status-ok); box-shadow: 0 0 0 3px rgba(48, 209, 88, 0.22); }
+.is-calling .doctor-live { background: var(--accent); box-shadow: 0 0 0 3px rgba(74, 163, 255, 0.22); }
+
+/* Answers to tap, which change with what the doctor last asked. */
+.doctor-choices { align-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.doctor-choices button { min-height: 34px; padding: 0 14px; border-radius: var(--radius-full); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); color: var(--text-primary); font-size: 13px; font-weight: 500; cursor: pointer; }
+.doctor-choices button:hover { background: var(--bg-hover); }
+.is-small .doctor-choices { display: none; }
+
+/* The controls for the procedure being gone through. */
+.doctor-guide { align-self: stretch; display: flex; flex-direction: column; gap: 8px; }
+.doctor-guide-bar { display: flex; gap: 4px; }
+.doctor-guide-bar i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.14); }
+.doctor-guide-bar i.is-done { background: var(--status-ok); }
+.doctor-guide-bar i.is-now { background: var(--accent); }
+.doctor-guide-next { height: 38px; border-radius: var(--radius-full); background: var(--accent-fill); color: var(--text-on-accent); font-size: 14px; font-weight: 500; cursor: pointer; }
+.doctor-guide-next:hover { background: #0068d6; }
+
+/* Minimised: a bar with the doctor's current words and the controls, so the whole screen is free. */
+.doctor-backdrop.is-small { inset: auto 20px 20px auto; display: block; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.doctor-call.is-small { width: 340px; max-width: calc(100vw - 40px); height: auto; gap: 10px; padding: 14px 18px; border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 24px; background: linear-gradient(180deg, #2a2a2e 0%, #1c1c1f 100%); box-shadow: 0 0 0 4px rgba(48, 209, 88, 0.14), 0 24px 64px rgba(0, 0, 0, 0.75); }
+.is-small .doctor-face, .is-small .doctor-fine, .is-small .doctor-form, .is-small .doctor-said, .is-small .doctor-saved { display: none; }
+.is-small .doctor-words { flex: none; overflow: hidden; }
+.is-small .doctor-caption { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; font-size: 14px; text-align: left; }
+/* The camera stays on for the doctor, but the self view is put away. */
+.is-small .doctor-self { width: 1px; opacity: 0; pointer-events: none; }
 
 /* The prompt on the dashboard: one line of what is off and the call, nothing else. */
 .health-prompt-backdrop { position: fixed; inset: 0; z-index: 50; display: grid; place-items: start center; padding: 14vh 24px 24px; background: rgba(0, 0, 0, 0.5); }
@@ -113,8 +146,11 @@ button.reminder-row { width: 100%; text-align: left; cursor: pointer; }
 /* The way in, at the top right of every screen. */
 .doctor-button { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: var(--radius-full); background: var(--accent-fill); color: var(--text-on-accent); font-size: 13px; font-weight: 500; white-space: nowrap; }
 .doctor-button:hover { background: #0068d6; }
+.doctor-button.is-live, .doctor-button.is-live:hover { background: rgba(48, 209, 88, 0.16); color: var(--status-ok); cursor: default; }
 
 @media (max-width: 520px) {
   .doctor-backdrop { padding: 0; }
   .doctor-call { width: 100%; height: 100%; border: 0; border-radius: 0; }
+  .doctor-backdrop.is-small { inset: auto 0 0 0; }
+  .doctor-call.is-small { width: 100%; max-width: 100%; border-radius: 20px 20px 0 0; }
 }

@@ -9,9 +9,9 @@ describe('doctor voices', () => {
     expect(ranked.map((x) => x.name)).toEqual(['Ava (Premium)', 'Google UK English Female', 'Samantha', 'Karen'])
   })
 
-  it('uses Google UK English Male when the browser has it, and the best English voice when not', () => {
+  it('uses the neutral Google US English voice when the browser has it, and the best English voice when not', () => {
     const mac = [v('Albert'), v('Samantha'), v('Daniel', 'en-GB')]
-    expect(doctorVoice([...mac, v('Google US English', 'en-US', false), v('Google UK English Male', 'en-GB', false)])?.name).toBe('Google UK English Male')
+    expect(doctorVoice([...mac, v('Google US English', 'en-US', false), v('Google UK English Male', 'en-GB', false)])?.name).toBe('Google US English')
     expect(doctorVoice(mac)?.name).toBe('Samantha')
     expect(doctorVoice([])).toBeUndefined()
   })

@@ -64,19 +64,22 @@ export function Resources() {
 export function ProcedurePlayer() {
   const { id } = useParams()
   const { state, viewer } = useStore()
-  const { openCall } = useCall()
-  const [at, setAt] = useState(0)
-  useEffect(() => { setAt(0) }, [id])
+  const { askFor } = useCall()
+  const [own, setOwn] = useState(0)
+  useEffect(() => { setOwn(0) }, [id])
+  const at = own
+  const setAt = setOwn
   const p = allProcedures(state, viewer).find((x) => x.id === id)
   const count = p?.steps.length ?? 0
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') setAt((a) => Math.min(a + 1, count - 1))
-      if (e.key === 'ArrowLeft') setAt((a) => Math.max(a - 1, 0))
+      if ((e.target as HTMLElement | null)?.closest?.('input, textarea')) return
+      if (e.key === 'ArrowRight') setAt(Math.min(at + 1, count - 1))
+      if (e.key === 'ArrowLeft') setAt(Math.max(at - 1, 0))
     }
     document.addEventListener('keydown', key)
     return () => document.removeEventListener('keydown', key)
-  }, [count])
+  }, [count, at])
   if (!p) return <Resources />
   const i = Math.min(at, p.steps.length - 1)
   const last = i === p.steps.length - 1
@@ -96,7 +99,7 @@ export function ProcedurePlayer() {
             {i > 0 && <button className="btn btn-secondary" onClick={() => setAt(i - 1)}>Back</button>}
             {!last && <button className="btn btn-primary" onClick={() => setAt(i + 1)}>Next step</button>}
             {last && p.button && <Link className="btn btn-primary" to={p.button.to}>{p.button.label}</Link>}
-            {p.kind === 'now' && <button className="btn btn-secondary" onClick={() => openCall(p.about)}>Call the doctor</button>}
+            {<button className="btn btn-secondary" onClick={() => askFor(p.id, p.about)}>Go through it with the doctor</button>}
           </div>
         </div>
       </div>

@@ -25,9 +25,9 @@ function ShellFrame() {
       <div className="header-system"><span className="header-phase">{phase.label}</span><span className="header-day">Day {state.day}</span></div>
       <div className="topbar-space" />
       <div className="viewer"><span className="viewer-name">{viewer.name}</span><span className="label">{viewer.role}</span></div>
-      <button className="doctor-button" onClick={() => openCall()}>
+      <button className={`doctor-button ${call ? 'is-live' : ''}`} onClick={() => { if (!call) openCall() }}>
         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="10.5" height="10" rx="2.5" /><path d="m13 9 4.5-2.5v7L13 11" /></svg>
-        Talk to the doctor
+        {call ? 'On a call with the doctor' : 'Talk to the doctor'}
       </button>
     </header>
     <div className="shell-body">
@@ -37,8 +37,9 @@ function ShellFrame() {
         <NavLink to="/resources"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 5c-2-1.5-4.500-2-7-2v12c2.500 0 5 .5 7 2 2-1.500 4.500-2 7-2V3c-2.500 0-5 .5-7 2Zm0 0v12" /></svg>Resources</NavLink>
         <NavLink to="/mental-health"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17S2 12 2 7a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5-8 10-8 10Z" /></svg>My Personal Diary</NavLink>
       </nav>
-      <main className="main" ref={mainRef}><Outlet /></main></div>
-    {call && <Doctor about={call.about} onClose={closeCall} />}
+      <main className="main" ref={mainRef}><Outlet /></main>
+      {call && <Doctor about={call.about} onClose={closeCall} />}
+    </div>
   </div>
 }
 

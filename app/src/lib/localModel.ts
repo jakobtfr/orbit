@@ -46,7 +46,7 @@ export async function chat(model: string, messages: ChatMessage[], onToken: (tex
   const res = await fetch(`${HOST}/api/chat`, {
     method: 'POST',
     signal,
-    body: JSON.stringify({ model, messages, stream: true, keep_alive: '30m', options: { temperature: 0.3, num_predict: 220 } }),
+    body: JSON.stringify({ model, messages, stream: true, keep_alive: '30m', options: { temperature: 0.3, num_predict: 110 } }),
   })
   if (!res.ok || !res.body) throw new Error(`Local model answered ${res.status}`)
   const reader = res.body.getReader()

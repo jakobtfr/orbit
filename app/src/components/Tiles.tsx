@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { age } from '../lib/format'
 import { INDICATORS, formatValue } from '../lib/indicators'
@@ -59,20 +58,6 @@ export function SymptomTile({ person, region }: { person: Person; region: Region
   )
 }
 
-/** A countdown for a step that says to wait or rest for some minutes. */
-function StepTimer({ minutes }: { minutes: number }) {
-  const [left, setLeft] = useState<number | null>(null)
-  useEffect(() => {
-    if (left === null || left <= 0) return
-    const id = setTimeout(() => setLeft(left - 1), 1000)
-    return () => clearTimeout(id)
-  }, [left])
-  if (left === null) return <button className="step-timer" onClick={() => setLeft(minutes * 60)}>Start {minutes}-minute timer</button>
-  if (left <= 0) return <span className="step-timer is-up" role="status">Time is up</span>
-  return <button className="step-timer is-running" aria-label="Stop timer" onClick={() => setLeft(null)}>{Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')} · stop</button>
-}
-
-/** The next action, walked through one step at a time, with a timer where a step says to wait. */
 /**
  * The next action, one step at a time. When the last step is done the card goes away and the
  * action is logged as done; the log is shown under "Done today" in Resources.
@@ -85,7 +70,6 @@ export function NextActionCard({ action, title }: { action: Action; title?: stri
   if (at >= steps.length) return null
   const last = at === steps.length - 1
   const step = steps[at]
-  const wait = step.match(/(?:for|after) (\d+) minutes/)
   const finish = () => {
     logAction(id, { title: title ?? action.next, steps: steps.length, day: state.day })
     setStepAt(id, steps.length)
@@ -103,7 +87,6 @@ export function NextActionCard({ action, title }: { action: Action; title?: stri
       )}
       <p className="body">{action.observed}</p>
       <div className="action-step"><p className="title-3" key={step} aria-live="polite">{step}</p><Astronaut key={step} scene={sceneFor(step)} size={132} /></div>
-      {wait && <StepTimer key={step} minutes={Number(wait[1])} />}
       {action.risk && <p className="label">Spaceflight risk this bears on: {action.risk}</p>}
       <div className="action-buttons">
         {last && action.button

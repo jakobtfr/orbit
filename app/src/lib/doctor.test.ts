@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
-import { wantsLook, afterReading, assessment, briefing, focusOn, heardReading, isUrgent, nextStep, opening, reply, speakable, withReading } from './doctor'
+import { wantsLook, greeting, guideCommand, declined, stepLine, wantsProcedure, afterReading, assessment, briefing, focusOn, heardReading, isUrgent, nextStep, opening, reply, speakable, withReading } from './doctor'
 import { now } from './judge'
 import type { AppState, Reading } from './types'
 
@@ -141,5 +141,59 @@ describe('virtual doctor', () => {
     expect(wantsLook('here', 'Could you hold it up to the camera?')).toBe(true)
     expect(wantsLook('I feel a little dizzy')).toBe(false)
     expect(wantsLook('How is my heart?', 'Your heart rate is fine.')).toBe(false)
+  })
+
+  it('understands the words used while going through a procedure', () => {
+    expect(guideCommand('Done.')).toBe('next')
+    expect(guideCommand('ok next step')).toBe('next')
+    expect(guideCommand('go back')).toBe('back')
+    expect(guideCommand('say that again')).toBe('repeat')
+    expect(guideCommand('stop the procedure')).toBe('stop')
+    expect(guideCommand('ok but my arm hurts')).toBeUndefined()
+    expect(guideCommand('it says 104 over 68')).toBeUndefined()
+  })
+
+  it('finds the procedure someone asks to go through', () => {
+    const list = [
+      { id: 'now-bp', title: 'Blood pressure', kind: 'now' as const },
+      { id: 'measure-bp', title: 'Blood pressure', kind: 'measure' as const },
+      { id: 'measure-spo2', title: 'Blood oxygen', kind: 'measure' as const },
+    ]
+    expect(wantsProcedure('How do I measure my blood pressure?', list)).toBe('measure-bp')
+    expect(wantsProcedure('walk me through the blood pressure task', list)).toBe('now-bp')
+    expect(wantsProcedure('guide me through blood oxygen', list)).toBe('measure-spo2')
+    expect(wantsProcedure("ok let's start", list, 'now-bp')).toBe('now-bp')
+    expect(wantsProcedure('when did it start?', list, 'now-bp')).toBeUndefined()
+    expect(wantsProcedure('How is my blood pressure?', list, 'now-bp')).toBeUndefined()
+  })
+
+  it('knows what someone does not want to deal with', () => {
+    const list = [
+      { id: 'now-bp', title: 'Blood pressure' },
+      { id: 'measure-bp', title: 'Blood pressure' },
+      { id: 'measure-spo2', title: 'Blood oxygen' },
+    ]
+    expect(declined("I don't want to talk about blood pressure", list)).toEqual(['now-bp', 'measure-bp'])
+    expect(declined('I said I dont want to talk about blood pressure.', list, 'measure-spo2')).toEqual(['now-bp', 'measure-bp'])
+    expect(declined('skip this', list, 'measure-spo2')).toEqual(['measure-spo2'])
+    expect(declined('not now', list, 'now-bp')).toEqual(['now-bp', 'measure-bp'])
+    expect(declined("I'd rather talk about something else", list, 'now-bp')).toEqual(['now-bp', 'measure-bp'])
+    expect(declined('not now', list)).toEqual([])
+    expect(declined('How is my blood pressure?', list, 'now-bp')).toEqual([])
+    expect(declined('Done.', list, 'now-bp')).toEqual([])
+    expect(declined("I don't feel dizzy", list, 'now-bp')).toEqual([])
+    expect(declined('should I leave the cuff on?', list, 'now-bp')).toEqual([])
+  })
+
+  it('opens a call from the header with an open question and the problems to pick from', () => {
+    const g = greeting(highPressure(), LENA)
+    expect(g.text).toBe('Hello Lena. What is the problem?')
+    expect(g.problems[0]).toEqual({ label: 'Blood pressure', about: 'bp' })
+    expect(greeting(base(), LENA).problems.every((p) => p.about)).toBe(true)
+  })
+
+  it('reads out one step at a time', () => {
+    expect(stepLine(['Sit down.', 'Fit the cuff.', 'Press start.'], 0)).toBe('Step 1 of 3. Sit down.')
+    expect(stepLine(['Sit down.', 'Fit the cuff.', 'Press start.'], 2)).toBe('Last step. Press start.')
   })
 })

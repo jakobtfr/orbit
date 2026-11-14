@@ -25,6 +25,7 @@ Long-duration missions expose crews to space radiation, isolation and confinemen
 
 - Official page: https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/
 - Full brief: [`docs/challenge-brief.md`](docs/challenge-brief.md)
+- Official resources, distilled: [`docs/resources.md`](docs/resources.md)
 - Skills: Human Exploration · Software · Space Exploration
 - Intro video: https://www.youtube.com/watch?v=RERG3gEmdC8
 
@@ -37,6 +38,7 @@ Long-duration missions expose crews to space radiation, isolation and confinemen
 ```
 docs/
   challenge-brief.md   # Full challenge text + considerations, captured for offline use
+  resources.md         # Official HRP/CSA links, distilled into product implications
   ideas.md             # Concept shortlist, open questions, decisions
 ```
 

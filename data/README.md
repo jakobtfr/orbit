@@ -67,7 +67,7 @@ The extracts were assembled and documented by the community project [`ydtoloza/a
 - **No SpO₂, mood, radiation, or continuous ECG** in these tables. Those indicators are not present in the open UTMB or Inspiration4 extracts.
 - **Temperature does not show the in-flight "space fever" here.** The mean within-subject change in bed rest is +0.04 °C (SD 0.12). The ~1 °C rise reported by Stahn et al. is a spaceflight finding; do not calibrate it from this dataset.
 - **Sleep is thin.** Actigraphy covers three subjects and only two pre-bed-rest nights, so there is no reliable personal sleep baseline.
-- **Cognition improves with practice.** Reaction times fall by about 10.7 ms per session, so compare by `sesion_n` or use later sessions.
+- **Cognition improves with practice.** Reaction times fall by about 10 ms per session on average (pooled slope ≈ −9 ms; mean within-subject slope ≈ −12 ms, n = 28), so compare by `sesion_n` or use later sessions.
 - **Labs contain outliers.** Use `atipico` and inspect the flagged rows before computing statistics. A haemoglobin value of 131 is a probable decimal-point error for 13.1 g/dL.
 - **Event free text was removed.** The original descriptions and interventions contain staff names. The structured category, symptom label, pain score, and timing are retained.
 - **Not medical advice.** These are research data, not clinical guidance.

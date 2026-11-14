@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
 import { StatusMark, Tag } from '../components/Status'
 import { NextActionCard, StatusTile } from '../components/Tiles'
-import { BESIDE, INDICATORS, INDICATOR_ORDER, REGIONS } from '../lib/indicators'
-import { SEVERITY, actionFor, attention, checkedInToday, judge, regionSummaries } from '../lib/judge'
+import { BESIDE, INDICATORS, REGIONS } from '../lib/indicators'
+import { actionFor, attention, checkedInToday, judge, regionSummaries } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { RegionKey } from '../lib/types'
 import { Missing, usePerson } from './common'
@@ -23,11 +23,6 @@ export function Body() {
   const base = `/body/${person.id}`
   const open = (r: RegionKey) => nav(`${base}/region/${r}`)
   const mood = judge(state, person, 'mood')
-  // Every indicator, the ones that need attention first. Mood stays in its private row.
-  const explore = INDICATOR_ORDER.filter((k) => k !== 'mood')
-    .map((k) => ({ k, sev: SEVERITY[judge(state, person, k).status] }))
-    .sort((x, y) => y.sev - x.sev)
-    .map((x) => x.k)
 
   return (
     <div className="screen body-screen">
@@ -94,15 +89,6 @@ export function Body() {
           {items.slice(1).map((i) => (i.key ? INDICATORS[i.key].name : i.label)).join(', ')}.
         </p>
       )}
-
-      <section className="explore">
-        <h2 className="title-2">Explore your measurements</h2>
-        <div className="tile-grid">
-          {explore.map((k) => (
-            <StatusTile key={k} person={person} k={k} />
-          ))}
-        </div>
-      </section>
     </div>
   )
 }

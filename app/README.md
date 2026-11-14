@@ -8,7 +8,8 @@ Version 1 of the ORBIT front end, built from [`../SPEC.md`](../SPEC.md) and [`..
 npm install
 npm run dev      # development server
 npm run build    # type-check and build to dist/
-npm test         # checks the scripted demo statuses and the fake logic
+npm test         # checks the fake logic and that the replay reproduces the bed-rest data check
+uv run scripts/replay_data.py   # regenerates src/data/utmb-replay.json from ../data/utmb/
 ```
 
 The app is always shown as Lena Brandt. For testing, `?viewer=samir` before the `#` opens as the medical lead, and `?flat` forces the flat body figure.
@@ -17,21 +18,23 @@ The app is always shown as Lena Brandt. For testing, `?viewer=samir` before the 
 
 | Path | Contents |
 | --- | --- |
-| `src/screens/` | The ten screens in the spec, plus a symptoms screen per body region |
-| `src/components/` | Status shapes and tags, tiles, next-action card, chart, 3D body (built from cross-sections in `bodyShape.ts`), trajectory view, app shell |
+| `src/screens/` | Body, region, indicator, measure, check-in, emergency, and Replay |
+| `src/components/` | Status shapes and tags, tiles, next-action card, chart, 3D body (built from cross-sections in `bodyShape.ts`), app shell |
 | `src/lib/indicators.ts` | The indicators, body regions, and their texts |
 | `src/lib/judge.ts` | The fake logic: status rules, who sees what, next actions |
-| `src/lib/mission.ts` | The mission plan and a simple orbit model: phase, place, position, distance, and signal delay for any day |
+| `src/lib/mission.ts` | The mission plan: phase and place for a mission day |
+| `src/lib/replay.ts` | Earth cutoffs against personal rules, replayed on real UTMB bed-rest days |
 | `src/lib/store.tsx` | App state: mission day, readings, check-ins |
 | `src/data/demo.ts` | The four scripted crew members and their readings |
 | `src/data/utmb-residuals.json` | Day-to-day variation taken from four NASA UTMB bed-rest subjects (`../data/utmb/daily_vitals.csv`), used as noise on the scripted series |
-| `src/data/devices.ts` | The equipment shown under Sources, with simulated battery levels |
+| `src/data/utmb-replay.json` | Daily vitals and baselines of 29 NASA UTMB bed-rest subjects, made by `scripts/replay_data.py` |
 | `src/data/emergency.ts` | Draft emergency steps. Not a protocol |
 | `public/licenses/` | SIL Open Font License texts for Inter and Geist Mono |
 
 ## Limits
 
-- Every value is demo data. Levels and trends are invented; only the day-to-day variation of four vital signs is replayed from real ground data.
+- Every value outside Replay is demo data. Levels and trends are invented; only the day-to-day variation of four vital signs is replayed from real ground data.
+- Replay uses real, unaltered bed-rest values. Bed rest is a ground stand-in for flight, and the data has no confirmed illness.
 - The status rules are simplified forms of R1 to R12 and have not been reviewed by a clinician.
 - Emergency steps and all guidance wording are drafts without a source.
 - State lives in memory. Reloading the page resets the demo.

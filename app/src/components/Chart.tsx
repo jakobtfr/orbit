@@ -18,7 +18,7 @@ function ticks(lo: number, hi: number, count: number): number[] {
 
 /**
  * Line chart following DESIGN.md: straight segments between real readings, no fills or smoothing,
- * baseline as a band, limits as thin labelled lines, status colour only on points outside a limit.
+ * baseline as a band, limits as thin labelled lines, the Earth cutoff dashed, status colour only on points outside a limit.
  */
 export function Chart({ k, readings, guide, baselines, from, to, decimals }: {
   k: IndicatorKey
@@ -42,6 +42,10 @@ export function Chart({ k, readings, guide, baselines, from, to, decimals }: {
       lo = Math.min(lo, l.v)
       hi = Math.max(hi, l.v)
     }
+  }
+  if (guide.earth) {
+    lo = Math.min(lo, guide.earth.v)
+    hi = Math.max(hi, guide.earth.v)
   }
   if (guide.band) {
     lo = Math.min(lo, guide.band[0])
@@ -89,6 +93,12 @@ export function Chart({ k, readings, guide, baselines, from, to, decimals }: {
           <text className="chart-label" x={W - M.right + 8} y={y(l.v) + 4}>{l.label}</text>
         </g>
       ))}
+      {guide.earth && (
+        <g>
+          <line x1={M.left} x2={W - M.right} y1={y(guide.earth.v)} y2={y(guide.earth.v)} stroke="var(--border-control)" strokeDasharray="6 4" />
+          <text className="chart-label" x={W - M.right + 8} y={y(guide.earth.v) + 4}>{guide.earth.label}</text>
+        </g>
+      )}
       <path d={path((r) => r.v)} fill="none" stroke="var(--text-primary)" strokeWidth="1.5" strokeLinejoin="round" />
       {data[0].v2 !== undefined && (
         <path d={path((r) => r.v2 ?? r.v)} fill="none" stroke="var(--text-primary)" strokeWidth="1.5" strokeLinejoin="round" />

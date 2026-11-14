@@ -4,11 +4,10 @@ import { useStore } from './lib/store'
 import { Body } from './screens/Body'
 import { CheckIn } from './screens/CheckIn'
 import { Emergency } from './screens/Emergency'
-import { Flight } from './screens/Flight'
 import { Indicator, Symptoms } from './screens/Indicator'
 import { Measure } from './screens/Measure'
 import { Region } from './screens/Region'
-import { Sources } from './screens/Sources'
+import { Replay } from './screens/Replay'
 
 function Home() {
   const { viewer } = useStore()
@@ -27,8 +26,7 @@ export function App() {
           <Route path="/body/:pid/symptoms/:rid" element={<Symptoms />} />
           <Route path="/body/:pid/measure/:key" element={<Measure />} />
           <Route path="/body/:pid/check-in" element={<CheckIn />} />
-          <Route path="/flight" element={<Flight />} />
-          <Route path="/sources" element={<Sources />} />
+          <Route path="/replay" element={<Replay />} />
           <Route path="*" element={<Home />} />
         </Route>
       </Routes>

@@ -5,7 +5,6 @@ import { BackLink } from '../components/Shell'
 import { StatusMark, Tag } from '../components/Status'
 import { NextActionCard, ValueLine, provenanceTags } from '../components/Tiles'
 import { FIRST_DAY } from '../data/demo'
-import { deviceBySource } from '../data/devices'
 import { age, signed, stamp } from '../lib/format'
 import { INDICATORS, REGIONS, formatValue } from '../lib/indicators'
 import { actionFor, activeSymptoms, baselines, chartGuide, judge, now, readingsFor, symptomsFor } from '../lib/judge'
@@ -49,7 +48,6 @@ export function Indicator() {
     return k === 'bp' && base2 !== undefined ? `${d1}/${signed((j.latest.v2 ?? 0) - base2, 0)}` : d1
   }
   const canMeasure = def.inputLabel !== ''
-  const device = deviceBySource(def.source)
 
   return (
     <div className="screen indicator-screen">
@@ -72,11 +70,7 @@ export function Indicator() {
           <Tag>{def.confidence}</Tag>
           <Tag>{def.rule}</Tag>
           {j.latest && <Tag>{age(t, j.latest.t)}</Tag>}
-          {device ? (
-            <Link className="tag tag-link" to={`/sources?device=${device.id}`}>{device.name}</Link>
-          ) : (
-            <Tag>{j.latest?.source ?? def.source}</Tag>
-          )}
+          <Tag>{j.latest?.source ?? def.source}</Tag>
         </div>
       </section>
 
@@ -161,7 +155,6 @@ export function Indicator() {
         {canMeasure && j.status !== 'unavailable' && (
           <Link className="btn btn-quiet" to={`/body/${person.id}/measure/${k}`}>How to measure</Link>
         )}
-        {device && <Link className="btn btn-quiet" to={`/sources?device=${device.id}`}>Device: {device.name.toLowerCase()}</Link>}
       </div>
     </div>
   )
@@ -189,7 +182,7 @@ export function Symptoms() {
         <div className="title-2">{act.length ? act.map((s) => s.name).join(', ') : 'None reported'}</div>
         <StatusMark status={act.length ? 'caution' : 'ok'} size={16} />
         <div className="tags">
-          <Tag>{act.length ? 'SELF-REPORTED' : 'SIMULATED'}</Tag>
+          <Tag>SELF-REPORTED</Tag>
           <Tag>LOW</Tag>
           <Tag>CHECK-IN</Tag>
         </div>

@@ -22,22 +22,15 @@ const ICONS: Record<string, React.ReactNode> = {
       <path d="M4 8h12M10 8v5M10 13l-3 5M10 13l3 5" />
     </>
   ),
-  flight: (
+  replay: (
     <>
-      <circle cx="10" cy="10" r="7" />
-      <circle cx="14.95" cy="5.05" r="1.6" fill="currentColor" />
+      <path d="M2.5 10h3l2-5 3 10 2-5h5" />
     </>
   ),
   emergency: (
     <>
       <path d="M10 2.5 17.5 10 10 17.5 2.5 10Z" />
       <path d="M10 6.5v4M10 13.2v.3" />
-    </>
-  ),
-  sources: (
-    <>
-      <path d="M5 2.5h7l3 3v12H5Z" />
-      <path d="M8 9h4M8 12h4M8 15h3" />
     </>
   ),
 }
@@ -65,11 +58,11 @@ export function Shell() {
           <Mark />
           <span className="wordmark">ORBIT</span>
         </Link>
-        <Link className="topbar-where" to="/flight" aria-label="Mission day and phase, open Flight">
+        <div className="topbar-where" aria-label="Mission day and phase">
           <Tag>Day {state.day}</Tag>
           <Tag>{phase.label}</Tag>
           <Tag>{clock(now(state))}</Tag>
-        </Link>
+        </div>
         <div className="topbar-space" />
         <div className="viewer">
           <span className="viewer-name">{viewer.name}</span>
@@ -81,8 +74,7 @@ export function Shell() {
           <NavLink to={`/body/${viewer.id}`} className={() => (pathname.startsWith('/body') ? 'active' : '')}>
             <NavIcon name="body" /><span>Body</span>
           </NavLink>
-          <NavLink to="/flight"><NavIcon name="flight" /><span>Flight</span></NavLink>
-          <NavLink to="/sources"><NavIcon name="sources" /><span>Sources</span></NavLink>
+          <NavLink to="/replay"><NavIcon name="replay" /><span>Replay</span></NavLink>
           <div className="nav-space" />
           <NavLink to="/emergency"><NavIcon name="emergency" /><span>Emergency</span></NavLink>
         </nav>

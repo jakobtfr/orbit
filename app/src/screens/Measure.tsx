@@ -57,7 +57,7 @@ export function Measure() {
       type: 'reading',
       personId: person.id,
       key: k,
-      reading: { t, v: n, v2: def.input2Label ? n2 : undefined, activity, source: 'Entered by hand', provenance: 'SIMULATED' },
+      reading: { t, v: n, v2: def.input2Label ? n2 : undefined, activity, source: 'Entered by hand', provenance: 'MEASURED' },
     })
     nav(indicatorPath)
   }

@@ -6,7 +6,7 @@ import type { AppState, IndicatorKey, Reading } from './types'
 
 const statuses = (s: AppState) => Object.fromEntries(INDICATOR_ORDER.map((k) => [k, judge(s, LENA, k).status]))
 const add = (s: AppState, k: IndicatorKey, t: number, v: number, v2?: number) =>
-  s.readings.lena[k]!.push({ t, v, v2, activity: 'rest', source: 'Entered by hand', provenance: 'SIMULATED' } satisfies Reading)
+  s.readings.lena[k]!.push({ t, v, v2, activity: 'rest', source: 'Entered by hand', provenance: 'MEASURED' } satisfies Reading)
 
 describe('Lena on mission day 100', () => {
   const s = initialState()
@@ -57,7 +57,7 @@ describe('fake logic', () => {
 
   it('a reading after exercise is ignored by the resting rule (SH7)', () => {
     const s = initialState()
-    s.readings.lena.temp!.push({ t: 100.33, v: 39.0, activity: 'after', source: 'Entered by hand', provenance: 'SIMULATED' })
+    s.readings.lena.temp!.push({ t: 100.33, v: 39.0, activity: 'after', source: 'Entered by hand', provenance: 'MEASURED' })
     expect(judge(s, LENA, 'temp').status).toBe('ok')
   })
 

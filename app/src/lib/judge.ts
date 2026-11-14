@@ -432,6 +432,8 @@ export interface ChartGuide {
   band?: [number, number]
   bandLabel?: string
   limits: { v: number; label: string }[]
+  /** The fixed Earth cutoff, drawn next to the personal limits for comparison. Always shown. */
+  earth?: { v: number; label: string }
 }
 
 export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {
@@ -439,11 +441,17 @@ export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {
     case 'hr':
       return {
         band: b.pre !== undefined ? [b.pre - 6, b.pre + 6] : undefined,
-        bandLabel: 'Before flight',
-        limits: b.pre !== undefined ? [{ v: b.pre * 1.2, label: '+20% of before' }] : [],
+        bandLabel: 'Your normal',
+        limits: b.pre !== undefined ? [{ v: b.pre * 1.2, label: 'Yours +20%' }] : [],
+        earth: { v: 100, label: 'Earth 100' },
       }
     case 'bp':
-      return { limits: [{ v: 130, label: 'Upper 130' }, { v: 80, label: 'Lower 80' }] }
+      return {
+        band: b.pre !== undefined ? [b.pre - 6, b.pre + 6] : undefined,
+        bandLabel: 'Your normal',
+        limits: b.pre !== undefined ? [{ v: b.pre + 20, label: 'Yours +20' }] : [],
+        earth: { v: 130, label: 'Earth 130' },
+      }
     case 'standing':
       return { limits: [{ v: 20, label: 'Drop of 20' }] }
     case 'spo2':
@@ -451,8 +459,9 @@ export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {
     case 'temp':
       return {
         band: b.recent !== undefined ? [b.recent - 0.4, b.recent + 0.4] : undefined,
-        bandLabel: 'Last 7 days',
-        limits: b.recent !== undefined ? [{ v: b.recent + 0.5, label: '+0.5 °C' }] : [],
+        bandLabel: 'Your last 7 days',
+        limits: b.recent !== undefined ? [{ v: b.recent + 0.5, label: 'Yours +0.5 °C' }] : [],
+        earth: { v: 38.0, label: 'Earth 38.0' },
       }
     case 'weight': {
       const base = b.month ?? b.pre

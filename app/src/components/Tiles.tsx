@@ -6,10 +6,9 @@ import { useStore } from '../lib/store'
 import type { Action, IndicatorKey, Person, Reading, RegionKey } from '../lib/types'
 import { STATUS, StatusMark, Tag } from './Status'
 
-/** Provenance tags for a reading. Bone load keeps MODELLED next to the demo tag (SH5). */
+/** Provenance tag for a reading (SH5). */
 export function provenanceTags(key: IndicatorKey, r?: Reading): string[] {
-  const p = r?.provenance ?? 'SIMULATED'
-  return INDICATORS[key].provenance === 'MODELLED' ? ['MODELLED', 'SIMULATED'] : [p]
+  return [r?.provenance ?? INDICATORS[key].provenance]
 }
 
 export function ValueLine({ k, reading, arrow, status, size = 'reading' }: {
@@ -59,7 +58,7 @@ export function SymptomTile({ person, region }: { person: Person; region: Region
       <div className="reading reading-text">{act.length ? act.map((s) => s.name).join(', ') : 'None reported'}</div>
       <StatusMark status={status} />
       <div className="tags">
-        <Tag>{act.length ? 'SELF-REPORTED' : 'SIMULATED'}</Tag>
+        <Tag>SELF-REPORTED</Tag>
         <Tag>LOW</Tag>
         <Tag>CHECK-IN</Tag>
         {act[0] && <Tag>{age(now(state), act[0].t)}</Tag>}

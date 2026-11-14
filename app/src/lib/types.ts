@@ -1,7 +1,7 @@
 export type StatusKey = 'ok' | 'caution' | 'warning' | 'stale' | 'unavailable' | 'repeat'
 export type RegionKey = 'head' | 'chest' | 'skin' | 'hips' | 'whole'
 export type Place = 'spacecraft' | 'station' | 'surface' | 'landing'
-export type Provenance = 'MEASURED' | 'SELF-REPORTED' | 'MODELLED' | 'SIMULATED'
+export type Provenance = 'MEASURED' | 'SELF-REPORTED' | 'MODELLED'
 export type Confidence = 'HIGH' | 'MODERATE' | 'LOW'
 export type Activity = 'rest' | 'during' | 'after'
 

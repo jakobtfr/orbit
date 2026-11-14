@@ -15,7 +15,7 @@ import residuals from './utmb-residuals.json'
 export const FIRST_DAY = -30
 /** The day the scripted events happen, and the day the app opens on. */
 export const SCENE_DAY = 100
-/** Readings exist for the whole simulated mission. */
+/** Readings exist for the whole mission. */
 export const LAST_DAY = SIM_END
 
 /** The crew member the app belongs to. */
@@ -86,7 +86,7 @@ function reading(key: IndicatorKey, t: number, v: number, v2?: number): Reading 
     v2: v2 === undefined ? undefined : Math.round(v2),
     activity: 'rest',
     source: def.source,
-    provenance: 'SIMULATED',
+    provenance: def.provenance,
   }
 }
 

@@ -129,7 +129,6 @@ export function Emergency() {
                 </div>
               )
             })}
-            <div className="tags"><Tag>SIMULATED</Tag></div>
           </aside>
         )}
       </div>

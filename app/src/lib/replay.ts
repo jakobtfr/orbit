@@ -50,7 +50,7 @@ export function earthLimit(v: Vital): number {
   return { hr: 100, sys: 130, dia: 80, temp: 38.0 }[v]
 }
 
-function earthOver(v: Vital, x: number): boolean {
+export function earthOver(v: Vital, x: number): boolean {
   return v === 'hr' ? x > 100 : x >= earthLimit(v)
 }
 
@@ -86,7 +86,7 @@ export interface Judged extends Day {
   orbitAlarm: boolean
 }
 
-function strictOver(v: Vital, x: number): boolean {
+export function strictOver(v: Vital, x: number): boolean {
   return v === 'sys' ? x >= 140 : v === 'dia' ? x >= 90 : earthOver(v, x)
 }
 

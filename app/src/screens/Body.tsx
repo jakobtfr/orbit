@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
 import { WeeklySummary } from '../components/dashboard/WeeklySummary'
@@ -21,19 +21,15 @@ export function Body() {
   const summaries = regionSummaries(state, person)
   const base = `/body/${person.id}`
   return <div className="screen dashboard-screen">
-    <header className="dashboard-header"><div><p className="eyebrow">ORBIT / CREW HEALTH MONITORING</p><h1>Health overview</h1><p>{person.name} · {person.role}</p></div><div className="dashboard-header-meta"><span className="simulation-label"><i /> SIMULATED MISSION</span><span>MISSION DAY <strong>{String(state.day).padStart(3, '0')}</strong></span></div></header>
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map"><div className="column-label"><span>01 / BODY MAP</span><span>Personal</span></div>
         <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />
       </section>
       <ActivityPanel state={state} person={person} />
       <WeeklySummary state={state} person={person} />
-      <section className="dashboard-column science-column" aria-label="Five health trend plots"><div className="column-label"><span>04 / HEALTH TRENDS</span><div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d}D</button>)}</div></div>
-        <div className="science-header"><p>Physiological measurements</p><span>Means ±1 SD · {days / 7}-day bins · simulated</span><div className="plot-legend"><span><i className="green" />Within bands</span><span><i className="amber" />Review</span><span><i className="red" />High concern</span></div></div>
-        {metrics(state, person).map((m) => <ScientificPlot key={m.key} metric={m} state={state} person={person} days={days} />)}
-        <p className="science-note">Bars show sample variability, not measurement uncertainty. Dashed lines show review thresholds; open each reference for its scope.</p>
+      <section className="dashboard-column science-column" aria-label="Three health trend plots"><div className="column-label"><span>04 / HEALTH TRENDS</span><div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d}D</button>)}</div></div>
+        {metrics(state, person).filter((m) => ['hr', 'temp', 'radiation'].includes(m.key)).map((m) => <ScientificPlot key={m.key} metric={m} state={state} person={person} days={days} />)}
       </section>
     </div>
-    <footer className="dashboard-footer"><span>ORBIT / CREW HEALTH SYSTEM</span><p>Research prototype · simulated readings · mock AI summary</p><a href="https://www.nasa.gov/hrp/hazards/" target="_blank" rel="noreferrer">The five spaceflight hazards ↗</a></footer>
   </div>
 }

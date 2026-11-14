@@ -103,7 +103,14 @@ export function BodyFigure({ summaries, active, onActive, onSelect, onMuscleSele
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectGroup(muscles[0].slug) } }}>
                 <defs><clipPath id={clip}>{muscles.flatMap((p) => p.pathArray.map((d, i) => <path key={`${p.slug}-${i}`} d={d} />))}</clipPath></defs>
                 {muscles.flatMap((p) => p.pathArray.map((d, i) => <path key={`${p.slug}-${i}`} d={d}
-                  fill={ref(lit ? 'lit' : 'muscle')} stroke={ref('gold')} strokeWidth={lit ? 1.4 : .65} strokeOpacity={lit ? .6 : .22} />))}
+                  fill={ref(lit ? 'lit' : 'muscle')} stroke={group === 'Head' ? '#edf1f5' : ref('gold')} strokeWidth={group === 'Head' ? 1.5 : lit ? 1.4 : .65} strokeOpacity={group === 'Head' ? .8 : lit ? .6 : .22} />))}
+                {group === 'Head' && side === 'front' && <g pointerEvents="none" aria-hidden="true" fill="none" stroke="#c5cdd8" strokeLinecap="round">
+                  <path d="M325 159Q338 153 350 160 M374 160Q386 153 399 159" strokeWidth="1.4" opacity=".25" />
+                  <path d="M328 166Q338 169 347 166 M377 166Q386 169 396 166" opacity=".22" />
+                  <path d="M361 163Q360 178 355 188Q362 192 369 188" strokeWidth="1.2" opacity=".26" />
+                  <path d="M349 207Q362 204 375 207 M352 210Q362 215 372 210" opacity=".22" />
+                  <path d="M324 182Q328 193 338 195 M400 182Q396 193 386 195" opacity=".13" />
+                </g>}
                 {lit && <g clipPath={`url(#${clip})`} pointerEvents="none" aria-hidden="true" >
                   <g transform={side === 'back' ? 'translate(724 0)' : undefined}>
                     {[0, 1, 2, 3, 4, 5, 6].map((i) => <path key={i} className="anatomy-blood-flow"

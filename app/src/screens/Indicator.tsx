@@ -73,7 +73,7 @@ export function Indicator() {
           <Tag>{def.rule}</Tag>
           {j.latest && <Tag>{age(t, j.latest.t)}</Tag>}
           {device ? (
-            <Link className="tag tag-link" to={`/sources?device=${device.id}`}>{device.name}</Link>
+            <Tag>{device.name}</Tag>
           ) : (
             <Tag>{j.latest?.source ?? def.source}</Tag>
           )}
@@ -161,7 +161,7 @@ export function Indicator() {
         {canMeasure && j.status !== 'unavailable' && (
           <Link className="btn btn-quiet" to={`/body/${person.id}/measure/${k}`}>How to measure</Link>
         )}
-        {device && <Link className="btn btn-quiet" to={`/sources?device=${device.id}`}>Device: {device.name.toLowerCase()}</Link>}
+        {device && <span className="body-sm note">Device: {device.name.toLowerCase()}</span>}
       </div>
     </div>
   )

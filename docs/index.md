@@ -39,6 +39,14 @@ Where each piece of information lives. Start here when you need a specific fact.
 | Green / amber / red values, flight adjustments, evidence, and confidence for 12 indicators | [`clinical-thresholds.md`](clinical-thresholds.md#rule-table) |
 | One specific indicator | All in the rule table: **R1** heart rate · **R2** blood pressure · **R3** blood pressure on standing (orthostatic check) · **R4** core temperature · **R5** blood oxygen · **R6** sleep · **R7** mood · **R8** radiation · **R9** bone load · **R10** nutrition and weight · **R11** cabin carbon dioxide · **R12** vision and eye changes (SANS) — [`clinical-thresholds.md`](clinical-thresholds.md#rule-table) |
 
+## Scientific constraints
+
+| What you need | Where to look |
+| --- | --- |
+| What the health logic must respect to be valid in flight: hard and soft constraints | [`scientific-constraints.md`](scientific-constraints.md) |
+| Spaceflight facts that are still unconfirmed | [`scientific-constraints.md`](scientific-constraints.md#verify-before-relying-on-it) |
+| One test per hard constraint to run against the prototype | [`scientific-constraints.md`](scientific-constraints.md#validity-tests) |
+
 ## Open data and extracted tables
 
 | What you need | Where to look |

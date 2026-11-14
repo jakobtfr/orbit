@@ -64,9 +64,9 @@
 .card-note { color: var(--text-muted); font-size: 12px; }
 
 /* Body map */
-.anatomy-stage { flex: 1; display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; }
-.anatomy-viewport { position: relative; flex: 1; min-height: 528px; padding: 24px 24px 64px; }
-.anatomy-figure { position: absolute; top: 24px; left: 24px; display: block; width: calc(100% - 48px); height: calc(100% - 88px); overflow: visible; }
+.anatomy-stage { display: flex; flex: 1; flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: clip; }
+.anatomy-viewport { position: relative; flex: 1; padding: 24px; }
+.anatomy-figure { position: sticky; top: 92px; display: block; width: 100%; height: clamp(440px, 60vh, 680px); overflow: visible; }
 .anatomy-region { cursor: pointer; outline: none; }
 .anatomy-region path { transition: fill var(--duration-base) ease-out; }
 .anatomy-region:focus-visible path { stroke: var(--accent); stroke-width: 3; }
@@ -74,7 +74,7 @@
 .anatomy-point-warning { color: var(--status-warning); }
 .anatomy-point-stale { color: var(--status-stale); }
 .anatomy-point-repeat { color: var(--text-primary); }
-.anatomy-caption { position: absolute; left: 16px; right: 16px; bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--text-primary); font-size: 15px; font-weight: 500; }
+.anatomy-caption { position: sticky; top: 0; z-index: 1; display: flex; flex: none; flex-direction: column; align-items: center; gap: 2px; padding: 20px 16px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; background: var(--bg-surface); color: var(--text-primary); font-size: 15px; font-weight: 500; }
 .anatomy-caption .status-mark { font-size: 13px; }
 .anatomy-instruction { color: var(--text-muted); font-size: 13px; font-weight: 400; }
 .anatomy-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; border-top: 1px solid var(--border-subtle); }
@@ -223,7 +223,7 @@
   .health-header .viewer, .health-header .header-system { display: none; }
   .screen.dashboard-screen, .planet-page { padding: 16px 12px 48px; }
   .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
-  .anatomy-viewport { min-height: 528px; }
+  .anatomy-figure { height: 440px; }
   .planet-nav { margin: 12px 8px 0; }
   .planet-nav a { padding: 0 12px; gap: 5px; }
   .planet-page-title h1 { font-size: 32px; }

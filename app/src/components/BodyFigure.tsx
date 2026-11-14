@@ -39,6 +39,8 @@ const ANCHORS: Record<RegionKey, { x: number; y: number; end: number }> = {
 export function BodyFigure({ summaries, active, onActive, onSelect, onMuscleSelect }: BodyProps) {
   const [side, setSide] = useState<'front' | 'back'>('front')
   const [hovered, setHovered] = useState<string | null>(null)
+  const [inspected, setInspected] = useState<string | null>(null)
+  const inspect = (group: string) => { setHovered(group); setInspected(group) }
   const parts = side === 'front' ? bodyFront : bodyBack
   const visibleMuscles = [...new Set(parts.map((p) => muscleFor(p.slug)).filter((key): key is MuscleKey => key !== undefined))]
   const selectGroup = (slug: string) => {
@@ -51,6 +53,10 @@ export function BodyFigure({ summaries, active, onActive, onSelect, onMuscleSele
 
   return (
     <div className="body-stage anatomy-stage">
+      <div className="anatomy-caption" aria-live="polite" aria-atomic="true">
+        <span>{inspected ?? (selected ? REGIONS[selected.region].name : 'Muscle anatomy')}</span>
+        {inspected ? <span className="anatomy-instruction">Select to view muscle details</span> : selected ? <StatusMark status={selected.status} /> : <span className="anatomy-instruction">Select a muscle group</span>}
+      </div>
       <div className="anatomy-viewport">
         <svg className="anatomy-figure" viewBox="0 60 724 1370" aria-label={`${side} body map. Select a region to explore its health indicators.`}>
           <g transform={side === 'back' ? 'translate(-724 0)' : undefined}>
@@ -61,9 +67,9 @@ export function BodyFigure({ summaries, active, onActive, onSelect, onMuscleSele
               const lit = hovered === group
               return <g key={group} className={`anatomy-region ${lit ? 'is-active' : ''}`}
                 role="button" tabIndex={0} aria-label={`Explore ${group}`}
-                onPointerEnter={() => { setHovered(group); onActive(region) }}
+                onPointerEnter={() => { inspect(group); onActive(region) }}
                 onPointerLeave={() => { setHovered(null); onActive(null) }}
-                onFocus={() => { setHovered(group); onActive(region) }}
+                onFocus={() => { inspect(group); onActive(region) }}
                 onBlur={() => { setHovered(null); onActive(null) }}
                 onClick={() => selectGroup(muscles[0].slug)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectGroup(muscles[0].slug) } }}>
@@ -83,23 +89,19 @@ export function BodyFigure({ summaries, active, onActive, onSelect, onMuscleSele
             })}
           </g>
         </svg>
-        <div className="anatomy-caption" aria-live="polite">
-          <span>{hovered ?? (selected ? REGIONS[selected.region].name : 'Muscle anatomy')}</span>
-          {hovered ? <span className="anatomy-instruction">Select to view muscle details</span> : selected ? <StatusMark status={selected.status} /> : <span className="anatomy-instruction">Select a muscle group</span>}
-        </div>
       </div>
       <div className="anatomy-controls">
         <div className="anatomy-toggle" aria-label="Body orientation" role="group">
-          <button aria-pressed={side === 'front'} onClick={() => { setSide('front'); setHovered(null); onActive(null) }}>Front</button>
-          <button aria-pressed={side === 'back'} onClick={() => { setSide('back'); setHovered(null); onActive(null) }}>Back</button>
+          <button aria-pressed={side === 'front'} onClick={() => { setSide('front'); setHovered(null); setInspected(null); onActive(null) }}>Front</button>
+          <button aria-pressed={side === 'back'} onClick={() => { setSide('back'); setHovered(null); setInspected(null); onActive(null) }}>Back</button>
         </div>
         <button className="anatomy-whole" onClick={() => onSelect('whole')}>Whole body <span aria-hidden="true">↗</span></button>
       </div>
       <div className="muscle-group-list" aria-label={`${side} muscle groups`}>
         {visibleMuscles.map((key) => <button key={key}
           className={hovered === MUSCLE_GROUPS[key].name ? 'is-active' : ''}
-          onPointerEnter={() => setHovered(MUSCLE_GROUPS[key].name)} onPointerLeave={() => setHovered(null)}
-          onFocus={() => setHovered(MUSCLE_GROUPS[key].name)} onBlur={() => setHovered(null)}
+          onPointerEnter={() => inspect(MUSCLE_GROUPS[key].name)} onPointerLeave={() => setHovered(null)}
+          onFocus={() => inspect(MUSCLE_GROUPS[key].name)} onBlur={() => setHovered(null)}
           onClick={() => onMuscleSelect(key)}><span><strong>{MUSCLE_GROUPS[key].name}</strong><small>{MUSCLE_GROUPS[key].anatomy}</small></span><span aria-hidden="true">↗</span></button>)}
       </div>
     </div>

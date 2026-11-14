@@ -21,11 +21,11 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | Dashboard | `#/body/lena` | Three columns: body map; daily activity with risks and checks; health trends, starting with the "Earth limits vs. your normal" card |
 | Region, Muscle group, Indicator, Symptoms, Measure, Check-in | `#/body/lena/...` | Reached from the dashboard |
 | Deep Data | `#/deep-data` | Paper-style figures of real NASA UTMB bed-rest records (heart rate, systolic pressure, temperature) with a drafted medical summary, SVG and CSV export |
-| Mental Health | `#/mental-health` | Private mood, energy, journal; cleared on reload |
+| My Personal Diary | `#/mental-health` | Private mood, energy, separation reflections, family videos, and local recording |
 | Replay | `#/replay` | Real NASA bed-rest data judged by Earth limits and personal rules. `?s=UTMB-40` opens a volunteer |
 | Emergency | `#/emergency` | Button at the top right of every screen |
 
-**Settings** (gear icon in the header) switches between the planet health system (default, surface, with the Dashboard / Deep Data / Mental Health navigation) and the flight health system (spacecraft). The setting changes which checks are available and the radiation reference; readings and mission day stay the same.
+**Settings** (gear icon in the header) switches between the planet health system (default, surface, with the Dashboard / Deep Data / My Personal Diary navigation) and the flight health system (spacecraft). The setting changes which checks are available and the radiation reference; readings and mission day stay the same.
 
 ## Layout
 
@@ -62,4 +62,26 @@ The app is shown as Lena Brandt and opens on mission day 100.
 - Bed rest is a ground stand-in for flight, and its data has no confirmed illness.
 - Status rules and review bands are simplified from published values and have not been reviewed by a clinician.
 - Emergency steps follow published first-aid guidelines but have not been reviewed by a clinician.
-- State lives in memory. Reloading the page resets the demo.
+- Mission/demo state lives in memory. Diary entries and videos use device-local IndexedDB storage.
+
+
+## My Personal Diary
+
+The diary logs mood, energy, free-form notes, and optional reflections about distance
+from family and friends, recent connection, and support needs. Entries include a
+creation timestamp and mission day. They are stored in this browser's IndexedDB and
+remain available across navigation and reloads. They are separate from medical
+symptom check-ins. Clearing site data removes the diary. Storage failures fall back
+to the current session with a visible message.
+
+Family videos can be selected from the device (up to 100 MB), played, and downloaded.
+Camera recording requires an explicit click and camera/microphone permission. The
+preview is muted; capture starts only after pressing Start recording. Stop & save
+closes camera/microphone tracks and stores the clip locally. Recording is capped at
+three minutes; leaving the page stops capture. Stored messages can be previewed and
+downloaded. There is no upload, sharing service, or automatic transmission to family.
+The browser selects a supported MediaRecorder format; unsupported devices and denied
+permissions show an error. Localhost and HTTPS support the camera permission flow.
+
+Validation covers compilation, diary page rendering, controls, and unavailable-storage
+handling. Physical camera/microphone capture requires a browser/device check.

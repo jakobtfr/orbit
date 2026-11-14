@@ -1,4 +1,5 @@
-import { createContext, useContext, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react'
+import { readDiary, type ConnectionAnswers } from './diary'
 import { LENA, initialState } from '../data/demo'
 import type { AppState, CheckIn, IndicatorKey, Person, Reading } from './types'
 
@@ -29,9 +30,10 @@ export function applyHealthSystem(state: AppState, system: HealthSystem): AppSta
   return { ...state, place: system === 'planet' ? 'surface' : 'spacecraft' }
 }
 
-export interface MentalEntry { id: string; day: number; mood: number; energy: number; note: string }
+export interface MentalEntry { id: string; day: number; mood: number; energy: number; note: string; createdAt?: string; answers?: ConnectionAnswers }
 
 interface Store {
+  mentalStorageStatus: 'loading' | 'ready' | 'unavailable'
   mentalEntries: MentalEntry[]
   setMentalEntries: Dispatch<React.SetStateAction<MentalEntry[]>>
   healthSystem: HealthSystem
@@ -47,7 +49,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, initialState)
   const [healthSystem, setHealthSystem] = useState<HealthSystem>('planet')
   const [mentalEntries, setMentalEntries] = useState<MentalEntry[]>([])
-  const store = useMemo(() => ({ state: applyHealthSystem(state, healthSystem), dispatch, viewer: LENA, healthSystem, setHealthSystem, mentalEntries, setMentalEntries }), [state, healthSystem, mentalEntries])
+  const [mentalStorageStatus, setMentalStorageStatus] = useState<'loading' | 'ready' | 'unavailable'>('loading')
+  useEffect(() => {
+    let active = true
+    readDiary<MentalEntry>('entries').then((entries) => {
+      if (!active) return
+      setMentalEntries(entries.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
+      setMentalStorageStatus('ready')
+    }).catch(() => { if (active) setMentalStorageStatus('unavailable') })
+    return () => { active = false }
+  }, [])
+  const store = useMemo(() => ({ state: applyHealthSystem(state, healthSystem), dispatch, viewer: LENA, healthSystem, setHealthSystem, mentalEntries, setMentalEntries, mentalStorageStatus }), [state, healthSystem, mentalEntries, mentalStorageStatus])
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>
 }
 

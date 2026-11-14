@@ -51,7 +51,7 @@ export function Shell() {
       {healthSystem === 'planet' && <nav className="planet-nav" aria-label="Planet health navigation">
         <NavLink to={`/body/${viewer.id}`} className={() => pathname.startsWith('/body') ? 'active' : ''}><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1" /><rect x="12" y="3" width="5" height="5" rx="1" /><rect x="3" y="12" width="5" height="5" rx="1" /><rect x="12" y="12" width="5" height="5" rx="1" /></svg>Dashboard</NavLink>
         <NavLink to="/deep-data"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3v14h14M6 12l3-4 3 2 4-6" /></svg>Deep Data</NavLink>
-        <NavLink to="/mental-health"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17S2 12 2 7a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5-8 10-8 10Z" /></svg>Mental Health</NavLink>
+        <NavLink to="/mental-health"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17S2 12 2 7a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5-8 10-8 10Z" /></svg>My Personal Diary</NavLink>
       </nav>}
       <main className="main" ref={mainRef}><Outlet /></main></div>
   </div>

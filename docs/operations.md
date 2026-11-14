@@ -1,6 +1,6 @@
 # What NASA Actually Does Today
 
-Researched 2026-11-14. This is the operational baseline ORBIT has to fit into — not a hypothetical.
+Researched 2026-11-14. This is the current operational baseline, not a hypothetical.
 
 ## The short version
 
@@ -16,8 +16,6 @@ ISS healthcare is **ground-centered and real-time**. A flight surgeon on console
 | **Crew Medical Officer (CMO)** | A crew member, usually a non-physician astronaut with ~40 h of medical training. Two are designated per increment. Performs in-flight physicals, runs the medical checklist (JSC 48522), manages onboard medical records. |
 | **Integrated Medical Group (IMG)** | The virtual single medical team across NASA, ESA, JAXA, CSA, and Russian partners. |
 | **ASCR** | Strength, conditioning, and rehab specialists who prescribe individual exercise. |
-
-> The 40-hour CMO is the single most important fact for ORBIT. The person expected to handle a medical event on Mars has about a week of medical training.
 
 ## What happens on a normal mission
 
@@ -51,28 +49,15 @@ From a review of 46 long-duration ISS crew members (20.6 flight years):
 - Events cluster in the **first month** of flight.
 - No forced medical evacuations from ISS to date (as of the cited 2008 source).
 
-This matters for the demo: the realistic first anomaly is not a cardiac arrest. It is a rash, a congestion that will not clear, or a sleep problem that compounds.
+## The exploration gap
 
-## Where the model breaks
-
-NASA's own Exploration Medical Capability (ExMC) element says it plainly:
+NASA's Exploration Medical Capability (ExMC) element states:
 
 - Over **100 spaceflight-relevant medical conditions** have been identified.
 - One-way communication delays can exceed **20 minutes**; evacuation and resupply become impossible.
 - The crew will need to **detect, diagnose, treat, and prevent** events autonomously.
 - Their solution direction is **Earth-Independent Medical Operations (EIMO)** with an in-vehicle **clinical decision support system (CDSS)**.
 - A CDSS is expected to raise the crew's effective scope of practice. In a 26-month reference mission simulation, raising cognitive and procedural scope of practice to level 5 reduced deaths by at least 34%.
-
-**ORBIT is a crew-side prototype of exactly that layer.** That is the strongest possible framing for the judges: we are not inventing a need; we are building the interface NASA says it needs.
-
-## What this means for ORBIT
-
-1. **Position as decision support, not autonomy.** The crew decides; the tool structures the decision and prepares the handover.
-2. **Mirror the real cadence.** A daily check-in plus a weekly deeper review maps to PHS and PMC. Do not invent a new workflow.
-3. **Design for a 40-hour CMO.** Plain language, checklists, just-in-time explanations, and "what do I do next" beats a data wall.
-4. **Include a private channel.** Behavioral data must never be visible to the whole crew by default.
-5. **Show the handover.** The flight surgeon is still in the loop; ORBIT's job is to make the next contact window count.
-6. **Keep the medical record structured.** The real system has an EMR and a daily status report. ORBIT's export should look like something a surgeon can read in 60 seconds.
 
 ## Sources
 

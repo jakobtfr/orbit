@@ -1,4 +1,4 @@
-# Resources (official challenge links)
+# Official Resources
 
 Captured 2026-11-14 from the challenge Resources tab.
 
@@ -12,81 +12,97 @@ Captured 2026-11-14 from the challenge Resources tab.
 
 ---
 
-## 1. The five hazards — the "why" layer
+## 1. The five hazards of human spaceflight
 
-HRP's framing: the hazards are not independent. They **feed off each other and exacerbate effects on the body**. That interaction is the argument for a single tool that looks at the whole astronaut instead of five disconnected monitors.
+HRP notes that the hazards are not independent: they feed off one another and exacerbate effects on the body.
 
-| Hazard | What it does to the crew | Product hook |
-| --- | --- | --- |
-| **Space radiation** | Invisible; one of the most hazardous aspects of flight. Raises cancer risk and compounds other damage. | Cumulative mission dose card with a budget, plus event markers (solar particle event) |
-| **Isolation & confinement** | Behavioral responses in small groups over long periods; crews must be selected, trained, and supported. | Mood/conflict check-ins, crew-level attention view, private self-report |
-| **Distance from Earth** | Supplies, instructions, and medical care get harder to receive; Mars is ~140M miles and a ~3-year mission. | Comms-delay clock, offline-first operation, handover packet for the next contact window |
-| **Gravity fields** | Whole body adapts to new loads — muscles, bones, inner ear, organs — then re-adapts on return. | Baseline drift, bone/muscle and orthostatic indicators, exercise adherence |
-| **Hostile / closed environments** | Temperature, pressure, lighting, noise, microbes, immune response. | Environmental context attached to readings (CO₂, noise, light, temperature) |
+| Hazard | Description |
+| --- | --- |
+| **Space radiation** | Invisible and considered one of the most hazardous aspects of spaceflight. Raises cancer risk and compounds other damage. |
+| **Isolation and confinement** | Behavioral responses occur in small groups isolated in a small space over long periods. Crews must be selected, trained, and supported. |
+| **Distance from Earth** | Supplies, instructions, and medical care become harder to receive. Mars is ~140 million miles away and a mission is roughly three years. |
+| **Gravity fields** | Muscles, bones, inner ear, and organs must adapt to new gravitational loads and re-adapt on return. |
+| **Hostile / closed environments** | Temperature, pressure, lighting, noise, microbes, and immune responses inside a vehicle. |
 
-Key quote for the pitch: *"Planning and self-sufficiency will be key to successful deep space missions."*
+Key quote from HRP: *"Planning and self-sufficiency will be key to successful deep space missions."*
 
-## 2. The HRP risk list — our information architecture
-
-This is the most useful page for us. Rather than inventing categories, we organize the whole app around HRP's own risk taxonomy.
+## 2. The 17 HRP risks
 
 ### Physiology
-| Risk | Product handle |
+
+| Risk | Description |
 | --- | --- |
-| Altered immune system responses | Temp, HR, symptom check-in, saliva sample reminders |
-| Altered sensorimotor & vestibular function | Dizziness / balance self-report; post-landing mode |
-| Cardiovascular adaptations | Resting HR, BP, orthostatic check, HR recovery |
-| Decompression sickness | Pre/post-EVA check, symptom flowchart |
-| Host-microorganism interactions | Skin/gut symptom log, habitat hygiene tasks |
-| Hypoxia | SpO₂, EVA pre-breathe compliance |
-| Inadequate food & nutrition | Weight, intake log, menu adherence |
-| Injury / compromised performance from EVA | Suit-fit and fatigue readiness check before EVA |
-| Reduced cardiorespiratory & musculoskeletal fitness | Exercise load, HR response, strength check-ins |
-| Spaceflight associated neuro-ocular syndrome (SANS) | Vision self-test, head/eye symptom prompts, OCT reminders |
-| Spaceflight-induced bone changes | Cumulative load, DXA-equivalent timeline, calcium/nutrition |
+| Altered immune system responses | Stress can reactivate latent viruses and cause rashes and other symptoms. |
+| Altered sensorimotor and vestibular function | Motion sickness, hand-eye and gait coordination issues, dizziness during gravity changes. |
+| Cardiovascular adaptations | Weightlessness alters circulation and heart/vessel function, potentially raising cardiovascular event risk. |
+| Decompression sickness | Dissolved nitrogen bubbles during transitions to lower pressure, e.g. before EVA. |
+| Host-microorganism interactions | Skin and gut microbiome changes may increase illness risk. |
+| Hypoxia | Oxygen in body tissues drops below normal; relevant to suit and pressure operations. |
+| Inadequate food and nutrition | Diet is essential to crew health and performance; long-duration food systems are hard. |
+| Injury / compromised performance from EVA | Cognitive fatigue, injury, decompression sickness, low oxygen, high CO₂ in suits. |
+| Reduced cardiorespiratory and musculoskeletal fitness | Bone density, muscle strength, and cardiovascular performance decline without countermeasures. |
+| Spaceflight associated neuro-ocular syndrome (SANS) | Structural changes in eyes and brain; long-term consequences under study. |
+| Spaceflight-induced bone changes | Bones break down and become more brittle without gravity. |
 
-### Behavior & human factors
-| Risk | Product handle |
+### Behavioral performance and human factors
+
+| Risk | Description |
 | --- | --- |
-| Behavioral changes & psychiatric disorders | Mood, sleep, isolation score; private journal; escalation path |
-| Inadequate teamwork | Crew pulse, conflict flag, crew-level attention view |
-| Inadequate sleep & irregular schedules | Sleep hours, sleep debt, light exposure (ARCHeR-style) |
-| Inadequate systems operations support | Context-aware procedures and "what do I do now" guidance |
-| Injury from dynamic loads | Landing/entry readiness and symptom check |
+| Behavioral changes and psychiatric disorders | Isolation, radiation, distance, and other stressors affect mental health. |
+| Inadequate teamwork | Crew selection and team functioning are critical; miscommunication and tension are risks. |
+| Inadequate sleep and irregular schedules | Chronic sleep loss, work demands, and circadian disruption affect health and safety. |
+| Inadequate systems operations support | Crews may face unexpected software, vehicle, or system problems with limited support. |
+| Injury from dynamic loads | Landing and other high-load phases can cause injury. |
 
-### Radiation
-| Risk | Product handle |
+### Space radiation
+
+| Risk | Description |
 | --- | --- |
-| Radiation-induced cancers | Cumulative dose, dose-rate trend, event exposure attribution |
+| Radiation-induced cancers | Crews exposed to space radiation may be more likely to develop cancer. |
 
-**Design consequence:** every indicator in the app must name the HRP risk it serves. If it doesn't, it doesn't ship.
+## 3. Ongoing HRP research
 
-## 3. Ongoing research — credibility anchors
+| Study | What it examines |
+| --- | --- |
+| ARCHeR (Artemis II) | Well-being, activity, and sleep patterns; actigraphy measures motion, sleep, and light exposure. |
+| Immune Biomarkers (Artemis II) | Blood and saliva samples to see how deep space changes the immune system. |
+| Artemis II Standard Measures | Consistent set of health information for future research. |
+| B-Complex | Whether daily B vitamins prevent or mitigate brain and eye changes. |
+| Brain Fluid Pressure | Relationship between skull fluid pressure and eye/brain changes. |
+| CIPHER | Suite of studies across multiple body systems. |
+| Simulating Manual Piloting for Moon Landings | How gravity transitions affect piloting. |
+| Spacecraft Occupant Protection | Discomfort during re-entry, combined with spacecraft sensor data. |
+| Spinal Fluid Biomarkers | Substances in spinal fluid associated with brain and eye changes. |
+| Standard Measures | Consistent physiological and psychological measurements. |
+| Thigh Cuff | Whether thigh cuffs keep fluid in the legs and avert eye disorders. |
+| Venous Haemostasis | Blood flow and coagulation changes in space. |
+| Zero T2 | Exercise in space without a treadmill. |
+| Altered Immunity (past) | Blood, saliva, and urine to study immune changes. |
+| Food Acceptability (past) | How long-duration flight affects food appeal. |
+| Food Physiology (past) | Whether an enhanced diet helps adaptation. |
+| Omics Archive (past) | Blood, urine, saliva, feces, and cells at the molecular level. |
+| Space Gardening (past) | Whether growing vegetables eases isolation. |
+| Spinal Health (past) | Spine scans to inform bone and muscle countermeasures. |
+| Tempus Pro (past) | Commercial telemedicine device collecting and integrating health data for remote diagnosis. |
+| Veggie Monitoring (past) | Microbial growth on crop hardware. |
 
-- **ARCHeR (Artemis II)** — actigraphy measuring motion, sleep patterns, and light exposure. Justifies our sleep + light + activity model.
-- **Tempus Pro** — commercial telemedicine device collecting and integrating health data for remote, near-real-time diagnosis. Precedent for a single integrated health record in flight.
-- **CIPHER** — suite of studies across multiple body systems. Justifies a multi-system, whole-crew view.
-- **Standard Measures / Artemis II Standard Measures** — consistent physiological and psychological measurements. Justifies standardized, comparable check-ins.
-- **Immune Biomarkers** — blood and saliva analysis on Artemis II. Justifies immune-related indicators.
-- **Venous Haemostasis** — blood flow and coagulation changes. Justifies BP/vascular focus.
-- **Brain Fluid Pressure / Spinal Fluid Biomarkers / Thigh Cuff** — SANS research. Justifies neuro-ocular prompts.
-- **B-Complex** — nutrition countermeasure for brain and eye changes.
-- **Zero T2** — exercise without a treadmill. Justifies exercise-adherence tracking as a first-class feature.
+## 4. CSA findings
 
-## 4. CSA material — the two arguments we were missing
+- **CANS** (Canadian Active Neutron Spectrometer) is a compact, autonomous instrument for continuous neutron radiation measurement in space. Neutron radiation contributes about **30%** of total radiation on the ISS. CSA awarded $5.5M for continued development.
+- Earth spin-offs cited by CSA: cancer therapy, radiation protection for aircrews, nuclear threat detection, public safety.
+- Spaceflight effects resemble **accelerated aging** and problems caused by a **sedentary lifestyle**. Space research informs osteoporosis, balance disorders, cardiovascular disease, and Type-2 diabetes.
+- Deep-space risks cited by CSA:
+  - more time in weightlessness
+  - more radiation exposure
+  - longer periods of isolation
+  - increased communication delays with Earth
+  - less ability to rely on Earth for food, materials, and emergency medical assistance
 
-**Radiation is measurable and monitorable in flight.** CANS is autonomous and continuous; neutrons are ~30% of ISS dose. Gives us a defensible radiation card instead of a vague warning. Also note the Earth spin-offs: cancer therapy, aircrew protection, public safety.
+## 5. Useful numeric facts from these pages
 
-**Dual-use impact.** CSA states spaceflight effects resemble **accelerated aging** and problems from a **sedentary lifestyle**, and that space research informs osteoporosis, balance disorders, cardiovascular disease, and Type-2 diabetes. That is our "who else benefits" answer, backed by a space agency rather than our own claim.
-
-**Deep-space risk list from CSA:** more time in weightlessness, more radiation exposure, longer isolation, increased communication delays, and less ability to rely on Earth for food, materials, and emergency medical assistance. That list is effectively the product requirements document.
-
----
-
-## What this changes about the design
-
-1. **Organize by risk, not by metric.** A "Risk Radar" of HRP risks is more defensible and more novel than another vitals dashboard.
-2. **Show unmonitored risks honestly.** Marking a risk "not instrumented on this mission" reads as competence, not as a gap.
-3. **Make distance from Earth visible in the UI.** A live light-time delay is the single cheapest way to make the concept legible to judges.
-4. **Attach context to every reading.** Sleep, light, CO₂, exercise, EVA — HRP's hazards interact, so the app should too.
-5. **Cite on every card.** Each risk screen carries its HRP link and one sentence on what changes in microgravity.
+| Fact | Value |
+| --- | --- |
+| Distance to Mars (average) | ~140 million miles |
+| Nominal Mars mission duration | ~3 years |
+| Neutron share of ISS radiation | ~30% |
+| ISS experiments running at any time | ~200 international experiments |

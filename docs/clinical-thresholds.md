@@ -1,17 +1,17 @@
-# Clinical Thresholds and Rule Provenance
+# Clinical Thresholds and Reference Values
 
-Prototype decision-support spec for ORBIT. **Not medical advice, not operational guidance, not a validated medical device.** Every rule ships with its source and a confidence label.
+Published clinical reference values relevant to spaceflight. **Not medical advice, not operational guidance, not a validated medical device.** Each row lists its source and a confidence label.
 
-## Design principle: relative before absolute
+## Spaceflight baseline shifts
 
-Spaceflight moves the baseline. Two findings change the rule design:
+Spaceflight moves the baseline out from under terrestrial reference ranges. Two published findings:
 
-1. **"Space fever" is real.** Resting core body temperature rises about **1.01 °C** during a long-duration ISS mission, plateauing around flight day 75. Maximal temperature during exercise rises **1.39 °C** and can exceed **40 °C** in some crew. A terrestrial "fever ≥ 38.0 °C" rule would flag almost every astronaut.
-2. **In-flight blood pressure runs low.** In one JACC cohort, brachial systolic BP fell from **122 ± 8** preflight to **111 ± 14 mmHg** in flight. Meanwhile roughly **30%** of astronauts experience orthostatic intolerance after return. Terrestrial hypertension cutoffs overcall; low BP and orthostatic collapse are the bigger operational risks.
-
-So ORBIT uses **absolute safety rails + personal rolling baselines**, and labels which is which.
+1. **"Space fever" is real.** Resting core body temperature rises about **1.01 °C** during a long-duration ISS mission, plateauing around flight day 75. Maximal temperature during exercise rises **1.39 °C** and can exceed **40 °C** in some crew. A terrestrial "fever ≥ 38.0 °C" cutoff would flag almost every astronaut.
+2. **In-flight blood pressure runs low.** In one JACC cohort, brachial systolic BP fell from **122 ± 8** preflight to **111 ± 14 mmHg** in flight. Meanwhile roughly **30%** of astronauts experience orthostatic intolerance after return. Terrestrial hypertension cutoffs overcall; low BP and orthostatic collapse are the larger operational risks.
 
 ## Rule table
+
+Green/amber/red bands are derived for prototyping. The Evidence column gives the published basis; Confidence states how strong that basis is.
 
 | ID | Indicator | Green | Amber | Red | Spaceflight adjustment | Evidence | Confidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -27,35 +27,6 @@ So ORBIT uses **absolute safety rails + personal rolling baselines**, and labels
 | **R10** | Nutrition / weight | Within 2% of 30-day baseline | >3% loss, or intake <80% of requirement for 7 days | >5% loss | Early fluid shifts confound scale weight; use a rolling trend, not a single weigh-in | HRP nutrition risk; clinical standards | Moderate |
 | **R11** | CO₂ / environment | ≤3 mmHg 1-hour average | >3 mmHg | >5 mmHg sustained, or headache/fatigue/cognitive symptoms | NASA-STD-3001 sets 3 mmHg 1-hour average; ISS has stayed at or below 3 since the 2016 flight rule | NASA-STD-3001 V2 [V2 6004]; OCHMO-TB-004 | High (standard), moderate (red heuristic) |
 | **R12** | Vision / SANS screen | No change | New blurred vision, visual field change, or subjective visual change | Sudden vision loss or severe headache | At least one ocular finding in ~81% of NASA astronauts; clinically concerning SANS in 15–20%. Prevalence rises with mission duration | SANS expert consensus 2026; Brunstetter et al., JAMA Ophthalmol 2024 | Moderate |
-
-## Cluster rules — the part that matters
-
-NASA HRP states the hazards "do not stand alone" and "can feed off each other." ORBIT should reason across indicators, not just threshold them.
-
-| ID | Cluster | Trigger | Action |
-| --- | --- | --- | --- |
-| **C1** | Fatigue–deconditioning | Sleep debt ≥7 h **and** resting HR ≥10% above baseline **and** mood drop ≥1 point | Amber cluster; reduce duty load, sleep protocol, re-measure in 24 h |
-| **C2** | Possible infection | Temperature ≥0.8 °C above baseline **and** HR ≥10% above baseline **and** SpO₂ <95% | Red cluster; isolate, mask, notify CMO, prepare handover |
-| **C3** | Immune–radiation | Solar particle event ≥10 mSv **and** new rash, cold sore, or respiratory symptoms | Amber cluster; document exposure, monitor, mention in handover |
-| **C4** | Return risk | Landing within 72 h **and** orthostatic check abnormal **and** sleep debt | Amber cluster; fluid loading, compression garment, seated egress plan |
-
-Clusters are the demo moment. Three amber dots becoming one named pattern is what a flight surgeon actually does, and it is what a dashboard cannot.
-
-## Presentation rules
-
-- Every card shows **source + confidence**. Low-confidence rules are visibly labeled.
-- Distinguish **measured** from **modeled** (bone load is modeled; SpO₂ is measured).
-- Never say "diagnosis." Say "finding," "pattern," or "consider."
-- Never prescribe. Recommend an action and an escalation path.
-- Show the **raw value and the baseline** side by side. A number without its baseline is noise.
-- If a rule cannot run because the input is missing, say **"not instrumented"** rather than showing green.
-
-## What we deliberately do not encode
-
-- No automated diagnosis or differential diagnosis.
-- No medication dosing.
-- No AI-generated triage. An LLM may rewrite an explanation, but the rule engine decides severity.
-- No claim of clinical validation. The pitch says "prototype, thresholds sourced from published literature" and means it.
 
 ## Source list
 

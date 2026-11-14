@@ -659,10 +659,10 @@ export interface ChartGuide {
   earth?: { v: number; label: string }
 }
 
-/** Names the band after the phase, e.g. "Your normal · Outbound to Mars". */
+/** The band label; the phase is named in the header and the note under the comparison, so the chart label stays short enough to fit. */
 function normalLabel(b: Baselines, fallback = 'Your normal'): string {
   if (!b.normal) return fallback
-  return `Your normal · ${b.normal.label}${b.normal.adapting ? ' (adapting)' : ''}`
+  return b.normal.adapting ? 'Your normal (adapting)' : 'Your normal'
 }
 
 export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {

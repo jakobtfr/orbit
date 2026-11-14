@@ -62,8 +62,8 @@ export interface Envelope {
  */
 const UTMB = 'NASA UTMB bed-rest study, 29 volunteers (NASA Life Sciences Portal, doi:10.83263/wjw1-ta27)'
 const UTMB_POST = 'NASA UTMB bed-rest study, first days after bed rest: heart rate +11.7 bpm on days 0–3, +6.7 on days 4–7 (doi:10.83263/wjw1-ta27)'
-const STAHN = 'Outside NASA: ESA/Charité study of ISS crew, +1 °C after about 75 days (Stahn et al. 2017, doi:10.1038/s41598-017-15560-w). Bed rest shows no rise, so NASA data cannot confirm it.'
-const MARS = 'Estimate: NASA has no data for long stays at 0.38 g. Uses the bed-rest values.'
+const STAHN = 'ESA/Charité study of ISS crew, +1 °C after about 75 days (Stahn et al. 2017, doi:10.1038/s41598-017-15560-w). Bed rest shows no rise, so NASA data cannot confirm it.'
+const MARS = 'NASA has no data for long stays at 0.38 g. Uses the bed-rest values.'
 
 export const ENVELOPES: Record<Gravity, Record<PhaseVital, Envelope>> = {
   earth: {
@@ -84,7 +84,7 @@ export const ENVELOPES: Record<Gravity, Record<PhaseVital, Envelope>> = {
     hr: { shift: 2, spread: 15, tau: 5, reentry: { size: 12, tau: 10 }, evidence: 'estimate', source: MARS },
     sys: { shift: 0, spread: 13, tau: 5, evidence: 'estimate', source: MARS },
     dia: { shift: 1, spread: 13, tau: 5, evidence: 'estimate', source: MARS },
-    temp: { shift: 0.5, spread: 0.6, tau: 25, evidence: 'estimate', source: 'Estimate: no data on Mars. Halfway between the in-flight rise and Earth.' },
+    temp: { shift: 0.5, spread: 0.6, tau: 25, evidence: 'estimate', source: 'No data on Mars. Halfway between the in-flight rise and Earth.' },
   },
 }
 

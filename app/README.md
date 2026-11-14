@@ -71,8 +71,13 @@ Scientific references remain available in each plot's Details.
 Planet mode opens by default. Its floating header links to Dashboard, Deep Data,
 and Mental Health. Selecting Flight mode hides the Planet navigation.
 
-Deep Data supports measurement and 7/28/90-day filters, raw readings, descriptive
-statistics, baseline/threshold charts, and CSV export. Mental Health keeps private
+Deep Data shows three paper-style figures from real NASA UTMB bed-rest records:
+heart rate, systolic blood pressure, and temperature. Subject selection, end-day
+selection, and 7/28/90-day windows update the plots and the automated medical draft.
+Daily observations, trailing seven-day means, sample SD bands, pre-bed-rest
+baselines, and prototype personal review limits are shown. Missing data stay missing.
+Each chart exports as self-contained SVG; CSV export preserves source observations.
+Mental-health prompts appear below the medical draft and link to the private check-in. Mental Health keeps private
 mood, energy, and journal entries in provider memory while navigating between pages.
 Reloading clears them. The optional 60-second breathing timer can be stopped and
 respects reduced-motion settings. Mental check-ins are independent of the symptom
@@ -85,3 +90,9 @@ The existing real-data replay remains available at `#/replay`, linked from Deep 
 UTMB extracts in `src/data/utmb-replay.json`. Regenerate them with
 `uv run scripts/replay_data.py`. Bed-rest records are ground analog data, not
 spaceflight measurements or confirmed illness events.
+
+The Deep Data medical draft uses simple per-signal counts and changes from baseline;
+it is not authored or validated by a physician. The selected research participant is
+not the signed-in astronaut. Methods and the primary dataset DOI are linked below
+the figures. Rolling SD is temporal variability, not a confidence interval or
+instrument uncertainty. SVG exports include axes, legends, units, and dataset ID.

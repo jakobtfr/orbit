@@ -10,7 +10,6 @@
   color: #d4d8de;
   background: #131518;
 }
-.nasa-logo { display: block; object-fit: contain; flex: none; }
 .brand-text { display: flex; flex-direction: column; gap: 5px; }
 .brand-subtitle { color: #9299a3; font: 9px/1.2 var(--font-mono); letter-spacing: .02em; }
 .topbar { height: 68px; background: #1a1d22; border-bottom-color: #373c44; }
@@ -178,7 +177,7 @@
   .topbar { height: 64px; padding: 0 10px; gap: 6px; }
   .topbar-where { gap: 4px; padding: 0; }.topbar-where .tag { font-size: 9px; }
   .brand { gap: 5px; padding-right: 0; }.brand-subtitle { display: none; }
-  .nasa-logo { width: 38px; height: 34px; }.wordmark { font-size: 12px; }
+  .wordmark { font-size: 12px; }
   .viewer-name { font-size: 10px; }.shell .nav { width: 56px; padding: 8px 3px; }.shell .nav a { font-size: 9px; }
 }
 
@@ -375,3 +374,8 @@
 @media (max-width: 600px) { .planet-page { padding: 22px 12px 40px; }.planet-panel { padding: 18px; }.planet-nav a { padding: 0 11px; font-size: 11px; gap: 5px; }.planet-nav { margin-top: 10px; }.planet-nav a svg { width: 14px; }.data-stat-grid { grid-template-columns: repeat(2, 1fr); }.data-toolbar .btn { padding: 0 10px; font-size: 12px; }.planet-page-title h1 { font-size: 24px; } }
 
 .data-page-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Emergency entry: always at the top right, outside the quiet rules like the flow itself. */
+.emergency-button { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border: 1px solid var(--status-warning); border-radius: 10px; color: var(--status-warning); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.emergency-button:hover { background: #ff767618; }
+@media (max-width: 700px) { .emergency-button { padding: 0 10px; } .health-header .viewer, .health-header .header-system { display: none; } }

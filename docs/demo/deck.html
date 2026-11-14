@@ -83,7 +83,7 @@
   <p class="lead">The body changes in space, so Earth’s medical limits raise alarms for healthy astronauts again and again. A crew that gets false alarms stops trusting them, and then misses the real one.</p>
   <div class="facts">
     <div class="fact"><strong>40+ min</strong><p>for a question to a doctor on Earth and its answer</p></div>
-    <div class="fact"><strong>+1 °C</strong><p>higher resting body temperature in flight; blood pressure drops</p></div>
+    <div class="fact"><strong>+1 °C</strong><p>higher resting body temperature in flight; after landing the heart runs fast for days</p></div>
     <div class="fact"><strong>~40 h</strong><p>of medical training for the crew member who has to decide</p></div>
   </div>
   <span class="num">2 / 7</span>
@@ -96,7 +96,7 @@
     <div class="stat earth"><span class="label">Earth’s fixed limits</span><strong>13.5%</strong><p>of days raised an alarm · about <em>24 alarms</em> per person in 6 months</p></div>
     <div class="stat"><span class="label">ORBIT, against each person’s own normal</span><strong>5.9%</strong><p>of days raised an alarm · about <em>11 alarms</em> per person in 6 months</p></div>
   </div>
-  <p class="foot">ORBIT also caught a slow heart-rate rise from 55 to about 75 bpm that never reached Earth’s line of 100. Reproduced by automated tests from the raw data.</p>
+  <p class="foot">Fewer alarms, and far fewer missed fevers: with known problems planted into the same data, ORBIT caught 94% of +1 °C fevers (Earth’s limits: 8%). Reproduced by automated tests from the raw data.</p>
   <span class="num">3 / 7</span>
 </section>
 
@@ -105,10 +105,10 @@
     <div class="text">
       <h2>One dashboard any crew member can read.</h2>
       <ul>
-        <li>A body map: tap a region to see what is watched there</li>
-        <li>Activity, sleep, and heart rate at a glance</li>
+        <li>A body map coloured by status</li>
         <li>One list of risks and checks, each with a next step</li>
-        <li>Real NASA data, judged both ways, on the home screen</li>
+        <li>“Call the doctor”: a simulated doctor on the device, no contact with Earth needed</li>
+        <li>Urgent symptoms go straight to the medical lead, not the model</li>
       </ul>
     </div>
     <div class="shot" style="align-self: center; height: auto; background: none"><img src="img/dashboard.png" alt="ORBIT dashboard" style="height: auto; border-radius: 28px"></div>
@@ -119,12 +119,12 @@
 <section class="slide wide">
   <div class="split">
     <div class="text">
-      <h2>38.0 °C: a fever on Earth. Normal for her in flight.</h2>
+      <h2>Your normal follows the mission.</h2>
       <ul>
-        <li>Every reading is compared with before flight and the last 7 days</li>
-        <li>Earth’s limit is drawn next to the personal one</li>
-        <li>One odd reading asks for a repeat, not an alarm</li>
-        <li>Clear steps for how to take each measurement</li>
+        <li>Outbound, on Mars, return, back on Earth: each phase has its own expected change, from NASA bed-rest data</li>
+        <li>Learned for each astronaut, then held, within NASA’s range between people, so a slow problem is never learned as normal</li>
+        <li>After landing, a heart rate 12 bpm higher is expected, not an alarm</li>
+        <li>38.0 °C: a fever on Earth, normal for her in flight</li>
       </ul>
     </div>
     <div class="shot"><img src="img/temperature.png" alt="Body temperature screen" style="object-position: top center"></div>
@@ -135,15 +135,15 @@
 <section class="slide wide">
   <div class="split">
     <div class="text">
-      <h2>“My crewmate just collapsed.”</h2>
+      <h2>Fewer alarms. Fewer missed fevers and heart-rate rises.</h2>
       <ul>
-        <li>One red button on every screen</li>
-        <li>One step at a time, with a timer</li>
-        <li>Branches on breathing; CPR adapted to weightlessness</li>
-        <li>Every step cites a published resuscitation guideline</li>
+        <li>Known problems planted into real NASA readings, same rule on both sides</li>
+        <li>Fevers and heart-rate changes: ORBIT catches far more</li>
+        <li>Small blood-pressure rises: Earth’s limits catch more, at the cost of false alarms</li>
+        <li>Every number rechecked by a separate script</li>
       </ul>
     </div>
-    <div class="shot"><img src="img/emergency.png" alt="Emergency flow, chest compressions step"></div>
+    <div class="shot" style="align-self: center; height: auto; background: none"><img src="img/misses.png" alt="Table of planted problems caught by Earth limits and by ORBIT" style="height: auto; border-radius: 28px"></div>
   </div>
   <span class="num">6 / 7</span>
 </section>
@@ -151,12 +151,12 @@
 <section class="slide close">
   <h2>Alarms a crew can trust.</h2>
   <ul>
-    <li><strong>2.3× fewer false alarms</strong>on real NASA bed-rest data, same rule on both sides, so the alarms that remain are believed</li>
-    <li><strong>No new hardware</strong>built for equipment already on board and a two-minute daily check-in</li>
-    <li><strong>Useful on Earth too</strong>for anyone far from a doctor: remote communities, ships, polar stations</li>
+    <li><strong>2.3× fewer false alarms</strong>on real NASA bed-rest data, same rule on both sides, while catching more fevers and heart-rate changes</li>
+    <li><strong>Limits that follow the mission</strong>from NASA data, including the risky days after landing</li>
+    <li><strong>No new hardware</strong>built for equipment already on board; useful on Earth too, for anyone far from a doctor</li>
   </ul>
   <p class="link">github.com/jakobtfr/orbit</p>
-  <p class="limits">Prototype, not a medical device. Bed rest is a ground stand-in for flight; limits and emergency steps are not yet reviewed by a clinician. The demo astronaut’s readings are scripted.</p>
+  <p class="limits">Prototype, not a medical device. Bed rest is a ground stand-in for flight; the in-flight temperature rise comes from an ESA study, and Mars values are estimates. Limits are not yet reviewed by a clinician. The demo astronaut’s readings are scripted.</p>
   <span class="num">7 / 7</span>
 </section>
 

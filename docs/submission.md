@@ -1,6 +1,6 @@
 # Project Submission Text
 
-Written 2026-11-14. One section per field on the Space Apps Project Submission page, ready to paste. Field instructions are from the [Project Submission Guide](https://www.spaceappschallenge.org/resources/project-submission-guide/). Submission closes Sunday, November 15, 2026, 11:59 p.m. local time.
+Written 2026-11-14, updated 2026-11-15 to match the app. One section per field on the Space Apps Project Submission page, ready to paste. Field instructions are from the [Project Submission Guide](https://www.spaceappschallenge.org/resources/project-submission-guide/). Submission closes Sunday, November 15, 2026, 11:59 p.m. local time.
 
 Before submitting: the repository must be public, and both links must open in a private browser window without a login.
 
@@ -12,17 +12,19 @@ ORBIT
 
 ## High-Level Project Summary
 
-ORBIT is health monitoring software for astronauts on long missions, built around one idea: judge each astronaut against their own normal, not Earth's. In space the body changes. Temperature runs about 1 °C higher and blood pressure drops, so Earth's medical limits raise alarms for healthy crew again and again. Halfway to Mars, where every question to a doctor takes over 40 minutes to answer, a crew that gets false alarms stops trusting them and then misses the real one.
+ORBIT is health monitoring software for astronauts on long missions, built around one idea: judge each astronaut against their own normal, not Earth's, and let that normal follow the mission. The body changes with gravity: in weightlessness temperature runs about 1 °C higher, and after landing the heart runs fast for days. Earth's medical limits raise alarms for healthy crew again and again. Halfway to Mars, where every question to a doctor takes over 40 minutes to answer, a crew that gets false alarms stops trusting them and then misses the real one.
 
-We tested this on real NASA bed-rest data from 29 healthy volunteers over 2,184 days. With the same rule on both sides, an alarm only when two days in a row are over the line, Earth's limits raised an alarm on 13.5% of days, about 24 per person in six months. Judged against each person's own normal, ORBIT raised one on 5.9% of days, about 11: 2.3 times fewer. It also caught a slow heart-rate rise that Earth's limits never saw.
+ORBIT learns each astronaut's normal for every phase of the mission (outbound, on Mars, return, back on Earth) from NASA bed-rest data and their own readings, within hard bounds, so a slow real problem is never learned as normal.
 
-ORBIT puts this into a dashboard any crew member can read: a body map, daily activity, one list of risks and checks with a clear next action, trends with Earth's limit drawn next to the personal one, and a one-tap emergency guide for chest pain or collapse with CPR adapted to weightlessness.
+We tested the idea on real NASA bed-rest data from 29 healthy volunteers over 2,184 days, with the same rule on both sides. Earth's limits raised an alarm on 13.5% of days; ORBIT on 5.9%, 2.3 times fewer. For fevers and heart-rate rises, fewer alarms did not mean missing more: when we planted known problems into the same data, ORBIT caught 94% of fevers of +1 °C (Earth's limits: 8%) and 93% of heart-rate rises of 20 bpm (Earth: 20%). Earth's limits do better on small blood-pressure rises, and we show that too.
+
+Around this sits a dashboard any crew member can read, step-by-step procedures, and a virtual doctor that runs on the device without contact with Earth.
 
 ## Link to Project Demo
 
 https://github.com/jakobtfr/orbit/blob/main/docs/demo/orbit-demo.pdf
 
-A 7-slide deck (PDF). Source: [`demo/deck.html`](demo/deck.html), screenshots of the running app in `demo/img/`. Re-export with Chrome: open the HTML and print to PDF, or `chrome --headless --print-to-pdf=orbit-demo.pdf deck.html`.
+A 7-slide deck (PDF), at most 7 slides as the rules require. Source: [`demo/deck.html`](demo/deck.html), screenshots of the running app in `demo/img/`. Re-export with Chrome: open the HTML and print to PDF, or `chrome --headless --print-to-pdf=orbit-demo.pdf deck.html`.
 
 ## Link to Final Project
 
@@ -32,38 +34,42 @@ The app runs locally: `cd app && npm install && npm run dev`. Instructions are i
 
 ## Detailed Project Description
 
-**What it does.** ORBIT helps astronauts check their own health without a doctor in reach. It is designed to take readings from equipment already on board (smart shirt, wrist tracker, radiation monitor, cabin sensors) plus a two-minute daily check-in; in the prototype these readings are scripted. It judges every reading against the astronaut's own normal, and says what to do next in plain words.
+**What it does.** ORBIT helps astronauts check their own health without a doctor in reach. It is designed to take readings from equipment already on board (smart shirt, wrist tracker, radiation monitor, cabin sensors) plus a two-minute daily check-in; in the prototype these readings are scripted. It judges every reading against the astronaut's own normal for the current mission phase, and says what to do next in plain words.
 
-- **Dashboard.** An anatomical body map (tap a region or muscle group to explore it), daily activity and sleep, one list of risks and checks, and trend plots for heart rate, core temperature, and radiation dose rate.
-- **Your normal, not Earth's.** Each indicator compares the latest reading with the value from before flight and the last seven days. Charts draw Earth's limit as a dashed line next to the personal one, so the difference is visible. Example: our demo astronaut's temperature of 38.0 °C sits on Earth's fever line but is normal for her in flight.
-- **One next action.** When something is off, ORBIT says what was observed and what to do: repeat the reading, apply a countermeasure, or contact the ground. One odd reading asks for a repeat instead of raising an alarm.
-- **How to measure.** Step-by-step instructions for each manual reading.
-- **Emergency.** A red button on every screen opens a step-by-step flow for chest pain or collapse. It branches on whether the person breathes normally, adapts CPR to weightlessness, and cites a published guideline for every step.
-- **Evidence built in.** A Replay screen runs real NASA bed-rest data through both rule sets, day by day, for any of the 29 volunteers. For one of them, Earth's limits raise 30 alarms in 90 days and ORBIT raises 1. A table shows every way of counting, including single days and a stricter 140/90 cutoff.
-- **Measurements and Mental Health.** Lena's own measurements, explored against her normal, and a private mood, energy, and journal check-in that only the astronaut sees.
-- **Environments.** A setting switches between a planet surface and a spacecraft; checks that need gravity, such as the standing blood pressure test, turn off in weightlessness.
+- **Your normal, for this phase of the mission.** The mission day sets the phase: outbound, on Mars, return, back on Earth. For each phase ORBIT expects a set change from the astronaut's pre-flight values, taken from NASA bed-rest data: for example, heart rate about 12 bpm higher in the first days back in gravity. It learns how far this astronaut sits from that expectation in the two weeks after the body has settled, then holds it. The learned normal can never leave the range NASA's data shows between people, so a slow real problem is not learned as normal. For 14 days after each gravity change the limits are wider, while the body adapts. Fixed danger values apply in every phase. Heart rate, blood pressure, and temperature each show where their normal comes from and whether the value is NASA data, from outside NASA, or an estimate.
+- **Dashboard.** An anatomical body map coloured by status, daily activity and sleep, one list of today's risks and open checks, and trend plots for heart rate, core temperature, and radiation dose rate. Charts draw Earth's limit next to the personal one. Example: our demo astronaut's temperature of 38.0 °C sits on Earth's fever line but is normal for her in flight.
+- **One next action.** When something is off, ORBIT says what was observed and what to do: repeat the reading, apply a countermeasure, or contact the medical lead. One odd reading asks for a repeat instead of raising an alarm. Each finding names the NASA Human Research Program risk it bears on; all 17 HRP risks are mapped to what ORBIT measures or asks.
+- **Call the doctor.** When a reading is off or a symptom was logged, the dashboard offers a call. A simulated doctor speaks, listens, and goes through the problem one step at a time, and can look at what the astronaut shows the camera. It runs on the device: with a local language model when one is installed, and with built-in answers when not. Anything that sounds urgent, such as chest pain or trouble breathing, is never left to the model: the astronaut is told to get the medical lead at once.
+- **Resources.** Every procedure on board, one step at a time, each step acted out by a small animated astronaut, stored on the device.
+- **Evidence built in.** A Replay screen runs real NASA bed-rest data through Earth's limits and ORBIT's rules, day by day, for any of the 29 volunteers, with the same two-day rule on both sides. A table shows every way of counting. A second table shows how many planted problems each rule set catches, including where ORBIT does worse.
+- **Measurements and Mental Health.** The astronaut's own measurements, one indicator at a time against her normal, with CSV export; and a private mood, energy, and journal check-in that only the astronaut sees.
 
-**How it works.** The app is a web front end that runs in the browser with no server or network. A Python script exports the daily vital signs and pre-bed-rest baselines of 29 volunteers from NASA's UTMB head-down bed-rest study. The app judges every day twice with the same two-day rule: Earth's limits (pulse over 100, blood pressure 130/80 or more, temperature 38.0 °C or more) and personal limits (pulse 20% above the person's own normal, blood pressure 20/15 mmHg above, or temperature 0.5 °C above). Automated tests reproduce every number from the raw data: 13.5% and 5.9% of days with two-day confirmation, 25.5% and 16.5% on single days. The demo astronaut's readings are scripted, with day-to-day variation taken from the same NASA data.
+**How it works.** The app is a web front end that runs in the browser with no server; the optional doctor model runs locally through Ollama. NASA's UTMB head-down bed-rest data (29 volunteers, daily vital signs) is used three ways:
+1. **Phase limits.** The expected change per phase and the allowed spread between people are computed from the data: the change in each volunteer's mean from their own pre-bed-rest mean, during bed rest (the stand-in for weightlessness) and after it (the return to gravity). A test reads the raw NASA file and checks the table against it. The +1 °C in-flight temperature rise is not in bed-rest data; it comes from an ESA/Charité study of ISS crew and is labelled "outside NASA". Mars values are labelled "estimate".
+2. **False alarms.** Every day is judged by Earth's limits (pulse over 100, blood pressure 130/80 or more, temperature 38.0 °C or more) and by personal limits (pulse 20% above the person's own normal, blood pressure 20/15 mmHg above, or temperature 0.5 °C above), both needing two days in a row: 13.5% against 5.9% of days. On single days: 25.5% against 16.5%. A stricter Earth cutoff of 140/90 gives 5.4% but is still one line for everyone.
+3. **Missed problems.** Fevers, heart-rate jumps, slow heart-rate drifts, and blood-pressure rises and drops are added to each volunteer's real readings. A problem counts as caught only where the rule had not already alarmed. A separate Python script recomputes all 65 results and matches the app.
 
-**Benefits.** 2.3 times fewer false alarms on real data with the same rule on both sides, so the alarms that remain are believed. A tool written for a crew member with about 40 hours of medical training, not a doctor. No new hardware. The same idea fits anyone far from a doctor on Earth: remote communities, ships, and polar stations.
+Automated tests (112) reproduce the headline numbers; the separate Python script rechecks all 65 planted-problem results. The demo astronaut's readings are scripted, with day-to-day variation taken from the same NASA data. The demo spacecraft's radiation dose stays under NASA's daily design limit of 1.3 mSv in free space ([NASA OCHMO standards overview, 2021](https://www.nasa.gov/sites/default/files/atoms/files/ochmo_standards_overview_sept_15_2021_francisco.pdf)).
 
-**What we hope to achieve.** A working example of the onboard decision support NASA says exploration missions need. Next steps are testing with people who have no medical training, a review of the emergency steps by a clinician, and validation on flight data.
+**Benefits.** 2.3 times fewer false alarms on real data with the same rule on both sides, while catching more fevers and heart-rate changes, so the alarms that remain are believed. Limits that know the mission phase, including the risky days after landing. A tool written for a crew member with about 40 hours of medical training, not a doctor. No new hardware, and no contact with Earth needed. The same idea fits anyone far from a doctor on Earth: remote communities, ships, and polar stations.
 
-**Limits.** Bed rest is a ground stand-in for flight, and the data contains no confirmed illness, so it shows fewer false alarms, not that every real problem is caught. Limits are simplified from published values and have not been reviewed by a clinician. ORBIT is a prototype, not a medical device.
+**What we hope to achieve.** A working example of the onboard decision support NASA says exploration missions need. Next steps: test the phase limits on flight data, test with people who have no medical training, and have a clinician review the limits and the doctor's wording.
 
-**Tools.** TypeScript, React, React Router, Vite, Vitest, SVG for all charts and the body map, Python with uv for the data export, Git and GitHub.
+**Limits.** Bed rest is a ground stand-in for flight. It shows no in-flight temperature rise, and flight studies disagree on how much blood pressure changes; ORBIT says where each value comes from. NASA has no data for long stays at Mars gravity, so those values are estimates. The data contains no real illness, so missed problems are tested with planted ones, which are simpler than real illness. ORBIT catches fewer of the smaller blood-pressure rises than Earth's limits. Neither Replay rule set has a low side, so both miss every planted drop; the app's low-pressure rule is not tested on NASA data. Missed problems are tested with the Replay's rules, not the live phase-aware limits. Limits have not been reviewed by a clinician. ORBIT is a prototype, not a medical device.
+
+**Tools.** TypeScript, React, React Router, Vite, Vitest, SVG for all charts and the body map, Python with uv for the data export and the separate check, Ollama for the optional local doctor model, the browser's speech functions for the doctor's voice, Git and GitHub.
 
 ## Use of Super Intelligence (SI)
 
 > Check this answer with the whole team before submitting. It is not shown to judges, but it must be true.
 
-Yes. We used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests; to search and summarise published sources; and to draft and edit documentation and this submission text. The team chose the challenge, framed the problem, made the product decisions, and reviewed the output. Every figure shown in the app is recomputed from the source data by automated tests. No images, video, or audio were generated with SI. The repository README states that AI assistance was used.
+Yes. We used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests; to search and summarise published sources; and to draft and edit documentation and this submission text. The team chose the challenge, framed the problem, made the product decisions, and reviewed the output. Every figure shown in the app is recomputed from the source data by automated tests. No images, video, or audio were generated with SI for the submission. In the product, the optional virtual doctor runs a local language model on the device; every limit, judgement, and urgent-symptom check is fixed code, not model output. The repository README states that AI assistance was used.
 
 ## NASA Data
 
-- **UTMB head-down tilt bed-rest study, daily vital signs** (NASA Life Sciences Portal, Case Report Form dataset, [DOI 10.83263/wjw1-ta27](https://doi.org/10.83263/wjw1-ta27)). The core of the project: 2,184 days of pulse, blood pressure, and temperature with pre-bed-rest baselines from 29 volunteers. Used for the Earth-versus-personal comparison on the Replay screen and the dashboard, and for the day-to-day variation of the demo astronaut. Extracted with the help of the community project [ydtoloza/astronaut-health-dataset](https://github.com/ydtoloza/astronaut-health-dataset).
+- **UTMB head-down tilt bed-rest study, daily vital signs** (NASA Life Sciences Portal, Case Report Form dataset, [DOI 10.83263/wjw1-ta27](https://doi.org/10.83263/wjw1-ta27)). The core of the project: 2,184 days of pulse, blood pressure, and temperature with pre-bed-rest baselines from 29 volunteers. Used to set the expected change and the allowed spread for each mission phase (bed rest as weightlessness, the days after bed rest as the return to gravity), for the Earth-versus-personal comparison and the missed-problems test on the Replay screen, and for the day-to-day variation of the demo astronaut. Extracted with the help of the community project [ydtoloza/astronaut-health-dataset](https://github.com/ydtoloza/astronaut-health-dataset).
 - **NASA Human Research Program**: the [five hazards of human spaceflight](https://www.nasa.gov/hrp/hazards/), the [risks of human spaceflight](https://www.nasa.gov/hrp/risks/), and [ongoing HRP research](https://www.nasa.gov/hrp/ongoing-hrp-research/), used to choose the indicators.
-- **NASA-STD-3001**: [Volume 1, Rev C](https://www.nasa.gov/wp-content/uploads/2023/11/nasa-std-3001-vol-1-rev-c-with-signature.pdf) (radiation limits), [Volume 2](https://standards.nasa.gov/standard/NASA/NASA-STD-3001_VOL_2) (cabin environment, display colours), and [6.0 Medical Operations](https://www.nasa.gov/reference/6-0-medical-operations/) (sleep).
+- **NASA-STD-3001**: [Volume 1, Rev C](https://www.nasa.gov/wp-content/uploads/2023/11/nasa-std-3001-vol-1-rev-c-with-signature.pdf) (radiation limits); the daily design limit of 1.3 mSv in free space is from the [NASA OCHMO standards overview, 2021](https://www.nasa.gov/sites/default/files/atoms/files/ochmo_standards_overview_sept_15_2021_francisco.pdf), [Volume 2](https://standards.nasa.gov/standard/NASA/NASA-STD-3001_VOL_2) (cabin environment, display colours), and [6.0 Medical Operations](https://www.nasa.gov/reference/6-0-medical-operations/) (sleep).
 - **NASA OCHMO technical briefs**: [TB-004 Carbon Dioxide](https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-004-carbon-dioxide.pdf) and [TB-019 Orthostatic Intolerance](https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-019-orthostatic-intolerance.pdf).
 - **NASA HRP [Bone Fracture Evidence Report](https://humanresearchroadmap.nasa.gov/evidence/reports/Bone%20Fracture%20Evidence%20Report_07-18-2024.pdf)** (2024) and [Simonsen, Radiation protection for space exploration](https://ntrs.nasa.gov/citations/20250006168) (NTRS, 2025).
 - **NASA Open Science Data Repository, Inspiration4** ([OSD-569](https://osdr.nasa.gov/bio/repo/data/studies/OSD-569), [OSD-575](https://osdr.nasa.gov/bio/repo/data/studies/OSD-575)): blood labs, explored and included in the repository; not used in the app.
@@ -72,22 +78,21 @@ Yes. We used Claude (Anthropic), an AI coding assistant, to help write and refac
 
 **Space agency partners**
 
-- Brazilian Space Agency: the [challenge intro video](https://www.youtube.com/watch?v=RERG3gEmdC8), whose chest-pain scenario is the basis of the emergency flow.
+- Brazilian Space Agency: the [challenge intro video](https://www.youtube.com/watch?v=RERG3gEmdC8), whose chest-pain scenario shaped how the doctor hands urgent symptoms to a person.
 - Canadian Space Agency: [Bio-Monitor smart shirt](https://www.asc-csa.gc.ca/eng/sciences/bio-monitor.asp) (the onboard source of heart rate, blood pressure, and blood oxygen), [monitoring radiation for astronaut health](https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp), and [why we conduct science experiments in space](https://www.asc-csa.gc.ca/eng/iss/science/why-do-we-conduct-science-experiments-in-space.asp).
 
 **Clinical and scientific sources**
 
-- Stahn et al., Increased core body temperature in astronauts during long-duration space missions, Scientific Reports 7:16180, 2017. https://www.nature.com/articles/s41598-017-15560-w
+- Stahn et al., Increased core body temperature in astronauts during long-duration space missions, Scientific Reports 7:16180, 2017 (the in-flight temperature rise, labelled outside NASA). https://www.nature.com/articles/s41598-017-15560-w
+- Norsk et al., Fluid shifts, vasodilatation and ambulatory blood pressure reduction during long duration spaceflight, J Physiol 593, 2015 (in-flight blood pressure, compared in the method notes). https://doi.org/10.1113/jphysiol.2014.284869
+- Zeitlin et al., Science 340:1080, 2013, and Hassler et al., Science 343:1244797, 2014 (radiation in cruise to Mars and on its surface). https://doi.org/10.1126/science.1235989, https://doi.org/10.1126/science.1244797
 - Barger et al., Lancet Neurology, 2014 (sleep in spaceflight). https://www.thelancet.com/journals/laneur/article/PIIS1474-4422(14)70122-X/abstract
 - Shibata et al., Cardiac Effects of Long-Duration Space Flight, JACC, 2023. https://www.jacc.org/doi/10.1016/j.jacc.2023.05.058
 - Crucian et al., International Journal of General Medicine, 2016 (immune and illness events). https://pmc.ncbi.nlm.nih.gov/articles/PMC5098747/
 - LeBlanc et al., JBMR, 2007, and Stavnichuk et al., npj Microgravity, 2020 (bone loss). https://doi.org/10.1359/JBMR.040307, https://pmc.ncbi.nlm.nih.gov/articles/PMC7200725
 - SANS expert consensus, Eye, 2026, and Brunstetter et al., JAMA Ophthalmology, 2024 (eye changes). https://www.nature.com/articles/s41433-026-04651-6, https://jamanetwork.com/journals/jamaophthalmology/fullarticle/2821259
 - ACC/AHA 2017 hypertension guideline. https://www.ahajournals.org/doi/10.1161/HYP.0000000000000065
-- American Heart Association, resting heart rate and heart-attack warning signs. https://www.heart.org/en/health-topics/high-blood-pressure/the-facts-about-high-blood-pressure/all-about-heart-rate-pulse, https://www.heart.org/en/health-topics/heart-attack/warning-signs-of-a-heart-attack
-- Olasveengen et al., European Resuscitation Council Guidelines 2021: Basic Life Support. https://doi.org/10.1016/j.resuscitation.2021.02.009
-- Panchal et al., 2020 AHA Guidelines: Adult Basic and Advanced Life Support. https://doi.org/10.1161/CIR.0000000000000916
-- Hinkelbein et al., CPR during spaceflight: a guideline for CPR in microgravity (DGLRM, ESAM-SMG), Scand J Trauma Resusc Emerg Med 28:108, 2020. https://doi.org/10.1186/s13049-020-00793-y
+- American Heart Association, resting heart rate (the dashboard reference). https://www.heart.org/en/health-topics/high-blood-pressure/the-facts-about-high-blood-pressure/all-about-heart-rate-pulse
 - Billica et al., Perception of the medical risk of spaceflight, Aviat Space Environ Med 67(5), 1996 (serious-event rate).
 
 **Code, fonts, and design**

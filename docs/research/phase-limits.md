@@ -44,7 +44,7 @@ Spreads are 2 SD of the change between volunteers: weightlessness from bed-rest 
 
 ## Demo data change
 
-The demo spacecraft's dose rate in transit changed from 1.8 to 1.1 mSv a day. 1.8 is Curiosity's lightly shielded cruise stage (1.84, Zeitlin et al. 2013). It breaks NASA's design limit of 1.3 mSv a day in free space for crewed vehicles, so the home screen showed radiation in red every day.
+The demo spacecraft's dose rate in transit changed from 1.8 to 1.1 mSv a day. 1.8 is Curiosity's lightly shielded cruise stage (1.84, Zeitlin et al. 2013). It breaks NASA's design limit of 1.3 mSv a day in free space for crewed vehicles ([NASA OCHMO standards overview, 2021](https://www.nasa.gov/sites/default/files/atoms/files/ochmo_standards_overview_sept_15_2021_francisco.pdf)), so the home screen showed radiation in red every day.
 
 ## Limits of this method
 

@@ -34,7 +34,7 @@ export function phaseFor(day: number): Phase {
 
 /**
  * Radiation dose per day, in mSv, for the demo. In transit the spacecraft meets NASA's design limit
- * of 1.3 mSv a day in free space (NASA-STD-3001 Vol. 1); 1.1 is an illustrative shielded value.
+ * of 1.3 mSv a day in free space (NASA OCHMO standards overview, 2021); 1.1 is an illustrative shielded value.
  * Curiosity measured 1.84 inside its lightly shielded cruise stage, which a crew vehicle may not exceed.
  * On the surface of Mars, Curiosity measured 0.64 ± 0.12 (Hassler et al. 2014).
  */

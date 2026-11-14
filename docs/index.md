@@ -48,6 +48,7 @@ Where each piece of information lives. Start here when you need a specific fact.
 | The seven problems, with numbers, ranked, and what we leave out | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#problems-ranked) |
 | The five hypotheses, how to test each, and what would prove it wrong | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#hypotheses) |
 | Alert rates and symptom-versus-vitals results from replaying the bed-rest tables | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#what-the-data-check-showed) |
+| The same comparison inside the app, with the exact rules and tests | [`../app/README.md`](../app/README.md#methods) and `app/src/lib/replay.ts` |
 
 ## Solution
 
@@ -57,24 +58,26 @@ Where each piece of information lives. Start here when you need a specific fact.
 | How it works: the daily loop and the parts around it | [`solution/solution-overview.md`](solution/solution-overview.md#how-it-works) |
 | What ORBIT knows up front: values from before flight, flight information, the crew | [`solution/solution-overview.md`](solution/solution-overview.md#what-orbit-knows) |
 | Which onboard equipment feeds ORBIT | [`solution/solution-overview.md`](solution/solution-overview.md#where-the-data-comes-from) |
-| The 3D body view and the crew view | [`solution/solution-overview.md`](solution/solution-overview.md#what-the-crew-sees) |
+| The dashboard, body map, and crew sharing rules | [`solution/solution-overview.md`](solution/solution-overview.md#what-the-crew-sees) |
+| How the dashboard plots are calculated, their thresholds and references | [`solution/dashboard-methodology.md`](solution/dashboard-methodology.md) |
 | Expected impact, and how solid each claim is | [`solution/solution-overview.md`](solution/solution-overview.md#impact) |
 
 ## Build spec and design
 
 | What you need | Where to look |
 | --- | --- |
-| What to build in version 1: screens, components, fake data, done-when checks | [`../SPEC.md`](../SPEC.md) |
+| What the app contains: screens, data, logic, done-when checks | [`../SPEC.md`](../SPEC.md) |
 | How it looks and reads: colours, type, components, wording | [`../DESIGN.md`](../DESIGN.md) |
-| The version 1 web app and how to run it | [`../app/README.md`](../app/README.md) |
+| The web app and how to run it | [`../app/README.md`](../app/README.md) |
+| Emergency steps and their first-aid sources | `app/src/data/emergency.ts` and [`../SPEC.md`](../SPEC.md#emergency) |
 
 ## Scientific constraints
 
 | What you need | Where to look |
 | --- | --- |
-| What the health logic must respect to be valid in flight: hard and soft constraints | [`scientific-constraints.md`](solution/scientific-constraints.md) |
-| Spaceflight facts that are still unconfirmed | [`scientific-constraints.md`](solution/scientific-constraints.md#verify-before-relying-on-it) |
-| One test per hard constraint to run against the prototype | [`scientific-constraints.md`](solution/scientific-constraints.md#hard-constraints) |
+| What the health logic must respect to be valid in flight: hard and soft constraints | [`scientific-constraints.md`](research/scientific-constraints.md) |
+| Spaceflight facts that are still unconfirmed | [`scientific-constraints.md`](research/scientific-constraints.md#verify-before-relying-on-it) |
+| One test per hard constraint to run against the prototype | [`scientific-constraints.md`](research/scientific-constraints.md#hard-constraints) |
 
 ## Open data and extracted tables
 

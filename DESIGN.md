@@ -1,6 +1,8 @@
 # ORBIT Design Guidelines
 
-Written 2026-11-14. Version 1: one dark theme, no light theme yet.
+Written 2026-11-14, updated the same day for version 2. One dark theme, no light theme yet.
+
+**Scope.** These rules apply to every screen. The dashboard workspace (Dashboard, Deep Data, Mental Health) uses its own charcoal palette and card styles in `app/src/dashboard.css`; on those screens the status colours, shapes, and words below still apply unchanged.
 
 How ORBIT looks and reads. Every screen, the demo video, and the slide deck follow this file. Copy-paste values are in [Tokens](#tokens).
 
@@ -77,9 +79,9 @@ The colours for warning, caution, no recent data, and unavailable follow the req
 | In range | `status-ok` | `#3FBF6F` | 8.4:1 | Filled circle | In range | The rule's green band |
 | Caution | `status-caution` | `#F2C230` | 11.8:1 | Triangle | Caution | The rule's amber band, confirmed |
 | Warning | `status-warning` | `#FF7676` | 7.6:1 | Diamond | Warning | The rule's red band |
-| No recent data | `status-stale` | `#4CC9E0` | 10.1:1 | Dashed ring | No recent data | The last reading is older than the indicator's maximum age ([SH8](docs/solution/scientific-constraints.md#hard-constraints)) |
-| Unavailable | `status-unavailable` | `#7B818C` | 5.1:1 | Dash | Unavailable | The rule is switched off in this environment ([SH4](docs/solution/scientific-constraints.md#hard-constraints)) |
-| Repeat reading | none | `text-primary` | 18.2:1 | Half-filled circle | Repeat reading | One out-of-range reading, not yet confirmed ([SH6](docs/solution/scientific-constraints.md#hard-constraints)) |
+| No recent data | `status-stale` | `#4CC9E0` | 10.1:1 | Dashed ring | No recent data | The last reading is older than the indicator's maximum age ([SH8](docs/research/scientific-constraints.md#hard-constraints)) |
+| Unavailable | `status-unavailable` | `#7B818C` | 5.1:1 | Dash | Unavailable | The rule is switched off in this environment ([SH4](docs/research/scientific-constraints.md#hard-constraints)) |
+| Repeat reading | none | `text-primary` | 18.2:1 | Half-filled circle | Repeat reading | One out-of-range reading, not yet confirmed ([SH6](docs/research/scientific-constraints.md#hard-constraints)) |
 
 Rules:
 
@@ -120,7 +122,7 @@ Rules:
 - Minimum size for anything that must be read is 12 px.
 - Numbers that change or sit in a column use tabular figures (`font-variant-numeric: tabular-nums`); Geist Mono already does.
 - A value and its unit are separated by a non-breaking space; the unit is `data` size in `text-muted`: `37.8 °C`.
-- Mission time uses NASA's display format, in `tag` style: `MET 57/14:08:33`.
+- Mission time is shown in plain words, in `tag` style: `Day 100`. NASA's `MET 57/14:08:33` format was not understood without explanation.
 - Sentence case everywhere except `tag` and the wordmark.
 - Self-host both fonts and ship each font's `OFL.txt` with them. Do not load them from a CDN.
 
@@ -157,9 +159,9 @@ The whole tile is one touch target and opens the indicator's detail screen.
 
 Small `tag`-style labels in `text-muted` with a `border` edge and no fill. They never take a status colour.
 
-- **Provenance** ([SH5](docs/solution/scientific-constraints.md#hard-constraints)): `MEASURED`, `SELF-REPORTED`, `MODELLED`, `SIMULATED`.
-- **Confidence** ([SS5](docs/solution/scientific-constraints.md#soft-constraints)): `HIGH`, `MODERATE`, `LOW`.
-- **Source** ([SH1](docs/solution/scientific-constraints.md#hard-constraints)): the rule ID, such as `R4`, linking to the source list.
+- **Provenance** ([SH5](docs/research/scientific-constraints.md#hard-constraints)): `MEASURED`, `SELF-REPORTED`, `MODELLED`. Scripted demo values carry their indicator's normal provenance; the README and submission say which data is scripted.
+- **Confidence** ([SS5](docs/research/scientific-constraints.md#soft-constraints)): `HIGH`, `MODERATE`, `LOW`.
+- **Source** ([SH1](docs/research/scientific-constraints.md#hard-constraints)): the rule ID, such as `R4`, linking to the source list.
 
 ### Buttons
 
@@ -191,6 +193,7 @@ Shown when an indicator needs something from the crew. On `bg-raised`:
 
 The only place where the quiet rules are suspended.
 
+- Entry: an **Emergency** button at the top right of the header on every screen, outlined and labelled in `status-warning`, with the warning diamond. It is the only status colour in the header.
 - A full-width header with `status-warning` background and `bg-canvas` text (7.6:1).
 - One step per screen in `title-2`, with one primary button. Completed steps stay visible in `text-muted`.
 - The header shape may flash at 0.8 Hz, on for 70% of each cycle. The crew can stop it, and it does not flash when the device asks for reduced motion. Text itself never flashes.
@@ -200,10 +203,11 @@ The only place where the quiet rules are suspended.
 - Transitions last 120 to 200 ms with ease-out. Use them for state changes only: opening, closing, selecting.
 - No decorative or looping animation. Nothing moves on a screen where nothing has changed.
 - Flashing is reserved for the emergency flow.
+- One exception to "nothing moves": the "Earth limits vs. your normal" card on the Dashboard fills its 90 days once on load (about 1.6 s) and again on click. With reduced motion it shows the end state at once.
 
 ## Wording
 
-- Say what was observed and what to do next. Never name a diagnosis as fact ([SH9](docs/solution/scientific-constraints.md#hard-constraints)).
+- Say what was observed and what to do next. Never name a diagnosis as fact ([SH9](docs/research/scientific-constraints.md#hard-constraints)).
 - Use words a person with no medical training knows: "upper blood pressure value", not "systolic", unless the term is explained on the same screen.
 - ORBIT does not speak as a person. Write "Reading is above your usual range", not "I noticed" or "I think".
 - State the reason with every recommendation: which reading, against which baseline or limit.
@@ -278,7 +282,7 @@ Run each against a finished screen.
 - [NASA-STD-3001 Volume 2, Appendix F: Display Standard](https://www.nasa.gov/reference/appendix-f-vol-2/). Colour meanings (Table F.5-1), contrast, redundant cues, stale-data indication, limit arrows, flashing, and time format. The colour table was read from Revision E; check the current revision before quoting it.
 - [Inter](https://rsms.me/inter/), by The Inter Project Authors. SIL Open Font License 1.1.
 - [Geist Mono](https://vercel.com/font), by The Geist Project Authors. SIL Open Font License 1.1.
-- [`docs/solution/scientific-constraints.md`](docs/solution/scientific-constraints.md) for constraints SH1 to SH10 and SS1 to SS9.
+- [`docs/research/scientific-constraints.md`](docs/research/scientific-constraints.md) for constraints SH1 to SH10 and SS1 to SS9.
 - [`docs/research/clinical-thresholds.md`](docs/research/clinical-thresholds.md) for the green, amber, and red bands.
 
 Both fonts must be listed under References on the project submission page ([`judging.md`](docs/challenge/judging.md#eligibility-gates-for-global-judging)).

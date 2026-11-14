@@ -325,57 +325,19 @@
 .emergency-button:hover { background: #ff767618; }
 @media (max-width: 700px) { .emergency-button { padding: 0 10px; } .health-header .viewer, .health-header .header-system { display: none; } }
 
-/* Why ORBIT: the one claim on the home screen, replayed from real bed-rest days. */
-.dashboard-screen .why-orbit {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(320px, 1.35fr) minmax(200px, .7fr);
-  gap: 32px;
-  align-items: center;
-  padding: 24px 28px;
-  border: 1px solid var(--dash-border);
-  background: radial-gradient(120% 140% at 0% 0%, #8db8ad14 0%, transparent 55%), #1b1e23;
-  overflow: hidden;
-  animation: why-in .5s ease-out both;
-}
-@keyframes why-in { from { opacity: 0; transform: translateY(6px); } }
-.why-copy { display: flex; flex-direction: column; gap: 10px; }
-.why-copy h2 { color: #f0f2f5; font-size: 24px; font-weight: 500; letter-spacing: -.02em; line-height: 1.2; }
-.why-copy h2 em { font-style: normal; color: #9fd3c4; }
-.why-copy p:last-child { color: #a9b0ba; font-size: 13px; line-height: 1.55; max-width: 440px; }
-
-.why-lanes { display: flex; flex-direction: column; gap: 14px; padding: 14px 16px; border: 1px solid #2c3138; border-radius: 4px; background: #15181c; text-align: left; cursor: pointer; transition: border-color .15s ease-out; }
-.why-lanes:hover { border-color: #4a525d; }
-.why-lane { display: flex; flex-direction: column; gap: 6px; }
-.why-lane-head { display: flex; justify-content: space-between; align-items: baseline; color: #aeb5bf; font: 11px/1.4 var(--font-mono); letter-spacing: .03em; }
-.why-lane-head strong { color: var(--status-warning); font: 500 22px/1 var(--font-mono); font-variant-numeric: tabular-nums; }
-.why-lane.is-calm .why-lane-head strong { color: #9fd3c4; }
-.why-bars { display: flex; gap: 2px; height: 28px; align-items: center; }
-.why-bars i { flex: 1; height: 6px; border-radius: 1px; background: #2d333b; transition: height .18s ease-out, background-color .18s ease-out; }
-.why-bars i.is-future { height: 2px; background: #252a31; }
-.why-bars i.is-alarm { height: 28px; background: var(--status-warning); }
-.why-caption { display: flex; justify-content: space-between; gap: 12px; color: #8f97a2; font: 10px/1.4 var(--font-mono); }
-.why-again { color: #9fa8b4; opacity: 0; transition: opacity .15s ease-out; white-space: nowrap; }
-.why-lanes:hover .why-again, .why-lanes:focus-visible .why-again { opacity: 1; }
-
-.why-result { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.why-numbers { display: flex; align-items: baseline; gap: 12px; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-.why-from { color: #8a919b; font-size: 30px; text-decoration: line-through; text-decoration-color: #ff767699; text-decoration-thickness: 2px; }
-.why-arrow { color: #6f7781; font-size: 20px; }
-.why-to { color: #f0f2f5; font-size: 48px; font-weight: 500; letter-spacing: -.03em; }
-.why-result p { color: #a9b0ba; font-size: 12px; }
-.why-link { margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border: 1px solid #8db8ad66; border-radius: 4px; color: #cfe7df; font-size: 13px; transition: background-color .15s ease-out, gap .15s ease-out; }
-.why-link:hover { background: #8db8ad1a; gap: 10px; }
-
-@media (max-width: 1200px) {
-  .dashboard-screen .why-orbit { grid-template-columns: 1fr 1fr; }
-  .why-result { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
-  .why-link { margin-top: 0; }
-}
-@media (max-width: 760px) {
-  .dashboard-screen .why-orbit { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
-  .why-copy h2 { font-size: 20px; }
-}
+/* Earth limits vs. your normal: one real bed-rest volunteer, judged both ways. */
+.limits-card { display: flex; flex-direction: column; gap: 12px; }
+.limits-lanes { display: flex; flex-direction: column; gap: 10px; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+.limits-lane { display: flex; flex-direction: column; gap: 5px; }
+.limits-lane-head { display: flex; justify-content: space-between; align-items: baseline; color: #aeb5bf; font: 10px/1.4 var(--font-mono); letter-spacing: .03em; }
+.limits-lane-head strong { color: #e6e9ee; font: 500 16px/1 var(--font-mono); font-variant-numeric: tabular-nums; }
+.limits-bars { display: flex; gap: 1px; height: 18px; align-items: center; }
+.limits-bars i { flex: 1; height: 4px; border-radius: 1px; background: #2d333b; transition: height .15s ease-out; }
+.limits-bars i.is-future { height: 2px; background: #252a31; }
+.limits-bars i.is-alarm { height: 18px; background: var(--status-warning); }
+.limits-caption { color: #8f97a2; font-size: 11px; line-height: 1.45; }
+.limits-link { display: flex; justify-content: space-between; gap: 8px; color: #b9c3cf; font-size: 11px; }
+.limits-link:hover { color: #e6e9ee; }
 
 /* Three balanced dashboard columns with a single action list. */
 .risks-checks .check-arrow { margin-left: auto; padding-top: 3px; color: #8e9ead; font-size: 12px; }

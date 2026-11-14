@@ -1,10 +1,10 @@
 # High-Level Solution
 
-Written 2026-11-14, extended the same day. What ORBIT solves, how it works at a high level, and the impact it can have. It builds on the problems (P1 to P7) and hypotheses (H1 to H5) in [`problems-and-hypotheses.md`](problems-and-hypotheses.md) and must respect [`scientific-constraints.md`](../research/scientific-constraints.md). Functional requirements come next.
+Written 2026-11-14, extended the same day and updated to match the app as built (see [`SPEC.md`](../../SPEC.md)). What ORBIT solves, how it works at a high level, and the impact it can have. It builds on the problems (P1 to P7) and hypotheses (H1 to H5) in [`problems-and-hypotheses.md`](problems-and-hypotheses.md) and must respect [`scientific-constraints.md`](../research/scientific-constraints.md). Functional requirements come next.
 
 ## In one sentence
 
-ORBIT is the crew's onboard health record and guide: it knows each person's values from before flight, collects every measurement from the equipment already on board, shows on a 3D body where something is off, and tells a crew member with no medical training what to do next, without waiting for a doctor on Earth.
+ORBIT is the crew's onboard health record and guide: it knows each person's values from before flight, collects every measurement from the equipment already on board, judges each one against that person's own normal instead of Earth's, shows on a body map where something is off, and tells a crew member with no medical training what to do next, without waiting for a doctor on Earth.
 
 ## What we solve
 
@@ -14,11 +14,11 @@ Today a doctor on the ground notices, judges, and decides. On a Mars-class missi
 | --- | --- | --- |
 | "Is something wrong with me?" | Most trouble is small, frequent, and felt, not measured (P1). | Asks how you feel every day, and treats that answer as a main signal next to the measurements. |
 | "Is this reading normal?" | Earth limits do not fit a body in space (P2). | Judges each reading against your own values from before flight and in flight, with flight-adjusted limits. |
-| "Where is the problem?" | The crew are not doctors (P3). | Marks the affected part of a 3D body, which you can tap to explore. |
+| "Where is the problem?" | The crew are not doctors (P3). | Marks the affected part of a body map, which you can tap to explore. |
 | "What do I do now?" | No doctor is in reach (P3). | Gives one clear next action in plain words, with the reason and the source. |
-| "My crewmate just collapsed." | A serious emergency is likely once per mission (P4). | Opens a fixed step-by-step flow, one step per screen. |
+| "My crewmate just collapsed." | A serious emergency is likely once per mission (P4). | Opens a step-by-step first-aid flow from a button on every screen, with each step sourced. |
 | "Am I slowly getting worse?" | Bone, eyes, radiation, and sleep decline without symptoms (P5). | Shows trends since before flight and whether sleep and exercise follow the plan. |
-| "How is the rest of the crew?" | The crew look after each other; nobody else can (P3, P4). | Shows every crew member's status side by side. |
+| "How is the rest of the crew?" | The crew look after each other; nobody else can (P3, P4). | In an emergency, any crewmate can be chosen as the patient. A crew overview is designed below but not built. |
 
 Two more problems shape the design: mood is private and never shown to the crew (P6), and the rules switch with the environment and mission day (P7).
 
@@ -63,31 +63,33 @@ One loop runs every day. Most of it is automatic.
 | **1. Collect** | Readings arrive from the onboard equipment. For anything not automatic, ORBIT prompts when it is due and explains how to take it. | The brief asks for prompts and instructions. Automatic collection is what makes the record complete. |
 | **2. Check in** | A two-minute set of questions: how you feel, any symptoms. | In our bed-rest data, vital signs were no more abnormal on days with a complaint than on other days. Devices alone miss most events (H1). |
 | **3. Judge** | Each reading is compared with your values from before flight, your recent values in flight, and limits adjusted for flight and mission day. One odd reading leads to "repeat", not an alarm. | Earth limits raised an alert on 25.5% of days in healthy volunteers; personal limits on 5.9% (H2). |
-| **4. Show** | The 3D body marks where attention is needed. | A non-doctor sees at a glance where to look. |
+| **4. Show** | The body map and the dashboard show where attention is needed. | A non-doctor sees at a glance where to look. |
 | **5. Act** | One next action: carry on, repeat, apply a countermeasure, or contact the ground. | A non-doctor needs a decision, not a number (H3). |
 
 Around the loop:
 
-- **Emergency flow.** One tap from the home screen. Fixed steps, one per screen, for an acute event such as chest pain and collapse. It opens the patient's record for the crewmate who responds (H4).
+- **Emergency flow.** One tap from the top right of every screen. Fixed steps, one per screen, for chest pain or collapse. It branches on whether the person breathes normally, adapts CPR to weightlessness, cites a guideline for every step, and shows the patient's readings to the crewmate who responds (H4).
 - **Trends.** Charts from before flight to today, so slow changes are seen early (H5).
-- **Environment and mission-day switch.** Turns checks on and off as the flight information changes.
+- **Environment switch.** The planet or flight health system turns checks on and off, such as the standing blood pressure test that needs gravity.
+- **Replay.** Real NASA bed-rest data judged by Earth's limits and by ORBIT side by side, so anyone can check the core claim (H2).
 
 ## What the crew sees
 
-### The body
+### The dashboard
 
-The home screen is a 3D human figure for the selected person. It is the map of their health.
+The home screen is a personal dashboard for the astronaut.
 
-- **Quiet when healthy.** A body with nothing wrong is plain. A region is marked only when it needs attention, with a colour, a shape, and a word together.
-- **Tap to explore.** Tapping a region opens three levels: what is being watched there and why it matters in space; the latest value against your own normal; the trend since before flight and the source of the rule.
+- **Body map.** An anatomical figure, front and back. A region is marked only when it needs attention, with a colour, a shape, and a word together. Tapping a region opens what is watched there and why it matters in space, then each reading against your own normal, then its trend and the source of the rule. Tapping a muscle group explains what it does and links to exercise and bone load.
 - **Regions.** Head (headache, vision, thinking), chest (heart, blood pressure, breathing, blood oxygen), skin (rashes), hips and spine (bone and muscle), whole body (temperature, weight).
-- **Beside the body.** Things with no single place: sleep, radiation dose, cabin air, and a private mood entry.
+- **Daily activity.** Exercise against the plan, sleep, resting heart rate, blood oxygen, and today's alerts with one next action each.
+- **Weekly review and trends.** A weekly summary (a mock AI preview for now), risk prompts, and trend plots for heart rate, core temperature, and radiation dose rate. Above the plots, a card shows one real bed-rest volunteer judged by Earth's limits (54 alarms in 90 days) and by their own normal (1), linking to the full Replay.
+- **Deep Data and Mental Health.** Raw readings with statistics and export; a private mood, energy, and journal check-in.
 
-The brief suggests exactly this: "a human figure where each part of the body is clickable and displays information about its function and health status."
+The brief suggests a body like this: "a human figure where each part of the body is clickable and displays information about its function and health status."
 
-### The crew
+### The crew (designed, not built)
 
-A row of crew members, each with a single overall status. Selecting one opens their body.
+The app is shown from one astronaut's point of view. The sharing rules below are the design for a crew overview:
 
 - Everyone sees each crewmate's overall status and anything that person has chosen to share.
 - The medical lead sees the full record of every crew member.
@@ -99,6 +101,7 @@ This follows how agencies work today: medical talks are private, and details rea
 ### What makes it different
 
 - **Your normal, not Earth's normal.** The yardstick is your own body, starting from before flight.
+- **Shown on NASA data.** On NASA bed-rest data, Earth limits raised an alarm on 25.5% of days, ORBIT's personal rules on 5.9%. The app replays this, and its tests reproduce the numbers.
 - **Devices and feelings together.** The equipment gives the numbers; the check-in catches the common problems that numbers miss.
 - **Where, then what to do.** A body to see the problem, and one action to handle it, written for someone with about 40 hours of medical training.
 - **No new hardware.** It joins up equipment that is already on board.
@@ -109,7 +112,7 @@ Each line says how solid the claim is.
 
 | Who benefits | Impact | How solid |
 | --- | --- | --- |
-| Crew, every day | About four times fewer false alarms: from 46 to 11 per person per 180 days. Fewer false alarms means the real ones are believed. | Measured on bed-rest data, not in flight. |
+| Crew, every day | About four times fewer false alarms: from 46 to 11 per person per 180 days. Fewer false alarms means the real ones are believed. | Measured on bed-rest data, not in flight. Reproduced in the app's Replay. |
 | Crew, every day | A place to catch and handle the roughly 40 minor events expected for a crew of four over three years, most of which devices miss. | Rate from station records; the total is our arithmetic. |
 | Crew, every day | Less time spent on health admin, because readings arrive on their own. | Expected, not measured. |
 | Crew, in an emergency | A first correct action within one minute, taken by a crewmate with the patient's record in front of them, for the roughly one serious event expected per Mars mission. | Target, not yet tested with people. |
@@ -120,12 +123,12 @@ Each line says how solid the claim is.
 ## Open decisions
 
 - **Crew visibility.** The sharing rules above are our proposal. The alternative is that everyone sees everything, which is simpler but goes against current medical privacy practice.
-- **How far the 3D body goes this weekend.** A full 3D model costs build time. A simpler figure with the same regions and the same tap-to-explore levels proves the idea if time runs short.
+- **The AI weekly summary.** It is a mock with prepared answers. Keep it as a clearly labelled concept or remove it.
 - **Skin versus core temperature.** The smart shirt measures skin temperature; the space-fever finding is about core temperature. The two must not be compared directly (SH7).
 
 ## What has to be true
 
-The solution only matters if the five hypotheses hold. H1 and H2 have first results from the bed-rest data. H3 and H4 need tests with real people this weekend. H5 is partly testable. Details and failure conditions are in [`problems-and-hypotheses.md`](problems-and-hypotheses.md#hypotheses). That the body view makes status easier to read is an assumption we take from the brief, not a tested finding.
+The solution only matters if the five hypotheses hold. H1 and H2 have first results from the bed-rest data. H3 and H4 need tests with real people this weekend. H5 is partly testable. Details and failure conditions are in [`problems-and-hypotheses.md`](problems-and-hypotheses.md#hypotheses). That the body map makes status easier to read is an assumption we take from the brief, not a tested finding.
 
 ## Sources for onboard equipment
 
@@ -138,4 +141,4 @@ We read search summaries of these pages, not the full pages.
 
 ## Next step
 
-Write functional requirements for the three inputs, the daily loop, the body view, and the crew view. Each requirement names the part above it belongs to, the hypothesis it serves, and the constraint it must meet.
+Test H3 and H4 with three outsiders, have someone with medical training review the emergency steps, and decide on the AI summary.

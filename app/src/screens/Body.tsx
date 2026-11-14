@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
-import { WhyOrbit } from '../components/dashboard/WhyOrbit'
+import { LimitsCard } from '../components/dashboard/LimitsCard'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
 import { metrics } from '../lib/dashboard'
 import { regionSummaries } from '../lib/judge'
@@ -21,13 +21,13 @@ export function Body() {
   const summaries = regionSummaries(state, person)
   const base = `/body/${person.id}`
   return <div className="screen dashboard-screen">
-    <WhyOrbit />
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map"><div className="column-label"><span>01 / BODY MAP</span><span>Personal</span></div>
         <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />
       </section>
       <ActivityPanel state={state} person={person} />
       <section className="dashboard-column science-column" aria-label="Three health trend plots"><div className="column-label"><span>03 / HEALTH TRENDS</span><div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d}D</button>)}</div></div>
+        <LimitsCard />
         {metrics(state, person).filter((m) => ['hr', 'temp', 'radiation'].includes(m.key)).map((m) => <ScientificPlot key={m.key} metric={m} state={state} person={person} days={days} />)}
       </section>
     </div>

@@ -2,7 +2,10 @@
 
 ## Data and variability
 
-All displayed dashboard readings are simulated. Heart-rate and temperature variation
+All of Lena's dashboard readings are simulated. The one exception is the card
+"Earth limits vs. your normal" at the top of the trends column: it shows real NASA
+UTMB bed-rest data for one volunteer (UTMB-01), judged by the same rules as the
+Replay screen. Heart-rate and temperature variation
 inherits the existing UTMB-derived demo series; those displayed values are not actual
 flight measurements. Sleep, exercise, cabin CO2, and radiation are scripted.
 

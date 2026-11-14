@@ -20,7 +20,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | --- | --- | --- |
 | Dashboard | `#/body/lena` | Three columns: body map; daily activity with risks and checks; health trends, starting with the "Earth limits vs. your normal" card |
 | Region, Muscle group, Indicator, Symptoms, Measure, Check-in | `#/body/lena/...` | Reached from the dashboard |
-| Deep Data | `#/deep-data` | Paper-style figures of real NASA UTMB bed-rest records (heart rate, systolic pressure, temperature) with a drafted medical summary, SVG and CSV export |
+| Deep Data | `#/deep-data` | Lena's own measurements: pick any indicator and see its trend against her normal, with CSV export |
 | My Personal Diary | `#/mental-health` | Private mood, energy, separation reflections, family videos, and local recording |
 | Replay | `#/replay` | Real NASA bed-rest data judged by Earth limits and personal rules. `?s=UTMB-40` opens a volunteer |
 | Talk to the doctor | `#/doctor` | Button at the top right of every screen |
@@ -54,7 +54,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 
 - **Replay.** Earth limits: pulse over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on any single day. Personal: pulse 20% over the volunteer's own pre-bed-rest mean, blood pressure 20/15 over, or temperature 0.5 °C over, on two days in a row. Tests reproduce 25.5% and 5.9% of days with an alarm.
 - **Dashboard plots.** Daily observations with trailing seven-day mean ±1 SD; radiation dose rate from cumulative-dose differences over elapsed time. Thresholds, references, and caveats are in [dashboard methodology](../docs/solution/dashboard-methodology.md).
-- **Deep Data.** Daily observations, trailing seven-day means, sample SD bands, pre-bed-rest baselines, and personal review limits. The medical draft uses per-signal counts and changes from baseline and is not written or checked by a physician. The selected research participant is not the signed-in astronaut.
+- **Deep Data.** Lena's own series, the same personal limits and Earth cutoffs as the indicator charts, over 7, 28, or 90 days or the whole mission. The NASA volunteer comparison is Replay, not this screen.
 
 ## Limits
 

@@ -1,5 +1,16 @@
-/* Deep Data: real bed-rest figures and the drafted summary, as neutral tiles. */
+/* Deep Data: Lena's own measurements, as neutral tiles. */
 .research-page { max-width: 1600px; }
+.research-lead { margin-top: 6px; color: var(--text-muted); font-size: 15px; }
+.research-note { color: var(--text-muted); font-size: 13px; line-height: 1.55; }
+.lena-record .chart { padding: 8px 16px 0; }
+.measure-group { padding-top: 8px; }
+.measure-group h3 { margin: 12px 0 4px; color: var(--text-muted); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+.measure-list { display: flex; flex-direction: column; gap: 2px; }
+.measure-list button { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; width: 100%; padding: 10px 12px; border-radius: 12px; text-align: left; color: var(--text-primary); }
+.measure-list button[aria-pressed='true'] { background: var(--bg-hover); }
+.measure-name { font-size: 15px; font-weight: 500; }
+.measure-value { font-variant-numeric: tabular-nums; font-size: 15px; }
+.measure-meta { grid-column: 1 / -1; }
 .research-toolbar { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 20px; }
 .research-toolbar label { display: flex; flex-direction: column; gap: 6px; color: var(--text-muted); font-size: 13px; }
 .research-toolbar select, .research-toolbar input { min-height: 40px; padding: 8px 14px; border: 0; border-radius: 12px; background: var(--bg-surface); color: var(--text-primary); font: 15px var(--font-sans); }

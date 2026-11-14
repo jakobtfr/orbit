@@ -1,45 +1,137 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PaperPlot } from '../components/research/PaperPlot'
-import { downloadResearch, RESEARCH_LABELS, RESEARCH_VITALS, researchSummary } from '../lib/research'
-import { SUBJECTS, VITAL_INFO, volunteerName } from '../lib/replay'
+import { Chart } from '../components/Chart'
+import { StatusMark } from '../components/Status'
+import { FIRST_DAY } from '../data/demo'
+import { signed } from '../lib/format'
+import { INDICATORS, formatValue } from '../lib/indicators'
+import { baselines, chartGuide, judge, now, readingsFor } from '../lib/judge'
+import { downloadResearch } from '../lib/research'
+import { useStore } from '../lib/store'
+import type { IndicatorKey } from '../lib/types'
 import '../research.css'
 
+const RANGES = [
+  { label: '7 days', days: 7 },
+  { label: '28 days', days: 28 },
+  { label: '90 days', days: 90 },
+  { label: 'Whole mission', days: 0 },
+]
+
+const GROUPS: { title: string; keys: IndicatorKey[] }[] = [
+  { title: 'Chest', keys: ['hr', 'bp', 'standing', 'spo2'] },
+  { title: 'Head', keys: ['vision'] },
+  { title: 'Whole body', keys: ['temp', 'weight'] },
+  { title: 'Hips and spine', keys: ['bone'] },
+  { title: 'Daily routine', keys: ['sleep', 'exercise', 'radiation', 'cabin', 'mood'] },
+]
+
+const EXPLORABLE = GROUPS.flatMap((group) => group.keys)
+
 export function DeepData() {
-  const [subjectId, setSubjectId] = useState('UTMB-01')
+  const { state, viewer } = useStore()
+  const [key, setKey] = useState<IndicatorKey>('hr')
   const [days, setDays] = useState(28)
-  const subject = SUBJECTS.find((s) => s.id === subjectId) ?? SUBJECTS[0]
-  const lastDay = Math.max(...subject.days.map((d) => d.day))
-  const [selectedEnd, setSelectedEnd] = useState<number | null>(null)
-  const end = Math.min(selectedEnd ?? lastDay, lastDay)
-  const start = Math.max(1, end - days + 1)
-  const reviews = RESEARCH_VITALS.map((vital) => ({ vital, ...researchSummary(subject, vital, start, end) }))
-  const flagged = reviews.filter((r) => r.over !== undefined && r.over > 0)
+  const t = now(state)
+  const from = days ? state.day - days + 1 : FIRST_DAY
+  const def = INDICATORS[key]
+  const judged = judge(state, viewer, key)
+  const base = baselines(state, viewer, key)
+  const guide = chartGuide(key, base)
+  const series = readingsFor(state, viewer.id, key).filter((r) => r.t >= from && r.t <= t && r.activity === 'rest')
+  const pre = viewer.preflight[key]
+  const latest = judged.latest
+  const change = (() => {
+    if (!latest || pre?.v === undefined) return undefined
+    const upper = signed(latest.v - pre.v, def.decimals)
+    if (key === 'bp' && pre.v2 !== undefined) return `${upper}/${signed((latest.v2 ?? 0) - pre.v2, 0)}`
+    return `${upper} ${def.unit}`
+  })()
+
   const exportCsv = () => {
-    const rows = [['subject', 'bed_rest_day', 'heart_rate_bpm', 'systolic_mmhg', 'temperature_c'], ...subject.days.filter((d) => d.day >= start && d.day <= end).map((d) => [subject.id, d.day, d.values.hr ?? '', d.values.sys ?? '', d.values.temp ?? ''])]
-    downloadResearch(rows.map((row) => row.map((v) => `"${String(v).replaceAll('"', '""')}"`).join(',')).join('\n'), 'text/csv;charset=utf-8', `${subject.id}-D${start}-${end}.csv`)
+    const rows = [['measurement', 'mission_day', 'value', 'second_value', 'unit']]
+    for (const item of EXPLORABLE) {
+      const info = INDICATORS[item]
+      for (const reading of readingsFor(state, viewer.id, item)) {
+        if (reading.t < from || reading.t > t) continue
+        rows.push([info.name, String(Math.floor(reading.t)), String(reading.v), reading.v2 === undefined ? '' : String(reading.v2), info.unit])
+      }
+    }
+    const csv = rows.map((row) => row.map((value) => `"${value.replaceAll('"', '""')}"`).join(',')).join('\n')
+    downloadResearch(csv, 'text/csv;charset=utf-8', `lena-day-${Math.floor(from)}-${state.day}.csv`)
   }
-  return <div className="planet-page research-page">
-    <header className="planet-page-title"><h1>Deep Data</h1><div className="data-page-actions"><Link className="btn btn-secondary" to="/replay">Earth limits vs. your normal ↗</Link><button className="btn btn-secondary" onClick={exportCsv}>Download data ↓</button></div></header>
-    <div className="research-toolbar">
-      <label>Volunteer<select value={subject.id} onChange={(e) => { setSubjectId(e.target.value); setSelectedEnd(null) }}>{SUBJECTS.map((s) => <option key={s.id} value={s.id}>{volunteerName(s.id)}</option>)}</select></label>
-      <div className="research-ranges" role="group" aria-label="Data time range">{[7, 28, 90].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d} days</button>)}</div>
-      <label>End day<input aria-label="End bed-rest day" type="number" min={1} max={lastDay} value={end} onChange={(e) => { const n = Number(e.target.value); if (Number.isFinite(n)) setSelectedEnd(Math.max(1, Math.min(lastDay, Math.round(n)))) }} /></label>
-      <span className="research-interval">Days {start}–{end} of bed rest</span>
-    </div>
-    <div className="research-layout">
-      <section className="research-figures" aria-label="Three scientific study plots">
-        
-        {RESEARCH_VITALS.map((vital) => <PaperPlot key={`${subject.id}-${vital}`} subject={subject} vital={vital} start={start} end={end} />)}
-        <details className="research-method"><summary>How these figures are made</summary><p>These are real daily readings from a NASA study in which healthy volunteers stayed in bed, tilted slightly head-down, for up to 90 days. This imitates weightlessness on the ground. The volunteer is a study participant, not you.</p><p>White squares are the daily readings; days without a reading are left empty. The blue line is the average of the last 7 days, and the shaded area shows how much the readings usually vary. The grey line is the volunteer’s normal before bed rest. The yellow line is ORBIT’s personal limit: heart rate 20% above normal, upper blood pressure 20 mmHg above, or temperature 0.5 °C above. These are prototype limits, not medical cut-offs.</p><a href="https://doi.org/10.83263/wjw1-ta27" target="_blank" rel="noreferrer">Source: NASA bed-rest study records ↗</a></details>
-      </section>
-      <aside className="research-sidebar" aria-label="Medical summary and mental health tips">
-        <section className="clinical-summary"><header><h2>Medical summary</h2><span className="clinical-draft">Automated draft</span></header><p className="review-context">{volunteerName(subject.id)} · days {start}–{end}</p><div className={`review-conclusion ${flagged.length ? 'needs-review' : ''}`}><strong>{flagged.length ? `${flagged.length} ${flagged.length === 1 ? 'measurement' : 'measurements'} to review` : reviews.every((r) => r.stats.n) ? 'Nothing above the personal limits' : 'Incomplete measurements'}</strong><p>{flagged.length ? 'Some readings went above this volunteer’s personal limits. Look at those days in the figures.' : 'This describes recorded signals only; it does not establish overall health.'}</p></div>
-          {reviews.map((r) => <article key={r.vital} className="clinical-vital"><div><h3>{RESEARCH_LABELS[r.vital]}</h3><span className={r.over ? 'review-flag' : ''}>{r.stats.n ? r.over === undefined ? 'No earlier value' : `${r.over} of ${r.stats.n} days above limit` : 'No data'}</span></div><p>{r.stats.mean === undefined ? 'No observations in this interval.' : `Average ${r.stats.mean.toFixed(r.vital === 'temp' ? 2 : 1)} ${VITAL_INFO[r.vital].unit}${r.delta === undefined ? '' : `, ${r.delta >= 0 ? '+' : '−'}${Math.abs(r.delta).toFixed(r.vital === 'temp' ? 2 : 1)} compared with before bed rest`}.`}</p><small>{r.latest ? `Last reading: ${r.latest.value} ${VITAL_INFO[r.vital].unit} on day ${r.latest.day}` : 'Missing days are not counted as normal.'}</small></article>)}
-          <div className="clinical-next"><strong>Suggested follow-up</strong><p>{flagged.length ? 'Talk to the medical lead about readings that stay above the limit, together with any symptoms.' : 'Continue the planned check schedule and record any new symptoms.'}</p></div><p className="clinical-note">Written automatically from the readings. No doctor has reviewed it.</p>
+
+  return (
+    <div className="planet-page research-page">
+      <header className="planet-page-title">
+        <div>
+          <h1>Deep Data</h1>
+          <p className="research-lead">Your measurements, compared with your own normal.</p>
+        </div>
+        <div className="data-page-actions">
+          <Link className="btn btn-secondary" to={`/body/${viewer.id}/indicator/${key}`}>Open this measurement</Link>
+          <button className="btn btn-secondary" onClick={exportCsv}>Download data ↓</button>
+        </div>
+      </header>
+      <div className="research-toolbar">
+        <div className="research-ranges" role="group" aria-label="Time range">
+          {RANGES.map((range) => (
+            <button key={range.label} aria-pressed={days === range.days} onClick={() => setDays(range.days)}>{range.label}</button>
+          ))}
+        </div>
+        <span className="research-interval">Mission days {Math.floor(from)}–{state.day}</span>
+      </div>
+      <div className="research-layout">
+        <section className="research-figures" aria-label={def.name}>
+          <article className="paper-card lena-record">
+            <header>
+              <h2>{def.name}</h2>
+              <StatusMark status={judged.status} />
+            </header>
+            {def.chart ? (
+              <Chart k={key} readings={readingsFor(state, viewer.id, key)} guide={guide} baselines={base} from={from} to={t} decimals={def.decimals} />
+            ) : (
+              <p className="paper-empty">{latest ? `${formatValue(key, latest)} ${def.unit}`.trim() : 'No readings yet.'} This check is stored as a result, without a daily trend.</p>
+            )}
+            <footer>
+              <span>Latest <strong>{latest ? formatValue(key, latest) : '—'}</strong> {def.unit}</span>
+              <span>{series.length} {series.length === 1 ? 'reading' : 'readings'} in this range</span>
+              {pre && <span>Before flight <strong>{formatValue(key, pre)}</strong> {def.unit}</span>}
+              {change && <span>{change} from before flight</span>}
+            </footer>
+          </article>
+          <p className="research-note">
+            {judged.status === 'unavailable' && judged.reason ? `${judged.reason} ` : ''}
+            {def.provenance === 'MODELLED' ? 'Estimated, not measured. ' : ''}
+            The line is your readings. A band is your normal, a solid mark is your personal limit, and a dashed mark is the Earth cutoff.
+            {' '}<span>{def.source}.</span>
+          </p>
         </section>
-        <section className="research-wellbeing"><h2>Between check-ins</h2><p className="wellbeing-context">General prompts. Mood and sleep were not measured in these plotted records.</p><div><p><strong>Protect a regular sleep window.</strong><small>Keep rest on the schedule, especially during busy work periods.</small></p></div><div><p><strong>Stay connected.</strong><small>Make time for a private conversation with someone you trust.</small></p></div><div><p><strong>Record how you feel.</strong><small>Use a short check-in to notice changes in mood and energy.</small></p></div><Link className="wellbeing-link" to="/mental-health">Open personal diary <span>↗</span></Link><a className="wellbeing-reference" href="https://www.nasa.gov/humans-in-space/isolation-what-can-we-learn-from-the-experiences-of-nasa-astronauts/" target="_blank" rel="noreferrer">NASA · wellbeing in isolation ↗</a></section>
-      </aside>
+        <aside className="research-sidebar" aria-label="Your measurements">
+          <section className="clinical-summary">
+            <header><h2>Your measurements</h2></header>
+            <p className="review-context">{viewer.name} · mission day {state.day}</p>
+            {GROUPS.map((group) => (
+              <div key={group.title} className="measure-group">
+                <h3>{group.title}</h3>
+                <div className="measure-list">
+                  {group.keys.map((item) => {
+                    const info = INDICATORS[item]
+                    const result = judge(state, viewer, item)
+                    return (
+                      <button key={item} aria-pressed={item === key} onClick={() => setKey(item)}>
+                        <span className="measure-name">{info.name}</span>
+                        <span className="measure-value">{result.latest ? formatValue(item, result.latest) : '—'}</span>
+                        <span className="measure-meta"><StatusMark status={result.status} size={12} /></span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
+          </section>
+        </aside>
+      </div>
     </div>
-  </div>
+  )
 }

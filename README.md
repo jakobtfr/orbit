@@ -31,7 +31,7 @@ The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). 
 - **How to measure.** Step-by-step instructions for each reading, and a two-minute daily symptom check-in.
 - **Talk to the doctor.** One tap from the top right of every screen. A simulated doctor reads your own readings and check-ins and tells you in plain words whether your results look fine or something seems off, for example with your chest, and what to do next. You can talk to it by voice with your camera on, like a video call, or type. Answers are put together on the device, so it works without contact with Earth.
 - **Replay.** The full bed-rest comparison: pick any of the 29 volunteers and watch both rule sets judge the same days.
-- **Deep Data and Mental Health.** Figures of real bed-rest records with a drafted medical summary and SVG/CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
+- **Deep Data and Mental Health.** Lena's own measurements, explored one indicator at a time against her normal, with CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
 - **Environment.** Settings switch between the planet and the flight health system. Checks that need gravity, and the radiation reference, follow the setting.
 
 ## Run it

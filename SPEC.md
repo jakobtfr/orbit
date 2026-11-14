@@ -38,7 +38,7 @@ Navigation (planet system): Dashboard · Deep Data · Mental Health
 Dashboard ──► Region ──► Indicator ──► Measure
     │    └──► Muscle group
     ├──► Check-in
-    └──► Replay  (also from Deep Data)
+    └──► Replay
 Mental Health
 Talk to the doctor (from the header, on every screen)
 ```
@@ -52,7 +52,7 @@ Talk to the doctor (from the header, on every screen)
 | Symptoms | `#/body/lena/symptoms/:region` | What did I report for this part of the body? |
 | Measure | `#/body/lena/measure/:key` | How do I take this reading? |
 | Check-in | `#/body/lena/check-in` | How do I feel today? |
-| Deep Data | `#/deep-data` | What do real bed-rest records look like in detail? |
+| Deep Data | `#/deep-data` | What do my own measurements look like over time? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
 | Talk to the doctor | `#/doctor` | Are my results fine, and what should I do? |
@@ -107,7 +107,7 @@ Special cases: Unavailable shows the reason ("The standing test needs gravity.")
 
 ### Deep Data
 
-Real NASA UTMB bed-rest records, not Lena's data. A volunteer picker ("Volunteer 1" and so on, no study codes), 7/28/90-day windows, and an end day. Three figures (resting heart rate, systolic blood pressure, temperature) with daily observations, trailing seven-day mean ±1 SD, the pre-bed-rest mean, and the personal review threshold; each exports as SVG. Beside them a rule-based **Medical summary** (marked "Automated draft", not reviewed by a clinician) and short wellbeing prompts linking to Mental Health. CSV export, methods, and a link to Replay.
+Lena's own measurements, for exploring the record. A list of every indicator, grouped by part of the body, with the latest value and status. Choosing one draws its trend for 7, 28, or 90 days, or the whole mission, using the same chart as Indicator: her readings, her normal, her personal limit, and the Earth cutoff where one exists. The footer shows the latest value, how many readings fall in the window, and the change from before flight. "Open this measurement" goes to that indicator. CSV export covers every measurement in the window. The NASA bed-rest comparison stays on Replay.
 
 ### Mental Health
 

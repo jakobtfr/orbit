@@ -83,7 +83,7 @@ The home screen is a personal dashboard for the astronaut.
 - **Regions.** Head (headache, vision, thinking), chest (heart, blood pressure, breathing, blood oxygen), skin (rashes), hips and spine (bone and muscle), whole body (temperature, weight).
 - **Daily activity.** Exercise against the plan, sleep, resting heart rate, blood oxygen, and one list of risks and checks, each with its next action.
 - **Trends.** Trend plots for heart rate, core temperature, and radiation dose rate. Above the plots, a card shows one real bed-rest volunteer judged by Earth's limits (54 alarms in 90 days) and by their own normal (1), linking to the full Replay.
-- **Deep Data and Mental Health.** Figures of real bed-rest records with a drafted medical summary; a private mood, energy, and journal check-in.
+- **Deep Data and Mental Health.** Lena's own measurements, explored against her normal; a private mood, energy, and journal check-in.
 
 The brief suggests a body like this: "a human figure where each part of the body is clickable and displays information about its function and health status."
 

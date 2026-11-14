@@ -60,6 +60,13 @@ Where each piece of information lives. Start here when you need a specific fact.
 | The 3D body view and the crew view | [`solution/solution-overview.md`](solution/solution-overview.md#what-the-crew-sees) |
 | Expected impact, and how solid each claim is | [`solution/solution-overview.md`](solution/solution-overview.md#impact) |
 
+## Build spec and design
+
+| What you need | Where to look |
+| --- | --- |
+| What to build in version 1: screens, components, fake data, done-when checks | [`../SPEC.md`](../SPEC.md) |
+| How it looks and reads: colours, type, components, wording | [`../DESIGN.md`](../DESIGN.md) |
+
 ## Scientific constraints
 
 | What you need | Where to look |

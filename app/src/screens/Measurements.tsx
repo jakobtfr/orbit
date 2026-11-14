@@ -19,11 +19,12 @@ const RANGES = [
 ]
 
 const GROUPS: { title: string; keys: IndicatorKey[] }[] = [
-  { title: 'Chest', keys: ['hr', 'bp', 'standing', 'spo2'] },
-  { title: 'Head', keys: ['vision'] },
-  { title: 'Whole body', keys: ['temp', 'weight'] },
+  { title: 'Chest', keys: ['hr', 'bp', 'standing', 'spo2', 'rr'] },
+  { title: 'Head', keys: ['vision', 'hearing', 'cognition'] },
+  { title: 'Whole body', keys: ['temp', 'weight', 'glucose', 'intake', 'hydration', 'balance'] },
   { title: 'Hips and spine', keys: ['bone'] },
-  { title: 'Daily routine', keys: ['sleep', 'exercise', 'radiation', 'cabin', 'mood'] },
+  { title: 'Cabin', keys: ['cabin', 'o2', 'noise', 'water'] },
+  { title: 'Daily routine', keys: ['sleep', 'exercise', 'radiation', 'mood'] },
 ]
 
 const EXPLORABLE = GROUPS.flatMap((group) => group.keys)

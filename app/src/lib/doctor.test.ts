@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
-import { assessment, briefing, isUrgent, opening, reply, speakable } from './doctor'
+import { wantsLook, afterReading, assessment, briefing, focusOn, heardReading, isUrgent, nextStep, opening, reply, speakable, withReading } from './doctor'
 import { now } from './judge'
 import type { AppState, Reading } from './types'
 
-const base = initialState
+/** The demo state without its low blood pressure: everything in range. */
+function base(): AppState {
+  const s = initialState()
+  s.readings[LENA.id].bp!.filter((r) => r.t > 99).forEach((r) => { r.v = 110; r.v2 = 66 })
+  return s
+}
 
 /** The demo state with blood pressure high on the last two readings. */
 function highPressure(): AppState {
@@ -77,5 +82,64 @@ describe('virtual doctor', () => {
     expect(isUrgent('I can’t breathe')).toBe(true)
     expect(isUrgent('My chest is tight')).toBe(true)
     expect(isUrgent('How is my heart?')).toBe(false)
+  })
+
+  it('opens the call about whatever is off, a reading or a logged symptom, with nothing written per condition', () => {
+    const s = initialState()
+    const focus = focusOn(s, LENA)
+    expect(focus?.key).toBe('bp')
+    const o = opening(s, LENA, focus)
+    expect(o.text).toContain('I am here about your blood pressure')
+    expect(o.text).toContain('86/54 mmHg')
+    expect(o.text).toContain('how do you feel right now')
+
+    const rash = base()
+    rash.checkins[LENA.id].push({ t: 100.32, feel: 'Not quite right', symptoms: [{ name: 'Skin rash', region: 'skin' }], mood: 3 })
+    const skin = focusOn(rash, LENA)
+    expect(skin?.title).toBe('the skin rash you logged')
+    expect(focusOn(rash, LENA, 'skin')?.title).toBe('the skin rash you logged')
+    expect(opening(rash, LENA, skin).text).toContain('I am here about the skin rash you logged')
+
+    expect(focusOn(base(), LENA)).toBeUndefined()
+    expect(focusOn(base(), LENA, 'bp')).toBeUndefined()
+  })
+
+  it('hears any reading said aloud, saves it, and says whether it is back in range', () => {
+    expect(heardReading('ok it says 104 over 68 now')).toEqual({ key: 'bp', v: 104, v2: 68 })
+    expect(heardReading('my pulse is 64')).toEqual({ key: 'hr', v: 64 })
+    expect(heardReading('temperature 37,2 degrees')).toEqual({ key: 'temp', v: 37.2 })
+    expect(heardReading('the reading is 97', 'spo2')).toEqual({ key: 'spo2', v: 97 })
+    expect(heardReading('I rested for 5 minutes', 'bp')).toBeUndefined()
+    expect(heardReading('I have had it for 10 days')).toBeUndefined()
+    const s = initialState()
+    const better = withReading(s, LENA, 'bp', { v: 104, v2: 68 }).state
+    expect(afterReading(better, LENA, 'bp').text).toContain('104/68 mmHg is back in your usual range')
+    const same = withReading(s, LENA, 'bp', { v: 85, v2: 52 }).state
+    expect(afterReading(same, LENA, 'bp').text).toContain('Samir Haddad')
+  })
+
+  it('walks through the measuring steps one at a time without a model', () => {
+    const focus = focusOn(initialState(), LENA)!
+    expect(nextStep(focus, 1).text).toContain('Rest for 5 minutes first')
+    expect(nextStep(focus, focus.steps.length - 1).text).toMatch(/^Last step\./)
+    expect(nextStep(focus, 99).text).toContain('whole plan')
+  })
+
+  it('gives the model one way of helping with anything, what the call was opened about, and whether it can see', () => {
+    const s = initialState()
+    const seeing = briefing(s, LENA, { focus: focusOn(s, LENA), camera: 'picture' })
+    expect(seeing).toContain('whatever it is: a reading that is off, a rash, a bump')
+    expect(seeing).toContain('This call was opened about your blood pressure')
+    expect(seeing).toContain('one still picture')
+    expect(briefing(base(), LENA)).toContain('whatever it is')
+    expect(briefing(base(), LENA)).toContain('you cannot see them')
+    expect(briefing(base(), LENA, { camera: 'on' })).toContain('only get a picture when they show you something')
+  })
+
+  it('sends a picture only when something is being shown', () => {
+    expect(wantsLook('Can you look at this rash?')).toBe(true)
+    expect(wantsLook('here', 'Could you hold it up to the camera?')).toBe(true)
+    expect(wantsLook('I feel a little dizzy')).toBe(false)
+    expect(wantsLook('How is my heart?', 'Your heart rate is fine.')).toBe(false)
   })
 })

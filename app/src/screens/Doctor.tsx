@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Mark } from '../components/Shell'
 import { StatusShape } from '../components/Status'
-import { SUGGESTIONS, briefing, isUrgent, opening, reply, speakable, type DoctorReply } from '../lib/doctor'
-import { chat, findModel, warm, type ChatMessage } from '../lib/localModel'
+import { SUGGESTIONS, afterReading, briefing, focusOn, heardReading, isUrgent, nextStep, opening, reply, speakable, wantsLook, withReading, type DoctorReply } from '../lib/doctor'
+import { INDICATORS, formatValue } from '../lib/indicators'
+import { canSee, chat, findModel, warm, type ChatMessage } from '../lib/localModel'
 import { useStore } from '../lib/store'
 import { doctorVoice } from '../lib/voices'
 import '../doctor.css'
@@ -11,6 +12,8 @@ import '../doctor.css'
 interface Line extends DoctorReply {
   id: number
   from: 'doctor' | 'you'
+  /** A note under the message, such as a reading that was saved from it. */
+  note?: string
 }
 
 type Phase = 'idle' | 'thinking' | 'speaking' | 'listening'
@@ -45,8 +48,13 @@ function tidy(text: string): string {
 }
 
 export function Doctor() {
-  const { state, viewer } = useStore()
-  const [lines, setLines] = useState<Line[]>(() => [{ id: 0, from: 'doctor', ...opening(state, viewer) }])
+  const { state, viewer, dispatch } = useStore()
+  const [params] = useSearchParams()
+  /** What this call is about. Fixed when the call opens, so the plan stays even after the reading improves. */
+  const [focus] = useState(() => focusOn(state, viewer, params.get('about')))
+  const [lines, setLines] = useState<Line[]>(() => [{ id: 0, from: 'doctor', ...opening(state, viewer, focus) }])
+  /** True when the model on this device can look at pictures. */
+  const [sees, setSees] = useState(false)
   const [draft, setDraft] = useState('')
   const [hearing, setHearing] = useState('')
   const [voice, setVoice] = useState(false)
@@ -63,6 +71,9 @@ export function Doctor() {
   const turn = useRef(0)
   const misses = useRef(0)
   const modelNow = useRef<string | null>(null)
+  const seesNow = useRef(false)
+  /** The step of the plan the built-in doctor has reached, when no model is running. */
+  const step = useRef(0)
   const voiceNow = useRef<SpeechSynthesisVoice | undefined>(undefined)
   const asking = useRef<AbortController | null>(null)
   /** Sentences handed to the speech voice in the current turn, and whether more are still to come. */
@@ -158,26 +169,56 @@ export function Doctor() {
   const speakEnd = () => { speech.current.closed = true; settle() }
   const speak = (text: string) => { speakBegin(); sentences(text).forEach(sayPart); speakEnd() }
 
+  /** One still picture from the camera, as base64 JPEG, for a model that can see. */
+  const snapshot = (): string | undefined => {
+    const v = video.current
+    if (!v || !streamNow.current || !v.videoWidth) return undefined
+    const canvas = document.createElement('canvas')
+    canvas.width = 512
+    canvas.height = Math.round((512 * v.videoHeight) / v.videoWidth)
+    canvas.getContext('2d')?.drawImage(v, 0, 0, canvas.width, canvas.height)
+    return canvas.toDataURL('image/jpeg', 0.8).split(',')[1]
+  }
+
   const send = (text: string) => {
     asking.current?.abort()
-    const rule = reply(state, viewer, text)
-    const you: Line = { id: nextId.current++, from: 'you', text }
+    const urgent = isUrgent(text)
+    // A reading said aloud in a call about that reading is saved, and everything after it uses the new state.
+    const heard = urgent ? undefined : heardReading(text, focus?.key)
+    let current = state
+    let note: string | undefined
+    if (heard) {
+      const added = withReading(state, viewer, heard.key, heard)
+      current = added.state
+      dispatch({ type: 'reading', personId: viewer.id, key: heard.key, reading: added.reading })
+      note = `Saved: ${INDICATORS[heard.key].name} ${formatValue(heard.key, heard)} ${INDICATORS[heard.key].unit}`
+    }
+    const general = reply(current, viewer, text)
+    // The built-in doctor: judge a new reading; otherwise answer what was said, or give the next step of a focused call.
+    const rule: DoctorReply = urgent ? general
+      : heard ? afterReading(current, viewer, heard.key)
+      : !focus || general.status !== undefined || general.actions ? general
+      : nextStep(focus, ++step.current)
+    const you: Line = { id: nextId.current++, from: 'you', text, note }
     const using = modelNow.current
     // Urgent words always get the fixed answer. So does everything when no model is running.
-    if (!using || isUrgent(text)) {
+    if (!using || urgent) {
       setLines((ls) => [...ls, you, { id: nextId.current++, from: 'doctor', ...rule }])
       if (voiceOn.current) speak(rule.text)
       return
     }
+    const lastSaid = [...lines].reverse().find((l) => l.from === 'doctor')?.text
+    const picture = seesNow.current && wantsLook(text, lastSaid) ? snapshot() : undefined
+    if (picture) you.note = [you.note, 'Sent with a picture from your camera'].filter(Boolean).join(' · ')
 
     const id = nextId.current++
     const write = (t: string) => setLines((ls) => ls.map((l) => (l.id === id ? { ...l, text: t } : l)))
     const messages: ChatMessage[] = [
-      { role: 'system', content: briefing(state, viewer) },
+      { role: 'system', content: briefing(current, viewer, { focus, camera: picture ? 'picture' : streamNow.current && seesNow.current ? 'on' : 'off', note: note ? `They have just told you a new reading in this message. ${note}. It is already in the readings above with its status.` : undefined }) },
       ...lines.slice(-10).filter((l) => l.text).map((l): ChatMessage => ({ role: l.from === 'doctor' ? 'assistant' : 'user', content: l.text })),
-      { role: 'user', content: text },
+      { role: 'user', content: text, images: picture ? [picture] : undefined },
     ]
-    setLines((ls) => [...ls, you, { id, from: 'doctor', text: '', status: rule.status, actions: rule.actions }])
+    setLines((ls) => [...ls, you, { id, from: 'doctor', text: '', status: rule.status, actions: focus ? undefined : general.actions }])
     const ctl = new AbortController()
     asking.current = ctl
     const aloud = voiceOn.current
@@ -231,6 +272,7 @@ export function Doctor() {
       modelNow.current = m
       setModel(m)
       warm(m)
+      canSee(m).then((yes) => { if (active) { seesNow.current = yes; setSees(yes) } })
     })
     return () => { active = false }
   }, [])
@@ -311,6 +353,7 @@ export function Doctor() {
               ? <video ref={video} autoPlay muted playsInline aria-label="Your camera" />
               : <span>Camera off</span>}
             <span className="doctor-self-name">{viewer.name}</span>
+            {stream && sees && <span className="doctor-self-seen">Show something to the doctor</span>}
           </div>
         </div>
 
@@ -324,13 +367,13 @@ export function Doctor() {
         {notice && <p className="body-sm doctor-notice" role="alert">{notice}</p>}
         <p className="card-note">
           A simulated doctor, not a real clinician. {model ? 'Answers are written by a language model running on this device, from your own readings and check-ins. It can make mistakes.' : 'Answers are put together on this device from your own readings and check-ins.'}
-          Your camera picture is only shown to you and is not recorded. In voice mode, your browser's speech service turns what you say into text and may send the audio online to do it.
+          {stream && sees ? 'While the camera is on, a still picture goes to that model when you show it something or ask it to look. Pictures stay on this device and are not kept.' : 'Your camera picture is only shown to you and is not recorded.'} In voice mode, your browser's speech service turns what you say into text and may send the audio online to do it.
         </p>
       </section>
 
       <section className="doctor-talk" aria-label="Conversation">
         <header className="doctor-talk-head">
-          <h1 className="title-3">Talk to the doctor</h1>
+          <h1 className="title-3">{focus ? `About ${focus.title}` : 'Talk to the doctor'}</h1>
           <span className="label">Day {state.day}</span>
         </header>
         <ol className="doctor-lines" aria-live="polite">
@@ -338,6 +381,7 @@ export function Doctor() {
             <li key={l.id} className={`doctor-line from-${l.from} ${l.urgent ? 'is-urgent' : ''}`}>
               <span className="label">{l.from === 'doctor' ? <>{l.status && <StatusShape status={l.status} size={11} />} Doctor</> : 'You'}</span>
               <p>{l.text || '…'}</p>
+              {l.note && <span className="tag">{l.note}</span>}
               {l.actions && (
                 <div className="doctor-actions">
                   {l.actions.map((a) => <Link key={a.to} className="tag tag-link" to={a.to}>{a.label}</Link>)}
@@ -349,7 +393,7 @@ export function Doctor() {
           <li ref={end} aria-hidden="true" />
         </ol>
         <div className="doctor-suggest">
-          {SUGGESTIONS.map((s) => <button key={s} className="tag tag-link" onClick={() => send(s)}>{s}</button>)}
+          {(focus ? ['I feel fine', 'Done. What next?', 'Can you look at this?', 'What does this mean?'] : SUGGESTIONS).map((s) => <button key={s} className="tag tag-link" onClick={() => send(s)}>{s}</button>)}
         </div>
         <form className="doctor-form" onSubmit={submit}>
           <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={phase === 'listening' ? 'Listening. Speak, or type here' : 'Type a question or how you feel'} aria-label="Message to the doctor" />

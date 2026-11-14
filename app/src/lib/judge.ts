@@ -123,6 +123,7 @@ export function classify(key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>, b: Bas
       if (v >= 140 || d >= 90) return { level: 'warning', arrow: '↑' }
       const risen = b.pre !== undefined && b.pre2 !== undefined && (v >= b.pre + 20 || d >= b.pre2 + 15)
       if (v >= 130 || d >= 80 || risen) return { level: 'caution', arrow: '↑' }
+      if (v < 90 || (d > 0 && d < 60)) return { level: 'caution', arrow: '↓' }
       return { level: 'ok' }
     }
     case 'standing':
@@ -130,6 +131,22 @@ export function classify(key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>, b: Bas
     case 'spo2':
       if (v < 90) return { level: 'warning', arrow: '↓', immediate: true }
       if (v < 95) return { level: 'caution', arrow: '↓' }
+      return { level: 'ok' }
+    case 'rr':
+      if (v < 8 || v > 30) return { level: 'warning', arrow: v < 8 ? '↓' : '↑', immediate: true }
+      if (v < 10 || v > 24) return { level: 'caution', arrow: v < 10 ? '↓' : '↑' }
+      return { level: 'ok' }
+    case 'glucose':
+      if (v < 54 || v >= 200) return { level: 'warning', arrow: v < 54 ? '↓' : '↑', immediate: true }
+      if (v < 70 || v >= 100) return { level: 'caution', arrow: v < 70 ? '↓' : '↑' }
+      return { level: 'ok' }
+    case 'intake':
+      if (v < 60) return { level: 'warning', arrow: '↓' }
+      if (v < 80) return { level: 'caution', arrow: '↓' }
+      return { level: 'ok' }
+    case 'hydration':
+      if (v < 1.5) return { level: 'warning', arrow: '↓' }
+      if (v < 2) return { level: 'caution', arrow: '↓' }
       return { level: 'ok' }
     case 'temp': {
       if (v >= 39.5) return { level: 'warning', arrow: '↑', immediate: true }
@@ -148,6 +165,18 @@ export function classify(key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>, b: Bas
       if (v >= 2) return { level: 'warning', immediate: true }
       if (v >= 1) return { level: 'caution' }
       return { level: 'ok' }
+    case 'hearing':
+      if (v >= 25) return { level: 'warning', arrow: '↑' }
+      if (v >= 10) return { level: 'caution', arrow: '↑' }
+      return { level: 'ok' }
+    case 'cognition':
+      if (v < 70 || (b.pre !== undefined && b.pre - v >= 20)) return { level: 'warning', arrow: '↓' }
+      if (v < 80 || (b.pre !== undefined && b.pre - v >= 10)) return { level: 'caution', arrow: '↓' }
+      return { level: 'ok' }
+    case 'balance':
+      if (v < 10) return { level: 'warning', arrow: '↓' }
+      if (v < 20) return { level: 'caution', arrow: '↓' }
+      return { level: 'ok' }
     case 'bone':
       // A modelled value alone never produces a warning (SH5).
       return v < 80 ? { level: 'caution', arrow: '↓' } : { level: 'ok' }
@@ -165,22 +194,34 @@ export function classify(key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>, b: Bas
       if (v > 5) return { level: 'warning', arrow: '↑', immediate: true }
       if (v > 3) return { level: 'caution', arrow: '↑' }
       return { level: 'ok' }
+    case 'o2':
+      if (v < 120) return { level: 'warning', arrow: '↓', immediate: true }
+      if (v < 145) return { level: 'caution', arrow: '↓' }
+      return { level: 'ok' }
+    case 'noise':
+      if (v >= 72) return { level: 'warning', arrow: '↑' }
+      if (v > 60) return { level: 'caution', arrow: '↑' }
+      return { level: 'ok' }
+    case 'water':
+      if (v < 0.05) return { level: 'warning', arrow: '↓' }
+      if (v < 0.1 || v > 1) return { level: 'caution', arrow: v > 1 ? '↑' : '↓' }
+      return { level: 'ok' }
     case 'mood':
       return v <= 2 ? { level: 'caution', arrow: '↓' } : { level: 'ok' }
   }
 }
 
 export function unavailableReason(key: IndicatorKey, place: Place): string | undefined {
-  if (key === 'standing' && (place === 'spacecraft' || place === 'station')) {
-    return 'The standing test needs gravity.'
+  if ((key === 'standing' || key === 'balance') && (place === 'spacecraft' || place === 'station')) {
+    return key === 'standing' ? 'The standing test needs gravity.' : 'The balance test needs gravity.'
   }
   return undefined
 }
 
 /** How many of the latest readings in a row must be out of range before the status is confirmed. */
-const CONFIRM: Partial<Record<IndicatorKey, number>> = { sleep: 3, exercise: 3, mood: 2 }
-/** Indicators where one reading is enough, because they are totals or self-reports, not spot readings. */
-const NO_REPEAT: IndicatorKey[] = ['radiation', 'cabin', 'vision', 'bone', 'weight', 'standing']
+const CONFIRM: Partial<Record<IndicatorKey, number>> = { sleep: 3, exercise: 3, mood: 2, intake: 3, hydration: 3 }
+/** Indicators where one reading is enough, because they are totals, the environment, or a periodic check. */
+const NO_REPEAT: IndicatorKey[] = ['radiation', 'cabin', 'o2', 'noise', 'water', 'vision', 'hearing', 'cognition', 'bone', 'weight', 'standing', 'balance']
 
 export function judge(state: AppState, person: Person, key: IndicatorKey): Judged {
   const reason = unavailableReason(key, state.place)
@@ -201,7 +242,8 @@ export function judge(state: AppState, person: Person, key: IndicatorKey): Judge
   // One odd reading is not an alarm (SH6): it must be confirmed by the readings before it.
   const need = CONFIRM[key] ?? 2
   const recent = resting.slice(-need)
-  const confirmed = recent.length === need && recent.every((r) => classify(key, r, b).level !== 'ok')
+  // The readings must also point the same way: a low one does not confirm a high one.
+  const confirmed = recent.length === need && recent.every((r) => { const c = classify(key, r, b); return c.level !== 'ok' && c.arrow === lvl.arrow })
   if (confirmed) return { status: lvl.level, arrow: lvl.arrow, latest }
   if (key === 'sleep' || key === 'exercise' || key === 'mood') return { status: 'ok', latest }
   return { status: 'repeat', arrow: lvl.arrow, latest }
@@ -356,6 +398,15 @@ export function actionFor(state: AppState, person: Person, item: AttentionItem):
         button: measure,
       }
     case 'bp':
+      if (j.arrow === '↓') {
+        return {
+          observed: item.status === 'warning'
+            ? 'Blood pressure is very low: the upper value is under 80.'
+            : 'Blood pressure has been below 90 over 60 on two readings in a row.',
+          next: 'Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today.',
+          button: measure,
+        }
+      }
       return {
         observed: 'Blood pressure has been above the usual range on two readings in a row.',
         next: 'Rest for 5 minutes and repeat the reading. Tell the medical lead today.',
@@ -417,6 +468,61 @@ export function actionFor(state: AppState, person: Person, item: AttentionItem):
         next: 'Repeat the vision check with each eye and contact the ground at the next opportunity.',
         button: { label: 'Repeat check', to: `${base}/measure/${key}` },
       }
+    case 'rr':
+      return {
+        observed: 'Breathing rate has stayed outside 10 to 24 breaths a minute.',
+        next: 'Sit still and count again for one minute. Tell the medical lead if it stays high or very low.',
+        button: measure,
+      }
+    case 'glucose':
+      return {
+        observed: j.arrow === '↓' ? 'Fasting blood sugar is below 70 mg/dL.' : 'Fasting blood sugar is at or above 100 mg/dL.',
+        next: 'Wash the finger and repeat the fingerstick. Eat if it is low. Tell the medical lead if it stays out of range.',
+        button: measure,
+      }
+    case 'intake':
+      return {
+        observed: 'Less than 80% of the food plan was eaten for several days.',
+        next: 'Finish today’s meals. Tell the medical lead if food is being left because of taste, nausea, or time.',
+      }
+    case 'hydration':
+      return {
+        observed: 'Fluid drunk is under 2 litres. Low drinking raises the chance of a kidney stone.',
+        next: 'Drink water through the rest of the day and log it.',
+      }
+    case 'hearing':
+      return {
+        observed: 'Hearing has shifted by 10 dB or more from before flight.',
+        next: 'Repeat the hearing check in a quiet module and limit time beside the loudest fans. Tell the medical lead.',
+        button: measure,
+      }
+    case 'cognition':
+      return {
+        observed: 'The thinking score is 10 points or more below the before-flight score.',
+        next: 'Repeat the short test once after sleep. Tell the medical lead if the drop remains.',
+        button: measure,
+      }
+    case 'balance':
+      return {
+        observed: 'The balance test was held for under 20 seconds.',
+        next: 'Repeat it with a crewmate beside you. Tell the medical lead if standing still is hard.',
+        button: measure,
+      }
+    case 'o2':
+      return {
+        observed: 'Cabin oxygen is below 145 mmHg.',
+        next: 'Check the oxygen supply and the cabin pressure. Watch for headache, tiredness, and fast breathing.',
+      }
+    case 'noise':
+      return {
+        observed: 'Cabin noise has averaged above 60 dBA.',
+        next: 'Use hearing protection near the loud equipment and sleep in the quieter module.',
+      }
+    case 'water':
+      return {
+        observed: j.arrow === '↑' ? 'The biocide in the drinking water is high.' : 'The biocide in the drinking water is too low to hold microbes back.',
+        next: 'Do not ignore a failed water sample. Use the reserve water and tell the ground.',
+      }
     default:
       return {
         observed: `${def.name} is outside the usual range.`,
@@ -477,6 +583,26 @@ export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {
       return { limits: [{ v: 480, label: '80% of limit' }, { v: 600, label: 'Career limit' }] }
     case 'cabin':
       return { limits: [{ v: 3, label: '3 mmHg' }] }
+    case 'rr':
+      return { band: [12, 20], bandLabel: 'Usual', limits: [{ v: 10, label: '10' }, { v: 24, label: '24' }] }
+    case 'glucose':
+      return { band: [70, 99], bandLabel: 'Fasting', limits: [{ v: 70, label: '70' }, { v: 100, label: '100' }] }
+    case 'intake':
+      return { limits: [{ v: 80, label: '80% of plan' }] }
+    case 'hydration':
+      return { limits: [{ v: 2, label: '2 L' }] }
+    case 'hearing':
+      return { limits: [{ v: 10, label: '10 dB' }] }
+    case 'cognition':
+      return { limits: b.pre !== undefined ? [{ v: b.pre - 10, label: '−10 from yours' }] : [{ v: 80, label: '80' }] }
+    case 'balance':
+      return { limits: [{ v: 20, label: '20 s' }] }
+    case 'o2':
+      return { limits: [{ v: 145, label: '145 mmHg' }] }
+    case 'noise':
+      return { limits: [{ v: 60, label: '60 dBA' }] }
+    case 'water':
+      return { limits: [{ v: 0.1, label: '0.10 mg/L' }] }
     case 'mood':
       return { limits: [{ v: 2, label: '2 of 5' }] }
     default:

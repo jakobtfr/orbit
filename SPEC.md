@@ -145,15 +145,25 @@ The camera picture is shown only to the viewer and is not recorded or analysed. 
 | Blood pressure | Chest | R2 | Smart shirt | Measured | 1 day |
 | Standing blood pressure test | Chest | R3 | Entered by hand | Measured | 7 days |
 | Blood oxygen | Chest | R5 | Smart shirt | Measured | 1 day |
+| Breathing rate | Chest | R13 | Smart shirt | Measured | 1 day |
 | Body temperature | Whole body | R4 | Entered by hand | Measured | 1 day |
 | Body weight | Whole body | R10 | Body mass device | Measured | 7 days |
+| Blood sugar | Whole body | R14 | Fingerstick | Measured | 7 days |
+| Food eaten | Whole body | R15 | Food log | Self-reported | 1 day |
+| Fluid drunk | Whole body | R16 | Drink log | Self-reported | 1 day |
+| Balance test | Whole body | R22 | Entered by hand | Measured | 7 days |
 | Vision check | Head | R12 | Entered by hand | Self-reported | 30 days |
+| Hearing check | Head | R19 | Hearing test | Measured | 30 days |
+| Thinking check | Head | R18 | Short thinking test | Measured | 14 days |
 | Symptoms | By region | None | Check-in | Self-reported | 2 days |
 | Bone protection | Hips and spine | R9 | Estimated from exercise | Modelled | 1 day |
 | Sleep | Activity | R6 | Wrist tracker | Measured | 1 day |
 | Exercise | Activity | R9 | Exercise machines | Measured | 1 day |
 | Radiation dose | Activity | R8 | Radiation monitor | Measured | 1 day |
 | Cabin air | Activity | R11 | Cabin monitor | Measured | 1 hour |
+| Cabin oxygen | Activity | R17 | Cabin monitor | Measured | 1 day |
+| Cabin noise | Activity | R20 | Cabin monitor | Measured | 1 day |
+| Potable water | Activity | R21 | Water monitor | Measured | 14 days |
 | Mood | Mental Health, private | R7 | Check-in | Self-reported | 2 days |
 
 Maximum ages are our own prototype values, not sourced.
@@ -176,7 +186,7 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 | Judging a reading | Against the personal normal and flight-adjusted limits in `lib/judge.ts`, simplified from rules R1 to R12. |
 | One odd reading | Spot readings out of range once show Repeat reading; a confirming reading makes it Caution or Warning (SH6). Readings dangerous on their own, such as blood oxygen below 90%, skip the repeat. |
 | Old readings | Older than the maximum age shows No recent data, never green (SH8). |
-| Place | Set by the mission day. The standing test is Unavailable in the spacecraft (SH4). The radiation review line is 0.9 mSv/day on the surface and 1.3 mSv/day in free space. |
+| Place | Set by the mission day. The standing test and the balance test are Unavailable in the spacecraft (SH4). The radiation review line is 0.9 mSv/day on the surface and 1.3 mSv/day in free space. |
 | Saving a reading | Added to the record and judged at once. |
 | Finishing a check-in | Logged symptoms mark their region; the check-in shows as done for the day. |
 | Replay | `lib/replay.ts`: Earth cutoffs on any single day against personal rules on two days in a row. Tests reproduce 25.5% and 5.9%. |

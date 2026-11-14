@@ -8,6 +8,8 @@ const HOST = 'http://localhost:11434'
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant'
   content: string
+  /** Still pictures as base64, for models that can see. */
+  images?: string[]
 }
 
 /** The model to use, or null when Ollama is not reachable. A Llama model is preferred when several are installed. */
@@ -20,6 +22,17 @@ export async function findModel(): Promise<string | null> {
     return names.find((n) => /^llama/i.test(n)) ?? names[0] ?? null
   } catch {
     return null
+  }
+}
+
+/** True when the model can look at pictures. */
+export async function canSee(model: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${HOST}/api/show`, { method: 'POST', body: JSON.stringify({ model }), signal: AbortSignal.timeout(3000) })
+    const data = (await res.json()) as { capabilities?: string[] }
+    return !!data.capabilities?.includes('vision')
+  } catch {
+    return false
   }
 }
 

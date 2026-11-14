@@ -5,26 +5,39 @@ import { attention, checkedInToday, judge, regionStatus } from './judge'
 import type { AppState, IndicatorKey, Reading } from './types'
 
 const statuses = (s: AppState) => Object.fromEntries(INDICATOR_ORDER.map((k) => [k, judge(s, LENA, k).status]))
+/** The demo state without its low blood pressure, for tests that need everything in range. */
+function calm(): AppState {
+  const s = initialState()
+  s.readings.lena.bp!.filter((r) => r.t > 99).forEach((r) => { r.v = 110; r.v2 = 66 })
+  return s
+}
 const add = (s: AppState, k: IndicatorKey, t: number, v: number, v2?: number) =>
   s.readings.lena[k]!.push({ t, v, v2, activity: 'rest', source: 'Entered by hand', provenance: 'MEASURED' } satisfies Reading)
 
 describe('Lena on mission day 100', () => {
   const s = initialState()
 
-  it('everything in range, 38.0 °C is not a fever (SH2)', () => {
+  it('only the low blood pressure stands out, and 38.0 °C is not a fever (SH2)', () => {
     const st = statuses(s)
     expect(judge(s, LENA, 'temp').latest?.v).toBe(38)
     expect(st.temp).toBe('ok')
     expect(st.standing).toBe('unavailable')
+    expect(st.balance).toBe('unavailable')
+    expect(st.rr).toBe('ok')
+    expect(st.glucose).toBe('ok')
+    expect(st.o2).toBe('ok')
     expect(st.bone).toBe('ok')
-    expect(attention(s, LENA)).toEqual([])
+    expect(st.bp).toBe('caution')
+    expect(judge(s, LENA, 'bp').arrow).toBe('↓')
+    expect(attention(s, LENA).map((i) => i.key)).toEqual(['bp'])
+    expect(attention(calm(), LENA)).toEqual([])
     expect(checkedInToday(s, 'lena')).toBe(false)
   })
 })
 
 describe('fake logic', () => {
   it('one high blood pressure is a repeat; a second confirms caution; an in-range one clears it (SH6)', () => {
-    const s = initialState()
+    const s = calm()
     add(s, 'bp', 100.32, 145, 92)
     expect(judge(s, LENA, 'bp').status).toBe('repeat')
     expect(attention(s, LENA).length).toBe(1)
@@ -34,8 +47,15 @@ describe('fake logic', () => {
     expect(judge(s, LENA, 'bp').status).toBe('ok')
   })
 
-  it('a reported headache marks the head (SH3)', () => {
+  it('two low blood pressures in a row are a caution, and a high one after a low one is only a repeat', () => {
     const s = initialState()
+    expect(judge(s, LENA, 'bp').status).toBe('caution')
+    add(s, 'bp', 100.32, 145, 92)
+    expect(judge(s, LENA, 'bp').status).toBe('repeat')
+  })
+
+  it('a reported headache marks the head (SH3)', () => {
+    const s = calm()
     s.checkins.lena.push({ t: 100.32, feel: 'Not quite right', symptoms: [{ name: 'Headache', region: 'head' }], mood: 3 })
     expect(regionStatus(s, LENA, 'head')).toBe('caution')
     expect(attention(s, LENA).length).toBe(1)

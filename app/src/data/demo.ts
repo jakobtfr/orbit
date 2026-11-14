@@ -103,6 +103,16 @@ function buildReadings(p: Person): Partial<Record<IndicatorKey, Reading[]>> {
     sleep: [],
     exercise: [],
     radiation: [],
+    rr: [],
+    glucose: [],
+    intake: [],
+    hydration: [],
+    hearing: [],
+    cognition: [],
+    balance: [],
+    o2: [],
+    noise: [],
+    water: [],
   }
   let dose = pf.radiation!.v
   // Illustrative correlated drift, not a calibrated physiology or radiation model.
@@ -120,11 +130,23 @@ function buildReadings(p: Person): Partial<Record<IndicatorKey, Reading[]>> {
     out.hr!.push(reading('hr', d + 0.3125, hr))
 
     // Blood pressure runs lower in flight.
-    const sys = pf.bp!.v - 9 * settle + noise('sys', d, 0.4, 4)
-    const dia = pf.bp!.v2! - 6 * settle + noise('dia', d, 0.4, 4)
+    let sys = pf.bp!.v - 9 * settle + noise('sys', d, 0.4, 4)
+    let dia = pf.bp!.v2! - 6 * settle + noise('dia', d, 0.4, 4)
+    // The scene: blood pressure has been low for two mornings, so there is something to talk to the doctor about.
+    if (d === SCENE_DAY - 1) { sys = 89; dia = 58 }
+    if (d === SCENE_DAY) { sys = 86; dia = 54 }
     out.bp!.push(reading('bp', d + 0.3125, sys, dia))
 
     out.spo2!.push(reading('spo2', d + 0.3125, 97 + Math.floor(rand(d, 1) * 3)))
+    out.rr!.push(reading('rr', d + 0.33, 13 + Math.floor(rand(d, 31) * 4)))
+    if ((d - FIRST_DAY) % 3 === 1) out.glucose!.push(reading('glucose', d + 0.27, 86 + Math.floor(rand(d, 32) * 8)))
+    out.intake!.push(reading('intake', d + 0.7, 92 + Math.floor(rand(d, 33) * 10)))
+    out.hydration!.push(reading('hydration', d + 0.72, 2.4 + rand(d, 34) * 0.5))
+    if (d % 14 === 0) out.hearing!.push(reading('hearing', d + 0.4, Math.floor(rand(d, 37) * 4)))
+    if (d % 7 === 0) out.cognition!.push(reading('cognition', d + 0.45, 90 + Math.floor(rand(d, 36) * 6)))
+    out.o2!.push(reading('o2', d + 0.2, 156 + Math.floor(rand(d, 35) * 8)))
+    out.noise!.push(reading('noise', d + 0.21, 48 + Math.floor(rand(d, 38) * 6)))
+    if (d % 7 === 0) out.water!.push(reading('water', d + 0.22, 0.25 + rand(d, 39) * 0.15))
 
     // Body temperature rises about 1 °C in flight and levels off near day 75.
     let temp = pf.temp!.v + (flight ? 1.0 * (1 - Math.exp(-d / 22)) : 0) + noise('temp', d, 0.4, 0.15) + thermalDrift
@@ -152,6 +174,7 @@ function buildReadings(p: Person): Partial<Record<IndicatorKey, Reading[]>> {
     // The standing test is only done where there is gravity, once a week.
     if (flight && phaseFor(d).place !== 'spacecraft' && d % 7 === 0) {
       out.standing!.push(reading('standing', d + 0.33, 6 + Math.floor(rand(d, 6) * 9)))
+      out.balance!.push(reading('balance', d + 0.35, 26 + Math.floor(rand(d, 40) * 5)))
     }
   }
   return out

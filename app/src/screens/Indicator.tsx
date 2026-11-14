@@ -107,6 +107,7 @@ export function Indicator() {
       )}
 
       {action && <NextActionCard action={action} />}
+      {action && (j.status === 'caution' || j.status === 'warning') && <Link className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} to={`/doctor?about=${k}`}>Talk it through with the doctor</Link>}
 
       {def.chart && j.status !== 'unavailable' && (
         <section>

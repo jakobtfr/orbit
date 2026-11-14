@@ -20,14 +20,24 @@ export interface DoctorReply {
   urgent?: boolean
 }
 
-export const SUGGESTIONS = ['How are my results?', 'How is my heart?', 'What should I do next?', 'I have a headache']
+export const SUGGESTIONS = ['How are my results?', 'What should I do next?', 'I have a headache', 'Can you look at this rash?']
 
 const AREA: Record<IndicatorKey, string> = {
   hr: 'your chest',
   bp: 'your chest',
   standing: 'your chest',
   spo2: 'your chest',
+  rr: 'your breathing',
   temp: 'your temperature',
+  glucose: 'your blood sugar',
+  intake: 'your food',
+  hydration: 'how much you drink',
+  hearing: 'your hearing',
+  cognition: 'your thinking',
+  balance: 'your balance',
+  o2: 'the cabin oxygen',
+  noise: 'the cabin noise',
+  water: 'the drinking water',
   weight: 'your weight',
   vision: 'your eyes',
   bone: 'your bones',
@@ -108,7 +118,15 @@ export function assessment(state: AppState, person: Person): DoctorReply {
 }
 
 /** What the doctor says when the conversation opens. */
-export function opening(state: AppState, person: Person): DoctorReply {
+export function opening(state: AppState, person: Person, focus?: Focus): DoctorReply {
+  if (focus) {
+    const latest = focus.key ? judge(state, person, focus.key).latest : undefined
+    const last = focus.key && latest ? ` Your last reading was ${withUnit(focus.key, latest)}, ${age(now(state), latest.t)}.` : ''
+    return {
+      status: focus.status,
+      text: `Hello ${firstName(person)}. I am here about ${focus.title}. ${focus.finding}${last} Let us sort it out together, one step at a time. ${focus.steps[0]}`,
+    }
+  }
   const a = assessment(state, person)
   const ask = a.status === 'ok' ? 'How are you feeling today?' : 'How do you feel right now?'
   return { ...a, text: `Hello ${firstName(person)}. I have looked at your readings for day ${state.day}. ${a.text} ${ask}` }
@@ -180,18 +198,26 @@ interface Topic {
 
 const TOPICS: Topic[] = [
   { match: /blood pressure|\bpressure\b|\bbp\b/, keys: ['bp', 'standing'] },
-  { match: /oxygen|saturation|spo2|breath/, keys: ['spo2'] },
+  { match: /saturation|spo2|blood oxygen/, keys: ['spo2'] },
+  { match: /breath|respir/, keys: ['rr', 'spo2'] },
   { match: /heart|pulse|\bbpm\b|cardiac/, keys: ['hr', 'bp'] },
-  { match: /chest|lung/, keys: ['hr', 'bp', 'spo2'] },
+  { match: /chest|lung/, keys: ['hr', 'bp', 'spo2', 'rr'] },
   { match: /temperature|fever|\bhot\b|\bcold\b/, keys: ['temp'] },
-  { match: /weight|\bkilos?\b|eating|appetite/, keys: ['weight'] },
+  { match: /weight|\bkilos?\b|eating|appetite|food|meal|nutrition/, keys: ['weight', 'intake'] },
+  { match: /blood sugar|glucose/, keys: ['glucose'] },
+  { match: /thirst|hydrat|drink|urine|kidney/, keys: ['hydration'] },
+  { match: /\bhearing\b|deaf/, keys: ['hearing'] },
+  { match: /think|focus|cognit|memory|concentrat/, keys: ['cognition'] },
+  { match: /balance|unsteady|gait/, keys: ['balance'] },
+  { match: /noise|loud/, keys: ['noise', 'hearing'] },
   { match: /vision|eyes?\b|sight|\bsee\b/, keys: ['vision'] },
   { match: /\bhead\b/, keys: ['vision', 'cabin'] },
   { match: /bones?\b|hips?\b|spine|\bback\b|muscles?/, keys: ['bone', 'exercise'] },
   { match: /exercise|training|workout|treadmill/, keys: ['exercise', 'bone'] },
   { match: /sleep|slept/, keys: ['sleep'] },
   { match: /radiation|dose|solar/, keys: ['radiation'] },
-  { match: /\bair\b|carbon dioxide|\bco2\b|co₂|cabin/, keys: ['cabin'] },
+  { match: /\bair\b|carbon dioxide|\bco2\b|co₂|cabin/, keys: ['cabin', 'o2'] },
+  { match: /drinking water|potable|biocide/, keys: ['water'] },
 ]
 
 interface Complaint {
@@ -204,7 +230,7 @@ interface Complaint {
 const COMPLAINTS: Complaint[] = [
   { match: /headache|head (hurts|aches|is pounding)|migraine/, name: 'a headache', keys: ['cabin', 'sleep'], advice: 'Headaches are common here, and stale air or short sleep are the usual reasons. Drink water and rest for a while.' },
   { match: /dizz|light.?headed|vertigo|spinning/, name: 'dizziness', keys: ['bp', 'hr'], advice: 'Sit or hold on to something until it passes, and drink water.' },
-  { match: /rash|itch|skin (is|feels|looks)/, name: 'a skin rash', keys: [], advice: 'Rashes are the most common complaint in a closed cabin. Keep the area clean and dry, and do not scratch it.' },
+  { match: /rash|itch|skin (is|feels|looks)|\b(bumps?|lumps?|swelling|swollen|bruise|blister|spots?|cut|wound|scratch|sore)\b/, name: 'something on the skin', keys: [], advice: 'Skin problems are the most common complaint in a closed cabin. Keep the area clean and dry, do not scratch or squeeze it, and note its size so you can tell whether it changes.' },
   { match: /cough|sore throat|runny nose|a cold\b|congest/, name: 'a cold or cough', keys: ['temp', 'spo2'], advice: 'Rest, drink water, and keep your distance from the others where you can.' },
   { match: /feverish|i have a fever|shiver|chills|burning up/, name: 'feeling feverish', keys: ['temp'], advice: 'Rest and drink water, and take your temperature again in an hour.' },
   { match: /tired|exhaust|fatigue|no energy|can'?t sleep|cannot sleep|insomnia|sleepy/, name: 'tiredness', keys: ['sleep', 'cabin'], advice: 'Protect tonight’s sleep: dim the lights and stop work an hour before.' },
@@ -301,6 +327,11 @@ export function speakable(text: string): string {
     .replace(/mmHg CO₂/g, 'millimetres of mercury of carbon dioxide')
     .replace(/mmHg/g, 'millimetres of mercury')
     .replace(/\bbpm\b/g, 'beats per minute')
+    .replace(/breaths\/min/g, 'breaths per minute')
+    .replace(/mg\/dL/g, 'milligrams per decilitre')
+    .replace(/mg\/L/g, 'milligrams per litre')
+    .replace(/dBA/g, 'decibels')
+    .replace(/\bdB\b/g, 'decibels')
     .replace(/°C/g, 'degrees Celsius')
     .replace(/\bmSv\b/g, 'millisieverts')
     .replace(/CO₂/g, 'carbon dioxide')
@@ -315,7 +346,7 @@ export function speakable(text: string): string {
  * What the on-device language model is told before the conversation. It gets the same findings the
  * built-in answers use, so it can choose the words but not the facts.
  */
-export function briefing(state: AppState, person: Person): string {
+export function briefing(state: AppState, person: Person, call: { focus?: Focus; camera?: 'off' | 'on' | 'picture'; note?: string } = {}): string {
   const readings = INDICATOR_ORDER.filter((k) => k !== 'mood').map((key) => {
     const def = INDICATORS[key]
     const j = judge(state, person, key)
@@ -331,10 +362,125 @@ export function briefing(state: AppState, person: Person): string {
   const symptoms = activeSymptoms(state, person.id).map((s) => s.name.toLowerCase())
   return [
     `You are the ORBIT doctor, a simulated doctor on a video call with ${person.name} (${person.role}), a crew member on a long space mission. It is mission day ${state.day}. You are a simulation, not a real clinician, and you say so if asked.`,
-    'How to talk: warm, calm, and plain, like a good family doctor who knows this person. Your words are read aloud, so answer in two to four short sentences with no lists, no headings, no markdown, and no emojis. Ask at most one follow-up question.',
+    'How to talk: warm, calm, and plain, like a good family doctor who knows this person. Your words are read aloud, so answer in two or three short sentences with no lists, no headings, no markdown, and no emojis. Ask at most one question. Do not repeat advice you have already given in this call, and do not read their readings back unless they ask or one has changed.',
     `Rules: every number and finding you mention must come from the readings below. Never invent a value; if something is not listed, say it is not measured. Go by the status given for each reading: it is judged against this person's own normal, not against Earth limits. Do not name a diagnosis and do not suggest medicines or doses. If something sounds serious, tell them to call ${medicalLead()}. Mood and the diary are private and you cannot see them. If asked about something unrelated, answer briefly and come back to how they are.`,
     `Your overall read of today: ${assessment(state, person).text}`,
     `Readings:\n${readings.join('\n')}`,
     `Symptoms logged in the last two days: ${symptoms.length ? symptoms.join(', ') : 'none'}.`,
-  ].join('\n\n')
+    'How to help with a problem, whatever it is: a reading that is off, a rash, a bump, a pain, a cut, poor sleep, or anything else they bring up. First find out what they notice and how they feel. If it is something that can be seen, ask them to show it to the camera. Then give one practical, safe, first-aid level thing to do, wait for their answer, and go on from what they say. Never give a list of steps at once. If it is about a reading, have them rest and take it again and tell you the numbers: a reading they say aloud is saved and appears above with its status, so go by that status. Finish by saying plainly what to watch for and when to tell the medical lead, and suggest logging it in the daily check-in so it stays on their record.',
+    call.focus
+      ? `This call was opened about ${call.focus.title}. ${call.focus.finding} The usual next step for it: ${call.focus.next} Start there, but help just as readily with anything else they raise.`
+      : '',
+    call.camera === 'picture'
+      ? 'Their latest message comes with one still picture from their camera, because they are showing you something. Say plainly what you can actually see in it: where it is, its colour, its rough size, how a sensor or dressing sits. If the picture is dark, blurred, or does not show what they mean, say so and ask them to hold it closer or turn towards the light. Describe, do not diagnose, and never judge their health from how they look.'
+      : call.camera === 'on'
+        ? 'Their camera is on, but you only get a picture when they show you something. Do not describe or guess what they look like. If something is worth seeing, ask them to hold it up to the camera.'
+        : 'Their camera is off, so you cannot see them. If something is worth seeing, ask them to turn the camera on, or to describe it.',
+    call.note ?? '',
+  ].filter(Boolean).join('\n\n')
+}
+
+/* ---------- a call about one thing ---------- */
+
+/** What a call was opened about: any reading that is off or any symptom that was logged. */
+export interface Focus {
+  /** Set when the call is about a reading. */
+  key?: IndicatorKey
+  /** How it is named in a sentence: "your blood pressure", "the skin rash you logged". */
+  title: string
+  status: StatusKey
+  finding: string
+  next: string
+  /** What the built-in doctor walks through when no language model is running. */
+  steps: string[]
+}
+
+/**
+ * What a call should be about: the reading or body region asked for, or else the most serious thing
+ * that is off. Nothing here is written for one condition; it all comes from the rules and the
+ * measuring instructions. Undefined when nothing is off, and then the doctor just talks.
+ */
+export function focusOn(state: AppState, person: Person, about?: string | null): Focus | undefined {
+  const items = attention(state, person).filter((i) => isOff(i.status) || i.status === 'repeat')
+  const item = about ? items.find((i) => i.key === about || (i.kind === 'symptom' && i.region === about)) : items.find((i) => isOff(i.status))
+  if (!item) return undefined
+  const a = actionFor(state, person, item)
+  const feel = 'First, how do you feel right now?'
+  if (item.kind === 'symptom') {
+    return {
+      status: item.status,
+      title: `the ${item.label.toLowerCase()} you logged`,
+      finding: a.observed,
+      next: a.next,
+      steps: [feel, 'Tell me about it: where it is, when it started, and whether it is getting better or worse. If it is something that can be seen, describe its size and colour.', a.next],
+    }
+  }
+  const def = INDICATORS[item.key as IndicatorKey]
+  return {
+    key: item.key,
+    status: item.status,
+    title: `your ${def.name.toLowerCase()}`,
+    finding: a.observed,
+    next: a.next,
+    steps: [feel, ...def.steps, 'Now take the reading again and tell me the result.', a.next],
+  }
+}
+
+/**
+ * A reading the person says out loud: "it is 104 over 68", "pulse is 64", "37.2 degrees".
+ * The words say which reading it is; a bare number counts only for the reading the call is about.
+ */
+export function heardReading(said: string, hint?: IndicatorKey): { key: IndicatorKey; v: number; v2?: number } | undefined {
+  const q = said.toLowerCase().replace(/(\d),(\d)/g, '$1.$2')
+  const within = (n: number, lo: number, hi: number) => n >= lo && n <= hi
+  const pair = q.match(/(\d{2,3})\s*(?:over|\/|on|by)\s*(\d{2,3})/)
+  if (pair) {
+    const [v, v2] = [Number(pair[1]), Number(pair[2])]
+    return within(v, 50, 250) && within(v2, 30, 150) && v > v2 ? { key: 'bp', v, v2 } : undefined
+  }
+  const n = Number(q.match(/\d{2,3}(?:\.\d)?/)?.[0])
+  if (!Number.isFinite(n)) return undefined
+  const range: Partial<Record<IndicatorKey, [number, number]>> = { hr: [30, 220], spo2: [50, 100], temp: [34, 42], weight: [35, 150], sleep: [0, 14] }
+  const named: IndicatorKey | undefined =
+    /bpm|beats|pulse|heart rate/.test(q) ? 'hr'
+    : /percent|%|oxygen|saturation/.test(q) ? 'spo2'
+    : /degrees|celsius|°|temperature/.test(q) ? 'temp'
+    : /kilos?\b|kilograms?|\bkg\b|weigh/.test(q) ? 'weight'
+    : undefined
+  const key = named ?? (hint && /\b(reading|result|it is|it's|it says|shows|now)\b/.test(q) ? hint : undefined)
+  const r = key && range[key]
+  return key && r && within(n, r[0], r[1]) ? { key, v: n } : undefined
+}
+
+/** The state with one more reading in it, taken now. */
+export function withReading(state: AppState, person: Person, key: IndicatorKey, r: Pick<Reading, 'v' | 'v2'>): { state: AppState; reading: Reading } {
+  const reading: Reading = { t: now(state), v: r.v, v2: r.v2, activity: 'rest', source: 'Told to the doctor', provenance: 'SELF-REPORTED' }
+  const mine = state.readings[person.id] ?? {}
+  return { reading, state: { ...state, readings: { ...state.readings, [person.id]: { ...mine, [key]: [...(mine[key] ?? []), reading] } } } }
+}
+
+/** What the built-in doctor says after a new reading in a focused call. */
+export function afterReading(state: AppState, person: Person, key: IndicatorKey): DoctorReply {
+  const j = judge(state, person, key)
+  const value = j.latest ? withUnit(key, j.latest) : 'that'
+  if (j.status === 'ok') return { status: 'ok', text: `Thank you. ${value} is back in your usual range. Take it easy for the next hour, get up slowly, and check again this evening.` }
+  return { status: j.status, text: `Thank you. ${value} is still outside your usual range. Stay resting and tell ${medicalLead()}, today. I will be here if anything changes.` }
+}
+
+/** The built-in doctor's next step in a focused call, when no language model is running. */
+export function nextStep(focus: Focus, index: number): DoctorReply {
+  const step = focus.steps[index]
+  return step
+    ? { status: focus.status, text: index === focus.steps.length - 1 ? `Last step. ${step}` : `Good. ${step}` }
+    : { text: 'That is the whole plan. Tell me the new reading whenever you have it, or ask me anything else.' }
+}
+
+/**
+ * True when the person is showing something, so a picture from the camera should go with their message:
+ * they say so, or the doctor has just asked to see it.
+ */
+export function wantsLook(said: string, doctorSaid = ''): boolean {
+  const q = said.toLowerCase()
+  if (/\b(look|see|seeing|show|showing|camera|picture|visible|here it is|like this|this (rash|bump|spot|cut|mark|lump|bruise|swelling|sensor|cuff))\b/.test(q)) return true
+  return /\b(show me|let me see|hold (it|that|the|your)[^.?!]*\b(up|camera)|to the camera|can i see|turn (it|towards))\b/i.test(doctorSaid)
 }

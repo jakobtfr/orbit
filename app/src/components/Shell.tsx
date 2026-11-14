@@ -1,10 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { phaseFor } from '../lib/mission'
+import { CallProvider, useCall } from '../lib/call'
 import { useStore } from '../lib/store'
+import { Doctor } from '../screens/Doctor'
 
 export function Shell() {
+  return <CallProvider><ShellFrame /></CallProvider>
+}
+
+function ShellFrame() {
   const { state, viewer } = useStore()
+  const { call, openCall, closeCall } = useCall()
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
   const phase = phaseFor(state.day)
@@ -18,10 +25,10 @@ export function Shell() {
       <div className="header-system"><span className="header-phase">{phase.label}</span><span className="header-day">Day {state.day}</span></div>
       <div className="topbar-space" />
       <div className="viewer"><span className="viewer-name">{viewer.name}</span><span className="label">{viewer.role}</span></div>
-      <Link className="doctor-button" to="/doctor">
+      <button className="doctor-button" onClick={() => openCall()}>
         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="10.5" height="10" rx="2.5" /><path d="m13 9 4.5-2.5v7L13 11" /></svg>
         Talk to the doctor
-      </Link>
+      </button>
     </header>
     <div className="shell-body">
       <nav className="planet-nav" aria-label="Health navigation">
@@ -30,6 +37,7 @@ export function Shell() {
         <NavLink to="/mental-health"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17S2 12 2 7a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5-8 10-8 10Z" /></svg>My Personal Diary</NavLink>
       </nav>
       <main className="main" ref={mainRef}><Outlet /></main></div>
+    {call && <Doctor about={call.about} onClose={closeCall} />}
   </div>
 }
 

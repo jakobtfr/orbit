@@ -30,7 +30,7 @@ describe('Planet workspace pages', () => {
     expect(html).toContain('Download data')
     expect(html).not.toMatch(/NaN|Infinity/)
     expect(html).not.toContain('href="/flight"')
-    expect(html).toContain('href="/doctor"')
+    expect(html).toContain('Talk to the doctor')
     expect(html).not.toContain('nasa-logo')
   })
   it('renders a private check-in and breathing controls without a medical completion action', () => {

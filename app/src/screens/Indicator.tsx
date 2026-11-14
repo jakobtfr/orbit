@@ -7,6 +7,7 @@ import { NextActionCard, ValueLine } from '../components/Tiles'
 import { FIRST_DAY } from '../data/demo'
 import { age, signed, stamp } from '../lib/format'
 import { INDICATORS, REGIONS, formatValue } from '../lib/indicators'
+import { useCall } from '../lib/call'
 import { actionFor, activeSymptoms, baselines, chartGuide, judge, now, readingsFor, symptomsFor } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { IndicatorKey, RegionKey } from '../lib/types'
@@ -23,6 +24,7 @@ export function Indicator() {
   const person = usePerson()
   const { key } = useParams()
   const { state } = useStore()
+  const { openCall } = useCall()
   const [range, setRange] = useState(30)
   if (!person || !key || !(key in INDICATORS)) return <Missing />
 
@@ -107,7 +109,7 @@ export function Indicator() {
       )}
 
       {action && <NextActionCard action={action} />}
-      {action && (j.status === 'caution' || j.status === 'warning') && <Link className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} to={`/doctor?about=${k}`}>Talk it through with the doctor</Link>}
+      {action && (j.status === 'caution' || j.status === 'warning') && <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => openCall(k)}>Call the doctor about this</button>}
 
       {def.chart && j.status !== 'unavailable' && (
         <section>

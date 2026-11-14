@@ -23,7 +23,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | Measurements | `#/measurements` | Lena's own measurements: pick any indicator and see its trend against her normal, with CSV export |
 | My Personal Diary | `#/mental-health` | Private mood, energy, separation reflections, family videos, and local recording |
 | Replay | `#/replay` | Real NASA bed-rest data judged by Earth limits and personal rules. `?s=UTMB-40` opens a volunteer |
-| Talk to the doctor | `#/doctor` | Button at the top right of every screen |
+| Call the doctor | pop-up | Prompt on the Dashboard when something is off, or the button at the top right |
 
 The header shows the mission phase for the current day. Outbound and return are the spacecraft; the stay on Mars is the surface. That place decides the standing test and the radiation review line. Readings and the mission day stay as scripted.
 

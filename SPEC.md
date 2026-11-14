@@ -40,7 +40,7 @@ Dashboard ──► Region ──► Indicator ──► Measure
     ├──► Check-in
     └──► Replay
 Mental Health
-Talk to the doctor (from the header, on every screen)
+Call the doctor (a pop-up, from the Dashboard prompt or the header)
 ```
 
 | Screen | Route | The question it answers |
@@ -55,7 +55,7 @@ Talk to the doctor (from the header, on every screen)
 | Measurements | `#/measurements` | What do my own measurements look like over time? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
-| Talk to the doctor | `#/doctor` | Are my results fine, and what should I do? |
+| Call the doctor | pop-up, no route | Something is off: what do I do about it? |
 
 The app opens on the Dashboard.
 
@@ -125,17 +125,18 @@ The evidence screen. Built on real, unaltered NASA UTMB bed-rest data.
 5. **Chart** of one vital at a time with Earth's limit, the volunteer's own normal, and their personal limit.
 6. The rules, the source DOI, and the limit of the evidence: fewer false alarms, not proof that real problems are caught.
 
-### Talk to the doctor
+### Call the doctor
 
-Inside the shell, in two parts. The doctor is simulated and runs on the device. When [Ollama](https://ollama.com) is running on the same machine, answers are written by its language model (`app/src/lib/localModel.ts`), which is given the viewer's readings, their status, and the findings from the rules in `judge.ts` and told to use nothing else. Sentences are spoken as they arrive. When no model is running or it does not answer, the doctor uses its built-in answers (`app/src/lib/doctor.ts`). The opening read and the answer to urgent words are always the built-in ones. Nothing is sent off the device.
+A phone call in a pop-up over whatever screen is showing. There is no doctor page.
 
-1. **Call stage.** The doctor's tile with a "Simulated" tag, its state (Speaking, Listening, Ready), and its latest sentence as a caption. The viewer's own camera sits in the corner. Controls: "Start call" (voice and camera together), "Voice", "Camera", and "End call".
-2. **Conversation.** The doctor opens with a read of today: "Your results look fine", or "Something seems off with your chest" followed by what was observed and the next action. Messages carry the status shape and buttons such as "Repeat reading". Four suggested questions and a text box work with voice off.
-3. **Voice mode.** The doctor speaks each answer, then listens, then answers again. Units are read as words ("110 over 66"). If the browser cannot listen, the doctor still speaks and the viewer types.
-4. **What it answers.** How the results look; one part of the body or one indicator; what to do next; a symptom the viewer describes, which it relates to the readings and sends to the check-in. Mood and the diary are private and are not read.
-5. **Urgent words** (chest pain, cannot breathe, fainting, sudden loss of vision) are never handled by the doctor: it tells the viewer to stay still and call the medical lead now, and gives the latest heart rate, blood pressure, and blood oxygen to pass on.
+1. **Prompt.** When a reading is confirmed out of range or a symptom was logged, the Dashboard opens with a small alert: what needs attention, the finding in one line, "Call the doctor", the usual next action (such as "Repeat reading"), and an X. It appears once per session. The call also opens from "Talk to the doctor" in the header, from the item in Risks & checks, and from the indicator's screen.
+2. **Call.** It rings for about two seconds, then connects with voice and camera on. The pop-up shows the doctor, the call time, its state (Speaking, Thinking, Listening), what it is saying as a caption, and the viewer's camera in the corner. Controls: mute, camera, type instead of speaking, end call.
+3. **What it is about.** A call opened from a finding starts with that finding and the first question. Nothing is written per condition: the finding and next action come from the rules in `judge.ts`, and the doctor is given one general way of helping with anything the viewer raises, measured or not (a rash, a bump, a pain): ask, look, one practical step at a time, re-check, say when to tell the medical lead.
+4. **Seeing.** When the model can read pictures and the viewer shows something or asks it to look, one still picture from the camera goes with that message. Otherwise no picture is sent.
+5. **Readings said aloud** ("it says 106 over 68 now") are saved as a self-reported reading and judged at once, so the doctor can say whether it is back in range.
+6. **Who answers.** When [Ollama](https://ollama.com) is running on the same machine, answers are written by its language model (`app/src/lib/localModel.ts`), which is given the readings, their status, and the findings and told to use nothing else. Without it, built-in answers are used (`app/src/lib/doctor.ts`). The opening and the answer to urgent words (chest pain, cannot breathe, fainting) are always built in: stay still and call the medical lead now.
 
-The camera picture is shown only to the viewer and is not recorded or analysed. Speech recognition is the browser's own and may process audio online. The wording has not been reviewed by a clinician.
+The doctor is simulated and its wording has not been reviewed by a clinician. The model, the pictures, and the readings stay on the device. The voice (Google UK English Male in Chrome) and speech recognition are the browser's and may work online.
 
 ## Indicators
 

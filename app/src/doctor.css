@@ -1,139 +1,120 @@
-/* The virtual doctor: a calm call with yourself in the corner and the conversation beside it. */
+/* The call with the virtual doctor: a phone call in a pop-up, and the prompt that offers it. */
 
-.screen.doctor-screen {
+.doctor-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr);
-  gap: 20px;
-  width: 100%;
-  max-width: 1400px;
-  height: 100%;
-  min-height: 560px;
+  place-items: center;
   padding: 24px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
-.doctor-stage, .doctor-talk { min-width: 0; min-height: 0; }
-
-.doctor-tile {
+.doctor-call {
   position: relative;
-  flex: 1;
-  min-height: 340px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 32px 32px 150px;
-  border-radius: var(--radius-lg);
-  background: var(--bg-surface);
+  gap: 18px;
+  width: min(420px, 100%);
+  height: min(720px, 100%);
+  padding: 20px 24px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px;
+  background: linear-gradient(180deg, #1b1b1e 0%, #0e0e10 100%);
+  box-shadow: var(--shadow-dialog);
   text-align: center;
   overflow: hidden;
 }
+.doctor-call-head { align-self: stretch; display: flex; justify-content: space-between; align-items: baseline; color: var(--text-secondary); font: 500 13px/1.3 var(--font-sans); }
+.doctor-call-head em { margin-left: 6px; color: var(--text-muted); font-style: normal; font-weight: 400; }
+.doctor-clock { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.doctor-self { position: absolute; top: 52px; right: 16px; width: 92px; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; background: var(--bg-raised); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5); }
+.doctor-self video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+
+.doctor-face { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 36px; }
 .doctor-avatar {
   display: grid;
   place-items: center;
-  width: 128px;
-  height: 128px;
+  width: 112px;
+  height: 112px;
   border-radius: 50%;
   background: var(--bg-raised);
   color: var(--text-primary);
-  box-shadow: 0 0 0 0 transparent;
   transition: box-shadow var(--duration-base) ease-out;
 }
+.is-calling .doctor-avatar { animation: doctor-ring 1.2s ease-out infinite; }
 .is-listening .doctor-avatar { box-shadow: 0 0 0 3px var(--accent); }
 .is-speaking .doctor-avatar { animation: doctor-voice 1.4s ease-in-out infinite; }
+@keyframes doctor-ring {
+  0% { box-shadow: 0 0 0 0 rgba(74, 163, 255, 0.55); }
+  100% { box-shadow: 0 0 0 26px rgba(74, 163, 255, 0); }
+}
 @keyframes doctor-voice {
   0%, 100% { box-shadow: 0 0 0 3px var(--status-ok), 0 0 0 3px rgba(48, 209, 88, 0.25); }
   50% { box-shadow: 0 0 0 3px var(--status-ok), 0 0 0 18px rgba(48, 209, 88, 0); }
 }
-.doctor-id { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
-.doctor-id strong { font: 600 20px/1.3 var(--font-sans); letter-spacing: -0.01em; color: var(--text-primary); }
 .doctor-phase { color: var(--text-muted); font-size: 13px; }
 .is-listening .doctor-phase { color: var(--accent); }
 .is-speaking .doctor-phase { color: var(--status-ok); }
-.doctor-caption {
-  max-width: 560px;
-  max-height: 7.75em;
-  overflow-y: auto;
-  color: var(--text-secondary);
-  font: 400 17px/1.55 var(--font-sans);
-}
 
-.doctor-self {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  display: grid;
-  place-items: center;
-  width: 200px;
-  aspect-ratio: 4 / 3;
-  border-radius: 14px;
-  background: var(--bg-raised);
-  color: var(--text-muted);
-  font-size: 13px;
-  overflow: hidden;
-}
-.doctor-self video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-.doctor-self-name {
-  position: absolute;
-  left: 8px;
-  bottom: 8px;
-  padding: 3px 8px;
-  border-radius: var(--radius-full);
-  background: rgba(0, 0, 0, 0.6);
-  color: var(--text-primary);
-  font-size: 12px;
-}
+.doctor-words { flex: 1; min-height: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; overflow-y: auto; }
+.doctor-caption { color: var(--text-primary); font: 400 17px/1.5 var(--font-sans); }
+.doctor-caption.is-quiet { color: var(--text-muted); }
+.doctor-caption.is-urgent { padding: 12px 14px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--status-warning); }
+.doctor-said { color: var(--text-muted); font: 400 14px/1.45 var(--font-sans); }
+.doctor-said::before { content: 'You: '; }
+.doctor-saved { align-self: center; padding: 4px 10px; border-radius: var(--radius-full); background: rgba(48, 209, 88, 0.14); color: var(--status-ok); font-size: 12px; }
+.doctor-notice { color: var(--status-caution); font-size: 13px; line-height: 1.4; }
 
-.doctor-self-seen { position: absolute; left: 8px; top: 8px; padding: 3px 8px; border-radius: var(--radius-full); background: rgba(0, 0, 0, 0.6); color: var(--status-ok); font-size: 12px; }
-
-.doctor-controls { display: flex; flex-wrap: wrap; gap: 8px; }
-.doctor-controls .btn[aria-pressed='true'] { background: var(--bg-hover); box-shadow: inset 0 0 0 1px var(--border-control); }
-.doctor-controls .doctor-end { color: var(--status-warning); }
-.doctor-notice { color: var(--status-caution); }
-
-.doctor-talk { padding: 24px; border-radius: var(--radius-lg); background: var(--bg-surface); }
-.doctor-talk-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.doctor-lines {
-  flex: 1;
-  min-height: 160px;
-  margin: 0;
-  padding: 0 4px 0 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  overflow-y: auto;
-}
-.doctor-line { display: flex; flex-direction: column; gap: 4px; max-width: 92%; }
-.doctor-line .label { display: inline-flex; align-items: center; gap: 5px; }
-.doctor-line p { padding: 10px 14px; border-radius: 16px; background: var(--bg-raised); color: var(--text-primary); font: 400 15px/1.5 var(--font-sans); overflow-wrap: anywhere; }
-.doctor-line.from-you { align-self: flex-end; align-items: flex-end; }
-.doctor-line.from-you p { background: var(--accent-fill); color: var(--text-on-accent); }
-.doctor-line.is-hearing p { opacity: 0.6; }
-.doctor-line.is-urgent p { box-shadow: inset 0 0 0 1px var(--status-warning); }
-.doctor-actions, .doctor-suggest { display: flex; flex-wrap: wrap; gap: 6px; }
-.doctor-suggest .tag, .doctor-actions .tag { min-height: 30px; padding: 0 12px; font-size: 13px; }
-
-.doctor-form { display: flex; gap: 8px; }
-.doctor-form input {
-  flex: 1;
-  min-width: 0;
-  height: 44px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: var(--radius-full);
-  background: var(--bg-raised);
-  color: var(--text-primary);
-  font: 400 15px/1 var(--font-sans);
-}
+.doctor-form { align-self: stretch; display: flex; gap: 8px; }
+.doctor-form input { flex: 1; min-width: 0; height: 40px; padding: 0 14px; border: 0; border-radius: var(--radius-full); background: var(--bg-raised); color: var(--text-primary); font: 400 14px/1 var(--font-sans); }
 .doctor-form input::placeholder { color: var(--text-muted); }
+.doctor-form .btn { min-height: 40px; }
+
+.doctor-controls { display: flex; justify-content: center; gap: 14px; }
+.doctor-round { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: var(--bg-raised); color: var(--text-primary); cursor: pointer; transition: background var(--duration-fast) ease-out; }
+.doctor-round:hover { background: var(--bg-hover); }
+.doctor-round:disabled { opacity: 0.4; cursor: default; }
+.doctor-round svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.doctor-round[aria-pressed='true'] { background: var(--text-primary); color: #000; }
+.doctor-round.doctor-end { background: #ff453a; color: #fff; }
+.doctor-round.doctor-end:hover { background: #ff6961; }
+.doctor-round.doctor-end svg { fill: currentColor; stroke: none; }
+.doctor-fine { color: var(--text-muted); font-size: 11px; line-height: 1.4; }
+
+/* The prompt on the dashboard: one line of what is off and the call, nothing else. */
+.health-prompt-backdrop { position: fixed; inset: 0; z-index: 50; display: grid; place-items: start center; padding: 14vh 24px 24px; background: rgba(0, 0, 0, 0.5); }
+.health-prompt {
+  position: relative;
+  width: min(600px, 100%);
+  padding: 18px 20px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  background: #1c1c1f;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+.health-prompt h2 { display: flex; align-items: center; gap: 8px; padding-right: 32px; color: var(--text-primary); font: 600 15px/1.35 var(--font-sans); letter-spacing: -0.005em; }
+.health-prompt p { margin-top: 6px; color: var(--text-muted); font: 400 13px/1.5 var(--font-sans); }
+.health-prompt-close { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 6px; color: var(--text-muted); cursor: pointer; }
+.health-prompt-close:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-primary); }
+.health-prompt-close svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.health-prompt-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.health-prompt-actions > * { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; font: 500 13px/1 var(--font-sans); cursor: pointer; white-space: nowrap; }
+.health-prompt-quiet { border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-secondary); }
+.health-prompt-quiet:hover { background: rgba(255, 255, 255, 0.06); color: var(--text-primary); }
+.health-prompt-call { background: var(--text-primary); color: #000; }
+.health-prompt-call:hover { background: #fff; }
+.health-prompt-call svg { width: 14px; height: 14px; fill: currentColor; }
+button.reminder-row { width: 100%; text-align: left; cursor: pointer; }
 
 /* The way in, at the top right of every screen. */
-.doctor-button { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: var(--radius-full); background: var(--accent-fill); color: var(--text-on-accent); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.doctor-button { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: var(--radius-full); background: var(--accent-fill); color: var(--text-on-accent); font-size: 13px; font-weight: 500; white-space: nowrap; }
 .doctor-button:hover { background: #0068d6; }
 
-@media (max-width: 900px) {
-  .screen.doctor-screen { grid-template-columns: minmax(0, 1fr); height: auto; padding: 16px 12px 48px; }
-  .doctor-tile { padding-bottom: 32px; }
-  .doctor-self { position: relative; right: auto; bottom: auto; width: min(100%, 260px); }
-  .doctor-lines { max-height: 50vh; }
+@media (max-width: 520px) {
+  .doctor-backdrop { padding: 0; }
+  .doctor-call { width: 100%; height: 100%; border: 0; border-radius: 0; }
 }

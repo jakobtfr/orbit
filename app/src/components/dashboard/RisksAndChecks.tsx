@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
+import { useCall } from '../../lib/call'
 import { actionFor, attention, checkedInToday, judge } from '../../lib/judge'
 import { metricSamples, metrics } from '../../lib/dashboard'
 import type { AppState, Person } from '../../lib/types'
 
 export function RisksAndChecks({ state, person }: { state: AppState; person: Person }) {
   const base = `/body/${person.id}`
+  const { openCall } = useCall()
   const rate = metricSamples(state, person, 'radiation').at(-1)?.v
   const limit = metrics(state, person).find((m) => m.key === 'radiation')!.warning
   const radiationHigh = rate !== undefined && rate >= limit
@@ -19,7 +21,15 @@ export function RisksAndChecks({ state, person }: { state: AppState; person: Per
     <Link className={`reminder-row ${radiationHigh || radiation.status === 'warning' ? 'priority-high' : ''}`} to={`${base}/indicator/radiation`}>
       <span className="reminder-icon">!</span><div><strong>Radiation exposure</strong><small>{rate === undefined ? 'No recent radiation reading' : `${rate.toFixed(2)} mSv today · limit ${limit} a day`}</small><em>{radiationHigh ? 'Review shielding plan' : 'See dose history'}</em></div><span className="check-arrow">↗</span>
     </Link>
-    {other.map((item, i) => { const action = actionFor(state, person, item); return <Link key={i} className={`reminder-row ${item.status === 'warning' ? 'priority-high' : 'priority-soon'}`} to={item.status === 'caution' || item.status === 'warning' ? `/doctor?about=${item.key ?? item.region}` : action.button?.to ?? `${base}/check-in`}><span className="reminder-icon">!</span><div><strong>{item.label}</strong><small>{action.next}</small>{(item.status === 'caution' || item.status === 'warning') && <em>Talk it through with the doctor</em>}</div><span className="check-arrow">↗</span></Link> })}
+    {other.map((item, i) => {
+      const action = actionFor(state, person, item)
+      const off = item.status === 'caution' || item.status === 'warning'
+      const inside = <><span className="reminder-icon">!</span><div><strong>{item.label}</strong><small>{action.next}</small>{off && <em>Call the doctor about this</em>}</div><span className="check-arrow">↗</span></>
+      const tone = `reminder-row ${item.status === 'warning' ? 'priority-high' : 'priority-soon'}`
+      return off
+        ? <button key={i} className={tone} onClick={() => openCall(item.key ?? item.region)}>{inside}</button>
+        : <Link key={i} className={tone} to={action.button?.to ?? `${base}/check-in`}>{inside}</Link>
+    })}
     <Link className={`reminder-row ${temp.status === 'warning' ? 'priority-high' : ['repeat', 'caution'].includes(temp.status) ? 'priority-soon' : ''}`} to={`${base}/indicator/temp`}><span className="reminder-icon">°</span><div><strong>Temperature & symptoms</strong><small>{temp.latest ? `${temp.latest.v.toFixed(1)} °C · compare with your usual` : 'No recent temperature reading'}</small></div><span className="check-arrow">↗</span></Link>
     <Link className={`reminder-row ${sleep.status === 'warning' ? 'priority-high' : ['repeat', 'caution'].includes(sleep.status) ? 'priority-soon' : ''}`} to={`${base}/indicator/sleep`}><span className="reminder-icon">☾</span><div><strong>Sleep & recovery</strong><small>Review sleep history and fatigue</small></div><span className="check-arrow">↗</span></Link>
     <Link className="reminder-row priority-soon" to={`${base}/indicator/exercise`}><span className="reminder-icon">↗</span><div><strong>Resistance & cardio</strong><small>120-minute plan</small><em>Today · 16:00</em></div><span className="check-arrow">↗</span></Link>

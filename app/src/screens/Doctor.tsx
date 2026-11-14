@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
 import { Mark } from '../components/Shell'
-import { StatusShape } from '../components/Status'
-import { SUGGESTIONS, afterReading, briefing, focusOn, heardReading, isUrgent, nextStep, opening, reply, speakable, wantsLook, withReading, type DoctorReply } from '../lib/doctor'
+import { afterReading, briefing, focusOn, heardReading, isUrgent, nextStep, opening, reply, speakable, wantsLook, withReading, type DoctorReply } from '../lib/doctor'
 import { INDICATORS, formatValue } from '../lib/indicators'
 import { canSee, chat, findModel, warm, type ChatMessage } from '../lib/localModel'
 import { useStore } from '../lib/store'
@@ -16,7 +14,7 @@ interface Line extends DoctorReply {
   note?: string
 }
 
-type Phase = 'idle' | 'thinking' | 'speaking' | 'listening'
+type Phase = 'idle' | 'calling' | 'thinking' | 'speaking' | 'listening'
 
 /** The part of the browser's speech recognition that is used here. It is not in every TypeScript DOM library. */
 interface Recognition {
@@ -40,38 +38,44 @@ function sentences(text: string): string[] {
   return text.match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g)?.map((s) => s.trim()).filter(Boolean) ?? [text]
 }
 
-const PHASE_LABEL: Record<Phase, string> = { idle: 'Ready', thinking: 'Thinking', speaking: 'Speaking', listening: 'Listening' }
 
 /** Removes the markdown a language model may add, since the text is shown plainly and read aloud. */
 function tidy(text: string): string {
   return text.replace(/[*_#`]/g, '').trimStart()
 }
 
-export function Doctor() {
+/**
+ * The call with the virtual doctor, as a pop-up over the current screen. It rings briefly, then
+ * connects with voice and camera on.
+ */
+export function Doctor({ about, onClose }: { about?: string; onClose: () => void }) {
   const { state, viewer, dispatch } = useStore()
-  const [params] = useSearchParams()
   /** What this call is about. Fixed when the call opens, so the plan stays even after the reading improves. */
-  const [focus] = useState(() => focusOn(state, viewer, params.get('about')))
+  const [focus] = useState(() => focusOn(state, viewer, about))
   const [lines, setLines] = useState<Line[]>(() => [{ id: 0, from: 'doctor', ...opening(state, viewer, focus) }])
   /** True when the model on this device can look at pictures. */
   const [sees, setSees] = useState(false)
   const [draft, setDraft] = useState('')
   const [hearing, setHearing] = useState('')
   const [voice, setVoice] = useState(false)
-  const [phase, setPhase] = useState<Phase>('idle')
+  const [phase, setPhase] = useState<Phase>('calling')
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [notice, setNotice] = useState('')
+  const [muted, setMuted] = useState(false)
+  const [typing, setTyping] = useState(false)
+  const [seconds, setSeconds] = useState(0)
   /** The language model on this device, when one is running. Without it the doctor uses its built-in answers. */
   const [model, setModel] = useState<string | null>(null)
 
   const voiceOn = useRef(false)
-  const phaseNow = useRef<Phase>('idle')
+  const phaseNow = useRef<Phase>('calling')
   const recognition = useRef<Recognition | null>(null)
   /** Goes up each time speech is started or stopped, so callbacks from an older utterance do nothing. */
   const turn = useRef(0)
   const misses = useRef(0)
   const modelNow = useRef<string | null>(null)
   const seesNow = useRef(false)
+  const mutedNow = useRef(false)
   /** The step of the plan the built-in doctor has reached, when no model is running. */
   const step = useRef(0)
   const voiceNow = useRef<SpeechSynthesisVoice | undefined>(undefined)
@@ -95,7 +99,7 @@ export function Doctor() {
 
   const listen = useCallback(() => {
     const Rec = recognitionClass()
-    if (!Rec || !voiceOn.current) { go('idle'); return }
+    if (!Rec || !voiceOn.current || mutedNow.current) { go('idle'); return }
     stopListening()
     const r = new Rec()
     r.lang = 'en-US'
@@ -325,7 +329,35 @@ export function Doctor() {
     streamNow.current?.getTracks().forEach((t) => t.stop())
   }, [])
 
-  const inCall = voice || !!stream
+  // Ring for a moment, then connect: the doctor starts talking and the camera comes on.
+  const connect = useRef(() => {})
+  connect.current = () => { voiceStart(); void cameraStart() }
+  useEffect(() => {
+    const id = window.setTimeout(() => connect.current(), 1800)
+    return () => window.clearTimeout(id)
+  }, [])
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', key)
+    return () => document.removeEventListener('keydown', key)
+  }, [onClose])
+
+  const calling = phase === 'calling'
+  useEffect(() => {
+    if (calling) return
+    const id = window.setInterval(() => setSeconds((n) => n + 1), 1000)
+    return () => window.clearInterval(id)
+  }, [calling])
+  const toggleMute = () => {
+    const next = !muted
+    mutedNow.current = next
+    setMuted(next)
+    if (next) { stopListening(); if (phaseNow.current === 'listening') go('idle') }
+    else if (phaseNow.current === 'idle') { misses.current = 0; listen() }
+  }
+  const clock = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`
+  const lastLine = lines[lines.length - 1]
+  const saved = [...lines].reverse().find((l) => l.from === 'you')?.note
   const submit = (e: FormEvent) => {
     e.preventDefault()
     const text = draft.trim()
@@ -335,71 +367,68 @@ export function Doctor() {
   }
   const spoken = [...lines].reverse().find((l) => l.from === 'doctor')
 
-  return (
-    <div className="screen doctor-screen">
-      <section className="doctor-stage" aria-label="Call with the virtual doctor">
-        <div className={`doctor-tile is-${phase}`}>
-          <div className="doctor-avatar" aria-hidden="true"><Mark size={56} /></div>
-          <div className="doctor-id">
-            <strong>ORBIT doctor</strong>
-            <span className="tag">Simulated</span>
-            <span className="tag">{model ? `On this device · ${model}` : 'Built-in answers'}</span>
-          </div>
-          <p className="doctor-phase" role="status">{voice || phase !== 'idle' ? PHASE_LABEL[phase] : 'Voice is off'}</p>
-          {spoken && <p className="doctor-caption">{spoken.text || '…'}</p>}
+  const status = calling ? 'Calling…'
+    : phase === 'speaking' ? 'Speaking'
+    : phase === 'thinking' ? 'Thinking…'
+    : phase === 'listening' ? 'Listening'
+    : muted ? 'You are muted' : 'Connected'
 
-          <div className={`doctor-self ${stream ? 'is-on' : ''}`}>
-            {stream
-              ? <video ref={video} autoPlay muted playsInline aria-label="Your camera" />
-              : <span>Camera off</span>}
-            <span className="doctor-self-name">{viewer.name}</span>
-            {stream && sees && <span className="doctor-self-seen">Show something to the doctor</span>}
+  return (
+    <div className="doctor-backdrop">
+      <div className={`doctor-call is-${phase}`} role="dialog" aria-modal="true" aria-label="Call with the doctor">
+        <header className="doctor-call-head">
+          <span>ORBIT doctor <em>Simulated</em></span>
+          <span className="doctor-clock">{calling ? '' : clock}</span>
+        </header>
+
+        {stream && (
+          <div className="doctor-self">
+            <video ref={video} autoPlay muted playsInline aria-label="Your camera" />
           </div>
+        )}
+
+        <div className="doctor-face">
+          <div className="doctor-avatar" aria-hidden="true"><Mark size={52} /></div>
+          <p className="doctor-phase" role="status">{status}</p>
         </div>
+
+        <div className="doctor-words" aria-live="polite">
+          {calling
+            ? <p className="doctor-caption is-quiet">{focus ? `About ${focus.title}` : 'Connecting you now'}</p>
+            : <>
+                {lastLine?.from === 'you' && <p className="doctor-said">{lastLine.text}</p>}
+                {spoken && <p className={`doctor-caption ${spoken.urgent ? 'is-urgent' : ''}`}>{spoken.text || '…'}</p>}
+                {hearing && <p className="doctor-said">{hearing}</p>}
+                {saved && !hearing && <p className="doctor-saved">{saved}</p>}
+              </>}
+          <span ref={end} aria-hidden="true" />
+        </div>
+
+        {notice && <p className="doctor-notice" role="alert">{notice}</p>}
+
+        {typing && !calling && (
+          <form className="doctor-form" onSubmit={submit}>
+            <input autoFocus value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Type instead of speaking" aria-label="Message to the doctor" />
+            <button className="btn btn-primary" type="submit" disabled={!draft.trim()}>Send</button>
+          </form>
+        )}
 
         <div className="doctor-controls">
-          {!inCall
-            ? <button className="btn btn-primary" onClick={() => { voiceStart(); void cameraStart() }}>Start call</button>
-            : <button className="btn btn-secondary doctor-end" onClick={() => { voiceStop(); cameraStop() }}>End call</button>}
-          <button className="btn btn-secondary" aria-pressed={voice} onClick={voice ? voiceStop : voiceStart}>{voice ? 'Voice on' : 'Voice off'}</button>
-          <button className="btn btn-secondary" aria-pressed={!!stream} onClick={stream ? cameraStop : () => void cameraStart()}>{stream ? 'Camera on' : 'Camera off'}</button>
+          <button className="doctor-round" aria-pressed={muted} aria-label={muted ? 'Unmute microphone' : 'Mute microphone'} title={muted ? 'Unmute' : 'Mute'} disabled={calling} onClick={toggleMute}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" />{muted && <path d="M4 4l16 16" />}</svg>
+          </button>
+          <button className="doctor-round" aria-pressed={!stream} aria-label={stream ? 'Turn camera off' : 'Turn camera on'} title={stream ? 'Camera off' : 'Camera on'} disabled={calling} onClick={stream ? cameraStop : () => void cameraStart()}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.5" width="12" height="11" rx="2.5" /><path d="m15 10.5 6-3v9l-6-3" />{!stream && <path d="M4 4l16 16" />}</svg>
+          </button>
+          <button className="doctor-round" aria-pressed={typing} aria-label="Type a message" title="Type" disabled={calling} onClick={() => setTyping((t) => !t)}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2.5" /><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M7.5 14h9" /></svg>
+          </button>
+          <button className="doctor-round doctor-end" aria-label="End call" title="End call" onClick={onClose}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 13.5c5-4.5 12-4.5 17 0l-2.2 2.6-3.1-1.3v-2.4a9 9 0 0 0-6.4 0v2.4l-3.1 1.3Z" /></svg>
+          </button>
         </div>
-        {notice && <p className="body-sm doctor-notice" role="alert">{notice}</p>}
-        <p className="card-note">
-          A simulated doctor, not a real clinician. {model ? 'Answers are written by a language model running on this device, from your own readings and check-ins. It can make mistakes.' : 'Answers are put together on this device from your own readings and check-ins.'}
-          {stream && sees ? 'While the camera is on, a still picture goes to that model when you show it something or ask it to look. Pictures stay on this device and are not kept.' : 'Your camera picture is only shown to you and is not recorded.'} In voice mode, your browser's speech service turns what you say into text and may send the audio online to do it.
-        </p>
-      </section>
-
-      <section className="doctor-talk" aria-label="Conversation">
-        <header className="doctor-talk-head">
-          <h1 className="title-3">{focus ? `About ${focus.title}` : 'Talk to the doctor'}</h1>
-          <span className="label">Day {state.day}</span>
-        </header>
-        <ol className="doctor-lines" aria-live="polite">
-          {lines.map((l) => (
-            <li key={l.id} className={`doctor-line from-${l.from} ${l.urgent ? 'is-urgent' : ''}`}>
-              <span className="label">{l.from === 'doctor' ? <>{l.status && <StatusShape status={l.status} size={11} />} Doctor</> : 'You'}</span>
-              <p>{l.text || '…'}</p>
-              {l.note && <span className="tag">{l.note}</span>}
-              {l.actions && (
-                <div className="doctor-actions">
-                  {l.actions.map((a) => <Link key={a.to} className="tag tag-link" to={a.to}>{a.label}</Link>)}
-                </div>
-              )}
-            </li>
-          ))}
-          {hearing && <li className="doctor-line from-you is-hearing"><span className="label">You</span><p>{hearing}</p></li>}
-          <li ref={end} aria-hidden="true" />
-        </ol>
-        <div className="doctor-suggest">
-          {(focus ? ['I feel fine', 'Done. What next?', 'Can you look at this?', 'What does this mean?'] : SUGGESTIONS).map((s) => <button key={s} className="tag tag-link" onClick={() => send(s)}>{s}</button>)}
-        </div>
-        <form className="doctor-form" onSubmit={submit}>
-          <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={phase === 'listening' ? 'Listening. Speak, or type here' : 'Type a question or how you feel'} aria-label="Message to the doctor" />
-          <button className="btn btn-primary" type="submit" disabled={!draft.trim()}>Send</button>
-        </form>
-      </section>
+        <p className="doctor-fine">{model ? 'Runs on this device. Not a real clinician.' : 'Not a real clinician.'}{stream && sees ? ' Show something to the camera and ask it to look.' : ''}</p>
+      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
+import { HealthPrompt } from '../components/HealthPrompt'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
 import { LimitsCard } from '../components/dashboard/LimitsCard'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
@@ -20,6 +21,7 @@ export function Body() {
   const summaries = regionSummaries(state, person)
   const base = `/body/${person.id}`
   return <div className="screen dashboard-screen">
+    <HealthPrompt />
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map">
         <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />

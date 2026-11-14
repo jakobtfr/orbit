@@ -191,15 +191,15 @@ Shown when an indicator needs something from the crew. On `bg-raised`:
 - Only points outside a limit take a status colour, with the matching shape.
 - No tinted review bands, area fills, gradients, or smoothing that invents values between readings.
 
-### Talk to the doctor
+### Call the doctor
 
-A calm call, not an alarm. It follows the quiet rules.
+A phone call, not a page and not an alarm.
 
-- Entry: a **Talk to the doctor** button at the top right of the header on every screen: an `accent-fill` pill with white text and a camera icon. The header carries no status colour.
-- The doctor's tile is `bg-surface` with the ORBIT mark as its face and a "Simulated" tag beside the name. Its latest sentence is shown as a caption in `body-lg`.
-- State is shown on the ring around the mark and in words: a steady `accent` ring while listening, a `status-ok` ring that pulses while speaking, none when ready. With reduced motion the ring does not pulse.
-- The viewer's camera is a small mirrored tile in the corner with their name.
-- Messages are bubbles: the doctor's in `bg-raised` with the status shape beside the label, the viewer's in `accent-fill`. A message that sends the viewer to a crewmate has a 1 px `status-warning` outline.
+- **Prompt:** a compact alert near the top of the Dashboard, 600 px wide, 12 px radius, 1 px hairline border. One title line with the status shape, one line of finding in `text-muted`, an X in the corner, and two 32 px buttons at the right: the usual next action (outlined) and "Call the doctor" (white fill, black text). No other text.
+- **Call:** a 420 px wide pop-up with 32 px corners over a blurred backdrop. The ORBIT mark is the doctor's face. State is on the ring around it and in one word below: a ring that expands while calling, a steady `accent` ring while listening, a `status-ok` ring that pulses while speaking. With reduced motion the rings do not move.
+- What the doctor says is one caption in `body-lg`; the viewer's last words sit above it in `text-muted`. No transcript, no suggestions.
+- Four round 54 px controls: mute, camera, type, and end call in red. A control that is switched on is white.
+- The viewer's camera is a small mirrored tile at the top right.
 
 ## Motion
 

@@ -27,7 +27,7 @@ Other teams will build a vitals dashboard and bolt on a body map (the brief sugg
 | --- | --- |
 | **Crew Board** | 4 crew, status rings, who is due a check-in, next contact window, light-time delay clock |
 | **Check-in** | 60-second guided capture: HR, BP, temp, SpO₂, sleep, mood, symptoms, exposure events |
-| **Risk Radar** | The 13 HRP risks as a grid/target, each green/amber/red or "not instrumented" |
+| **Risk Radar** | The 17 HRP risks as a grid/target, each green/amber/red or "not instrumented" |
 | **Risk detail** | Trend, personal baseline, evidence drawer with HRP citation, "what changes in space" |
 | **Action card** | Next best action, countermeasure, re-measure timer, notify CMO, prepare for surgeon call |
 | **Handover** | Auto-generated SBAR packet queued for the next comm window |

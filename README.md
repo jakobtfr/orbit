@@ -4,10 +4,13 @@ NASA Space Apps Challenge 2026 · Challenge: **Create Health Monitoring Software
 
 This repo holds the source data for the challenge: the official brief, the official resources, what NASA currently does operationally, and published clinical reference values with citations.
 
+Looking for a specific fact? Start with the [data index](docs/index.md).
+
 ## Contents
 
 | File | What it contains |
 | --- | --- |
+| [`docs/index.md`](docs/index.md) | Topic-level index: which file and section holds each fact |
 | [`docs/challenge-brief.md`](docs/challenge-brief.md) | Full official challenge text and considerations |
 | [`docs/video-transcript.md`](docs/video-transcript.md) | Timestamped transcript of the official intro video (Rodrigo Leonardi, Brazilian Space Agency) |
 | [`docs/resources.md`](docs/resources.md) | Official HRP/CSA resources, distilled: five hazards, 17 risks, current research, CSA findings |

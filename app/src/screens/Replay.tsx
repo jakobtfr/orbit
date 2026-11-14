@@ -16,6 +16,7 @@ import {
   type Subject,
   type Vital,
 } from '../lib/replay'
+import { PROBLEMS, score } from '../lib/missRate'
 import { ScreenTitle } from './common'
 
 /** Two volunteers that show the two halves of the story. Any other can be picked from the list. */
@@ -25,6 +26,13 @@ const FEATURED = [
 ]
 
 const ALL = totals()
+
+/** Planted problems shown on the screen; the full set is in docs/research/miss-rate.md. */
+const SHOWN = ['fever-1.0', 'hr-20', 'drift-0.5', 'bp-up-15', 'bp-up-25', 'bp-down-20']
+const MISSES = SHOWN.map((id) => {
+  const p = PROBLEMS.find((cand) => cand['key'] === id)!
+  return { name: p.name, score: score(p) }
+})
 const pct = (n: number, d: number) => `${((n / d) * 100).toFixed(1)}%`
 const per180 = (n: number, d: number) => Math.round((n / d) * 180)
 const fmt = (v: Vital, x: number) => x.toFixed(VITAL_INFO[v].decimals)
@@ -99,6 +107,31 @@ export function Replay() {
         </p>
       </section>
 
+      <section aria-labelledby="miss-title">
+        <h2 className="title-2" id="miss-title">Does ORBIT miss real problems?</h2>
+        <p className="body prose">
+          Fewer alarms are only good if real problems still get through. This data has no real illness, so known problems were added on top of every volunteer’s real readings, three times each. Both rule sets use the same two-day rule, here on the same vital both days. A case counts only where the rule had not already raised an alarm before the problem was added.
+        </p>
+        <table className="table replay-compare">
+          <caption className="label">Share of planted problems caught (caught of cases)</caption>
+          <thead>
+            <tr><th scope="col">Planted problem</th><th scope="col">Earth limits</th><th scope="col">ORBIT</th></tr>
+          </thead>
+          <tbody>
+            {MISSES.map(({ name, score: s }) => (
+              <tr key={name}>
+                <th scope="row" className="cell-name">{name}</th>
+                <td className="cell-value">{caughtText(s.caughtClean.earth2, s.nClean.earth2)}</td>
+                <td className="cell-value">{caughtText(s.caughtClean.orbit2, s.nClean.orbit2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="body-sm note">
+          ORBIT catches far more fevers and heart-rate changes. Earth limits catch more of the smaller blood-pressure rises (+15 and +25), because 130/80 sits close to many people’s normal; they pay for it with false alarms. Neither rule set here looks at drops, so both miss every planted drop. The app itself flags low blood pressure, but the Replay does not test that rule. Planted problems are simple steps and ramps, not real illness. Every size, and a separate check of every number: docs/research/miss-rate.md.
+        </p>
+      </section>
+
       <section>
         <div className="section-row">
           <h2 className="title-2">One volunteer, day by day</h2>
@@ -157,10 +190,14 @@ export function Replay() {
       </section>
 
       <p className="body-sm note">
-        Earth limits: heart rate over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on two days in a row. ORBIT: heart rate 20% above the person’s own value, upper or lower blood pressure 20 or 15 mmHg above, or temperature 0.5 °C above, on two days in a row. Own values are the average of the days before bed rest. Source: NASA bed-rest study records. Bed rest is a ground stand-in for flight, and this data has no confirmed illness, so it shows fewer false alarms, not that real problems are caught.
+        Earth limits: heart rate over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on two days in a row. ORBIT: heart rate 20% above the person’s own value, upper or lower blood pressure 20 or 15 mmHg above, or temperature 0.5 °C above, on two days in a row. Own values are the average of the days before bed rest. Source: NASA bed-rest study records. Bed rest is a ground stand-in for flight, and this data has no confirmed illness: real problems are tested only with the planted problems above.
       </p>
     </div>
   )
+}
+
+function caughtText(share: number, n: number): string {
+  return `${Math.round(share * 100)}% (${Math.round(share * n)} of ${n})`
 }
 
 function Total({ title, share, per }: { title: string; share: string; per: number }) {

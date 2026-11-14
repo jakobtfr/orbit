@@ -123,12 +123,13 @@ The evidence screen. Built on real, unaltered NASA UTMB bed-rest data.
 
 1. Title "Earth's normal or yours?" and one paragraph on bed rest as a stand-in for weightlessness.
 2. **All volunteers:** two tiles with the same two-day rule on both sides, Earth limits 13.5% and ORBIT 5.9% of days with an alarm, with alarms per person in 180 days, and a table of every way of counting (single days 25.5% and 16.5%; stricter Earth 140/90: 5.4%).
-3. **One volunteer, day by day:** two featured cases and a list of all 29.
+3. **Does ORBIT miss real problems?** Planted problems added to the real readings (`lib/missRate.ts`, [`miss-rate.md`](docs/research/miss-rate.md)). A table of 6 problems, caught share for Earth limits and ORBIT with the same two-day rule: fever +1 °C 8% vs 94%, heart rate +20 bpm 20% vs 93%, slow drift 14% vs 71%, small BP rise 50% vs 26%, larger BP rise 90% vs 69%, BP drop 0% vs 0%. A note says where ORBIT does worse and that drops are not tested.
+4. **One volunteer, day by day:** two featured cases and a list of all 29.
    - *Normal runs high* (UTMB-01): blood pressure 132/80 before bed rest, on Earth's line. Earth 30 alarms on two days in a row (54 on single days), ORBIT 1.
    - *Slow heart-rate rise* (UTMB-40): resting pulse drifts from 55 to about 75. Earth 0 alarms on two days in a row (1 on single days), ORBIT 10.
-4. **Player:** play/pause and a day slider; two alarm lanes with counters; a "today" panel showing each vital, the Earth verdict, and the personal verdict, including "Repeat reading" when a value is over the personal limit only once.
-5. **Chart** of one vital at a time with Earth's limit, the volunteer's own normal, and their personal limit.
-6. The rules, the source DOI, and the limit of the evidence: fewer false alarms, not proof that real problems are caught.
+5. **Player:** play/pause and a day slider; two alarm lanes with counters; a "today" panel showing each vital, the Earth verdict, and the personal verdict, including "Repeat reading" when a value is over the personal limit only once.
+6. **Chart** of one vital at a time with Earth's limit, the volunteer's own normal, and their personal limit.
+7. The rules, the source DOI, and the limit of the evidence: bed rest is a ground stand-in, and planted problems are not real illness.
 
 ### Call the doctor
 

@@ -46,25 +46,26 @@ review band is not automatically a confirmed clinical alert.
 
 [NASA's five hazards](https://www.nasa.gov/hrp/hazards/) are radiation, isolation and
 confinement, distance from Earth, altered gravity, and hostile/closed environments.
-The five plots are useful related indicators, not direct measurements of all five
+The selected plots are related indicators, not direct measurements of all five
 hazards. Resting pulse relates to cardiovascular adaptation; sleep to isolation and
 circadian disruption; dose to radiation; and CO2 to the closed environment. Core
 temperature and symptom check-ins support health autonomy when Earth assistance is
 delayed. Distance itself is mission context, not a vital sign.
 
-## AI and outlook
+## Risks and checks
 
-The weekly brief is clearly marked as a mock template and incorporates calculated
-seven-day sleep and pulse means. The outlook offers review prompts rather than
-fabricated disease probabilities. Radiation review compares the simulated rate with
-the design reference; solar-event likelihood is unavailable. Reminder times are
-labelled as a demo schedule. Navigation leads to existing indicator and measurement
-screens, and the daily check-in updates the existing in-memory store.
+The dashboard has three equal desktop columns: anatomy, activity plus a combined
+risks/checks panel, and three health plots. The weekly summary and chatbot have
+been removed. Radiation exposure is shown once, followed by other alerts,
+temperature/symptom review, sleep/recovery, exercise, vision checks, and the daily
+check-in. Red highlights indicate review priority and yellow marks items due soon;
+they do not represent validated illness probabilities. Reminder times remain a demo
+schedule. Links open existing indicator, measurement, and check-in screens.
 
 ## Validation
 
 Unit tests cover sample variance, empty and singleton bins, boundary assignment,
 missing intervals, elapsed-time dose rates, counter resets, future-data exclusion,
 reversed sleep thresholds, and environment-specific radiation limits. Server-rendered
-markup checks verify five plots, references, navigation destinations, mock labels,
+markup checks verify three plots, references, navigation destinations, one combined risks/checks panel,
 and finite SVG geometry. These checks do not replace visual browser verification.

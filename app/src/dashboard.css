@@ -24,7 +24,7 @@
 .dashboard-header-meta strong { color: #e4e8ed; font-size: 18px; font-weight: 500; margin-left: 10px; }
 .simulation-label { display: flex; align-items: center; gap: 8px; font-size: 9px; color: #adb4bd; }
 .simulation-label i { width: 5px; height: 5px; background: #a7afb9; }
-.dashboard-grid { display: grid; grid-template-columns: minmax(215px, .95fr) minmax(235px, 1fr) minmax(270px, 1.1fr) minmax(315px, 1.25fr); gap: 16px; align-items: stretch; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 .dashboard-screen .dashboard-column {
   display: flex;
   flex-direction: column;
@@ -97,32 +97,10 @@
 .reminders .dashboard-button { margin-top: 20px; }
 .dashboard-button:hover { background: #414b5b; }
 /* Weekly review: concise text at the same scale as the rest of the console. */
-.weekly-brief { flex: 1; display: flex; flex-direction: column; }
-.weekly-brief header { margin-bottom: 24px; }
-.weekly-brief header .eyebrow { font-size: 9px; }
-.weekly-brief > .eyebrow { color: #939dab; font-size: 9px; }
-.weekly-brief h2 { font-size: 21px; font-weight: 500; line-height: 1.3; margin: 9px 0 15px; letter-spacing: -.02em; }
-.weekly-brief > p:not(.eyebrow):not(.mock-note) { color: #aeb7c3; font-size: 12px; line-height: 1.75; }
-.brief-highlight { display: flex; gap: 13px; padding: 22px 0; border-bottom: 1px solid #343a43; }
-.brief-highlight > span { color: #7e8a9a; font: 10px/1.8 var(--font-mono); }
-.brief-highlight strong { color: #d5dce5; font-size: 12px; font-weight: 500; }
-.brief-highlight p { color: #9ea9b7; font-size: 12px; line-height: 1.75; margin-top: 7px; }
-.brief-action { padding: 16px 0; }
-.brief-action .eyebrow { font-size: 9px; }
-.brief-action p { color: #b6c0cd; font-size: 12px; line-height: 1.75; margin-top: 7px; }
 .text-link { display: flex; justify-content: space-between; color: #c5d0df; font-size: 11px; padding: 12px 0; }
-.mock-note { color: #828e9e; font-size: 10px; line-height: 1.65; padding-top: 14px; margin-top: auto; }
-.outlook-card { flex: 1; }
-.outlook-intro { color: #9ca8b7; font-size: 11px; line-height: 1.7; margin-top: 10px; }
-.outlook-row { display: block; padding: 20px 0; border-bottom: 1px solid #343a43; }
-.outlook-row:last-child { border-bottom: 0; padding-bottom: 0; }
-.outlook-title { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-.outlook-title strong { color: #d9dfe7; font-size: 12px; font-weight: 500; }
 .risk-badge { font: 8px/1.4 var(--font-mono); padding: 4px 5px; border: 1px solid #485260; color: #aab5c4; white-space: nowrap; }
 .risk-badge.red { color: #e8a19a; border-color: #78514e; }
 .risk-badge.amber { color: #d8c389; border-color: #6c644a; }
-.outlook-row p { color: #9eabba; font-size: 11px; line-height: 1.75; margin-top: 10px; }
-.outlook-action { display: block; color: #b7c4d6; font-size: 10px; margin-top: 12px; }
 /* Five plots share remaining space; references expand the entire row naturally. */
 .science-header { padding: 16px 14px; border-bottom: 1px solid #343a43; }
 .science-header > p { font-size: 12px; font-weight: 500; color: #cdd5df; }
@@ -182,7 +160,7 @@
 }
 
 /* Equal-width instrument columns and a floating navigation header. */
-.dashboard-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.dashboard-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .shell { background: #131518; }
 .shell .shell-body { flex-direction: column; }
 .topbar { border: 0; background: #131518; padding: 0 24px; }
@@ -231,7 +209,6 @@
 .dashboard-column > .column-label { border-radius: 7px 7px 0 0; }
 .body-column { --category-accent: #9aafc5; }
 .activity-column { --category-accent: #80bcb1; }
-.summary-column { --category-accent: #b1a4c7; }
 .science-column { --category-accent: #8faec9; }
 .dashboard-column > .column-label { border-top: 2px solid var(--category-accent); color: var(--category-accent); }
 .dashboard-screen .anatomy-stage { background: #1a1e24; }
@@ -249,9 +226,6 @@
 .activity-column .oxygen-pill strong { color: #d2e3ed; }
 .activity-column .oxygen-pill .pill-symbol { color: #9abed2; }
 .activity-column .activity-pill:hover { border-color: #ffffff30; }
-.summary-column .weekly-brief { background: #aea0c105; }
-.summary-column .brief-highlight > span { color: #b1a4c7; }
-.brief-action { border-left: 2px solid #a99ab75c; padding-left: 12px; margin: 12px 0; }
 .reminder-warning .reminder-icon { border-color: #aa8e5b6b; color: #d4b780; background: #a68c4d0d; }
 .reminders .dashboard-button { border-color: #668b846b; background: #30433e; color: #d6e9e1; border-radius: 8px; }
 .reminders .dashboard-button:hover { background: #3b5149; }
@@ -260,29 +234,6 @@
 @media (prefers-reduced-motion: reduce) { .activity-ring, .activity-pill { transition: none; } }
 
 /* Conversation and section boundaries. */
-.dashboard-screen .health-chat { flex: 1; display: flex; flex-direction: column; min-height: 480px; background: #afa0c005; }
-.health-chat header { margin-bottom: 18px; }
-.health-chat-log { height: 360px; flex: 1 1 360px; max-height: 480px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #525563 transparent; padding-right: 6px; }
-.chat-message { max-width: 94%; margin-bottom: 22px; }
-.chat-speaker { display: block; margin-bottom: 7px; color: #a2aebf; font: 9px/1.5 var(--font-mono); }
-.chat-message p { font-size: 12px; line-height: 1.8; white-space: pre-line; color: #c9d1dc; overflow-wrap: anywhere; }
-.chat-user { width: fit-content; max-width: 88%; margin-left: auto; padding: 10px 13px; border: 1px solid #afa0c126; border-radius: 12px 12px 3px 12px; background: #afa0c110; }
-.chat-user .chat-speaker { color: #b6abc7; font-size: 8px; margin-bottom: 3px; }
-.chat-user p { font-size: 12px; color: #dfd9e9; }
-.chat-assistant { padding: 0 2px; }
-.chat-assistant .chat-speaker { color: #a4bfc2; }
-.chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
-.chat-suggestions button { border: 1px solid #464951; border-radius: 20px; padding: 6px 10px; color: #b3bdcb; font-size: 10px; }
-.chat-suggestions button:hover { background: #ffffff08; border-color: #7d788b; }
-.chat-composer { display: flex; align-items: center; gap: 8px; background: #16191e; border: 1px solid #50535f; border-radius: 10px; padding: 6px; }
-.chat-composer:focus-within { border-color: #a59cb6; }
-.chat-composer input { width: 100%; min-width: 0; background: transparent; color: #e0e4ed; border: 0; outline: none; padding: 8px; font: 12px/1.5 var(--font-sans); }
-.chat-composer input::placeholder { color: #8f98a6; }
-.chat-composer button { display: grid; place-items: center; flex: 0 0 30px; height: 30px; border-radius: 7px; background: #656176; color: #fff; }
-.chat-composer button:disabled { background: #2a2d34; color: #7a7e89; cursor: default; }
-.chat-disclosure { font-size: 9px; color: #858d9b; margin-top: 10px; }
-.dashboard-screen .reminders, .dashboard-screen .outlook-card { border-top: 2px solid #5d6573; background: #181c22; }
-.dashboard-screen .reminders > header, .dashboard-screen .outlook-card > header { padding-bottom: 16px; border-bottom: 1px solid #363d48; margin-bottom: 4px; }
 
 /* Compact telemetry: three plots with daily points and restrained threshold bands. */
 .science-column .science-plot { display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 20px 14px; }
@@ -306,12 +257,6 @@
 .reminders .priority-soon { border-left: 3px solid #c9ae72; margin-left: -16px; padding-left: 13px; }
 .reminders .priority-soon em { color: #d9bf86; }
 .reminders .priority-soon .reminder-icon { border-color: #ac945e75; color: #d9bf86; }
-.outlook-card .outlook-row { padding: 24px 0; }
-.outlook-card .outlook-title { flex-wrap: wrap; gap: 9px; }
-.outlook-card .outlook-title strong { font-size: 16px; line-height: 1.4; }
-.outlook-card .risk-badge { font-size: 10px; }
-.outlook-card .outlook-row p, .outlook-card .outlook-action { font-size: 13px; line-height: 1.6; }
-.outlook-card .outlook-action { color: #c0ccdd; }
 
 /* More breathing room between equally sized instruments. */
 .dashboard-grid { gap: 28px; }
@@ -431,3 +376,18 @@
   .dashboard-screen .why-orbit { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
   .why-copy h2 { font-size: 20px; }
 }
+
+/* Three balanced dashboard columns with a single action list. */
+.risks-checks .check-arrow { margin-left: auto; padding-top: 3px; color: #8e9ead; font-size: 12px; }
+.risks-checks .reminder-row { align-items: flex-start; }
+.activity-column .activity-ring { max-width: 190px; width: 100%; justify-self: center; }
+@media (max-width: 1050px) and (min-width: 701px) {
+  .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-screen .science-column { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .science-column > .column-label { grid-column: 1 / -1; }
+  .science-column .science-plot { min-width: 0; }
+}
+@media (min-width: 1051px) { .dashboard-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.dashboard-screen .risks-checks { border-top: 2px solid #5d6573; background: #181c22; }
+.dashboard-screen .risks-checks > header { padding-bottom: 16px; border-bottom: 1px solid #363d48; margin-bottom: 4px; }

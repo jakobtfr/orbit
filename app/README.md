@@ -19,7 +19,7 @@ The app is shown as Lena Brandt. The anatomical body map uses SVG and works with
 | Path | Contents |
 | --- | --- |
 | `src/screens/` | Dashboard, muscle details, indicators, measurements, check-in, symptoms, and NASA Replay |
-| `src/components/` | Status shapes and tags, tiles, next-action card, chart, interactive anatomical SVG body, chat preview, app shell |
+| `src/components/` | Status shapes and tags, tiles, next-action card, chart, interactive anatomical SVG body, combined risks/checks panel, app shell |
 | `src/components/anatomy/` | Front/back SVG paths adapted from Kacmisz/react-body-map, with attribution in `NOTICE.md` |
 | `src/lib/indicators.ts` | The indicators, body regions, and their texts |
 | `src/lib/judge.ts` | The fake logic: status rules, who sees what, next actions |
@@ -39,8 +39,8 @@ The app is shown as Lena Brandt. The anatomical body map uses SVG and works with
 
 ## Personal dashboard
 
-The home screen has four desktop columns: interactive anatomy; activity rings and
-reminders; a mock weekly brief and review outlook; and three scientific-style plots.
+The home screen has three equal desktop columns: interactive anatomy; activity
+rings with one combined risks/checks panel; and three scientific-style plots.
 At smaller widths the layout switches to two columns, then one.
 
 - Heart rate, core temperature, and radiation dose rate.
@@ -49,8 +49,8 @@ At smaller widths the layout switches to two columns, then one.
   and references. SD is variability in the demo series, not measurement uncertainty.
 - Radiation rates are calculated from cumulative dose differences divided by elapsed
   days, preserving fractional dose precision. Seeded drift adds illustrative variation.
-- The AI brief is a template over demo values; no illness or solar-event prediction
-  model is connected. Reminder times are explicitly a demo schedule.
+- Risk review and scheduled checks share one action list; radiation appears once.
+  Reminder times are explicitly a demo schedule. There is no dashboard chatbot.
 
 See [dashboard methodology](../docs/solution/dashboard-methodology.md) for threshold
 scope, source links, hazard mapping, and validation.

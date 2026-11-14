@@ -25,6 +25,7 @@ Looking for a specific fact? Start with the [data index](docs/index.md).
 | [`docs/challenge/resources.md`](docs/challenge/resources.md) | Official HRP/CSA resources, distilled: five hazards, 17 risks, current research, CSA findings |
 | [`docs/research/operations.md`](docs/research/operations.md) | What NASA actually does today: roles, cadence, countermeasures, medical event rates, exploration gap |
 | [`docs/research/clinical-thresholds.md`](docs/research/clinical-thresholds.md) | Published clinical values and spaceflight adjustments, with sources and confidence notes |
+| [`docs/solution/problems-and-hypotheses.md`](docs/solution/problems-and-hypotheses.md) | Where the need comes from, ranked problems, the cut, five testable hypotheses, and the bed-rest data check |
 | [`docs/solution/scientific-constraints.md`](docs/solution/scientific-constraints.md) | What the health logic must respect to be scientifically valid in flight, with a test per hard constraint |
 | [`docs/research/open-data.md`](docs/research/open-data.md) | Open datasets and repositories: UTMB bed rest, Inspiration4, flight-crew signals, ASPA, OSDR, ESA HREDA |
 | [`data/`](data/README.md) | Real extracted tables: UTMB daily vitals, labs, symptoms, sleep, tilt, cognition; Inspiration4 labs |

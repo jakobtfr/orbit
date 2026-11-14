@@ -36,3 +36,21 @@ The app is shown as Lena Brandt. The anatomical body map uses SVG and works with
 - The status rules are simplified forms of R1 to R12 and have not been reviewed by a clinician.
 - Emergency steps and all guidance wording are drafts without a source.
 - State lives in memory. Reloading the page resets the demo.
+
+## Personal dashboard
+
+The home screen has four desktop columns: interactive anatomy; activity rings and
+reminders; a mock weekly brief and review outlook; and five scientific-style plots.
+At smaller widths the layout switches to two columns, then one.
+
+- Heart rate, core temperature, nightly sleep, radiation dose rate, and cabin CO2.
+- 14/28-day controls; seven non-overlapping bins with mean ±1 sample SD.
+- Window SD, sample variance, sample count, threshold lines, and expandable tables
+  and references. SD is variability in the demo series, not measurement uncertainty.
+- Radiation rates are calculated from cumulative dose differences divided by elapsed
+  days. A constant simulated rate legitimately has zero sample SD.
+- The AI brief is a template over demo values; no illness or solar-event prediction
+  model is connected. Reminder times are explicitly a demo schedule.
+
+See [dashboard methodology](../docs/solution/dashboard-methodology.md) for threshold
+scope, source links, hazard mapping, and validation.

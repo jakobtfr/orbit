@@ -159,6 +159,7 @@ function buildCheckIns(): CheckIn[] {
   return list
 }
 
+/** One simulated daily sample of a 1-hour mean cabin ppCO2. */
 function buildCabin(): Reading[] {
   const out: Reading[] = []
   for (let d = 0; d <= LAST_DAY; d++) {

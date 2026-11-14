@@ -338,15 +338,19 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
     return canvas.toDataURL('image/jpeg', 0.8).split(',')[1]
   }
 
-  const send = (text: string) => {
+  /**
+   * Answers what the person said. With `hidden`, the text is an instruction to the model that the person never
+   * sees, used to have the model open the call in its own words; `fallback` is what is said if the model cannot.
+   */
+  const send = (text: string, opts: { hidden?: boolean; focus?: typeof focus; fallback?: DoctorReply & { choices?: Choice[] }; extra?: Choice[] } = {}) => {
     asking.current?.abort()
-    const urgent = isUrgent(text)
+    const urgent = !opts.hidden && isUrgent(text)
     // A reading said aloud in a call about that reading is saved, and everything after it uses the new state.
-    const heard = urgent ? undefined : heardReading(text, measured.current ?? focus?.key)
+    const heard = urgent || opts.hidden ? undefined : heardReading(text, measured.current ?? focus?.key)
     const lastDoctor = [...lines].reverse().find((l) => l.from === 'doctor')?.text ?? ''
     const known = [...tasks, ...allProcedures(state, viewer)]
     // Turning something down is acted on by the app, so its procedure never stays on screen. With nothing named, it is the one in hand or just offered.
-    const refused = urgent || heard ? [] : declined(text, known, proc?.id ?? (/\b(say start|shall we|ready to|go through|walk you through|take you through|want me to|would you like)\b/i.test(lastDoctor) ? todo[0]?.id : undefined))
+    const refused = urgent || heard || opts.hidden ? [] : declined(text, known, proc?.id ?? (/\b(say start|shall we|ready to|go through|walk you through|take you through|want me to|would you like)\b/i.test(lastDoctor) ? todo[0]?.id : undefined))
     const left = refused.length ? discard(refused) : undefined
     if (left && !modelNow.current) {
       setLines((ls) => [...ls, { id: nextId.current++, from: 'you', text }])
@@ -355,10 +359,10 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
     }
     // What is still open after that: the state itself only changes on the next render.
     const procNow = left?.closed ? null : proc
-    const focusNow = left?.unfocused ? undefined : focus
+    const focusNow = left?.unfocused ? undefined : opts.focus ?? focus
     const todoNow = left ? todo.filter((t) => !left.ids.includes(t.id)) : todo
     const droppedNow = left ? [...new Set([...dropped, ...left.ids])] : dropped
-    if (!urgent && !heard && !left) {
+    if (!urgent && !heard && !left && !opts.hidden) {
       // Going through a procedure is done by the app, not the model, so a step is never skipped or reworded.
       const command = proc ? guideCommand(text) : undefined
       // A plain yes to the doctor's offer to go through something starts the next thing it means to do.
@@ -385,7 +389,8 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
     }
     const general = reply(current, viewer, text)
     // The built-in doctor: judge a new reading; otherwise answer what was said, or give the next step of a focused call.
-    const rule: DoctorReply = urgent ? general
+    const rule: DoctorReply & { choices?: Choice[] } = opts.fallback ? opts.fallback
+      : urgent ? general
       : left ? { text: left.text }
       : heard ? afterReading(current, viewer, heard.key)
       : !focusNow || general.status !== undefined || general.actions ? general
@@ -394,7 +399,7 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
     const using = modelNow.current
     // Urgent words always get the fixed answer. So does everything when no model is running.
     if (!using || urgent) {
-      setLines((ls) => [...ls, you, { id: nextId.current++, from: 'doctor', ...rule, choices: rule.ask === 'where' ? WHERE : undefined }])
+      setLines((ls) => [...ls, ...(opts.hidden ? [] : [you]), { id: nextId.current++, from: 'doctor', ...rule, choices: rule.choices ?? (rule.ask === 'where' ? WHERE : undefined) }])
       if (voiceOn.current) speak(rule.text)
       return
     }
@@ -413,10 +418,10 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
           ? `You are going through the procedure "${procNow.title}" with them, and each step is shown to them in the call. They are on step ${at + 1} of ${procNow.steps.length}: "${procNow.steps[at]}" All its steps: ${procNow.steps.map((x, n) => `${n + 1}. ${x}`).join(' ')} You move through it for them. If what they just said shows this step is done, acknowledge it in a few words and end your answer with [[next]]. If it shows later steps are done too, end with [[step:N]], where N is the first step still to do. If it shows the whole procedure is done, end with [[finish]]. Example: they say "I am lying down and I had some water", you answer "Good. [[next]]". The app then reads the next step aloud, so never read out steps yourself. If they only ask a question about the step, answer it in one sentence with no tag. If they say they do not want to do this or talk about it, do not argue: say you will leave it, ask what they want instead, and end your answer with [[drop]]. The app then closes the procedure.`
           : `What you mean to get done in this call, in order: ${todoNow.length ? todoNow.map((t) => t.id).join(', ') : 'nothing in particular'}. Procedures you can go through with them, as id: name: ${allProcedures(current, viewer).filter((x) => !droppedNow.includes(x.id)).map((x) => `${x.id}: ${x.kind === 'measure' ? `how to measure ${x.title.toLowerCase()}` : x.title} (${x.steps.length} steps)`).join('; ')}. You cannot read steps out yourself: the app does that. So when something needs doing, say in one short sentence what you will go through with them, and end your answer with [[start:ID]], using an id from this list. Example answer: "Dizziness fits your low blood pressure, so let us deal with that now. [[start:${todoNow[0]?.id ?? 'measure-bp'}]]" The app then shows the procedure and reads its first step aloud. Leave the tag out only when they asked a plain question that needs no action. If they say they do not want to deal with one of these, end your answer with [[drop:ID]] instead and move on to what they do want.`,
       ].filter(Boolean).join(' ') || undefined }) },
-      ...lines.slice(-10).filter((l) => l.text).map((l): ChatMessage => ({ role: l.from === 'doctor' ? 'assistant' : 'user', content: l.text })),
+      ...(opts.hidden ? [] : lines.slice(-10)).filter((l) => l.text).map((l): ChatMessage => ({ role: l.from === 'doctor' ? 'assistant' : 'user', content: l.text })),
       { role: 'user', content: text, images: picture ? [picture] : undefined },
     ]
-    setLines((ls) => [...ls, you, { id, from: 'doctor', text: '', status: rule.status, actions: focusNow || left ? undefined : general.actions }])
+    setLines((ls) => [...(opts.hidden ? [] : [...ls, you]), { id, from: 'doctor', text: '', status: rule.status, actions: focusNow || left || opts.hidden ? undefined : general.actions }])
     const ctl = new AbortController()
     asking.current = ctl
     const aloud = voiceOn.current
@@ -428,7 +433,7 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
     let gaveUp = false
     const timer = window.setTimeout(() => { if (!full) { gaveUp = true; ctl.abort() } }, 25000)
     const fallBack = () => {
-      write(rule.text)
+      setLines((ls) => ls.map((l) => (l.id === id ? { ...l, text: rule.text, choices: rule.choices } : l)))
       if (voiceOn.current) speak(rule.text)
       else go('idle')
     }
@@ -439,9 +444,9 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
       // Say each sentence as soon as it is complete, so the voice starts before the answer is finished.
       const ready = aloud && turn.current === mine ? clean.slice(saidUpTo).match(/^[\s\S]*[.!?](?=\s)/) : null
       if (ready) { sayPart(ready[0]); saidUpTo += ready[0].length }
-    }, ctl.signal).then(() => {
+    }, ctl.signal, opts.hidden ? 0.9 : undefined).then(() => {
       let clean = tidy(full).trimEnd()
-      const tag = turn.current === mine ? ACT_TAG.exec(full) : null
+      const tag = turn.current === mine && !opts.hidden ? ACT_TAG.exec(full) : null
       const act = tag?.[1].toLowerCase()
       // The model decided to act: start a procedure, move on in the one in hand, or close it. What follows is added to what is being said.
       const dropping = act === 'drop' ? (tag?.[2] && known.some((p) => p.id === tag[2]) ? [tag[2]] : procNow ? [procNow.id] : []) : []
@@ -461,7 +466,9 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
       }
       if (!clean && put) clean = put.text
       if (!clean) { fallBack(); return }
-      const offered = started ? undefined : OPTIONS_TAG.exec(full)?.[1].split('|').map((x) => x.replace(/[*_#`"]/g, '').trim()).filter((x) => x && x.length <= 32).slice(0, 4).map((label): Choice => ({ label }))
+      const fromModel = OPTIONS_TAG.exec(full)?.[1].split('|').map((x) => x.replace(/[*_#`"]/g, '').trim()).filter((x) => x && x.length <= 32).slice(0, 4).map((label): Choice => ({ label })) ?? []
+      // Answers that come from the person's own data, such as the problems their readings point to, go first.
+      const offered = started ? undefined : [...(opts.extra ?? []), ...fromModel].filter((c, n, all) => all.findIndex((x) => x.label.toLowerCase() === c.label.toLowerCase()) === n).slice(0, 6)
       setLines((ls) => ls.map((l) => (l.id === id ? { ...l, text: clean, note: started?.note ?? put?.note, choices: offered?.length ? offered : undefined } : l)))
       if (aloud && turn.current === mine) { sayPart(clean.slice(saidUpTo)); speakEnd() }
       else if (phaseNow.current === 'thinking') go('idle')
@@ -545,7 +552,21 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
 
   // Ring for a moment, then connect: the doctor starts talking and the camera comes on.
   const connect = useRef(() => {})
-  connect.current = () => { voiceStart(); void cameraStart() }
+  connect.current = () => {
+    void cameraStart()
+    const first = lines[0]
+    // Without a model the call opens with the built-in words. With one, the model opens it itself, so no two calls start alike.
+    if (!modelNow.current || !first) { voiceStart(); return }
+    voiceOn.current = true
+    misses.current = 0
+    setVoice(true)
+    setNotice(recognitionClass() ? '' : 'This browser cannot listen, so I will speak and you can type.')
+    const name = viewer.name.split(' ')[0]
+    send(focus
+      ? `[The call has just connected and they have not spoken yet. Open it yourself, in your own words and not the way you would open any other call. Greet ${name} in two or three words, say in one sentence why you are calling, going by what this call was opened about, then ask one question about how they are or what they notice. End with [[options: ...]] giving three or four likely answers to your question.]`
+      : `[The call has just connected and they have not spoken yet. Open it yourself, in your own words and not the way you would open any other call. Greet ${name} in two or three words and ask what is wrong or what they need, in one short sentence. Do not mention any reading or finding yet, and give no options.]`,
+    { hidden: true, fallback: first, extra: focus ? undefined : first.choices })
+  }
   useEffect(() => {
     const id = window.setTimeout(() => connect.current(), 1800)
     return () => window.clearTimeout(id)
@@ -584,6 +605,7 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
   const choices = lastLine?.from === 'doctor' && !proc && phase !== 'thinking' ? lastLine.choices : undefined
   const choose = (c: Choice) => {
     if (c.start) { startProcedure(c.start); return }
+    if (c.other && modelNow.current) { send(c.label); return }
     if (c.other) {
       setLines((ls) => [...ls, { id: nextId.current++, from: 'you', text: c.label }])
       announce('Where is it?', undefined, WHERE)
@@ -594,6 +616,7 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
     // A problem was picked: the call is about it from here on, and the doctor leads with what it found.
     setFocus(f)
     step.current = 0
+    if (modelNow.current) { send(`It is ${f.title}.`, { focus: f }); return }
     setLines((ls) => [...ls, { id: nextId.current++, from: 'you', text: c.label }])
     announce(`${f.finding} ${f.steps[0]}`, `This call is about ${f.title}`, FEEL)
   }

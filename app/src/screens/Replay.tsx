@@ -269,7 +269,7 @@ function ReplayChart({ subject, days, index, vital }: { subject: Subject; days: 
   return (
     <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${info.name} over bed rest, with Earth's limit and the volunteer's own limit`}>
       {own !== null && mine !== null && (
-        <rect x={M.left} y={y(mine)} width={W - M.left - M.right} height={y(own) - y(mine)} fill="var(--bg-hover)" />
+        <rect x={M.left} y={y(mine)} width={W - M.left - M.right} height={y(own) - y(mine)} fill="var(--bg-surface)" />
       )}
       {lines.map((l) => (
         <g key={l.label}>

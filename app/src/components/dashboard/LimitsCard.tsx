@@ -43,7 +43,7 @@ export function LimitsCard() {
 
   return (
     <article className="dashboard-card limits-card">
-      <header><h2>Earth limits vs. your normal</h2><span className="small-tag">NASA DATA</span></header>
+      <header><h2>Earth limits vs. your normal</h2><span className="card-note">NASA data</span></header>
       <button className="limits-lanes" onClick={replay} aria-label={`Replay: ${earth} Earth ${plural(earth)}, ${orbit} ORBIT ${plural(orbit)} in ${days.length} days`}>
         <Lane label="Earth limits" count={earth} days={days} shown={shown} alarm={(d) => d.earthAlarm} />
         <Lane label="Your normal" count={orbit} days={days} shown={shown} alarm={(d) => d.orbitAlarm} />

@@ -2,7 +2,7 @@
 
 Written 2026-11-14, updated the same day for version 2. One dark theme, no light theme yet.
 
-**Scope.** These rules apply to every screen. The dashboard workspace (Dashboard, Deep Data, Mental Health) uses its own charcoal palette and card styles in `app/src/dashboard.css`; on those screens the status colours, shapes, and words below still apply unchanged.
+**Style.** ORBIT follows the look of apple.com in its dark sections: a black canvas, neutral rounded tiles without borders, the system font, pill-shaped buttons and controls, generous spacing, and no gradients, glows, or tinted panels. Colour is kept for status and for the one primary action. Tokens live in `app/src/styles.css`; the workspace screens (Dashboard, Deep Data, Mental Health) are laid out in `app/src/dashboard.css` and `app/src/research.css` with the same tokens.
 
 How ORBIT looks and reads. Every screen, the demo video, and the slide deck follow this file. Copy-paste values are in [Tokens](#tokens).
 
@@ -21,7 +21,7 @@ D2 and D5 are requirements of NASA's display standard, not only taste: colour "m
 ## Name and mark
 
 - **Name:** written `ORBIT`, all capitals, in every context.
-- **Wordmark:** `ORBIT` in Inter, weight 600, letter-spacing 0.12em, colour `text-primary`.
+- **Wordmark:** `ORBIT` in the system font, weight 600, letter-spacing 0.04em, colour `text-primary`.
 - **Mark:** a ring with one dot on it. Use it alone where the wordmark does not fit, such as an app icon.
 - **Colour:** the mark and wordmark are `text-primary` on `bg-canvas` only. Never a status colour, never the accent.
 - **Clear space:** at least the height of the letter O on every side.
@@ -42,33 +42,33 @@ Contrast figures are WCAG contrast ratios, calculated for this file. Text must r
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `bg-canvas` | `#090A0C` | Page background |
-| `bg-surface` | `#101114` | Tiles, cards, navigation |
-| `bg-raised` | `#17181C` | Dialogs, popovers, inputs |
-| `bg-hover` | `#1F2126` | Hover and pressed states |
-| `border-subtle` | `#1D1F24` | Dividers inside a surface |
-| `border` | `#2A2D34` | Edges of tiles and cards |
-| `border-control` | `#6B717C` | Edges of inputs and other controls (3.6:1 on `bg-raised`) |
+| `bg-canvas` | `#000000` | Page background |
+| `bg-surface` | `#1D1D1F` | Tiles and cards |
+| `bg-raised` | `#2C2C2E` | Tiles inside tiles, inputs, secondary buttons, popovers |
+| `bg-hover` | `#3A3A3C` | Hover and selected states, the selected segment |
+| `border-subtle` | `#2C2C2E` | Hairlines between list rows inside a tile |
+| `border` | `#3A3A3C` | Rarely used; tiles have no edge |
+| `border-control` | `#636366` | Chart frames and limit lines |
 
 ### Text
 
-| Token | Hex | On canvas | On raised | Use |
+| Token | Hex | On canvas | On surface | Use |
 | --- | --- | --- | --- | --- |
-| `text-primary` | `#F4F5F7` | 18.2:1 | 16.3:1 | Values, headings, anything acted on |
-| `text-secondary` | `#C8CCD4` | 12.3:1 | 11.0:1 | Body text |
-| `text-muted` | `#9DA3AE` | 7.8:1 | 7.0:1 | Labels, units, timestamps, tags |
+| `text-primary` | `#F5F5F7` | 19.3:1 | 15.5:1 | Values, headings, anything acted on |
+| `text-secondary` | `#D2D2D7` | 13.9:1 | 11.2:1 | Body text |
+| `text-muted` | `#A1A1A6` | 8.2:1 | 6.5:1 | Labels, units, timestamps, captions |
 
-There is no dimmer text colour. Nothing that must be read is darker than `text-muted`.
+There is no dimmer text colour. Nothing that must be read is darker than `text-muted`. On `bg-raised`, `text-muted` drops to 5.4:1; use it there only for units and captions next to a brighter value.
 
 ### Accent
 
 | Token | Hex | Contrast | Use |
 | --- | --- | --- | --- |
-| `accent` | `#A3A6FF` | 8.9:1 on canvas | Links, focus rings, selected outlines, active navigation |
-| `accent-fill` | `#4F52C4` | 6.3:1 with white text | Background of the one primary button per screen |
+| `accent` | `#4AA3FF` | 8.0:1 on canvas, 6.4:1 on surface | Links, focus rings, selected outlines |
+| `accent-fill` | `#005FC4` | 6.1:1 with white text | Background of the one primary button per screen |
 | `text-on-accent` | `#FFFFFF` | | Text on `accent-fill` |
 
-The accent marks things the crew can act on. It never carries a status. ORBIT has no advisory alert level; if one is added, revisit the accent first, because NASA assigns blue to advisory alerts.
+The blues are darkened from Apple's `#2997FF` and `#0071E3` to reach 6:1. The accent marks things the crew can act on. It never carries a status. ORBIT has no advisory alert level; if one is added, revisit the accent first, because NASA assigns blue to advisory alerts.
 
 ### Status
 
@@ -76,12 +76,14 @@ The colours for warning, caution, no recent data, and unavailable follow the req
 
 | State | Token | Hex | On canvas | Shape | Label | When |
 | --- | --- | --- | --- | --- | --- | --- |
-| In range | `status-ok` | `#3FBF6F` | 8.4:1 | Filled circle | In range | The rule's green band |
-| Caution | `status-caution` | `#F2C230` | 11.8:1 | Triangle | Caution | The rule's amber band, confirmed |
-| Warning | `status-warning` | `#FF7676` | 7.6:1 | Diamond | Warning | The rule's red band |
-| No recent data | `status-stale` | `#4CC9E0` | 10.1:1 | Dashed ring | No recent data | The last reading is older than the indicator's maximum age ([SH8](docs/research/scientific-constraints.md#hard-constraints)) |
-| Unavailable | `status-unavailable` | `#7B818C` | 5.1:1 | Dash | Unavailable | The rule is switched off in this environment ([SH4](docs/research/scientific-constraints.md#hard-constraints)) |
-| Repeat reading | none | `text-primary` | 18.2:1 | Half-filled circle | Repeat reading | One out-of-range reading, not yet confirmed ([SH6](docs/research/scientific-constraints.md#hard-constraints)) |
+| In range | `status-ok` | `#30D158` | 10.4:1 | Filled circle | In range | The rule's green band |
+| Caution | `status-caution` | `#FFD60A` | 14.9:1 | Triangle | Caution | The rule's amber band, confirmed |
+| Warning | `status-warning` | `#FF6961` | 7.4:1 | Diamond | Warning | The rule's red band |
+| No recent data | `status-stale` | `#64D2FF` | 12.2:1 | Dashed ring | No recent data | The last reading is older than the indicator's maximum age ([SH8](docs/research/scientific-constraints.md#hard-constraints)) |
+| Unavailable | `status-unavailable` | `#8E8E93` | 6.4:1 | Dash | Unavailable | The rule is switched off in this environment ([SH4](docs/research/scientific-constraints.md#hard-constraints)) |
+| Repeat reading | none | `text-primary` | 19.3:1 | Half-filled circle | Repeat reading | One out-of-range reading, not yet confirmed ([SH6](docs/research/scientific-constraints.md#hard-constraints)) |
+
+These are Apple's dark-mode system colours, with the accessible red. The hues still follow NASA's required colour table (Table F.5-1).
 
 Rules:
 
@@ -89,64 +91,64 @@ Rules:
 - Status colour goes on the shape, the label, and an arrow after the value (`↑` above the limit, `↓` below). It never fills a tile.
 - "No recent data" is its own state. Never show it as a dimmed green.
 - "Repeat reading" is deliberately uncoloured: an unconfirmed reading is not a caution yet.
-- `status-unavailable` is the one colour below 6:1. Use it for the shape and for disabled controls; write the label in `text-muted`.
-- Filled status backgrounds with `bg-canvas` text are reserved for the emergency flow (see [Emergency flow](#emergency-flow)).
+- Filled status backgrounds with black text are reserved for the emergency flow and its entry button (see [Emergency flow](#emergency-flow)), and for the small round icons of urgent items in Risks & checks.
+- **One exception to D2:** the two activity rings on the Dashboard use green (movement) and blue (weekly plan), as in Apple Fitness. They show progress, not status, and always carry a number and a word.
 
 ## Typography
 
-Two typefaces, both open source under the SIL Open Font License 1.1.
+One family: the system font, which is SF Pro on Apple devices. Inter is the self-hosted fallback elsewhere (SIL Open Font License 1.1).
 
-| Family | Use | Stack |
-| --- | --- | --- |
-| **Inter** (variable) | All interface text and headings | `"Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif` |
-| **Geist Mono** | Readings, units, times, IDs, tags | `"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace` |
+| Use | Stack |
+| --- | --- |
+| All text, values, and numbers | `-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Inter Variable", "Inter", "Segoe UI", sans-serif` |
 
-| Style | Family | Size / line height | Weight | Letter-spacing | Use |
-| --- | --- | --- | --- | --- | --- |
-| `display` | Inter | 48 / 1.05 | 600 | −0.022em | Demo title, slide headlines |
-| `title-1` | Inter | 32 / 1.15 | 600 | −0.02em | Screen title |
-| `title-2` | Inter | 24 / 1.25 | 600 | −0.015em | Section title |
-| `title-3` | Inter | 20 / 1.3 | 600 | −0.01em | Card title, next action |
-| `body-lg` | Inter | 17 / 1.55 | 400 | 0 | Guidance steps |
-| `body` | Inter | 15 / 1.55 | 400 | 0 | Default text |
-| `body-sm` | Inter | 13 / 1.5 | 400 | 0 | Supporting text |
-| `label` | Inter | 12 / 1.35 | 500 | 0 | Field and tile labels |
-| `reading-xl` | Geist Mono | 40 / 1.0 | 500 | −0.02em | The one value a screen is about |
-| `reading` | Geist Mono | 24 / 1.1 | 500 | −0.01em | Value on a tile |
-| `data` | Geist Mono | 13 / 1.4 | 400 | 0 | Units, timestamps, table cells |
-| `tag` | Geist Mono | 12 / 1.3 | 500 | 0.06em, uppercase | Provenance, confidence, mission time |
+| Style | Size / line height | Weight | Letter-spacing | Use |
+| --- | --- | --- | --- | --- |
+| `title-1` | 40 / 1.1 | 600 | −0.025em | Screen title |
+| `title-2` | 28 / 1.14 | 600 | −0.02em | Section title |
+| `title-3` | 20 / 1.3 | 600 | −0.01em | Card title, next action |
+| Tile title | 17–19 / 1.25 | 600 | −0.01em | Title inside a dashboard tile |
+| `body-lg` | 17 / 1.55 | 400 | 0 | Guidance steps |
+| `body` | 15 / 1.5 | 400 | −0.01em | Default text |
+| `body-sm` | 13 / 1.5 | 400 | 0 | Supporting text |
+| `label` | 12 / 1.35 | 500 | 0 | Field and tile labels |
+| `reading-xl` | 48 / 1.0 | 600 | −0.02em | The one value a screen is about |
+| `reading` | 28 / 1.1 | 600 | −0.01em | Value on a tile |
+| `data` | 13 / 1.4 | 400 | 0 | Units, timestamps, table cells |
+| `tag` | 12 / 1.3 | 500 | 0 | Provenance, confidence, rule ID |
 
 Rules:
 
-- Weights are 400, 500, and 600 only. Emphasis below heading level comes from `text-primary` against `text-secondary`, not from bold.
+- Weights are 400, 500, and 600 only.
 - Minimum size for anything that must be read is 12 px.
-- Numbers that change or sit in a column use tabular figures (`font-variant-numeric: tabular-nums`); Geist Mono already does.
-- A value and its unit are separated by a non-breaking space; the unit is `data` size in `text-muted`: `37.8 °C`.
-- Mission time is shown in plain words, in `tag` style: `Day 100`. NASA's `MET 57/14:08:33` format was not understood without explanation.
-- Sentence case everywhere except `tag` and the wordmark.
-- Self-host both fonts and ship each font's `OFL.txt` with them. Do not load them from a CDN.
+- All numbers use tabular figures (`font-variant-numeric: tabular-nums`, set on `body`).
+- A value and its unit are separated by a non-breaking space; the unit is smaller and `text-muted`: `37.8 °C`.
+- Mission time is shown in plain words: `Day 100`. NASA's `MET 57/14:08:33` format was not understood without explanation.
+- Sentence case everywhere except the wordmark.
+- No numbered section labels ("01 / BODY MAP") and no eyebrow labels above titles. A tile's title says what it is; if a title adds nothing, leave it out.
 
 ## Layout and shape
 
 | Token | Value | Use |
 | --- | --- | --- |
 | `space-1` to `space-8` | 4, 8, 12, 16, 24, 32, 48, 64 px | All padding and gaps |
-| `radius-sm` | 6 px | Buttons, inputs, tags |
-| `radius-md` | 10 px | Tiles, cards |
-| `radius-lg` | 16 px | Dialogs |
-| `radius-full` | 999 px | Status shapes, pills |
+| `radius-sm` | 8 px | Small inner elements |
+| `radius-md` | 18 px | Tiles inside tiles, cards |
+| `radius-lg` | 22 px | Dashboard tiles, dialogs |
+| `radius-full` | 980 px | Buttons, segmented controls, tags, status shapes |
 
-- **Width:** reading text runs to 640 px at most. Tile grids use 2 to 4 columns with a 16 px gap.
-- **Padding:** tiles and cards have 16 px inside; screens have 24 px at the edges.
-- **Touch targets:** at least 44 by 44 px, with 8 px between neighbours.
-- **Depth:** a higher layer is a lighter surface with a 1 px border. No shadows, except one on dialogs: `0 16px 48px rgba(0, 0, 0, 0.5)`.
-- **Icons:** 1.5 px stroke, 16 or 20 px, in `text-muted` unless they carry a status. An icon never appears without a text label.
+- **Grid:** the Dashboard is a bento grid of tiles in three columns with 20 px gaps; two on tablets, one on phones.
+- **Width:** reading text runs to 640 px at most. Pages are centred, up to 1440–1600 px.
+- **Padding:** dashboard tiles have 24 px inside; screens have 24 px at the edges.
+- **Touch targets:** at least 44 by 44 px for primary controls, with 8 px between neighbours.
+- **Depth:** a higher layer is a lighter surface. No borders on tiles, no shadows, except on dialogs and popovers: `0 16px 48px rgba(0, 0, 0, 0.6)`. The header is translucent with a background blur.
+- **Icons:** 1.5 px stroke, 15 to 20 px, in `text-muted` unless they carry a status. An icon never appears without a text label.
 
 ## Components
 
 ### Status tile
 
-One indicator per tile, on `bg-surface` with a `border` edge. Top to bottom:
+One indicator per tile, on `bg-surface`, with no edge. Top to bottom:
 
 1. Indicator name in `label`, `text-muted`.
 2. Value in `reading`, `text-primary`, with unit and limit arrow.
@@ -157,7 +159,7 @@ The whole tile is one touch target and opens the indicator's detail screen.
 
 ### Tags
 
-Small `tag`-style labels in `text-muted` with a `border` edge and no fill. They never take a status colour.
+Small pill-shaped labels: `tag` text in `text-muted` on `bg-raised`. They never take a status colour.
 
 - **Provenance** ([SH5](docs/research/scientific-constraints.md#hard-constraints)): `MEASURED`, `SELF-REPORTED`, `MODELLED`. Scripted demo values carry their indicator's normal provenance; the README and submission say which data is scripted.
 - **Confidence** ([SS5](docs/research/scientific-constraints.md#soft-constraints)): `HIGH`, `MODERATE`, `LOW`.
@@ -167,11 +169,12 @@ Small `tag`-style labels in `text-muted` with a `border` edge and no fill. They 
 
 | Kind | Look | Use |
 | --- | --- | --- |
-| Primary | `accent-fill` background, `text-on-accent` | The one main action on a screen |
-| Secondary | `bg-raised` background, `border` edge, `text-primary` | Other actions |
-| Quiet | No background, `accent` text | Navigation and "show more" |
+| Primary | `accent-fill` background, white text, pill shape | The one main action on a screen |
+| Secondary | `bg-raised` background, `text-primary`, pill shape | Other actions |
+| Quiet | No background, `accent` text, underline on hover | Links and "show more" |
+| Segmented | Pill track in `bg-surface` or `bg-raised`, selected segment in `bg-hover` | Ranges, front/back, navigation |
 
-Height is 44 px, radius `radius-sm`, text `body` at weight 500. Focus is a 2 px `accent` ring with a 2 px gap.
+Height is 44 px (32–36 px for segmented controls and the header button), radius `radius-full`, text `body` at weight 400. Focus is a 2 px `accent` ring with a 2 px gap.
 
 ### Next-action card
 
@@ -183,18 +186,17 @@ Shown when an indicator needs something from the crew. On `bg-raised`:
 
 ### Charts
 
-- The line and points are `text-primary`, 1.5 px.
-- The personal baseline is a band in `bg-hover`. Limits are 1 px lines in `border-control`, labelled in `data`.
+- The line and points are `text-primary`, 1.5 px. On the dashboard trend plots the line takes the status colour of each reading.
+- The personal baseline is a band in `bg-surface`. Limits are 1 px lines in `border-control`; Earth's limit is dashed. Labels are `data` in `text-muted`.
 - Only points outside a limit take a status colour, with the matching shape.
-- Axes and gridlines are `border-subtle`; axis labels are `data` in `text-muted`.
-- No area fills, gradients, or smoothing that invents values between readings.
+- No tinted review bands, area fills, gradients, or smoothing that invents values between readings.
 
 ### Emergency flow
 
 The only place where the quiet rules are suspended.
 
-- Entry: an **Emergency** button at the top right of the header on every screen, outlined and labelled in `status-warning`, with the warning diamond. It is the only status colour in the header.
-- A full-width header with `status-warning` background and `bg-canvas` text (7.6:1).
+- Entry: an **Emergency** button at the top right of the header on every screen: a `status-warning` pill with black text and the warning diamond (7.4:1). It is the only status colour in the header.
+- A full-width header with `status-warning` background and black text (7.4:1).
 - One step per screen in `title-2`, with one primary button. Completed steps stay visible in `text-muted`.
 - The header shape may flash at 0.8 Hz, on for 70% of each cycle. The crew can stop it, and it does not flash when the device asks for reduced motion. Text itself never flashes.
 
@@ -231,31 +233,36 @@ Run each against a finished screen.
 :root {
   color-scheme: dark;
 
-  --bg-canvas: #090A0C;
-  --bg-surface: #101114;
-  --bg-raised: #17181C;
-  --bg-hover: #1F2126;
+  /* Apple dark: black canvas, neutral tiles, system colours for status. */
+  --bg-canvas: #000000;
+  --bg-surface: #1d1d1f;
+  --bg-raised: #2c2c2e;
+  --bg-hover: #3a3a3c;
 
-  --border-subtle: #1D1F24;
-  --border: #2A2D34;
-  --border-control: #6B717C;
+  --border-subtle: #2c2c2e;
+  --border: #3a3a3c;
+  --border-control: #636366;
 
-  --text-primary: #F4F5F7;
-  --text-secondary: #C8CCD4;
-  --text-muted: #9DA3AE;
+  --text-primary: #f5f5f7;
+  --text-secondary: #d2d2d7;
+  --text-muted: #a1a1a6;
 
-  --accent: #A3A6FF;
-  --accent-fill: #4F52C4;
-  --text-on-accent: #FFFFFF;
+  --accent: #4aa3ff;
+  --accent-fill: #005fc4;
+  --text-on-accent: #ffffff;
 
-  --status-ok: #3FBF6F;
-  --status-caution: #F2C230;
-  --status-warning: #FF7676;
-  --status-stale: #4CC9E0;
-  --status-unavailable: #7B818C;
+  --status-ok: #30d158;
+  --status-caution: #ffd60a;
+  --status-warning: #ff6961;
+  --status-stale: #64d2ff;
+  --status-unavailable: #8e8e93;
 
-  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ring-move: #30d158;
+  --ring-plan: #0a84ff;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', 'Inter Variable', 'Inter', 'Segoe UI', sans-serif;
+  /* Numbers use the system font with tabular figures, as on apple.com. */
+  --font-mono: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Inter Variable', 'Inter', sans-serif;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -266,23 +273,22 @@ Run each against a finished screen.
   --space-7: 48px;
   --space-8: 64px;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-full: 999px;
+  --radius-sm: 8px;
+  --radius-md: 18px;
+  --radius-lg: 22px;
+  --radius-full: 980px;
 
-  --shadow-dialog: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-dialog: 0 16px 48px rgba(0, 0, 0, 0.6);
   --duration-fast: 120ms;
   --duration-base: 200ms;
-}
-```
+}```
 
 ## Sources
 
 - [NASA-STD-3001 Volume 2, Appendix F: Display Standard](https://www.nasa.gov/reference/appendix-f-vol-2/). Colour meanings (Table F.5-1), contrast, redundant cues, stale-data indication, limit arrows, flashing, and time format. The colour table was read from Revision E; check the current revision before quoting it.
-- [Inter](https://rsms.me/inter/), by The Inter Project Authors. SIL Open Font License 1.1.
-- [Geist Mono](https://vercel.com/font), by The Geist Project Authors. SIL Open Font License 1.1.
+- [Inter](https://rsms.me/inter/), by The Inter Project Authors. SIL Open Font License 1.1. The fallback when SF Pro is not available.
+- [Apple Human Interface Guidelines, Color](https://developer.apple.com/design/human-interface-guidelines/color). The dark-mode system colours used for status.
 - [`docs/research/scientific-constraints.md`](docs/research/scientific-constraints.md) for constraints SH1 to SH10 and SS1 to SS9.
 - [`docs/research/clinical-thresholds.md`](docs/research/clinical-thresholds.md) for the green, amber, and red bands.
 
-Both fonts must be listed under References on the project submission page ([`judging.md`](docs/challenge/judging.md#eligibility-gates-for-global-judging)).
+Inter must be listed under References on the project submission page ([`judging.md`](docs/challenge/judging.md#eligibility-gates-for-global-judging)).

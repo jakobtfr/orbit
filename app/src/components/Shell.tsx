@@ -26,7 +26,7 @@ export function Shell() {
     <header className="topbar health-header">
       <Link className="brand" to={`/body/${viewer.id}`} aria-label="ORBIT, health overview">
         <Mark size={28} />
-        <span className="brand-text"><span className="wordmark">ORBIT</span><span className="brand-subtitle">Space Apps prototype</span></span>
+        <span className="wordmark">ORBIT</span>
       </Link>
       <div className="header-system"><span className="system-dot" />{healthSystem === 'planet' ? 'Planet health system' : 'Flight health system'}<span className="header-day">Day {state.day}</span></div>
       <div className="topbar-space" />

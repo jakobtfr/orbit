@@ -81,9 +81,9 @@ The home screen is a personal dashboard for the astronaut.
 
 - **Body map.** An anatomical figure, front and back. A region is marked only when it needs attention, with a colour, a shape, and a word together. Tapping a region opens what is watched there and why it matters in space, then each reading against your own normal, then its trend and the source of the rule. Tapping a muscle group explains what it does and links to exercise and bone load.
 - **Regions.** Head (headache, vision, thinking), chest (heart, blood pressure, breathing, blood oxygen), skin (rashes), hips and spine (bone and muscle), whole body (temperature, weight).
-- **Daily activity.** Exercise against the plan, sleep, resting heart rate, blood oxygen, and today's alerts with one next action each.
-- **Weekly review and trends.** A weekly summary (a mock AI preview for now), risk prompts, and trend plots for heart rate, core temperature, and radiation dose rate. Above the plots, a card shows one real bed-rest volunteer judged by Earth's limits (54 alarms in 90 days) and by their own normal (1), linking to the full Replay.
-- **Deep Data and Mental Health.** Raw readings with statistics and export; a private mood, energy, and journal check-in.
+- **Daily activity.** Exercise against the plan, sleep, resting heart rate, blood oxygen, and one list of risks and checks, each with its next action.
+- **Trends.** Trend plots for heart rate, core temperature, and radiation dose rate. Above the plots, a card shows one real bed-rest volunteer judged by Earth's limits (54 alarms in 90 days) and by their own normal (1), linking to the full Replay.
+- **Deep Data and Mental Health.** Figures of real bed-rest records with a drafted medical summary; a private mood, energy, and journal check-in.
 
 The brief suggests a body like this: "a human figure where each part of the body is clickable and displays information about its function and health status."
 
@@ -123,7 +123,6 @@ Each line says how solid the claim is.
 ## Open decisions
 
 - **Crew visibility.** The sharing rules above are our proposal. The alternative is that everyone sees everything, which is simpler but goes against current medical privacy practice.
-- **The AI weekly summary.** It is a mock with prepared answers. Keep it as a clearly labelled concept or remove it.
 - **Skin versus core temperature.** The smart shirt measures skin temperature; the space-fever finding is about core temperature. The two must not be compared directly (SH7).
 
 ## What has to be true
@@ -141,4 +140,4 @@ We read search summaries of these pages, not the full pages.
 
 ## Next step
 
-Test H3 and H4 with three outsiders, have someone with medical training review the emergency steps, and decide on the AI summary.
+Test H3 and H4 with three outsiders, and have someone with medical training review the emergency steps.

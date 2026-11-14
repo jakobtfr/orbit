@@ -9,7 +9,6 @@ import { regionSummaries } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { RegionKey } from '../lib/types'
 import { Missing, usePerson } from './common'
-import '../dashboard.css'
 
 export function Body() {
   const person = usePerson()
@@ -22,12 +21,13 @@ export function Body() {
   const base = `/body/${person.id}`
   return <div className="screen dashboard-screen">
     <div className="dashboard-grid">
-      <section className="dashboard-column body-column" aria-label="Interactive body map"><div className="column-label"><span>01 / BODY MAP</span><span>Personal</span></div>
+      <section className="dashboard-column body-column" aria-label="Interactive body map">
         <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />
       </section>
       <ActivityPanel state={state} person={person} />
-      <section className="dashboard-column science-column" aria-label="Three health trend plots"><div className="column-label"><span>03 / HEALTH TRENDS</span><div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d}D</button>)}</div></div>
+      <section className="dashboard-column science-column" aria-label="Three health trend plots">
         <LimitsCard />
+        <div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d} days</button>)}</div>
         {metrics(state, person).filter((m) => ['hr', 'temp', 'radiation'].includes(m.key)).map((m) => <ScientificPlot key={m.key} metric={m} state={state} person={person} days={days} />)}
       </section>
     </div>

@@ -15,7 +15,7 @@ export function RisksAndChecks({ state, person }: { state: AppState; person: Per
   const done = checkedInToday(state, person.id)
   const other = attention(state, person).filter((item) => !['radiation', 'temp', 'sleep', 'vision', 'exercise'].includes(item.key ?? ''))
   return <div className="dashboard-card reminders risks-checks" aria-label="Risks and scheduled checks">
-    <header><h2>Risks & checks</h2><span className="small-tag">TODAY</span></header>
+    <header><h2>Risks & checks</h2></header>
     <Link className={`reminder-row ${radiationHigh || radiation.status === 'warning' ? 'priority-high' : ''}`} to={`${base}/indicator/radiation`}>
       <span className="reminder-icon">!</span><div><strong>Radiation exposure</strong><small>{rate === undefined ? 'No recent dose-rate data' : `${rate.toFixed(2)} mSv/d · reference ${limit}`}</small><em>{radiationHigh ? 'Review shielding plan' : 'Review dose history'}</em></div><span className="check-arrow">↗</span>
     </Link>

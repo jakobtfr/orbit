@@ -47,7 +47,8 @@ The app is shown as Lena Brandt and opens on mission day 100.
 | `src/data/utmb-replay.json` | Daily vitals and baselines of 29 NASA UTMB bed-rest volunteers, made by `scripts/replay_data.py` |
 | `src/data/utmb-residuals.json` | Day-to-day variation from four UTMB volunteers, used as noise on Lena's series |
 | `src/data/emergency.ts` | Emergency steps, each citing ERC 2021, AHA 2020, or the DGLRM/ESAM-SMG microgravity CPR guideline |
-| `public/licenses/` | Licence texts for Inter, Geist Mono, and react-body-map |
+| `public/licenses/` | Licence texts for Inter, Geist Mono (installed, no longer used), and react-body-map |
+| `src/styles.css`, `src/dashboard.css`, `src/research.css` | Tokens and base styles; workspace layout; Deep Data. The look follows apple.com, see `../DESIGN.md` |
 
 ## Methods
 

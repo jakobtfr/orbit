@@ -4,7 +4,7 @@ Written 2026-11-14, rewritten the same day to match the app as built. What the a
 
 **How to use this file.** This file says *what* each screen contains and does. [`DESIGN.md`](DESIGN.md) says *how* it looks and reads. If they disagree, `DESIGN.md` wins on look and wording, this file wins on content and behaviour. The reasons behind the product are in [`solution-overview.md`](docs/solution/solution-overview.md); the science rules (SH1 to SH10) are in [`scientific-constraints.md`](docs/research/scientific-constraints.md).
 
-**What changed from version 1.** The 3D body became an anatomical body map on a four-column personal dashboard. The Flight, Sources, and Crew screens and the orbit model were removed. Replay, Deep Data, Mental Health, and the planet/flight setting were added. Emergency moved to a button at the top right and its steps now cite published guidelines. The `SIMULATED` tag was removed.
+**What changed from version 1.** The 3D body became an anatomical body map on a three-column personal dashboard, styled after apple.com. The Flight, Sources, and Crew screens and the orbit model were removed. Replay, Deep Data, Mental Health, and the planet/flight setting were added. Emergency moved to a button at the top right and its steps now cite published guidelines. The `SIMULATED` tag was removed.
 
 ## The one idea
 
@@ -39,7 +39,6 @@ Dashboard ──► Region ──► Indicator ──► Measure
     │    └──► Muscle group
     ├──► Check-in
     └──► Replay  (also from Deep Data)
-Deep Data ──► Indicator
 Mental Health
 Emergency (from the header, on every screen)
 ```
@@ -53,7 +52,7 @@ Emergency (from the header, on every screen)
 | Symptoms | `#/body/lena/symptoms/:region` | What did I report for this part of the body? |
 | Measure | `#/body/lena/measure/:key` | How do I take this reading? |
 | Check-in | `#/body/lena/check-in` | How do I feel today? |
-| Deep Data | `#/deep-data` | What exactly are my numbers? |
+| Deep Data | `#/deep-data` | What do real bed-rest records look like in detail? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
 | Emergency | `#/emergency` | What do I do right now? |
@@ -73,17 +72,15 @@ The app opens on the Dashboard.
 
 ### Dashboard
 
-The home screen. Four columns; two on tablets, one on phones.
+The home screen. A bento grid of tiles in three columns; two on tablets, one on phones. No column headers or numbering: each tile's content says what it is.
 
-**01 Body map.** An anatomical SVG figure, front and back. Tapping a body region opens Region; tapping a muscle group opens Muscle group. A list under the figure gives the same targets for keyboard and screen readers.
+**Body map.** An anatomical SVG figure in flat neutral greys, front and back. Tapping a body region opens Region; tapping a muscle group opens Muscle group. A list under the figure gives the same targets for keyboard and screen readers.
 
-**02 Daily activity.** Movement against the 120-minute exercise plan, last night's sleep, resting heart rate with status, blood oxygen, and weekly plan adherence. Each opens its Indicator. Below, **Alerts & schedule**: the items that need attention with their next action, a radiation review when the dose rate is above the reference, the scheduled exercise and vision check (marked "demo"), and the daily check-in button.
+**Daily activity.** Movement against the 120-minute exercise plan (green ring), last night's sleep, resting heart rate with status, blood oxygen, and weekly plan adherence (blue ring). Each opens its Indicator.
 
-**03 Weekly review.** A weekly check-in chat marked "AI PREVIEW · MOCK": prepared answers about sleep, resting pulse, and exercise built from the week's readings. No model is connected. Below, **Risk monitoring**: fever and illness, radiation exposure, fatigue and recovery, each linking to the indicator to review. No disease probabilities are shown.
+**Risks & checks.** One list: radiation exposure against the reference, any other item that needs attention with its next action, temperature and symptoms, sleep and recovery, the scheduled exercise and vision check (marked "demo"), and the daily check-in button. Urgent items get a red round icon, items due soon a yellow one.
 
-**04 Health trends.** First, the card **Earth limits vs. your normal** (tag "NASA DATA"): two lanes for one real bed-rest volunteer (UTMB-01, 90 days), one bar per day, alarm days tall and red, with counters (Earth limits 54, your normal 1). The lanes fill once on load and again on click; with reduced motion they show the end state. One caption line, then a link "All 29: 46 vs 11 alarms in 6 months" to Replay. All numbers are calculated from `utmb-replay.json` at runtime. No headline or slogan.
-
-Then plots of resting heart rate, core temperature, and radiation dose rate over 14 or 28 days, with review bands and expandable statistics and references. Method: [`dashboard-methodology.md`](docs/solution/dashboard-methodology.md).
+**Trends.** First, the card **Earth limits vs. your normal** ("NASA data"): two lanes for one real bed-rest volunteer (UTMB-01, 90 days), one bar per day, alarm days tall and red, with counters (Earth limits 54, your normal 1). The lanes fill once on load and again on click; with reduced motion they show the end state. One caption line, then a link "All 29: 46 vs 11 alarms in 6 months" to Replay. All numbers are calculated from `utmb-replay.json` at runtime. Then a 14/28-day switch and plots of resting heart rate, core temperature, and radiation dose rate with their limits and expandable details. Method: [`dashboard-methodology.md`](docs/solution/dashboard-methodology.md).
 
 ### Region and Muscle group
 
@@ -110,7 +107,7 @@ Special cases: Unavailable shows the reason ("The standing test needs gravity.")
 
 ### Deep Data
 
-A measurement picker, 7/28/90-day filters, latest value, mean, standard deviation, variance, and sample count, the same chart as Indicator with Earth and personal lines, the raw measurement record, CSV export, and a link to Replay.
+Real NASA UTMB bed-rest records, not Lena's data. A participant picker, 7/28/90-day windows, and an end day. Three figures (resting heart rate, systolic blood pressure, temperature) with daily observations, trailing seven-day mean ±1 SD, the pre-bed-rest mean, and the personal review threshold; each exports as SVG. Beside them a rule-based **Medical summary** (marked "Automated draft", not reviewed by a clinician) and short wellbeing prompts linking to Mental Health. CSV export, methods, and a link to Replay.
 
 ### Mental Health
 
@@ -203,7 +200,7 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 
 - [x] The Dashboard shows the bed-rest comparison in one card and links to Replay.
 - [x] Replay reproduces 25.5% and 5.9% from the raw data, checked by tests.
-- [x] Indicator and Deep Data charts show Earth's limit next to the personal one for heart rate, blood pressure, and temperature.
+- [x] Indicator charts show Earth's limit next to the personal one for heart rate, blood pressure, and temperature.
 - [x] Lena's 38.0 °C shows In range (SH2).
 - [x] Emergency opens from every screen in one tap; the first step is on screen within three taps.
 - [x] Every emergency step cites a source, checked by tests (SH9).
@@ -215,7 +212,5 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 
 ## Open points
 
-- **The AI chat is a mock.** It is labelled as such. Decide whether to keep it as a concept or remove it.
-- **The dashboard's look** follows its own charcoal palette in `dashboard.css` rather than every token in `DESIGN.md`. Status colours and shapes still follow `DESIGN.md`.
 - **Radiation late in the mission.** With the published dose rates the total passes the 600 mSv career limit around day 460; from then on radiation stays at Warning.
 - **Maximum ages and review bands** are our own values.

@@ -24,7 +24,7 @@ export function MentalHealth() {
   }
   const phase = Math.floor(seconds / 4) % 2 === 0 ? 'Breathe in' : 'Breathe out'
   return <div className="planet-page mental-page">
-    <header className="planet-page-title"><div><p className="eyebrow">PERSONAL / DAY {state.day}</p><h1>Mental Health</h1></div><span className="privacy-label">Private · only you</span></header>
+    <header className="planet-page-title"><h1>Mental Health</h1><span className="privacy-label">Private · only you</span></header>
     <div className="mental-layout"><section className="planet-panel mental-checkin"><header><h2>How are you feeling?</h2></header><form onSubmit={save}>
       <fieldset><legend>Mood</legend><div className="mood-options">{MOODS.map((label, i) => <button key={label} type="button" aria-pressed={mood === i + 1} onClick={() => { setMood(i + 1); setSaved(false) }}><span>{i + 1}</span>{label}</button>)}</div></fieldset>
       <label className="mental-field">Energy <span>{energy} / 5</span><input type="range" min="1" max="5" step="1" value={energy} onChange={(e) => { setEnergy(Number(e.target.value)); setSaved(false) }} /></label>

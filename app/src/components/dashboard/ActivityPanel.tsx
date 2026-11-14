@@ -23,11 +23,10 @@ export function ActivityPanel({ state, person }: { state: AppState; person: Pers
   const sleepHours = sleep.latest ? Math.floor(sleep.latest.v) : undefined
   const sleepMinutes = sleep.latest ? Math.round((sleep.latest.v % 1) * 60) : undefined
   return <section className="dashboard-column activity-column" aria-label="Daily activity, risks and checks">
-    <div className="column-label"><span>02 / DAILY ACTIVITY</span><span>Today</span></div>
     <div className="activity-card">
-      <div className="activity-pair"><Ring value={exercise.latest?.v} goal={120} color="#80c7bc" label="Movement" unit="min" to={`${base}/indicator/exercise`} /><Link className="activity-pill sleep-pill" to={`${base}/indicator/sleep`}><span className="pill-symbol">☾</span><span className="eyebrow">LAST NIGHT</span><strong>{sleepHours === undefined ? '—' : `${sleepHours}h ${sleepMinutes}m`}</strong><span>8h sleep goal</span></Link></div>
+      <div className="activity-pair"><Ring value={exercise.latest?.v} goal={120} color="var(--ring-move)" label="Movement" unit="min" to={`${base}/indicator/exercise`} /><Link className="activity-pill sleep-pill" to={`${base}/indicator/sleep`}><span className="pill-symbol">☾</span><span>Last night</span><strong>{sleepHours === undefined ? '—' : `${sleepHours}h ${sleepMinutes}m`}</strong><span>8h sleep goal</span></Link></div>
       <Link className="activity-pill pulse-pill" to={`${base}/indicator/hr`}><span className="pill-symbol">♡</span><div><span>Resting heart rate</span><strong>{hr.latest?.v ?? '—'} <small>bpm</small></strong></div><StatusMark status={hr.status} /></Link>
-      <div className="activity-pair second-pair"><Link className="activity-pill oxygen-pill" to={`${base}/indicator/spo2`}><span className="pill-symbol">O₂</span><span>Blood oxygen</span><strong>{judge(state, person, 'spo2').latest?.v ?? '—'}<small> %</small></strong><span>Latest reading</span></Link><Ring value={adherence} goal={100} color="#d8bb79" label="Weekly plan" unit="%" to={`${base}/indicator/exercise`} /></div>
+      <div className="activity-pair second-pair"><Link className="activity-pill oxygen-pill" to={`${base}/indicator/spo2`}><span className="pill-symbol">O₂</span><span>Blood oxygen</span><strong>{judge(state, person, 'spo2').latest?.v ?? '—'}<small> %</small></strong><span>Latest reading</span></Link><Ring value={adherence} goal={100} color="var(--ring-plan)" label="Weekly plan" unit="%" to={`${base}/indicator/exercise`} /></div>
     </div>
     <RisksAndChecks state={state} person={person} />
   </section>

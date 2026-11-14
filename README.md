@@ -25,13 +25,13 @@ The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). 
 
 ## What ORBIT does
 
-- **Personal dashboard.** An anatomical body map, daily activity, sleep, alerts and schedule, a weekly review, and trend plots for heart rate, core temperature, and radiation dose rate. A small card, "Earth limits vs. your normal", shows one real volunteer's 90 days judged both ways.
+- **Personal dashboard.** An anatomical body map, daily activity and sleep, one list of risks and checks, and trend plots for heart rate, core temperature, and radiation dose rate. A small card, "Earth limits vs. your normal", shows one real volunteer's 90 days judged both ways.
 - **Your normal, not Earth's.** Every indicator is judged against the astronaut's own values from before flight and in flight. Indicator charts draw Earth's limit next to the personal one, so the difference is visible.
 - **One next action.** When something is off, ORBIT says what to do next in plain words: repeat the reading, apply a countermeasure, or contact the ground.
 - **How to measure.** Step-by-step instructions for each reading, and a two-minute daily symptom check-in.
 - **Emergency.** One tap from the top right of every screen. A step-by-step flow for chest pain or collapse that branches on breathing, with CPR adapted for weightlessness. Every step cites a published guideline.
 - **Replay.** The full bed-rest comparison: pick any of the 29 volunteers and watch both rule sets judge the same days.
-- **Deep Data and Mental Health.** Raw readings with statistics and CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
+- **Deep Data and Mental Health.** Figures of real bed-rest records with a drafted medical summary and SVG/CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
 - **Environment.** Settings switch between the planet and the flight health system. Checks that need gravity, and the radiation reference, follow the setting.
 
 ## Run it

@@ -67,7 +67,7 @@ export function Chart({ k, readings, guide, baselines, from, to, decimals }: {
     <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Readings over time">
       {guide.band && (
         <>
-          <rect x={M.left} y={y(guide.band[1])} width={W - M.left - M.right} height={y(guide.band[0]) - y(guide.band[1])} fill="var(--bg-hover)" />
+          <rect x={M.left} y={y(guide.band[1])} width={W - M.left - M.right} height={y(guide.band[0]) - y(guide.band[1])} fill="var(--bg-surface)" />
           <text className="chart-label" x={W - M.right + 8} y={y((guide.band[0] + guide.band[1]) / 2) + 4}>{guide.bandLabel}</text>
         </>
       )}

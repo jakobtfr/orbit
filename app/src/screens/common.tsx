@@ -12,10 +12,6 @@ export function Missing() {
   return <Navigate to={`/body/${viewer.id}`} replace />
 }
 
-export function PrivacyLine({ person }: { person: Person }) {
-  return <p className="privacy-line">Other details are private to {person.name} and the medical lead.</p>
-}
-
 export function ScreenTitle({ children, sub }: { children: React.ReactNode; sub?: React.ReactNode }) {
   return (
     <header className="screen-head">

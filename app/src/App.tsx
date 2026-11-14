@@ -3,7 +3,6 @@ import { Shell } from './components/Shell'
 import { useStore } from './lib/store'
 import { Body } from './screens/Body'
 import { CheckIn } from './screens/CheckIn'
-import { Crew } from './screens/Crew'
 import { Emergency } from './screens/Emergency'
 import { Flight } from './screens/Flight'
 import { Indicator, Symptoms } from './screens/Indicator'
@@ -22,7 +21,6 @@ export function App() {
       <Routes>
         <Route path="/emergency" element={<Emergency />} />
         <Route element={<Shell />}>
-          <Route path="/crew" element={<Crew />} />
           <Route path="/body/:pid" element={<Body />} />
           <Route path="/body/:pid/region/:rid" element={<Region />} />
           <Route path="/body/:pid/indicator/:key" element={<Indicator />} />

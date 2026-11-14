@@ -16,13 +16,6 @@ export function Mark({ size = 20 }: { size?: number }) {
 }
 
 const ICONS: Record<string, React.ReactNode> = {
-  crew: (
-    <>
-      <circle cx="7" cy="7" r="2.5" />
-      <circle cx="14" cy="8" r="2" />
-      <path d="M2.5 16c.4-2.6 2.2-4 4.5-4s4.1 1.4 4.5 4M12.5 12.3c2.400-.5 4.400.9 5 3.700" />
-    </>
-  ),
   body: (
     <>
       <circle cx="10" cy="4" r="2" />
@@ -85,7 +78,6 @@ export function Shell() {
       </header>
       <div className="shell-body">
         <nav className="nav" aria-label="Main">
-          <NavLink to="/crew"><NavIcon name="crew" /><span>Crew</span></NavLink>
           <NavLink to={`/body/${viewer.id}`} className={() => (pathname.startsWith('/body') ? 'active' : '')}>
             <NavIcon name="body" /><span>Body</span>
           </NavLink>

@@ -8,10 +8,10 @@ import { FIRST_DAY } from '../data/demo'
 import { deviceBySource } from '../data/devices'
 import { age, signed, stamp } from '../lib/format'
 import { INDICATORS, REGIONS, formatValue } from '../lib/indicators'
-import { actionFor, activeSymptoms, baselines, canSee, chartGuide, judge, now, readingsFor, symptomsFor } from '../lib/judge'
+import { actionFor, activeSymptoms, baselines, chartGuide, judge, now, readingsFor, symptomsFor } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { IndicatorKey, RegionKey } from '../lib/types'
-import { Missing, PrivacyLine, ScreenTitle, usePerson } from './common'
+import { Missing, ScreenTitle, usePerson } from './common'
 
 const RANGES = [
   { label: '7 days', days: 7 },
@@ -23,7 +23,7 @@ const ACTIVITY = { rest: 'Resting', during: 'During exercise', after: 'After exe
 export function Indicator() {
   const person = usePerson()
   const { key } = useParams()
-  const { state, viewer } = useStore()
+  const { state } = useStore()
   const [range, setRange] = useState(30)
   if (!person || !key || !(key in INDICATORS)) return <Missing />
 
@@ -31,18 +31,9 @@ export function Indicator() {
   const def = INDICATORS[k]
   const back = (
     <BackLink to={def.region === 'beside' ? `/body/${person.id}` : `/body/${person.id}/region/${def.region}`}>
-      {def.region === 'beside' ? (viewer.id === person.id ? 'Your body' : person.name) : REGIONS[def.region].name}
+      {def.region === 'beside' ? 'Your body' : REGIONS[def.region].name}
     </BackLink>
   )
-  if (!canSee(viewer, person, k)) {
-    return (
-      <div className="screen">
-        {back}
-        <ScreenTitle>{def.name}</ScreenTitle>
-        {k === 'mood' ? <p className="privacy-line">Mood is visible only to {person.name}.</p> : <PrivacyLine person={person} />}
-      </div>
-    )
-  }
 
   const t = now(state)
   const j = judge(state, person, k)
@@ -58,7 +49,6 @@ export function Indicator() {
     return k === 'bp' && base2 !== undefined ? `${d1}/${signed((j.latest.v2 ?? 0) - base2, 0)}` : d1
   }
   const canMeasure = def.inputLabel !== ''
-  const self = viewer.id === person.id
   const device = deviceBySource(def.source)
 
   return (
@@ -92,7 +82,7 @@ export function Indicator() {
 
       {j.status !== 'unavailable' && k !== 'vision' && (
         <section>
-          <h2 className="title-3">{self ? 'Compared with you' : `Compared with ${person.name}’s own values`}</h2>
+          <h2 className="title-3">Compared with you</h2>
           <div className="compare">
             <div className="compare-row">
               <span className="label">Before flight</span>
@@ -106,7 +96,7 @@ export function Indicator() {
               )}
             </div>
             <div className="compare-row">
-              <span className="label">{self ? 'Your last 7 days' : 'Last 7 days'}</span>
+              <span className="label">Your last 7 days</span>
               {b.recent !== undefined ? (
                 <>
                   <span className="reading">{formatValue(k, { v: b.recent, v2: b.recent2 })}<span className="unit">&nbsp;{def.unit}</span></span>
@@ -180,19 +170,10 @@ export function Indicator() {
 export function Symptoms() {
   const person = usePerson()
   const { rid } = useParams()
-  const { state, viewer } = useStore()
+  const { state } = useStore()
   if (!person || !rid || !(rid in REGIONS)) return <Missing />
   const region = rid as RegionKey
   const back = <BackLink to={`/body/${person.id}/region/${region}`}>{REGIONS[region].name}</BackLink>
-  if (!canSee(viewer, person, 'symptoms')) {
-    return (
-      <div className="screen">
-        {back}
-        <ScreenTitle>Symptoms</ScreenTitle>
-        <PrivacyLine person={person} />
-      </div>
-    )
-  }
   const act = activeSymptoms(state, person.id, region)
   const all = symptomsFor(state, person.id, region)
   const action = act.length

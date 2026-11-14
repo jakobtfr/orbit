@@ -50,13 +50,15 @@ export interface PreflightValue {
   n: number
 }
 
-export interface Person {
+/** Someone on board. Only the user of the app has readings. */
+export interface CrewMember {
   id: string
   name: string
   role: string
-  lead: boolean
-  /** Indicators this person lets the whole crew see. 'symptoms' covers logged symptoms. */
-  shared: (IndicatorKey | 'symptoms')[]
+}
+
+/** The crew member whose health the app shows. */
+export interface Person extends CrewMember {
   preflight: Partial<Record<IndicatorKey, PreflightValue>>
 }
 
@@ -77,7 +79,6 @@ export interface Judged {
 export interface AppState {
   day: number
   place: Place
-  viewerId: string
   readings: Record<string, Partial<Record<IndicatorKey, Reading[]>>>
   cabin: Reading[]
   checkins: Record<string, CheckIn[]>

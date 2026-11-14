@@ -8,7 +8,7 @@ import { age } from '../lib/format'
 import { INDICATORS, formatValue } from '../lib/indicators'
 import { judge, now } from '../lib/judge'
 import { useStore } from '../lib/store'
-import type { IndicatorKey, Person } from '../lib/types'
+import type { CrewMember, IndicatorKey } from '../lib/types'
 
 const PANEL: IndicatorKey[] = ['hr', 'bp', 'spo2']
 
@@ -21,7 +21,7 @@ export function Emergency() {
   const nav = useNavigate()
   const [start] = useState(() => Date.now())
   const [secs, setSecs] = useState(0)
-  const [patient, setPatient] = useState<Person | null>(null)
+  const [patient, setPatient] = useState<CrewMember | null>(null)
   const [started, setStarted] = useState(false)
   const [done, setDone] = useState<number[]>([])
   const [flash, setFlash] = useState(true)
@@ -99,7 +99,7 @@ export function Emergency() {
                   <p className="body-lg">
                     {CHEST_PAIN_STEPS.length} steps in {elapsed(done[done.length - 1])}. Stay with {patient.name} and keep taking readings until the ground replies.
                   </p>
-                  <button className="btn btn-primary btn-large" onClick={() => nav(`/body/${patient.id}`)}>Close and return to Body</button>
+                  <button className="btn btn-primary btn-large" onClick={() => nav(home)}>Close and return to Body</button>
                 </section>
               )}
             </>
@@ -108,13 +108,13 @@ export function Emergency() {
           {!finished && <button className="btn btn-quiet em-leave" onClick={() => setLeaving(true)}>Leave emergency</button>}
         </main>
 
-        {patient && (
-          <aside className="em-panel" aria-label="Patient readings">
-            <div className="label">Patient</div>
-            <div className="title-3">{patient.name}</div>
+        {patient?.id === viewer.id && (
+          <aside className="em-panel" aria-label="Your readings">
+            <div className="label">Your readings</div>
+            <div className="title-3">{viewer.name}</div>
             {PANEL.map((k) => {
-              const j = judge(state, patient, k)
-              const pre = patient.preflight[k]
+              const j = judge(state, viewer, k)
+              const pre = viewer.preflight[k]
               return (
                 <div key={k} className="em-reading">
                   <div className="label">{INDICATORS[k].name}</div>

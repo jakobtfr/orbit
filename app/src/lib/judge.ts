@@ -247,21 +247,6 @@ export const SYMPTOM_REGION: Record<string, RegionKey> = {
   Other: 'whole',
 }
 
-/* ---------- who sees what ---------- */
-
-export function canSee(viewer: Person, person: Person, key: IndicatorKey | 'symptoms'): boolean {
-  if (viewer.id === person.id) return true
-  if (key === 'mood') return false
-  if (viewer.lead) return true
-  // Cabin air is the same for everyone on board.
-  if (key === 'cabin') return true
-  return person.shared.includes(key)
-}
-
-export function seesEverything(viewer: Person, person: Person): boolean {
-  return viewer.id === person.id || viewer.lead
-}
-
 /* ---------- regions and overall ---------- */
 
 export function regionIndicators(region: RegionKey): IndicatorKey[] {
@@ -273,17 +258,14 @@ export interface RegionSummary {
   status: StatusKey
 }
 
-export function regionStatus(state: AppState, viewer: Person, person: Person, region: RegionKey): StatusKey {
-  const s: StatusKey[] = []
-  for (const k of regionIndicators(region)) {
-    if (canSee(viewer, person, k)) s.push(judge(state, person, k).status)
-  }
-  if (canSee(viewer, person, 'symptoms')) s.push(symptomStatus(state, person.id, region))
+export function regionStatus(state: AppState, person: Person, region: RegionKey): StatusKey {
+  const s = regionIndicators(region).map((k) => judge(state, person, k).status)
+  s.push(symptomStatus(state, person.id, region))
   return worst(s)
 }
 
-export function regionSummaries(state: AppState, viewer: Person, person: Person): RegionSummary[] {
-  return REGION_ORDER.map((region) => ({ region, status: regionStatus(state, viewer, person, region) }))
+export function regionSummaries(state: AppState, person: Person): RegionSummary[] {
+  return REGION_ORDER.map((region) => ({ region, status: regionStatus(state, person, region) }))
 }
 
 export interface AttentionItem {
@@ -295,28 +277,25 @@ export interface AttentionItem {
 }
 
 /** Everything about a person that is not in range, most serious first. Mood is left out: it is private. */
-export function attention(state: AppState, person: Person, viewer?: Person): AttentionItem[] {
+export function attention(state: AppState, person: Person): AttentionItem[] {
   const items: AttentionItem[] = []
   for (const k of INDICATOR_ORDER) {
     if (k === 'mood') continue
-    if (viewer && !canSee(viewer, person, k)) continue
     const j = judge(state, person, k)
     if (j.status !== 'ok' && j.status !== 'unavailable') {
       items.push({ kind: 'indicator', key: k, status: j.status, label: INDICATORS[k].name })
     }
   }
-  if (!viewer || canSee(viewer, person, 'symptoms')) {
-    for (const region of REGION_ORDER) {
-      const act = activeSymptoms(state, person.id, region)
-      if (act.length) {
-        items.push({ kind: 'symptom', region, status: 'caution', label: act.map((s) => s.name).join(', ') })
-      }
+  for (const region of REGION_ORDER) {
+    const act = activeSymptoms(state, person.id, region)
+    if (act.length) {
+      items.push({ kind: 'symptom', region, status: 'caution', label: act.map((s) => s.name).join(', ') })
     }
   }
   return items.sort((a, b) => SEVERITY[b.status] - SEVERITY[a.status])
 }
 
-/** The true overall status, shown to the whole crew. */
+/** The most serious status of anything that needs attention. */
 export function overallStatus(state: AppState, person: Person): StatusKey {
   return worst(attention(state, person).map((i) => i.status))
 }

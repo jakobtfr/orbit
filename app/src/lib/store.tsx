@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useReducer, type Dispatch, type ReactNode } from 'react'
-import { CREW, initialState } from '../data/demo'
+import { LENA, initialState } from '../data/demo'
 import { phaseFor } from './mission'
 import type { AppState, CheckIn, IndicatorKey, Person, Reading } from './types'
 
@@ -40,16 +40,8 @@ interface Store {
 const Ctx = createContext<Store | null>(null)
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, undefined, () => {
-    // A demo link can open as a given crew member: ?viewer=samir
-    const asked = new URLSearchParams(window.location.search).get('viewer')
-    const s = initialState()
-    return CREW.some((p) => p.id === asked) ? { ...s, viewerId: asked as string } : s
-  })
-  const store = useMemo(
-    () => ({ state, dispatch, viewer: CREW.find((p) => p.id === state.viewerId) ?? CREW[0] }),
-    [state],
-  )
+  const [state, dispatch] = useReducer(reducer, undefined, initialState)
+  const store = useMemo(() => ({ state, dispatch, viewer: LENA }), [state])
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>
 }
 
@@ -60,5 +52,5 @@ export function useStore(): Store {
 }
 
 export function personById(id: string | undefined): Person | undefined {
-  return CREW.find((p) => p.id === id)
+  return id === LENA.id ? LENA : undefined
 }

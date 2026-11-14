@@ -14,7 +14,7 @@ const QUESTIONS = ['How do you feel today?', 'Any symptoms?', 'How is your mood?
 
 export function CheckIn() {
   const person = usePerson()
-  const { state, viewer, dispatch } = useStore()
+  const { state, dispatch } = useStore()
   const nav = useNavigate()
   const [step, setStep] = useState(0)
   const [feel, setFeel] = useState<CheckInData['feel'] | null>(null)
@@ -25,14 +25,6 @@ export function CheckIn() {
   const [mood, setMood] = useState<number | null>(null)
   if (!person) return <Missing />
   const home = `/body/${person.id}`
-  if (viewer.id !== person.id) {
-    return (
-      <div className="screen">
-        <h1 className="title-1">Check-in</h1>
-        <p className="empty-line">A check-in can only be done by the person it is about.</p>
-      </div>
-    )
-  }
 
   const hasPain = chosen.includes('Pain')
   const symptoms: Symptom[] = chosen.map((name) =>

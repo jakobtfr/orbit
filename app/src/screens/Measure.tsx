@@ -4,10 +4,10 @@ import { BackLink } from '../components/Shell'
 import { Tag } from '../components/Status'
 import { age, stamp } from '../lib/format'
 import { INDICATORS, VISION_LABELS } from '../lib/indicators'
-import { canSee, now, readingsFor, unavailableReason } from '../lib/judge'
+import { now, readingsFor, unavailableReason } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { Activity, IndicatorKey } from '../lib/types'
-import { Missing, PrivacyLine, usePerson } from './common'
+import { Missing, usePerson } from './common'
 
 const ACTIVITIES: { key: Activity; label: string }[] = [
   { key: 'rest', label: 'Resting' },
@@ -18,7 +18,7 @@ const ACTIVITIES: { key: Activity; label: string }[] = [
 export function Measure() {
   const person = usePerson()
   const { key } = useParams()
-  const { state, viewer, dispatch } = useStore()
+  const { state, dispatch } = useStore()
   const nav = useNavigate()
   const [activity, setActivity] = useState<Activity>('rest')
   const [v, setV] = useState('')
@@ -31,7 +31,6 @@ export function Measure() {
   const indicatorPath = `/body/${person.id}/indicator/${k}`
   const back = <BackLink to={indicatorPath}>{def.name}</BackLink>
   const title = <h1 className="title-1">Measure {def.name.toLowerCase()}</h1>
-  if (!canSee(viewer, person, k)) return <div className="screen">{back}{title}<PrivacyLine person={person} /></div>
   const reason = unavailableReason(k, state.place)
   if (reason || !def.inputLabel) {
     return (

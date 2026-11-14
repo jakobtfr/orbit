@@ -257,24 +257,6 @@ a.tile:hover { background: var(--bg-hover); }
 .action-head { display: flex; align-items: center; gap: var(--space-2); }
 .action-card .btn { margin-top: var(--space-2); }
 
-/* ---------- crew ---------- */
-
-.crew-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--space-4); }
-.crew-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  transition: background var(--duration-fast) ease-out;
-}
-.crew-card:hover { background: var(--bg-hover); }
-.crew-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
-.crew-card .status-mark { margin-top: var(--space-2); font-size: 15px; }
-.crew-checkin { margin-top: var(--space-2); }
-
 /* ---------- body ---------- */
 
 .body-screen { gap: var(--space-4); }

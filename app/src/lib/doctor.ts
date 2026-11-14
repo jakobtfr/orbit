@@ -2,7 +2,7 @@ import { CREW } from '../data/demo'
 import { age } from './format'
 import { STATUS } from '../components/Status'
 import { INDICATORS, INDICATOR_ORDER, formatValue } from './indicators'
-import { actionFor, activeSymptoms, attention, judge, now, regionIndicators, type AttentionItem } from './judge'
+import { actionFor, activeSymptoms, attention, judge, now, regionIndicators, risksAtAttention, type AttentionItem } from './judge'
 import type { AppState, IndicatorKey, Person, Reading, RegionKey, StatusKey } from './types'
 
 /**
@@ -357,9 +357,10 @@ export function briefing(state: AppState, person: Person, call: { focus?: Focus;
     const line = `- ${def.name}: ${withUnit(key, j.latest)}, taken ${age(now(state), j.latest.t)}${before}. Status: ${STATUS[j.status].label}.`
     if (j.status === 'ok') return line
     const a = actionFor(state, person, { kind: 'indicator', key, status: j.status, label: def.name })
-    return `${line} Finding: ${a.observed} Next step: ${a.next}`
+    return `${line} Finding: ${a.observed} Next step: ${a.next}${a.risk ? ` Spaceflight risk it bears on: ${a.risk}.` : ''}`
   })
   const symptoms = activeSymptoms(state, person.id).map((s) => s.name.toLowerCase())
+  const atRisk = risksAtAttention(state, person)
   return [
     `You are the ORBIT doctor, a simulated doctor on a video call with ${person.name} (${person.role}), a crew member on a long space mission. It is mission day ${state.day}. You are a simulation, not a real clinician, and you say so if asked.`,
     'How to talk: warm, calm, and plain, like a good family doctor who knows this person. Your words are read aloud, so answer in two or three short sentences with no lists, no headings, no markdown, and no emojis. Ask at most one question. Do not repeat advice you have already given in this call, and do not read their readings back unless they ask or one has changed.',
@@ -367,6 +368,7 @@ export function briefing(state: AppState, person: Person, call: { focus?: Focus;
     `Your overall read of today: ${assessment(state, person).text}`,
     `Readings:\n${readings.join('\n')}`,
     `Symptoms logged in the last two days: ${symptoms.length ? symptoms.join(', ') : 'none'}.`,
+    atRisk.length ? `Spaceflight risks with a finding behind them today: ${atRisk.map((r) => `${r.risk.name} (${r.risk.what})`).join(' ')}` : '',
     'How to help with a problem, whatever it is: a reading that is off, a rash, a bump, a pain, a cut, poor sleep, or anything else they bring up. First find out what they notice and how they feel. If it is something that can be seen, ask them to show it to the camera. Then give one practical, safe, first-aid level thing to do, wait for their answer, and go on from what they say. Never give a list of steps at once. If it is about a reading, have them rest and take it again and tell you the numbers: a reading they say aloud is saved and appears above with its status, so go by that status. Finish by saying plainly what to watch for and when to tell the medical lead, and suggest logging it in the daily check-in so it stays on their record.',
     call.focus
       ? `This call was opened about ${call.focus.title}. ${call.focus.finding} The usual next step for it: ${call.focus.next} Start there, but help just as readily with anything else they raise.`

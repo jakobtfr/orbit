@@ -25,11 +25,12 @@ The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). 
 
 ## What ORBIT does
 
-- **Personal dashboard.** An anatomical body map, daily activity and sleep, one list of risks and checks, and trend plots for heart rate, core temperature, and radiation dose rate. A small card, "Earth limits vs. your normal", shows one real volunteer's 90 days judged both ways.
+- **Personal dashboard.** An anatomical body map, daily activity and sleep, one list of today's risks and open checks, and trend plots for heart rate, core temperature, and radiation dose rate.
 - **Your normal, not Earth's.** Every indicator is judged against the astronaut's own values from before flight and in flight. Indicator charts draw Earth's limit next to the personal one, so the difference is visible.
 - **One next action.** When something is off, ORBIT says what to do next in plain words: repeat the reading, apply a countermeasure, or contact the ground.
 - **How to measure.** Step-by-step instructions for each reading, and a two-minute daily symptom check-in.
 - **Call the doctor.** When a reading is off or a symptom was logged, the dashboard says so and offers an immediate call. The call is a pop-up like a phone call: a simulated doctor speaks, listens, and guides you through that one problem a step at a time, and can look at what you show the camera. It helps with anything you raise, not a fixed list of conditions. It runs on the device, with a local language model through Ollama when one is installed and built-in answers when not, so it works without contact with Earth.
+- **Risks.** All 17 risks of human spaceflight from NASA's Human Research Program, each with what ORBIT watches for it (readings, check-in symptoms, or private answers), its status today, and what you can do.
 - **Replay.** The full bed-rest comparison: pick any of the 29 volunteers and watch both rule sets judge the same days.
 - **Measurements and Mental Health.** Lena's own measurements, explored one indicator at a time against her normal, with CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
 - **Place.** The mission day sets it. Outbound and return are the spacecraft; the stay on Mars is the surface. The standing test needs gravity, and the radiation review line follows the place.

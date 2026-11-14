@@ -18,7 +18,7 @@ The app is shown as Lena Brandt and opens on mission day 100.
 
 | Screen | Route | Notes |
 | --- | --- | --- |
-| Dashboard | `#/body/lena` | Three columns: body map; daily activity with risks and checks; health trends, starting with the "Earth limits vs. your normal" card |
+| Dashboard | `#/body/lena` | Three columns: body map; daily activity with risks and checks; health trends |
 | Region, Muscle group, Indicator, Symptoms, Measure, Check-in | `#/body/lena/...` | Reached from the dashboard |
 | Measurements | `#/measurements` | Lena's own measurements: pick any indicator and see its trend against her normal, with CSV export |
 | My Personal Diary | `#/mental-health` | Private mood, energy, separation reflections, family videos, and local recording |
@@ -33,7 +33,7 @@ The header shows the mission phase for the current day. Outbound and return are 
 | --- | --- |
 | `src/screens/` | One file per screen |
 | `src/components/` | App shell, status shapes and tags, tiles, chart, anatomical SVG body |
-| `src/components/dashboard/` | Dashboard columns: activity, risks and checks, trend plots, limits card |
+| `src/components/dashboard/` | Dashboard columns: activity, risks and checks, trend plots |
 | `src/components/research/` | Paper-style plots of the bed-rest figures |
 | `src/components/anatomy/` | Front and back SVG paths adapted from Kacmisz/react-body-map (MIT), attribution in `NOTICE.md` |
 | `src/lib/judge.ts` | Status rules (simplified from R1 to R12), next actions |

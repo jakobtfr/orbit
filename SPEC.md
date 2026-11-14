@@ -33,7 +33,7 @@ ORBIT judges each reading against the astronaut's own normal, not Earth's. The a
 
 ```
 Header (every screen): ORBIT · mission phase · day · viewer · Talk to the doctor
-Navigation: Dashboard · Measurements · Mental Health
+Navigation: Dashboard · Measurements · Risks · Mental Health
 
 Dashboard ──► Region ──► Indicator ──► Measure
     │    └──► Muscle group
@@ -53,6 +53,7 @@ Call the doctor (a pop-up, from the Dashboard prompt or the header)
 | Measure | `#/body/lena/measure/:key` | How do I take this reading? |
 | Check-in | `#/body/lena/check-in` | How do I feel today? |
 | Measurements | `#/measurements` | What do my own measurements look like over time? |
+| Risks | `#/risks` | Which spaceflight risks is ORBIT watching for me, and what can I do about each? |
 | Mental Health | `#/mental-health` | How am I feeling, privately? |
 | Replay | `#/replay` | Does judging against my own normal really matter? |
 | Call the doctor | pop-up, no route | Something is off: what do I do about it? |
@@ -77,9 +78,9 @@ The home screen. A bento grid of tiles in three columns; two on tablets, one on 
 
 **Daily activity.** Movement against the 120-minute exercise plan (green ring), last night's sleep, resting heart rate with status, blood oxygen, and weekly plan adherence (blue ring). Each opens its Indicator.
 
-**Risks & checks.** One list: radiation exposure against the reference, any other item that needs attention with its next action, temperature and symptoms, sleep and recovery, the scheduled exercise and vision check (marked "demo"), and the daily check-in button. Urgent items get a red round icon, items due soon a yellow one.
+**Risks & checks.** Only what needs the viewer today, in this order: risks at Warning (red), risks at Caution (yellow), then the checks still open today (a reading that is missing or needs repeating, the exercise session if the plan is not met, the daily check-in). A risk opens a call with the doctor; a check goes to where it is done. A check disappears once it is done. Nothing that is in range is listed.
 
-**Trends.** First, the card **Earth limits vs. your normal** ("NASA data"): two lanes for one real bed-rest volunteer (UTMB-01, 90 days), one bar per day, alarm days tall and red, with counters (Earth limits 54, your normal 1). The lanes fill once on load and again on click; with reduced motion they show the end state. One caption line, then a link "All 29: 46 vs 11 alarms in 6 months" to Replay. All numbers are calculated from `utmb-replay.json` at runtime. Then a 14/28-day switch and plots of resting heart rate, core temperature, and radiation dose rate with their limits and expandable details. Method: [`dashboard-methodology.md`](docs/solution/dashboard-methodology.md).
+**Trends.** Plots of the last 28 days of resting heart rate, core temperature, and radiation dose rate with their limits and expandable details. Method: [`dashboard-methodology.md`](docs/solution/dashboard-methodology.md).
 
 ### Region and Muscle group
 
@@ -102,11 +103,22 @@ Special cases: Unavailable shows the reason ("The standing test needs gravity.")
 ### Measure and Check-in
 
 - **Measure:** where the value comes from, three to five numbered steps, activity and time context (SH7), a value input, and "Save reading". Saving returns to Indicator.
-- **Check-in:** four steps: how you feel, symptoms (with where and how bad for pain), mood ("Only you can see this."), and a summary with a next action if a symptom was logged.
+- **Check-in:** four steps: how you feel, symptoms (with where and how bad for pain), mood and how it is going with the crew ("Only you can see these answers."), and a summary with a next action if a symptom was logged. The symptom list includes nausea or motion sickness, injury, and joint pain after suit work. Joint pain after suit work is a Warning with its own action (possible decompression sickness: tell the medical lead now).
 
 ### Measurements
 
 Lena's own measurements, for exploring the record. A list of every indicator, grouped by part of the body, with the latest value and status. Choosing one draws its trend for 7, 28, or 90 days, or the whole mission, using the same chart as Indicator: her readings, her normal, her personal limit, and the Earth cutoff where one exists. The footer shows the latest value, how many readings fall in the window, and the change from before flight. "Open this measurement" goes to that indicator. CSV export covers every measurement in the window. The NASA bed-rest comparison stays on Replay.
+
+### Risks
+
+All 17 risks of human spaceflight named by NASA's Human Research Program (https://www.nasa.gov/hrp/risks/), grouped as Body; Mind, crew, and performance; Radiation. Each row shows the worst status of what ORBIT watches for that risk and opens to: what the risk is, the indicators watched (with status, linking to Indicator), the check-in symptoms that point to it, and what the crew member can do. Rows that need attention start open. The mapping and wording are in `app/src/lib/risks.ts`.
+
+| Watched through | Risks |
+| --- | --- |
+| Readings, with symptoms where they exist | Immune, balance and motion sickness, heart and circulation, microbes, low oxygen, nutrition, fitness, eye and brain changes, bone, sleep, radiation |
+| Check-in symptoms only | Decompression sickness, injury during suit work, injury at launch and landing (with the next launch or landing from the mission plan) |
+| Private check-in answers, two low answers in a row | Mood and mental health, working as a crew |
+| Cabin readings and explanation only | Running the systems alone: ORBIT covers only the health side |
 
 ### Mental Health
 
@@ -137,6 +149,10 @@ A phone call in a pop-up over whatever screen is showing. There is no doctor pag
 6. **Who answers.** When [Ollama](https://ollama.com) is running on the same machine, answers are written by its language model (`app/src/lib/localModel.ts`), which is given the readings, their status, and the findings and told to use nothing else. Without it, built-in answers are used (`app/src/lib/doctor.ts`). The opening and the answer to urgent words (chest pain, cannot breathe, fainting) are always built in: stay still and call the medical lead now.
 
 The doctor is simulated and its wording has not been reviewed by a clinician. The model, the pictures, and the readings stay on the device. The voice (Google UK English Male in Chrome) and speech recognition are the browser's and may work online.
+
+### Body map colours and muscle screens
+
+The body map is coloured by status: each part takes the worst status of its health region and of the indicators watched for it (for the legs, hips and back that includes exercise and bone protection). The status shape is shown in the caption on hover, in the list of groups, and in a legend under the figure. A muscle screen shows that status, how the part fares without gravity, everything ORBIT watches that bears on it (symptoms, the region's indicators, and its own), and how it is trained. Nothing is measured per muscle; the screen says so.
 
 ## Indicators
 

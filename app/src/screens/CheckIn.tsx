@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Tag } from '../components/Status'
 import { NextActionCard } from '../components/Tiles'
 import { REGIONS, REGION_ORDER } from '../lib/indicators'
-import { SYMPTOM_REGION, now, symptomNext } from '../lib/judge'
+import { SYMPTOM_REGION, lastCheckIn, now, symptomNext } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { CheckIn as CheckInData, RegionKey, Symptom } from '../lib/types'
 import { Missing, usePerson } from './common'
@@ -28,6 +28,8 @@ export function CheckIn() {
   const home = `/body/${person.id}`
 
   const hasPain = chosen.includes('Pain')
+  const previousTeam = lastCheckIn(state, person.id)?.team
+  const tense = team !== null && team <= 2 && previousTeam !== undefined && previousTeam <= 2
   const symptoms: Symptom[] = chosen.map((name) =>
     name === 'Pain' ? { name, region: painRegion ?? 'whole', pain: pain ?? undefined } : { name, region: SYMPTOM_REGION[name] ?? 'whole' },
   )
@@ -149,6 +151,14 @@ export function CheckIn() {
             ))}
             <li><span>Mood: {mood} of 5 · crew: {team} of 5 · only you can see this</span></li>
           </ul>
+          {tense && (
+            <NextActionCard
+              action={{
+                observed: 'Working with the crew has felt tense on two check-ins in a row. Only you can see this.',
+                next: 'Raise it early and in person. If it does not ease, ask the commander for a crew talk or the medical lead for a private one.',
+              }}
+            />
+          )}
           {symptoms.length > 0 && (
             <NextActionCard
               action={{

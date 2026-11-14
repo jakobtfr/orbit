@@ -1,4 +1,5 @@
 import { BESIDE, INDICATORS, INDICATOR_ORDER, REGIONS, REGION_ORDER } from './indicators'
+import { RISKS, risksForIndicator, risksForSymptoms, type Risk } from './risks'
 import type {
   Action,
   AppState,
@@ -370,9 +371,53 @@ export function checkedInToday(state: AppState, personId: string): boolean {
   return !!c && Math.floor(c.t) === state.day
 }
 
+/* ---------- spaceflight risks (NASA HRP, see risks.ts) ---------- */
+
+/** Low answers about the crew on this many check-ins in a row count as a lasting tension. */
+const TEAM_CONFIRM = 2
+
+/** Private, like mood: shown only to the person who answered. */
+export function teamStatus(state: AppState, personId: string): StatusKey {
+  const answers = (state.checkins[personId] ?? []).filter((c) => c.t <= now(state) && c.team !== undefined)
+  const last = answers[answers.length - 1]
+  if (!last || now(state) - last.t > SYMPTOM_WINDOW_DAYS) return 'stale'
+  const recent = answers.slice(-TEAM_CONFIRM)
+  return recent.length === TEAM_CONFIRM && recent.every((c) => c.team! <= 2) ? 'caution' : 'ok'
+}
+
+/** The worst of everything measured or reported that bears on a risk. */
+export function riskStatus(state: AppState, person: Person, risk: Risk): StatusKey {
+  if (risk.privateAnswer === 'team') return teamStatus(state, person.id)
+  if (risk.privateAnswer === 'mood') return lastCheckIn(state, person.id) ? judge(state, person, 'mood').status : 'stale'
+  const active = activeSymptoms(state, person.id).map((s) => s.name)
+  const statuses = risk.indicators.map((k) => judge(state, person, k).status)
+  statuses.push(...risk.symptoms.filter((name) => active.includes(name)).map(symptomLevel))
+  return worst(statuses)
+}
+
+/** Risks with a confirmed finding behind them, most serious first. Private answers are left out. */
+export function risksAtAttention(state: AppState, person: Person): { risk: Risk; status: StatusKey }[] {
+  return RISKS.filter((risk) => !risk.privateAnswer)
+    .map((risk) => ({ risk, status: riskStatus(state, person, risk) }))
+    .filter((r) => r.status === 'caution' || r.status === 'warning')
+    .sort((a, b) => SEVERITY[b.status] - SEVERITY[a.status])
+}
+
+function riskNames(risks: Risk[]): string | undefined {
+  return risks.length ? risks.map((r) => r.name).join(', ') : undefined
+}
+
 /* ---------- next actions (draft wording, see SPEC.md open points) ---------- */
 
+/** The next action for a finding, with the spaceflight risk the finding bears on. */
 export function actionFor(state: AppState, person: Person, item: AttentionItem): Action {
+  const risks = item.kind === 'symptom' && item.region
+    ? risksForSymptoms(activeSymptoms(state, person.id, item.region).map((s) => s.name))
+    : item.key ? risksForIndicator(item.key) : []
+  return { ...baseAction(state, person, item), risk: riskNames(risks) }
+}
+
+function baseAction(state: AppState, person: Person, item: AttentionItem): Action {
   const base = `/body/${person.id}`
   if (item.kind === 'symptom' && item.region) {
     const names = item.label.toLowerCase()

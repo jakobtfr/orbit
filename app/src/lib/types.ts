@@ -77,6 +77,8 @@ export interface Person extends CrewMember {
 export interface Action {
   observed: string
   next: string
+  /** The NASA HRP spaceflight risk or risks this finding bears on, by plain name. */
+  risk?: string
   button?: { label: string; to: string }
 }
 

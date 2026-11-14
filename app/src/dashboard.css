@@ -112,6 +112,8 @@
 .reminder-row small { display: block; margin-top: 2px; color: var(--text-muted); font-size: 13px; line-height: 1.45; }
 .reminder-row em { display: block; margin-top: 4px; color: var(--text-muted); font-size: 12px; font-style: normal; }
 .check-arrow { margin-left: auto; padding-top: 4px; color: var(--text-muted); font-size: 13px; }
+.reminder-row.is-check .reminder-icon { background: transparent; box-shadow: inset 0 0 0 1.5px var(--border-control); }
+.reminders-empty { padding: 16px 0; color: var(--text-muted); font-size: 14px; }
 .priority-high .reminder-icon { background: var(--status-warning); color: #000; }
 .priority-high em { color: var(--status-warning); }
 .priority-soon .reminder-icon { background: var(--status-caution); color: #000; }
@@ -121,9 +123,6 @@
 .dashboard-button.is-done { background: var(--bg-raised); color: var(--text-muted); }
 
 /* Trends */
-.plot-range { display: flex; align-self: flex-end; gap: 2px; padding: 2px; border-radius: var(--radius-full); background: var(--bg-surface); }
-.plot-range button { min-height: 28px; padding: 0 14px; border-radius: var(--radius-full); color: var(--text-muted); font-size: 13px; }
-.plot-range button[aria-pressed='true'] { color: var(--text-primary); background: var(--bg-hover); }
 .science-plot { flex: 1; display: grid; grid-template-rows: auto minmax(220px, 1fr) auto; gap: 12px; min-height: 320px; }
 .science-plot header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .science-plot header a { color: var(--text-primary); font: 600 17px/1.3 var(--font-sans); }
@@ -141,19 +140,6 @@
 .plot-method table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
 .plot-method td, .plot-method th { padding: 5px 2px; text-align: right; border-bottom: 1px solid var(--border-subtle); }
 
-/* Earth limits vs. your normal: one real bed-rest volunteer, judged both ways. */
-.limits-card { display: flex; flex-direction: column; gap: 14px; }
-.limits-lanes { display: flex; flex-direction: column; gap: 12px; padding: 0; text-align: left; cursor: pointer; }
-.limits-lane { display: flex; flex-direction: column; gap: 6px; }
-.limits-lane-head { display: flex; justify-content: space-between; align-items: baseline; color: var(--text-muted); font-size: 13px; }
-.limits-lane-head strong { color: var(--text-primary); font: 600 22px/1 var(--font-sans); }
-.limits-bars { display: flex; gap: 1px; height: 20px; align-items: center; }
-.limits-bars i { flex: 1; height: 4px; border-radius: 2px; background: var(--bg-hover); transition: height var(--duration-fast) ease-out; }
-.limits-bars i.is-future { height: 2px; background: var(--bg-raised); }
-.limits-bars i.is-alarm { height: 20px; background: var(--status-warning); }
-.limits-caption { color: var(--text-muted); font-size: 13px; line-height: 1.45; }
-.limits-link { display: flex; justify-content: space-between; gap: 8px; color: var(--accent); font-size: 14px; }
-.limits-link:hover { text-decoration: underline; }
 
 /* ---------- Measurements and Mental Health pages ---------- */
 
@@ -202,7 +188,6 @@
 @media (max-width: 1050px) and (min-width: 701px) {
   .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dashboard-screen .science-column { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .science-column > .plot-range { grid-column: 1 / -1; }
 }
 @media (max-width: 850px) {
   .mental-layout { grid-template-columns: 1fr; }

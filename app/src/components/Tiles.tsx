@@ -64,6 +64,7 @@ export function NextActionCard({ action }: { action: Action }) {
       </div>
       <p className="body">{action.observed}</p>
       <p className="title-3">{action.next}</p>
+      {action.risk && <p className="label">Spaceflight risk this bears on: {action.risk}</p>}
       {action.button && (
         <Link className="btn btn-primary" to={action.button.to}>
           {action.button.label}

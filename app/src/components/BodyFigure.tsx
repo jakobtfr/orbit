@@ -63,7 +63,7 @@ export function BodyFigure({ summaries, active, onActive, onSelect, onMuscleSele
   return (
     <div className="body-stage anatomy-stage">
       <div className="anatomy-caption" aria-live="polite" aria-atomic="true">
-        <span>{inspected ?? (selected ? REGIONS[selected.region].name : 'Muscle anatomy')}</span>
+        <span>{inspected ?? (selected ? REGIONS[selected.region].name : 'Your body')}</span>
         {inspected ? <StatusMark status={statusOfGroup(inspected)} /> : selected ? <StatusMark status={selected.status} /> : <span className="anatomy-instruction">Coloured by status. Select a part for details</span>}
       </div>
       <div className="anatomy-viewport">

@@ -206,7 +206,6 @@ A phone call, not a page and not an alarm.
 - Transitions last 120 to 200 ms with ease-out. Use them for state changes only: opening, closing, selecting.
 - No decorative or looping animation. Nothing moves on a screen where nothing has changed.
 - Nothing flashes. The one looping animation is the ring around the virtual doctor while it speaks, because it shows a state.
-- One exception to "nothing moves": the "Earth limits vs. your normal" card on the Dashboard fills its 90 days once on load (about 1.6 s) and again on click. With reduced motion it shows the end state at once.
 
 ## Wording
 

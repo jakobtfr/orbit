@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
 import { HealthPrompt } from '../components/HealthPrompt'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
-import { LimitsCard } from '../components/dashboard/LimitsCard'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
 import { MUSCLE_GROUPS, muscleStatus, type MuscleKey } from '../lib/anatomy'
 import { metrics } from '../lib/dashboard'
@@ -17,7 +16,6 @@ export function Body() {
   const { state } = useStore()
   const nav = useNavigate()
   const [active, setActive] = useState<RegionKey | null>(null)
-  const [days, setDays] = useState(28)
   if (!person) return <Missing />
   const summaries = regionSummaries(state, person)
   const base = `/body/${person.id}`
@@ -30,9 +28,7 @@ export function Body() {
       </section>
       <ActivityPanel state={state} person={person} />
       <section className="dashboard-column science-column" aria-label="Three health trend plots">
-        <LimitsCard />
-        <div className="plot-range" aria-label="Plot time range" role="group">{[14, 28].map((d) => <button key={d} aria-pressed={days === d} onClick={() => setDays(d)}>{d} days</button>)}</div>
-        {metrics(state, person).filter((m) => ['hr', 'temp', 'radiation'].includes(m.key)).map((m) => <ScientificPlot key={m.key} metric={m} state={state} person={person} days={days} />)}
+        {metrics(state, person).filter((m) => ['hr', 'temp', 'radiation'].includes(m.key)).map((m) => <ScientificPlot key={m.key} metric={m} state={state} person={person} days={28} />)}
       </section>
     </div>
   </div>

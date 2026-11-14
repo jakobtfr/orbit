@@ -16,6 +16,8 @@ Looking for a specific fact? Start with the [data index](docs/index.md).
 | [`docs/resources.md`](docs/resources.md) | Official HRP/CSA resources, distilled: five hazards, 17 risks, current research, CSA findings |
 | [`docs/operations.md`](docs/operations.md) | What NASA actually does today: roles, cadence, countermeasures, medical event rates, exploration gap |
 | [`docs/clinical-thresholds.md`](docs/clinical-thresholds.md) | Published clinical values and spaceflight adjustments, with sources and confidence notes |
+| [`docs/open-data.md`](docs/open-data.md) | Open datasets and repositories: UTMB bed rest, Inspiration4, flight-crew signals, ASPA, OSDR, ESA HREDA |
+| [`data/`](data/README.md) | Real extracted tables: UTMB daily vitals, labs, symptoms, sleep, tilt, cognition; Inspiration4 labs |
 | [`docs/judging.md`](docs/judging.md) | Official 2026 judging criteria, three-phase process, 10 awards, eligibility gates |
 
 ## Challenge links

@@ -65,13 +65,3 @@ A team or project must meet all of these:
 - Pass NASA's China funding-restriction review.
 
 To be eligible for a Global Award, the project must use at least one NASA data source or resource.
-
-## Implications for this project
-
-| Criterion | What to do |
-| --- | --- |
-| **Relevance** | Make NASA data integral, not decorative. Use HRP risk/hazard data, OCHMO standards, or NASA open science data as inputs to the assessment logic itself. |
-| **Validity** | Cite clinical thresholds and their confidence levels (see [`clinical-thresholds.md`](clinical-thresholds.md)); be explicit about what is prototype-grade vs. operational. |
-| **Impact** | Lead with the deep-space / communication-delay scenario, and note the Earth analogue (remote communities with limited care access). |
-| **Creativity** | Differentiate from a generic dashboard — e.g. the clickable body map, guided measurement coaching, or a crew-routine/gamification loop. |
-| **Presentation** | Budget hours for the 30-second video or 7-slide deck. It counts, and an over-limit demo disqualifies from global judging. |

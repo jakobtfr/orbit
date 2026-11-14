@@ -1,0 +1,1054 @@
+astronauta_id,sujeto,fecha,hora,fase,dia_mision,categoria,sintoma,dolor_0a10
+UTMB-01,224,2005-02-25,17:10,,-9,Dolor de cabeza,HA (headache),
+UTMB-01,224,2005-03-05,6:00,,-1,abdominal hyperactivity,abdominal hyperactivity,
+UTMB-01,224,2005-03-18,0:40,,12,Dificultad para dormir,unable to sleep,
+UTMB-01,224,2005-04-07,14:30,,32,Dolor de cabeza,slight headache,
+UTMB-01,224,2005-04-07,19:30,,32,None reported,None reported,
+UTMB-01,224,2005-04-21,17:10,,46,Dolor de cabeza,"HA to frontal region = ""3"" on 0-10 scale quality= ache duration ~1 hour with recent increase in intensity",
+UTMB-01,224,2005-04-23,18:00,,48,Dolor de cabeza,slight headache 2-3 (scale 0-10),
+UTMB-01,224,2005-04-25,12:25,,50,Dolor de cabeza,HA (headache),
+UTMB-01,224,2005-04-30,21:10,,55,Dificultad para dormir,"unable to sleep last HS R/t other subject snoring, could hear even with ear plugs in",
+UTMB-01,224,2005-05-02,21:20,,57,Dolor de cabeza,"HA (headache) ""7""",
+UTMB-01,224,2005-05-15,19:35,,70,Dolor de cabeza,"headache ""all over - just started"" 3 on 0-10 scale",
+UTMB-01,224,2005-05-16,19:25,,71,"frontal region HA = ""3"" x 15 min.","frontal region HA = ""3"" x 15 min.",
+UTMB-01,224,2005-05-30,14:00,,85,"rt. foot (bottom) ""burned"" from heating pad during dorsal foot vein test","rt. foot (bottom) ""burned"" from heating pad during dorsal foot vein test",
+UTMB-01,224,2005-06-17,21:20,,103,Dificultad para dormir,"unable to sleep, excited about discharge",
+UTMB-03,3985,2007-02-05,11:20,mision,3,Otro,Other,0
+UTMB-03,3985,2007-02-23,15:15,mision,21,Dolor de cabeza,Headache,1
+UTMB-03,3985,2007-02-23,19:45,mision,21,Dolor de cabeza,Headache,0
+UTMB-03,3985,2007-03-01,15:30,mision,27,Dolor de cabeza,Headache,0
+UTMB-03,3985,2007-03-03,12:15,mision,29,Dolor de cabeza,Headache,4
+UTMB-03,3985,2007-03-07,12:00,mision,33,Otro,Other,5
+UTMB-03,3985,2007-03-07,19:05,mision,33,Otro,Other,0
+UTMB-03,3985,2007-03-11,21:40,mision,37,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-03-12,21:40,mision,38,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-03-13,19:25,mision,39,Dolor de cabeza,Headache,0
+UTMB-03,3985,2007-03-20,21:40,mision,46,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-03-23,11:30,mision,49,Dolor de cabeza,Headache,2
+UTMB-03,3985,2007-03-23,18:30,mision,49,Dolor de cabeza,Headache,0
+UTMB-03,3985,2007-03-30,17:00,mision,56,Dolor (otro),Pain,4
+UTMB-03,3985,2007-04-03,11:55,mision,60,Dolor de cabeza,Headache,1
+UTMB-03,3985,2007-04-03,13:30,mision,60,Dolor (otro),Pain,1
+UTMB-03,3985,2007-04-11,20:30,mision,68,Otro,Other,0
+UTMB-03,3985,2007-04-11,21:40,mision,68,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-04-12,10:00,mision,69,Otro,Other,0
+UTMB-03,3985,2007-04-12,21:45,mision,69,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-04-13,21:50,mision,70,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-04-14,21:45,mision,71,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-04-16,21:45,mision,73,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-03,3985,2007-04-18,10:40,mision,75,Dolor de cabeza,Headache,3
+UTMB-03,3985,2007-04-18,14:45,mision,75,Dolor (otro),Pain,5
+UTMB-03,3985,2007-04-19,21:55,mision,76,Otro,Other,0
+UTMB-03,3985,2007-04-20,11:00,mision,77,Dolor (otro),Pain,4
+UTMB-03,3985,2007-05-03,9:15,mision,90,Mareo,Dizziness,0
+UTMB-03,3985,2007-05-07,20:55,post,94,Otro,Other,0
+UTMB-03,3985,2007-05-08,7:30,post,95,Otro,Other,3
+UTMB-03,3985,2007-05-19,8:10,post,106,Otro,Other,0
+UTMB-05,446,2005-03-05,0:45,,-4,c/o diarrhea,c/o diarrhea,
+UTMB-05,446,2005-03-11,10:00,,2,Dolor de espalda,little bit of back pain,
+UTMB-05,446,2005-03-11,17:05,,2,Dolor de espalda,more pain in the back,
+UTMB-05,446,2005-03-11,20:45,,2,Dolor de espalda,Middle - upper back/shoulder pain.  (Both 5 on scale of 0 - 10) Frontal sinus pressure & pain.,
+UTMB-05,446,2005-03-12,16:00,,3,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-13,21:00,,4,Dolor de espalda,back pain,
+UTMB-05,446,2005-03-16,11:30,,7,Dolor de cabeza,"""slight headache about 2.5 (on scale of 0 - 10)""",
+UTMB-05,446,2005-03-16,15:30,,7,"""Incision site has opened""  after pt. took a shower.","""Incision site has opened""  after pt. took a shower.",
+UTMB-05,446,2005-03-16,18:25,,7,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-16,20:04,,7,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-16,21:00,,7,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-17,5:20,,8,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-17,8:05,,8,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-17,11:10,,8,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-17,13:55,,8,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-17,18:10,,8,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-17,19:20,,8,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-26,20:50,,17,Dolor de cabeza,headache #3/10 scale,
+UTMB-05,446,2005-03-27,5:20,,18,Dolor de espalda,mid thoracic back pain (muscle ache) #4 / 10,
+UTMB-05,446,2005-03-27,7:10,,18,Dolor de espalda,"muscle ""tightness"" in back",
+UTMB-05,446,2005-03-27,20:30,,18,Dolor de espalda,back discomfort,
+UTMB-05,446,2005-03-30,16:40,,21,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-30,21:00,,21,Dolor de cabeza,headache,
+UTMB-05,446,2005-03-31,23:15,,22,Dolor de cabeza,headache of 5 on 0-10 scale,
+UTMB-05,446,2005-04-01,21:40,,23,Dolor de cabeza,headache,
+UTMB-05,446,2005-04-03,17:30,,25,Estreñimiento,pt complaints of constipation,
+UTMB-05,446,2005-04-11,Not reported,,33,Dolor de cabeza,headache at a 3 on a 0-10 scale,
+UTMB-05,446,2005-04-16,14:30,,38,"c/o HA to frontal region that is ""throbbing"" & = to ""3.5"" on 0-10 scale","c/o HA to frontal region that is ""throbbing"" & = to ""3.5"" on 0-10 scale",
+UTMB-05,446,2005-04-16,16:35,,38,"c/o HA = ""7"" on 0-10 scale","c/o HA = ""7"" on 0-10 scale",
+UTMB-05,446,2005-04-16,17:45,,38,"c/o HA = ""8""","c/o HA = ""8""",
+UTMB-05,446,2005-04-16,20:00,,38,Dolor de cabeza,c/o headache of 8 on 0-10 scale,
+UTMB-05,446,2005-04-16,21:55,,38,Dolor de cabeza,c/o headache 4 on 0-10 scale,
+UTMB-05,446,2005-04-16,23:30,,38,Dolor de cabeza,still c/o headache,
+UTMB-05,446,2005-04-17,8:50,,39,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-04-17,19:00,,39,Dolor de cabeza,headache,
+UTMB-05,446,2005-04-17,21:50,,39,Dolor de cabeza,headache,
+UTMB-05,446,2005-04-25,20:40,,47,Dolor (otro),"frontal region HA = ""1"" on 0-10 scale pain is an ""ache"" present c/o",
+UTMB-05,446,2005-04-25,21:50,,47,"frontal HA persists = ""1"" on 0-10 scale. No relief with ibuprofen","frontal HA persists = ""1"" on 0-10 scale. No relief with ibuprofen",
+UTMB-05,446,2005-04-27,7:10,,49,Dolor (otro),bruise  - top foot with soreness up left lateral ankle,
+UTMB-05,446,2005-04-27,12:25,,49,Dolor de cabeza,HA (headache) due to nitro given for test,
+UTMB-05,446,2005-04-27,15:25,,49,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-04-27,18:00,,49,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-04-27,21:20,,49,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-04-29,19:15,,51,Dolor de cabeza,frontal headache,
+UTMB-05,446,2005-04-29,21:00,,51,Dolor de cabeza,slight residual headache,
+UTMB-05,446,2005-04-30,7:30,,52,Dolor de cabeza,HA - caused by light hurting eyes,
+UTMB-05,446,2005-04-30,8:20,,52,Dolor de cabeza,HA - caused by light hurting eyes,
+UTMB-05,446,2005-04-30,12:10,,52,Dolor de cabeza,HA - caused by light hurting eyes,
+UTMB-05,446,2005-05-02,22:00,,54,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-05-08,19:00,,60,Dolor de cabeza,"headache from today's testing, tilt test",
+UTMB-05,446,2005-05-10,17:40,,62,Dolor de cabeza,"""slight headache""",
+UTMB-05,446,2005-05-10,21:30,,62,Dolor de cabeza,slight headache,
+UTMB-05,446,2005-05-14,14:00,,66,blood (small amount) was found on toilet paper,blood (small amount) was found on toilet paper,
+UTMB-05,446,2005-05-16,20:50,,68,Dificultad para dormir,"worried can't sleep, upset tummy",
+UTMB-05,446,2005-05-16,16:40,,68,Dolor de cabeza,headache,
+UTMB-05,446,2005-05-18,11:20,,70,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-05-18,19:50,,70,Dolor (otro),"frontal HA = ""2"" on pain scale, present x 30 min",
+UTMB-05,446,2005-05-19,10:50,,71,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-05-19,17:30,,71,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-05-23,22:20,,75,Dolor de cabeza,headache a 2 on 0-10 scale,
+UTMB-05,446,2005-05-23,18:30,,75,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-05-23,21:55,,75,Dolor de cabeza,headache,
+UTMB-05,446,2005-05-24,14:30,,76,Dolor (otro),wrist pain (after weight bearing),
+UTMB-05,446,2005-05-24,21:45,,76,Dolor (otro),wrist pain continues,
+UTMB-05,446,2005-05-25,19:00,,77,Dolor (otro),tooth pain,
+UTMB-05,446,2005-05-26,6:10,,78,Dolor (otro),"toothache to left upper jaw = ""3"" on 0-10 pain scale",
+UTMB-05,446,2005-05-26,12:20,,78,Dolor (otro),tooth pain,
+UTMB-05,446,2005-05-26,19:20,,78,Dolor (otro),tooth pain,
+UTMB-05,446,2005-05-26,22:03,,78,Dolor (otro),"tooth pain = ""6"" throbbing",
+UTMB-05,446,2005-05-26,23:40,,78,Dolor (otro),"tooth pain = ""6""",
+UTMB-05,446,2005-05-27,6:05,,79,Dolor (otro),"tooth pain = ""6-7""",
+UTMB-05,446,2005-05-27,8:15,,79,Dolor (otro),toothache left side,
+UTMB-05,446,2005-05-27,13:00,,79,Dolor (otro),toothache left side,
+UTMB-05,446,2005-05-27,16:20,,79,Dolor (otro),toothache left side,
+UTMB-05,446,2005-05-27,21:30,,79,Dolor (otro),"c/o tooth pain to left upper jaw = ""6"" on pain scale, throbbing ""comes and goes"" x 3 days",
+UTMB-05,446,2005-05-27,23:10,,79,Dificultad para dormir,"c/o increase tooth pain = ""8"" & now difficulty sleeping",
+UTMB-05,446,2005-05-27,8:00,,79,Dolor (otro),toothache,
+UTMB-05,446,2005-05-28,14:10,,80,Dolor (otro),toothache,
+UTMB-05,446,2005-05-28,21:50,,80,Dolor (otro),"tooth pain - left upper jaw.  Pain = ""5""",
+UTMB-05,446,2005-05-29,6:10,,81,Dolor (otro),"tooth pain - pinching = ""5"" on 0-10 scale",
+UTMB-05,446,2005-05-29,10:40,,81,Dolor (otro),toothache,
+UTMB-05,446,2005-05-29,19:40,,81,Dolor (otro),"tooth pain = ""5"" to left upper jaw",
+UTMB-05,446,2005-05-29,20:10,,81,Dolor (otro),no pain relief to tooth,
+UTMB-05,446,2005-05-30,4:00,,82,Dolor (otro),"tooth pain = ""5"" requests Tylenol - no meds allowed due to testing",
+UTMB-05,446,2005-05-30,0:00,,82,Dolor (otro),left upper tooth ache,
+UTMB-05,446,2005-06-04,12:55,,87,Dolor de cabeza,"headache ""3""",
+UTMB-05,446,2005-06-04,21:30,,87,Dolor de cabeza,headache of 3 on -10 scale,
+UTMB-05,446,2005-06-04,23:00,,87,Dolor de cabeza,aspirin for continued headache,
+UTMB-05,446,2005-06-04,23:00,,87,Dificultad para dormir,c/o can't sleep,
+UTMB-05,446,2005-06-05,22:10,,88,Dolor (otro),Right lateral-dorsal foot pain 4 on 0-10 scale from old IV site.  No bruising noted.,
+UTMB-05,446,2005-06-07,16:30,,90,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-06-08,14:30,,91,itchiness to both legs,itchiness to both legs,
+UTMB-05,446,2005-06-08,16:00,,91,itchiness to both legs,itchiness to both legs,
+UTMB-05,446,2005-06-08,19:30,,91,"c/o abd discomfort - states feeling ""bloated""","c/o abd discomfort - states feeling ""bloated""",
+UTMB-05,446,2005-06-08,23:00,,91,"abdominal discomfort = ""4"" + distension","abdominal discomfort = ""4"" + distension",
+UTMB-05,446,2005-06-10,0:15,,93,Dolor de cabeza,c/o headache at 4 on 0-10 scale of pain,
+UTMB-05,446,2005-06-10,10:00,,93,"pressure ""behind pt's eyes""","pressure ""behind pt's eyes""",
+UTMB-05,446,2005-06-10,10:00,,93,Dolor (otro),"left foot ""is sore""",
+UTMB-05,446,2005-06-10,17:30,,93,Dolor (otro),pain in the pelvic area related to exercises,
+UTMB-05,446,2005-06-11,13:10,,94,Dolor de cabeza,HA from nitro given during testing (5),
+UTMB-05,446,2005-06-14,13:00,,97,Dolor de cabeza,HA (headache),
+UTMB-05,446,2005-06-14,19:20,,97,left muscle tightness to bilat calves,left muscle tightness to bilat calves,
+UTMB-05,446,2005-06-18,5:25,,101,Dolor de cabeza,headache,
+UTMB-05,446,2005-06-20,3:10,,103,"dull throbbing to lateral dorsal surface of left foot = ""4"" on scale hurting since 24:00","dull throbbing to lateral dorsal surface of left foot = ""4"" on scale hurting since 24:00",
+UTMB-05,446,2005-06-20,5:00,,103,Dolor (otro),"continued pain to lateral dorsal surface of left foot = ""4"".  No improvement with heat.",
+UTMB-05,446,2005-06-20,8:30,,103,Dolor (otro),"left foot ""is sore""",
+UTMB-05,446,2005-06-21,8:10,,104,Dolor (otro),"""pain on left foot comes and goes""",
+UTMB-06,5160,2013-03-06,15:00,mision,9,Otro,Other,0
+UTMB-06,5160,2013-03-08,12:50,mision,11,Otro,Other,0
+UTMB-06,5160,2013-03-08,21:15,mision,11,Dolor de cabeza,Headache,4
+UTMB-06,5160,2013-03-09,6:00,mision,12,Dolor de cabeza,Headache,6
+UTMB-06,5160,2013-03-26,21:00,mision,29,Dolor de cabeza,Headache,3
+UTMB-07,5165,2008-01-22,9:07,pre,-6,Dolor de cabeza,Headache,3
+UTMB-07,5165,2008-01-24,12:30,pre,-4,Dolor de cabeza,Headache,4
+UTMB-07,5165,2008-01-26,12:45,pre,-2,Dolor de cabeza,Headache,1
+UTMB-07,5165,2008-01-28,10:25,pre,0,Dolor de cabeza,Headache,1
+UTMB-07,5165,2008-01-29,21:45,mision,1,Otro,Other,0
+UTMB-07,5165,2008-01-30,7:30,mision,2,Dolor (otro),Pain,3
+UTMB-07,5165,2008-01-31,7:30,mision,3,Otro,Other,4
+UTMB-07,5165,2008-02-01,8:00,mision,4,Dolor (otro),Pain,2
+UTMB-07,5165,2008-02-03,7:30,mision,6,Dolor (otro),Pain,1
+UTMB-07,5165,2008-02-03,7:20,mision,6,Otro,Other,0
+UTMB-07,5165,2008-02-04,10:20,mision,7,Dolor de cabeza,Headache,6
+UTMB-07,5165,2008-02-04,21:55,mision,7,Dolor de cabeza,Headache,2
+UTMB-07,5165,2008-02-07,11:30,mision,10,Otro,Other,0
+UTMB-07,5165,2008-02-07,11:30,mision,10,Otro,Other,0
+UTMB-07,5165,2008-02-18,11:15,mision,21,Dolor de cabeza,Headache,3
+UTMB-07,5165,2008-02-28,11:15,mision,31,Dolor (otro),Pain,3
+UTMB-07,5165,2008-02-28,15:25,mision,31,Dolor de cabeza,Headache,3
+UTMB-07,5165,2008-02-28,21:44,mision,31,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-07,5165,2008-02-29,22:50,mision,32,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-07,5165,2008-03-14,16:44,mision,46,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-07,5165,2008-03-25,13:15,mision,57,Dolor de cabeza,Headache,3
+UTMB-07,5165,2008-03-28,15:16,mision,60,Dolor de cabeza,Headache,2
+UTMB-07,5165,2008-04-11,15:45,mision,74,Dolor de cabeza,Headache,2
+UTMB-07,5165,2008-04-29,16:00,post,92,Dolor (otro),Pain,5
+UTMB-07,5165,2008-05-06,7:30,post,99,Otro,Other,0
+UTMB-07,5165,2008-05-08,8:00,post,101,Dolor (otro),Pain,0
+UTMB-09,5580,2009-03-28,20:05,pre,-1,Estreñimiento,Constipation,8
+UTMB-09,5580,2009-03-30,19:15,pre,1,Otro,Other,0
+UTMB-09,5580,2009-04-02,15:00,mision,4,Otro,Other,0
+UTMB-09,5580,2009-04-15,14:34,mision,17,Estreñimiento,Constipation,0
+UTMB-09,5580,2009-04-21,16:50,mision,23,Otro,Other,0
+UTMB-09,5580,2009-04-23,12:30,mision,25,Dolor (otro),Pain,1
+UTMB-09,5580,2009-04-25,17:46,mision,27,Otro,Other,0
+UTMB-09,5580,2009-04-28,6:00,mision,30,Otro,Other,0
+UTMB-09,5580,2009-05-01,16:35,mision,33,Otro,Other,0
+UTMB-09,5580,2009-05-30,17:52,post,62,Otro,Other,0
+UTMB-09,5580,2009-05-31,6:00,post,63,Dolor (otro),Pain,5
+UTMB-09,5580,2009-05-31,15:30,post,63,Otro,Other,0
+UTMB-09,5580,2009-06-02,17:20,post,65,Estreñimiento,Constipation,0
+UTMB-09,5580,2009-06-02,16:34,post,65,Otro,Other,0
+UTMB-09,5580,2009-06-03,19:00,post,66,Estreñimiento,Constipation,0
+UTMB-09,5580,2009-06-06,14:13,post,69,Otro,Other,0
+UTMB-09,5580,2009-06-06,17:30,post,69,Estreñimiento,Constipation,0
+UTMB-09,5580,2009-06-07,17:23,post,70,Estreñimiento,Constipation,0
+UTMB-09,5580,2009-06-09,19:51,post,72,Estreñimiento,Constipation,0
+UTMB-12,5788,2005-03-03,9:00,,-6,Dolor de cabeza,crying- during head down rotation/microneurography,
+UTMB-12,5788,2005-03-07,7:30,,-2,menses cramping,menses cramping,
+UTMB-12,5788,2005-03-11,8:05,,2,Dolor de espalda,back pain,
+UTMB-12,5788,2005-03-11,12:40,,2,Dolor de espalda,back pain,
+UTMB-12,5788,2005-03-24,8:00,,15,"pt complaints of ""itching"" right AC area after tape was removed","pt complaints of ""itching"" right AC area after tape was removed",
+UTMB-12,5788,2005-03-25,22:05,,16,Mareo,"""vertigo"" followed by dizziness & nausea (brief episode)",
+UTMB-12,5788,2005-03-26,7:10,,17,Mareo,dizziness,
+UTMB-12,5788,2005-03-26,9:25,,17,Mareo,"dizziness/ nausea/ ""hot et sweaty""",
+UTMB-12,5788,2005-03-27,7:10,,18,Mareo,dizziness/ nausea with movement,
+UTMB-12,5788,2005-04-03,12:15,,25,abdominal cramps,abdominal cramps,
+UTMB-12,5788,2005-04-07,10:00,,29,Dolor (otro),leg pain at the biopsy site,
+UTMB-12,5788,2005-04-07,14:40,,29,Dolor (otro),leg pain at the biopsy site,
+UTMB-12,5788,2005-04-07,19:45,,29,Not reported,Not reported,
+UTMB-12,5788,2005-04-23,8:30,,45,Mareo,"feeling ""dizzy""",
+UTMB-12,5788,2005-04-28,20:00,,50,Dificultad para dormir,c/o difficulty sleeping during the last few nights,
+UTMB-12,5788,2005-04-29,21:30,,51,Dificultad para dormir,c/o difficulty sleeping x several nights except last p.m. when subject took diaphenhydramine 30 min before HS.,
+UTMB-12,5788,2005-05-05,19:50,,57,Dolor (otro),"chest pain only when laughs, not radiating, no shortness of breath, pulse regular and WNL (62)",
+UTMB-12,5788,2005-06-09,8:30,,92,Dolor (otro),"muscle soreness, blurry vision, tail bone soreness",
+UTMB-12,5788,2005-06-09,10:30,,92,Dolor (otro),tailbone pain,
+UTMB-12,5788,2005-06-10,17:45,,93,Dolor (otro),"""sore feet""",
+UTMB-12,5788,2005-06-10,21:40,,93,Dolor (otro),"still has sore feet, went outside and feels ""it somewhat more now""",
+UTMB-12,5788,2005-06-11,17:45,,94,Dolor (otro),muscle achiness /soreness,
+UTMB-12,5788,2005-06-11,21:40,,94,Dificultad para dormir,not able to sleep at HS,
+UTMB-12,5788,2005-06-12,7:50,,95,Dolor (otro),muscle soreness,
+UTMB-12,5788,2005-06-12,9:45,,95,"""funny, fuzzy"" feeling","""funny, fuzzy"" feeling",
+UTMB-12,5788,2005-06-12,21:30,,95,Dificultad para dormir,difficulty sleeping since HOB no longer decreased,
+UTMB-12,5788,2005-06-13,9:11,,96,Dolor (otro),shortness of breath after shower and pain to ankles,
+UTMB-12,5788,2005-06-13,15:10,,96,Dolor (otro),pain in right ankle,
+UTMB-12,5788,2005-06-13,17:15,,96,Dolor (otro),pain in right ankle,
+UTMB-12,5788,2005-06-13,21:45,,96,Mareo,"c/o ""dizziness"" & ""foggy"" vision, feeling ""drunk"", difficulty walking straight",
+UTMB-12,5788,2005-06-14,17:30,,97,Dolor (otro),ankle pain (bilateral),
+UTMB-12,5788,2005-06-16,18:00,,99,Dolor (otro),sore/pain in both feet,
+UTMB-12,5788,2005-06-17,16:45,,100,Dolor (otro),feet ache,
+UTMB-12,5788,2005-06-18,8:00,,101,Dolor (otro),"left foot pain, left knee swelling, right calf pain/tenderness",
+UTMB-12,5788,2005-06-18,14:00,,101,Dolor (otro),"left knee pain, right leg pain",
+UTMB-12,5788,2005-06-19,17:15,,102,Dolor (otro),"left knee pain, pain of both feet",
+UTMB-12,5788,2005-06-19,19:10,,102,Dolor (otro),"left knee ""soreness"" = ""6"" on 0-10 scale",
+UTMB-12,5788,2005-06-19,21:15,,102,Dolor (otro),"intermittent right knee pain today.  ""zero"" @ present except to light - moderate palpation",
+UTMB-12,5788,2005-06-20,10:50,,103,Dolor (otro),"left knee soreness, bilateral ankle soreness",
+UTMB-13,5814,2009-01-11,10:00,mision,-240,Dolor (otro),Pain,1
+UTMB-13,5814,2009-08-28,14:48,pre,-11,Otro,Other,0
+UTMB-13,5814,2009-08-28,15:35,pre,-11,Otro,Other,0
+UTMB-13,5814,2009-08-28,19:15,pre,-11,Otro,Other,0
+UTMB-13,5814,2009-08-29,6:00,pre,-10,Otro,Other,0
+UTMB-13,5814,2009-08-30,6:30,pre,-9,Otro,Other,0
+UTMB-13,5814,2009-08-30,15:52,pre,-9,Otro,Other,0
+UTMB-13,5814,2009-09-02,11:50,pre,-6,Otro,Other,1
+UTMB-13,5814,2009-09-06,11:25,pre,-2,Otro,Other,4
+UTMB-13,5814,2009-09-12,16:24,mision,4,Dolor (otro),Pain,2
+UTMB-13,5814,2009-09-13,19:20,mision,5,Otro,Other,0
+UTMB-13,5814,2009-09-14,13:45,mision,6,Otro,Other,0
+UTMB-13,5814,2009-09-14,19:20,mision,6,Otro,Other,0
+UTMB-13,5814,2009-09-15,14:45,mision,7,Estreñimiento,Constipation,0
+UTMB-13,5814,2009-09-15,19:15,mision,7,Dolor (otro),Pain,1
+UTMB-13,5814,2009-09-19,6:30,mision,11,Otro,Other,0
+UTMB-13,5814,2009-09-19,7:30,mision,11,Otro,Other,0
+UTMB-13,5814,2009-09-21,20:00,mision,13,Otro,Other,0
+UTMB-13,5814,2009-09-22,6:55,mision,14,Otro,Other,0
+UTMB-13,5814,2009-09-27,8:10,mision,19,Menstrual Cramps,Menstrual Cramps,3
+UTMB-13,5814,2009-09-27,17:34,mision,19,Estreñimiento,Constipation,0
+UTMB-13,5814,2009-09-29,12:10,mision,21,Otro,Other,1
+UTMB-13,5814,2009-09-29,16:26,mision,21,Dolor (otro),Pain,3
+UTMB-13,5814,2009-09-30,11:20,mision,22,Otro,Other,0
+UTMB-13,5814,2009-09-30,16:48,mision,22,Otro,Other,0
+UTMB-13,5814,2009-09-30,19:15,mision,22,Otro,Other,0
+UTMB-13,5814,2009-09-30,20:15,mision,22,Otro,Other,0
+UTMB-13,5814,2009-10-01,7:00,mision,23,Otro,Other,0
+UTMB-13,5814,2009-10-01,18:46,mision,23,Otro,Other,0
+UTMB-13,5814,2009-10-01,16:18,mision,23,Otro,Other,0
+UTMB-13,5814,2009-10-02,7:00,mision,24,Otro,Other,0
+UTMB-13,5814,2009-10-02,16:45,mision,24,Otro,Other,0
+UTMB-13,5814,2009-10-07,14:45,mision,29,Otro,Other,0
+UTMB-13,5814,2009-10-07,20:00,mision,29,Otro,Other,4
+UTMB-13,5814,2009-10-09,11:30,mision,31,Dolor de cabeza,Headache,1
+UTMB-13,5814,2009-10-10,7:10,mision,32,Otro,Other,0
+UTMB-13,5814,2009-10-10,19:50,mision,32,Otro,Other,0
+UTMB-13,5814,2009-10-11,15:55,mision,33,Otro,Other,0
+UTMB-13,5814,2009-10-11,17:14,mision,33,Otro,Other,0
+UTMB-13,5814,2009-10-11,21:30,mision,33,Otro,Other,0
+UTMB-13,5814,2009-10-12,7:48,mision,34,Otro,Other,2
+UTMB-13,5814,2009-10-12,21:15,mision,34,Otro,Other,0
+UTMB-13,5814,2009-10-14,7:15,mision,36,Otro,Other,0
+UTMB-13,5814,2009-10-16,21:00,mision,38,Otro,Other,0
+UTMB-13,5814,2009-10-17,15:00,mision,39,Otro,Other,0
+UTMB-13,5814,2009-10-17,20:00,mision,39,Otro,Other,0
+UTMB-13,5814,2009-10-18,20:55,mision,40,Otro,Other,0
+UTMB-13,5814,2009-10-19,10:14,mision,41,Otro,Other,0
+UTMB-13,5814,2009-10-19,20:30,mision,41,Otro,Other,0
+UTMB-13,5814,2009-10-20,9:30,mision,42,Otro,Other,3
+UTMB-13,5814,2009-10-20,15:45,mision,42,Otro,Other,0
+UTMB-13,5814,2009-10-20,21:00,mision,42,Otro,Other,0
+UTMB-13,5814,2009-10-21,9:00,mision,43,Otro,Other,0
+UTMB-13,5814,2009-10-21,19:19,mision,43,Otro,Other,0
+UTMB-13,5814,2009-10-21,21:35,mision,43,Otro,Other,0
+UTMB-13,5814,2009-10-22,9:35,mision,44,Otro,Other,0
+UTMB-13,5814,2009-10-22,16:25,mision,44,Otro,Other,0
+UTMB-13,5814,2009-10-22,21:22,mision,44,Otro,Other,0
+UTMB-13,5814,2009-10-23,9:40,mision,45,Otro,Other,0
+UTMB-13,5814,2009-10-23,15:15,mision,45,Otro,Other,0
+UTMB-13,5814,2009-10-24,7:15,mision,46,Otro,Other,0
+UTMB-13,5814,2009-10-24,14:45,mision,46,Otro,Other,0
+UTMB-13,5814,2009-10-24,17:53,mision,46,Otro,Other,5
+UTMB-13,5814,2009-10-24,19:20,mision,46,Otro,Other,0
+UTMB-13,5814,2009-10-24,20:37,mision,46,Otro,Other,0
+UTMB-13,5814,2009-10-25,7:25,mision,47,Otro,Other,0
+UTMB-13,5814,2009-10-25,8:25,mision,47,Otro,Other,0
+UTMB-13,5814,2009-10-25,16:07,mision,47,Otro,Other,0
+UTMB-13,5814,2009-10-25,16:07,mision,47,Otro,Other,0
+UTMB-13,5814,2009-10-25,16:35,mision,47,Otro,Other,0
+UTMB-13,5814,2009-10-25,20:45,mision,47,Otro,Other,0
+UTMB-13,5814,2009-10-26,9:30,mision,48,Otro,Other,0
+UTMB-13,5814,2009-10-26,15:03,mision,48,Otro,Other,0
+UTMB-13,5814,2009-10-26,19:05,mision,48,Otro,Other,0
+UTMB-13,5814,2009-10-27,8:40,mision,49,Otro,Other,0
+UTMB-13,5814,2009-10-27,12:10,mision,49,Otro,Other,0
+UTMB-13,5814,2009-10-27,20:15,mision,49,Otro,Other,0
+UTMB-13,5814,2009-10-28,9:15,mision,50,Otro,Other,0
+UTMB-13,5814,2009-10-28,11:35,mision,50,Otro,Other,0
+UTMB-13,5814,2009-10-30,9:25,mision,52,Otro,Other,0
+UTMB-13,5814,2009-10-31,10:55,mision,53,Otro,Other,0
+UTMB-13,5814,2009-11-01,9:30,mision,54,Otro,Other,0
+UTMB-13,5814,2009-11-01,21:25,mision,54,Otro,Other,0
+UTMB-13,5814,2009-11-02,9:20,mision,55,Otro,Other,0
+UTMB-13,5814,2009-11-02,21:00,mision,55,Otro,Other,0
+UTMB-13,5814,2009-11-03,21:05,mision,56,Otro,Other,0
+UTMB-13,5814,2009-11-03,10:30,mision,56,Otro,Other,0
+UTMB-13,5814,2009-11-04,9:20,mision,57,Otro,Other,0
+UTMB-13,5814,2009-11-04,21:05,mision,57,Otro,Other,0
+UTMB-13,5814,2009-11-05,10:20,mision,58,Otro,Other,0
+UTMB-13,5814,2009-11-05,21:05,mision,58,Otro,Other,0
+UTMB-13,5814,2009-11-07,9:25,mision,60,Otro,Other,0
+UTMB-13,5814,2009-11-08,13:15,post,61,Otro,Other,3
+UTMB-13,5814,2009-11-10,17:05,post,63,Dolor (otro),Pain,3
+UTMB-13,5814,2009-11-10,19:00,post,63,Dolor (otro),Pain,2
+UTMB-13,5814,2009-11-11,19:30,post,64,Dolor (otro),Pain,3
+UTMB-13,5814,2009-11-13,19:00,post,66,Dolor (otro),Pain,1
+UTMB-13,5814,2009-11-14,7:30,post,67,Otro,Other,0
+UTMB-13,5814,2009-11-14,13:33,post,67,Otro,Other,0
+UTMB-13,5814,2009-11-14,15:57,post,67,Otro,Other,0
+UTMB-13,5814,2009-11-14,17:08,post,67,Otro,Other,0
+UTMB-13,5814,2009-11-14,20:00,post,67,Dolor (otro),Pain,1
+UTMB-13,5814,2009-11-15,7:30,post,68,Otro,Other,0
+UTMB-13,5814,2009-11-15,17:52,post,68,Otro,Other,0
+UTMB-13,5814,2009-11-16,8:15,post,69,Otro,Other,0
+UTMB-13,5814,2009-11-20,11:30,post,73,Otro,Other,3
+UTMB-14,5907,2010-01-26,12:30,pre,-4,Dolor de cabeza,Headache,3
+UTMB-14,5907,2010-01-31,17:40,mision,1,Dolor de cabeza,Headache,3
+UTMB-14,5907,2010-02-01,20:00,mision,2,Dolor (otro),Pain,0
+UTMB-14,5907,2010-02-02,7:45,mision,3,Dolor de cabeza,Headache,1
+UTMB-14,5907,2010-02-02,13:30,mision,3,Dolor de cabeza,Headache,1
+UTMB-14,5907,2010-02-02,15:55,mision,3,Estreñimiento,Constipation,5
+UTMB-14,5907,2010-02-02,21:12,mision,3,Dolor de cabeza,Headache,4
+UTMB-14,5907,2010-02-04,14:00,mision,5,Dolor de cabeza,Headache,1
+UTMB-14,5907,2010-02-05,8:00,mision,6,Estreñimiento,Constipation,0
+UTMB-14,5907,2010-02-06,17:49,mision,7,Otro,Other,0
+UTMB-14,5907,2010-02-13,7:20,mision,14,Estreñimiento,Constipation,0
+UTMB-14,5907,2010-02-20,12:30,mision,21,Dolor de cabeza,Headache,3
+UTMB-14,5907,2010-02-23,9:30,mision,24,Otro,Other,0
+UTMB-14,5907,2010-02-24,6:05,mision,25,Dolor de cabeza,Headache,2
+UTMB-14,5907,2010-02-24,10:30,mision,25,Menstrual Cramps,Menstrual Cramps,3
+UTMB-14,5907,2010-03-02,20:00,mision,31,Dolor de cabeza,Headache,4
+UTMB-14,5907,2010-03-04,14:10,mision,33,Estreñimiento,Constipation,0
+UTMB-14,5907,2010-03-10,21:45,mision,39,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-14,5907,2010-03-11,22:55,mision,40,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-14,5907,2010-03-30,12:00,mision,59,Menstrual Cramps,Menstrual Cramps,0
+UTMB-14,5907,2010-03-30,14:00,mision,59,Menstrual Cramps,Menstrual Cramps,4
+UTMB-14,5907,2010-04-03,16:00,post,63,Dolor (otro),Pain,2
+UTMB-15,6043,2008-03-07,7:00,pre,-10,Otro,Other,0
+UTMB-15,6043,2008-03-07,21:33,pre,-10,Otro,Other,0
+UTMB-15,6043,2008-03-08,9:15,pre,-9,Otro,Other,0
+UTMB-15,6043,2008-03-24,11:10,mision,7,Dolor (otro),Pain,3
+UTMB-15,6043,2008-03-25,22:00,mision,8,Dolor de cabeza,Headache,7
+UTMB-15,6043,2008-03-26,7:12,mision,9,Dolor de cabeza,Headache,2
+UTMB-15,6043,2008-03-27,16:26,mision,10,Otro,Other,0
+UTMB-15,6043,2008-04-02,8:10,mision,16,Otro,Other,0
+UTMB-15,6043,2008-04-03,8:20,mision,17,Otro,Other,0
+UTMB-15,6043,2008-04-14,11:15,mision,28,Otro,Other,0
+UTMB-15,6043,2008-05-16,15:35,mision,60,Dolor de cabeza,Headache,7
+UTMB-15,6043,2008-05-30,13:15,mision,74,Dolor de cabeza,Headache,4
+UTMB-15,6043,2008-06-16,20:00,post,91,Dolor (otro),Pain,2
+UTMB-15,6043,2008-06-17,13:00,post,92,Dolor (otro),Pain,1
+UTMB-15,6043,2008-06-17,20:00,post,92,Dolor (otro),Pain,2
+UTMB-15,6043,2008-06-18,8:00,post,93,Dolor (otro),Pain,1
+UTMB-15,6043,2008-06-21,8:00,post,96,Otro,Other,0
+UTMB-15,6043,2008-06-21,8:00,post,96,Otro,Other,0
+UTMB-15,6043,2008-06-21,20:20,post,96,Otro,Other,0
+UTMB-17,6607,2008-05-25,7:43,mision,2,Dolor (otro),Pain,10
+UTMB-17,6607,2008-05-29,21:00,mision,6,Dolor (otro),Pain,5
+UTMB-17,6607,2008-05-29,9:00,mision,6,Dolor (otro),Pain,3
+UTMB-17,6607,2008-05-30,16:30,mision,7,Dolor de cabeza,Headache,10
+UTMB-17,6607,2008-05-30,21:15,mision,7,Dolor de cabeza,Headache,10
+UTMB-17,6607,2008-06-12,12:15,mision,20,Dolor de cabeza,Headache,10
+UTMB-17,6607,2008-06-12,21:00,mision,20,Dolor (otro),Pain,8
+UTMB-17,6607,2008-06-13,10:30,mision,21,Dolor (otro),Pain,0
+UTMB-17,6607,2008-06-13,10:40,mision,21,Dolor (otro),Pain,0
+UTMB-17,6607,2008-06-14,17:33,mision,22,Otro,Other,0
+UTMB-17,6607,2008-06-20,21:51,mision,28,Otro,Other,0
+UTMB-17,6607,2008-06-21,14:00,mision,29,Dolor (otro),Pain,7
+UTMB-17,6607,2008-06-21,19:30,mision,29,Dolor (otro),Pain,8
+UTMB-17,6607,2008-06-22,19:40,mision,30,Dolor (otro),Pain,8
+UTMB-17,6607,2008-06-23,8:00,mision,31,Dolor (otro),Pain,8
+UTMB-17,6607,2008-06-25,19:30,mision,33,Dolor (otro),Pain,2
+UTMB-17,6607,2008-07-02,16:46,mision,40,Dolor (otro),Pain,2
+UTMB-17,6607,2008-07-18,13:00,mision,56,Otro,Other,0
+UTMB-17,6607,2008-07-19,20:00,mision,57,Otro,Other,0
+UTMB-17,6607,2008-07-24,8:30,mision,62,Otro,Other,0
+UTMB-17,6607,2008-08-07,15:00,mision,76,Otro,Other,0
+UTMB-17,6607,2008-08-08,12:30,mision,77,Dolor (otro),Pain,10
+UTMB-17,6607,2008-08-09,16:00,mision,78,Otro,Other,0
+UTMB-17,6607,2008-08-20,21:00,post,89,Otro,Other,0
+UTMB-17,6607,2008-08-21,7:58,post,90,Dolor (otro),Pain,4
+UTMB-18,6858,2009-05-19,8:00,pre,-6,Dolor (otro),Pain,1
+UTMB-18,6858,2009-05-21,12:59,pre,-4,Dolor (otro),Pain,5
+UTMB-18,6858,2009-05-27,19:30,mision,2,Otro,Other,3
+UTMB-18,6858,2009-06-02,16:58,mision,8,Dolor de cabeza,Headache,2
+UTMB-18,6858,2009-06-05,16:02,mision,11,Estreñimiento,Constipation,0
+UTMB-18,6858,2009-06-14,9:03,mision,20,Estreñimiento,Constipation,0
+UTMB-18,6858,2009-06-15,11:00,mision,21,Dolor de cabeza,Headache,4
+UTMB-18,6858,2009-06-17,12:30,mision,23,Otro,Other,0
+UTMB-18,6858,2009-06-19,8:00,mision,25,Dolor de cabeza,Headache,2
+UTMB-18,6858,2009-06-25,11:33,mision,31,Dolor de cabeza,Headache,0
+UTMB-18,6858,2009-07-13,9:50,mision,49,Dolor de cabeza,Headache,4
+UTMB-18,6858,2009-07-25,13:08,post,61,Otro,Other,0
+UTMB-18,6858,2009-07-25,19:02,post,61,Otro,Other,0
+UTMB-18,6858,2009-07-25,19:20,post,61,Otro,Other,0
+UTMB-18,6858,2009-07-25,7:30,post,61,Otro,Other,0
+UTMB-18,6858,2009-07-27,11:45,post,63,Mareo,Dizziness,0
+UTMB-18,6858,2009-07-27,16:45,post,63,Otro,Other,0
+UTMB-18,6858,2009-07-27,19:30,post,63,Dolor (otro),Pain,6
+UTMB-18,6858,2009-07-28,15:16,post,64,Dolor (otro),Pain,3
+UTMB-18,6858,2009-07-30,8:00,post,66,Dolor (otro),Pain,1
+UTMB-20,7352,2006-04-06,22:20,pre,-11,Repeated sneezing and nasal congestion,Repeated sneezing and nasal congestion,
+UTMB-20,7352,2006-04-10,21:00,pre,-7,Sensation of urgency just before urination.  Unable to stop urine stream once started.,Sensation of urgency just before urination.  Unable to stop urine stream once started.,
+UTMB-20,7352,2006-04-18,10:30,mision,1,Dolor (otro),Post muscle bx (biopsy) pain,
+UTMB-20,7352,2006-04-18,12:35,mision,1,Dolor (otro),Post muscle pain biopsy,
+UTMB-20,7352,2006-04-18,15:15,mision,1,Dolor (otro),Post muscle bx (biopsy) pain,
+UTMB-20,7352,2006-04-21,10:00,mision,4,Dolor de espalda,Lower-mid back ache more muscle than bone,
+UTMB-20,7352,2006-04-21,21:55,mision,4,Dificultad para dormir,Subject c/o (complaint of) inability to sleep throughout night; c/o feeling drowsy during day 2° lack of sleep,
+UTMB-20,7352,2006-04-22,17:40,mision,5,Dolor de espalda,C/o (complaint of) back starting to ache,
+UTMB-20,7352,2006-04-24,13:45,mision,7,Dolor de cabeza,Headache post vascular testing & PE nitroglycerine,
+UTMB-20,7352,2006-04-26,22:45,mision,9,Dificultad para dormir,Unable to sleep,
+UTMB-20,7352,2006-04-28,23:00,mision,11,Dificultad para dormir,Unable to fall asleep,
+UTMB-20,7352,2006-04-29,11:00,mision,12,Dolor de espalda,Rash to back,
+UTMB-20,7352,2006-05-03,14:00,mision,16,"C/o (complaint of) cramping lower, middle abdomen with attempt to have a BM","C/o (complaint of) cramping lower, middle abdomen with attempt to have a BM",
+UTMB-20,7352,2006-05-06,13:30,mision,19,Dolor (otro),C/o (complaint of) increased redness & soreness to left thigh muscle biopsy site,
+UTMB-20,7352,2006-05-09,23:00,mision,22,C/o (complaint of) restlessness,C/o (complaint of) restlessness,
+UTMB-20,7352,2006-05-19,15:30,mision,32,Dolor de cabeza,Subject still has headache post Nitroglycerine (refused Rx earlier),
+UTMB-20,7352,2006-05-27,21:50,mision,40,Dolor de espalda,Left sided lower back pain - onset 2-3 days ago-intermittent,
+UTMB-20,7352,2006-06-05,13:00,mision,49,Dolor de cabeza,HA (headache) - from SL Nirtoglycerine,
+UTMB-20,7352,2006-06-05,19:00,mision,49,Dolor de cabeza,HA (headache) - returning,
+UTMB-20,7352,2006-06-13,10:05,mision,57,Left leg discomfort,Left leg discomfort,
+UTMB-20,7352,2006-07-04,10:55,mision,78,Dolor de cabeza,"Nasal/head congestion - watery eyes, burning nose",
+UTMB-20,7352,2006-07-04,15:40,mision,78,Dolor de cabeza,Nasal/head congestion,
+UTMB-20,7352,2006-07-04,21:30,mision,78,Dolor de cabeza,Nasal/head congestion clear - yellow nasal drainage,
+UTMB-20,7352,2006-07-05,8:53,mision,79,Dolor de cabeza,Head congestion,
+UTMB-20,7352,2006-07-05,21:30,mision,79,Dificultad para dormir,Insomnia,
+UTMB-20,7352,2006-07-10,14:15,mision,84,Noted pustule to plantar surface to right foot under 4th toe.,Noted pustule to plantar surface to right foot under 4th toe.,
+UTMB-20,7352,2006-07-15,11:08,mision,89,Náusea o vómito,Nausea,
+UTMB-20,7352,2006-07-19,18:00,post,93,Achy all over 9 on 0-10 scale,Achy all over 9 on 0-10 scale,
+UTMB-21,7772,2006-05-22,Not reported,mision,1,Dolor (otro),Muscle bx site pain,
+UTMB-21,7772,2006-05-23,6:05,mision,2,Dolor (otro),Discomfort to left leg bx (biopsy) site when subject moves leg.  Pain = 2-3 with movement.,
+UTMB-21,7772,2006-05-26,8:00,mision,5,Estreñimiento,Constipation no BM since 5/21/2006,
+UTMB-21,7772,2006-05-26,19:40,mision,5,Dolor de cabeza,Headache  after trying to have BM,
+UTMB-21,7772,2006-05-27,10:45,mision,6,Dolor de cabeza,Headache,
+UTMB-21,7772,2006-05-27,Not reported,mision,6,Difficulty passing stool (hard stool),Difficulty passing stool (hard stool),
+UTMB-21,7772,2006-05-27,18:30,mision,6,Dolor de cabeza,C/o (complaint of) mild headache,
+UTMB-21,7772,2006-05-28,19:40,mision,7,Dolor de cabeza,Headache to top & crown of head with movement.  Rates as 4.,
+UTMB-21,7772,2006-05-30,17:43,mision,9,Dolor de cabeza,Headache from CV testing re to top of head.,
+UTMB-21,7772,2006-05-31,8:00,mision,10,Dolor de cabeza,Headache frontal sinus,
+UTMB-21,7772,2006-06-03,10:15,mision,13,Dolor (otro),Post biopsy pain left vastus,
+UTMB-21,7772,2006-06-03,20:00,mision,13,Subject requested gauze & ace wrap be reapplied to bx (biopsy) site,Subject requested gauze & ace wrap be reapplied to bx (biopsy) site,
+UTMB-21,7772,2006-06-06,11:00,mision,16,Dolor de cabeza,Headache,
+UTMB-21,7772,2006-06-07,7:30,mision,17,Estreñimiento,Constipation,
+UTMB-21,7772,2006-06-11,16:30,mision,21,Dolor de cabeza,Pounding HA (headache) = 6 on pain scale,
+UTMB-21,7772,2006-06-21,15:35,mision,31,Dolor (otro),Muscle bx site pain with movement of leg,
+UTMB-21,7772,2006-06-24,13:50,mision,34,Dolor de cabeza,Pounding headache to right frontal region = 3,
+UTMB-21,7772,2006-07-02,11:59,mision,42,Nasal congestion,Nasal congestion,
+UTMB-21,7772,2006-07-04,7:40,mision,44,Dolor de cabeza,Nasal/head congestion,
+UTMB-21,7772,2006-07-05,11:50,mision,45,Dolor de cabeza,Nasal/head congestion,
+UTMB-21,7772,2006-07-10,9:05,mision,50,Piel seca,Dry skin left elbow,
+UTMB-21,7772,2006-07-15,20:25,mision,55,Dolor (otro),Pain with movement/soreness left leg s/p muscle bx (biopsy),
+UTMB-21,7772,2006-07-17,8:30,mision,57,C/o (complaint of) numbness at left VL muscle bx (biopsy) sites,C/o (complaint of) numbness at left VL muscle bx (biopsy) sites,
+UTMB-21,7772,2006-07-18,7:45,mision,58,Numbness at left VL muscle bx sites,Numbness at left VL muscle bx sites,
+UTMB-21,7772,2006-07-24,9:00,mision,64,Dolor (otro),Left VL muscle bx (biopsy) sites with burning sharp shooting pain,
+UTMB-21,7772,2006-07-26,14:50,mision,66,Dolor de cabeza,Headache,
+UTMB-21,7772,2006-08-04,8:50,mision,75,Ant bite,Ant bite,
+UTMB-21,7772,2006-08-04,21:40,mision,75,Dolor de cabeza,Headache,
+UTMB-21,7772,2006-08-20,14:00,post,91,Dolor de espalda,Body aches sore lower back no pain.,
+UTMB-21,7772,2006-08-21,6:22,post,92,Dolor de cabeza,HA (headache),
+UTMB-21,7772,2006-08-21,11:20,post,92,Dolor de cabeza,Headache,
+UTMB-21,7772,2006-08-21,19:27,post,92,Dolor de cabeza,Headache,
+UTMB-21,7772,2006-08-25,15:25,post,96,Dolor de cabeza,HA (headache) - right ankle soreness,
+UTMB-21,7772,2006-08-25,21:40,post,96,Dolor (otro),Sore ankles bilaterally,
+UTMB-21,7772,2006-08-26,10:05,post,97,Dolor (otro),Right ankle soreness,
+UTMB-21,7772,2006-08-26,17:45,post,97,Dolor (otro),Bilateral ankle pain,
+UTMB-21,7772,2006-08-26,18:40,post,97,Dolor (otro),Bilateral ankle pain,
+UTMB-21,7772,2006-08-28,19:15,post,99,Dolor (otro),Bilateral ankle pain,
+UTMB-21,7772,2006-08-29,19:30,post,100,Dolor (otro),Right ankle pain,
+UTMB-21,7772,2006-08-30,8:10,post,101,Dolor (otro),Right ankle pain,
+UTMB-21,7772,2006-08-30,14:00,post,101,Dolor (otro),Right ankle soreness,
+UTMB-21,7772,2006-08-30,20:12,post,101,Dolor (otro),Ankle soreness,
+UTMB-21,7772,2006-08-31,7:55,post,102,Dolor (otro),Right ankle soreness with ambulation,
+UTMB-21,7772,2006-08-31,18:40,post,102,Dolor (otro),Right ankle soreness of 4 on 0-10 scale,
+UTMB-22,7961,2007-01-25,12:00,pre,-4,Dolor de cabeza,Headache,4
+UTMB-22,7961,2007-01-25,18:35,pre,-4,Otro,Other,0
+UTMB-22,7961,2007-01-25,20:00,pre,-4,Otro,Other,5
+UTMB-22,7961,2007-01-30,20:50,mision,1,Dolor de cabeza,Headache,4
+UTMB-22,7961,2007-02-03,7:45,mision,5,Otro,Other,0
+UTMB-22,7961,2007-02-07,19:10,mision,9,Dolor de cabeza,Headache,4
+UTMB-22,7961,2007-02-08,9:15,mision,10,Dolor de cabeza,Headache,1
+UTMB-22,7961,2007-02-09,17:15,mision,11,Otro,Other,4
+UTMB-22,7961,2007-02-17,14:00,mision,19,Dolor de cabeza,Headache,4
+UTMB-22,7961,2007-02-20,12:00,mision,22,Dolor (otro),Pain,5
+UTMB-22,7961,2007-03-04,21:55,mision,34,Dolor de cabeza,Headache,3
+UTMB-22,7961,2007-03-06,18:00,mision,36,Otro,Other,0
+UTMB-22,7961,2007-03-24,21:45,mision,54,Dolor de cabeza,Headache,0
+UTMB-22,7961,2007-03-28,15:34,mision,58,Dolor de cabeza,Headache,0
+UTMB-22,7961,2007-04-11,7:30,mision,72,Dolor (otro),Pain,3
+UTMB-23,7984,2007-02-12,14:45,mision,1,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-02-12,18:47,mision,1,Dolor de cabeza,Headache,2
+UTMB-23,7984,2007-02-12,21:50,mision,1,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-23,7984,2007-02-13,8:00,mision,2,Dolor (otro),Pain,4
+UTMB-23,7984,2007-02-13,13:00,mision,2,Otro,Other,6
+UTMB-23,7984,2007-02-13,13:26,mision,2,Otro,Other,6
+UTMB-23,7984,2007-02-16,14:24,mision,5,Otro,Other,0
+UTMB-23,7984,2007-02-16,14:35,mision,5,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-02-16,14:30,mision,5,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-02-17,11:30,mision,6,Otro,Other,0
+UTMB-23,7984,2007-02-17,14:00,mision,6,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-02-17,14:30,mision,6,Otro,Other,0
+UTMB-23,7984,2007-02-17,18:03,mision,6,Otro,Other,0
+UTMB-23,7984,2007-02-17,23:05,mision,6,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-23,7984,2007-02-18,13:30,mision,7,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-02-18,11:30,mision,7,Otro,Other,0
+UTMB-23,7984,2007-02-19,16:39,mision,8,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-02-19,21:58,mision,8,Dolor de cabeza,Headache,0
+UTMB-23,7984,2007-02-24,22:41,mision,13,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-23,7984,2007-02-25,13:00,mision,14,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-02-25,21:15,mision,14,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-02-26,9:25,mision,15,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-02-28,14:00,mision,17,Otro,Other,0
+UTMB-23,7984,2007-03-01,13:02,mision,18,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-03-02,12:15,mision,19,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-03-03,12:15,mision,20,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-03-05,15:05,mision,22,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-03-05,19:25,mision,22,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-03-05,21:50,mision,22,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-23,7984,2007-03-06,6:10,mision,23,Otro,Other,0
+UTMB-23,7984,2007-03-07,11:50,mision,24,Otro,Other,0
+UTMB-23,7984,2007-03-10,21:55,mision,27,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-23,7984,2007-03-12,14:50,mision,29,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-03-12,21:20,mision,29,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-03-13,9:00,mision,30,Dolor de cabeza,Headache,1
+UTMB-23,7984,2007-03-14,19:20,mision,31,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-03-14,13:30,mision,31,Dolor de cabeza,Headache,0
+UTMB-23,7984,2007-03-19,14:40,mision,36,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-03-22,6:50,mision,39,Dolor de cabeza,Headache,0
+UTMB-23,7984,2007-03-24,14:10,mision,41,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-03-28,19:25,mision,45,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-03-28,9:35,mision,45,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-01,13:45,mision,49,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-02,8:00,mision,50,Dolor (otro),Pain,0
+UTMB-23,7984,2007-04-04,17:40,mision,52,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-04-06,10:20,mision,54,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-06,19:35,mision,54,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-06,21:50,mision,54,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-23,7984,2007-04-09,6:15,mision,57,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-12,20:00,mision,60,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-04-16,11:55,mision,64,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-17,7:15,mision,65,Otro,Other,0
+UTMB-23,7984,2007-04-22,17:45,mision,70,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-28,21:00,mision,76,Dolor de cabeza,Headache,3
+UTMB-23,7984,2007-04-28,21:55,mision,76,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-23,7984,2007-04-29,7:50,mision,77,Dolor de cabeza,Headache,2
+UTMB-23,7984,2007-05-05,15:00,mision,83,Dolor de cabeza,Headache,2
+UTMB-23,7984,2007-05-11,18:00,mision,89,Dolor de cabeza,Headache,4
+UTMB-23,7984,2007-05-13,11:50,post,91,Dolor de cabeza,Headache,2
+UTMB-23,7984,2007-05-15,10:58,post,93,Otro,Other,0
+UTMB-23,7984,2007-05-15,17:10,post,93,Estreñimiento,Constipation,0
+UTMB-23,7984,2007-05-17,21:40,post,95,Otro,Other,0
+UTMB-23,7984,2007-05-21,17:00,post,99,Otro,Other,0
+UTMB-24,8072,2013-01-18,7:35,pre,-17,Otro,Other,0
+UTMB-24,8072,2013-01-19,7:25,pre,-16,Otro,Other,0
+UTMB-24,8072,2013-01-19,20:00,pre,-16,Otro,Other,0
+UTMB-24,8072,2013-01-23,8:15,pre,-12,Otro,Other,0
+UTMB-24,8072,2013-01-24,14:35,pre,-11,Dolor de cabeza,Headache,3
+UTMB-24,8072,2013-01-24,20:00,pre,-11,Dolor (otro),Pain,1
+UTMB-24,8072,2013-01-29,8:30,pre,-6,Otro,Other,0
+UTMB-24,8072,2013-01-31,8:07,pre,-4,Dolor (otro),Pain,3
+UTMB-24,8072,2013-02-04,18:00,pre,0,Dolor (otro),Pain,5
+UTMB-24,8072,2013-02-04,21:48,pre,0,Dolor (otro),Pain,3
+UTMB-24,8072,2013-02-05,6:10,mision,1,Dolor (otro),Pain,3
+UTMB-24,8072,2013-02-05,7:45,mision,1,Dolor (otro),Pain,3
+UTMB-24,8072,2013-02-05,20:12,mision,1,Dolor (otro),Pain,4
+UTMB-24,8072,2013-02-06,7:30,mision,2,Dolor (otro),Pain,2
+UTMB-24,8072,2013-02-06,19:30,mision,2,Dolor (otro),Pain,3
+UTMB-24,8072,2013-02-07,7:40,mision,3,Dolor (otro),Pain,1
+UTMB-24,8072,2013-02-07,10:30,mision,3,Otro,Other,0
+UTMB-24,8072,2013-02-09,20:20,mision,5,Dolor de cabeza,Headache,4
+UTMB-24,8072,2013-02-10,8:00,mision,6,Dolor de cabeza,Headache,1
+UTMB-24,8072,2013-02-10,11:41,mision,6,Dificultad para dormir,Sleeping Difficulty,3
+UTMB-24,8072,2013-02-10,11:30,mision,6,Dolor (otro),Pain,3
+UTMB-24,8072,2013-02-10,21:46,mision,6,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-02-14,13:00,mision,10,Otro,Other,0
+UTMB-24,8072,2013-02-14,13:00,mision,10,Dolor (otro),Pain,0
+UTMB-24,8072,2013-02-15,21:55,mision,11,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-02-16,21:40,mision,12,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-02-18,14:30,mision,14,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-02-24,21:50,mision,20,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-02-25,11:05,mision,21,Otro,Other,0
+UTMB-24,8072,2013-02-26,8:00,mision,22,Otro,Other,0
+UTMB-24,8072,2013-02-26,20:45,mision,22,Otro,Other,0
+UTMB-24,8072,2013-02-27,7:15,mision,23,Otro,Other,0
+UTMB-24,8072,2013-03-01,20:40,mision,25,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-02,21:55,mision,26,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-04,21:42,mision,28,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-05,7:20,mision,29,Otro,Other,0
+UTMB-24,8072,2013-03-07,7:05,mision,31,Otro,Other,0
+UTMB-24,8072,2013-03-07,20:35,mision,31,Otro,Other,0
+UTMB-24,8072,2013-03-07,21:45,mision,31,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-07,21:45,mision,31,Otro,Other,0
+UTMB-24,8072,2013-03-08,8:05,mision,32,Otro,Other,0
+UTMB-24,8072,2013-03-08,20:45,mision,32,Otro,Other,0
+UTMB-24,8072,2013-03-08,21:43,mision,32,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-09,21:53,mision,33,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-10,19:05,mision,34,Dolor (otro),Pain,3
+UTMB-24,8072,2013-03-13,6:00,mision,37,Dolor (otro),Pain,3
+UTMB-24,8072,2013-03-13,7:15,mision,37,Dolor (otro),Pain,2
+UTMB-24,8072,2013-03-14,12:55,mision,38,Dolor (otro),Pain,4
+UTMB-24,8072,2013-03-14,21:45,mision,38,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-15,7:35,mision,39,Otro,Other,0
+UTMB-24,8072,2013-03-15,9:30,mision,39,Otro,Other,0
+UTMB-24,8072,2013-03-15,20:35,mision,39,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-16,21:45,mision,40,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-16,21:55,mision,40,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-18,19:34,mision,42,Dolor (otro),Pain,2
+UTMB-24,8072,2013-03-20,21:41,mision,44,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-21,21:37,mision,45,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-22,21:45,mision,46,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-25,12:15,mision,49,Otro,Other,0
+UTMB-24,8072,2013-03-25,21:00,mision,49,Otro,Other,0
+UTMB-24,8072,2013-03-28,21:45,mision,52,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-03-30,13:48,mision,54,Otro,Other,0
+UTMB-24,8072,2013-03-30,21:41,mision,54,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-04-03,13:15,mision,58,Otro,Other,0
+UTMB-24,8072,2013-04-03,20:00,mision,58,Dolor (otro),Pain,3
+UTMB-24,8072,2013-04-04,8:00,mision,59,Dolor (otro),Pain,2
+UTMB-24,8072,2013-04-06,21:42,mision,61,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-24,8072,2013-04-07,21:44,mision,62,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-26,8615,2007-07-06,16:30,pre,-12,Otro,Other,0
+UTMB-26,8615,2007-07-11,7:15,pre,-7,Dolor (otro),Pain,5
+UTMB-26,8615,2007-07-11,15:00,pre,-7,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-07-13,7:35,pre,-5,Menstrual Cramps,Menstrual Cramps,4
+UTMB-26,8615,2007-07-13,16:00,pre,-5,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-07-14,12:30,pre,-4,Dolor de cabeza,Headache,3
+UTMB-26,8615,2007-07-17,7:00,pre,-1,Menstrual Cramps,Menstrual Cramps,5
+UTMB-26,8615,2007-07-25,13:35,mision,7,Dolor de cabeza,Headache,5
+UTMB-26,8615,2007-07-26,20:45,mision,8,Otro,Other,0
+UTMB-26,8615,2007-07-27,7:20,mision,9,Dolor (otro),Pain,2
+UTMB-26,8615,2007-08-01,17:58,mision,14,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-08-03,8:00,mision,16,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-26,8615,2007-08-06,8:00,mision,19,Dolor de cabeza,Headache,4
+UTMB-26,8615,2007-08-13,8:00,mision,26,Menstrual Cramps,Menstrual Cramps,5
+UTMB-26,8615,2007-08-17,11:35,mision,30,Dolor de cabeza,Headache,1
+UTMB-26,8615,2007-08-17,8:00,mision,30,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-08-17,14:00,mision,30,Dolor de cabeza,Headache,3
+UTMB-26,8615,2007-08-21,8:00,mision,34,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-08-23,8:00,mision,36,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-08-29,7:30,mision,42,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-09-06,8:55,mision,50,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-09-09,18:00,mision,53,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-09-10,16:35,mision,54,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-09-16,11:00,mision,60,Mareo,Dizziness,3
+UTMB-26,8615,2007-09-24,13:40,mision,68,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-09-27,7:06,mision,71,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-10-02,10:00,mision,76,Dolor de cabeza,Headache,5
+UTMB-26,8615,2007-10-05,17:00,mision,79,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-10-06,12:15,mision,80,Otro,Other,0
+UTMB-26,8615,2007-10-06,16:00,mision,80,Otro,Other,0
+UTMB-26,8615,2007-10-07,8:00,mision,81,Menstrual Cramps,Menstrual Cramps,1
+UTMB-26,8615,2007-10-07,8:00,mision,81,Otro,Other,0
+UTMB-26,8615,2007-10-09,17:53,mision,83,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-10-10,15:00,mision,84,Menstrual Cramps,Menstrual Cramps,3
+UTMB-26,8615,2007-10-10,21:30,mision,84,Menstrual Cramps,Menstrual Cramps,4
+UTMB-26,8615,2007-10-11,6:45,mision,85,Menstrual Cramps,Menstrual Cramps,5
+UTMB-26,8615,2007-10-11,10:53,mision,85,Dolor de cabeza,Headache,2
+UTMB-26,8615,2007-10-11,15:00,mision,85,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-10-16,11:40,post,90,Dolor de cabeza,Headache,4
+UTMB-26,8615,2007-10-18,7:30,post,92,Dolor (otro),Pain,4
+UTMB-26,8615,2007-10-19,7:15,post,93,Dolor (otro),Pain,4
+UTMB-26,8615,2007-10-19,12:00,post,93,Dolor de cabeza,Headache,3
+UTMB-26,8615,2007-10-21,7:45,post,95,Estreñimiento,Constipation,0
+UTMB-26,8615,2007-10-21,8:00,post,95,Dolor (otro),Pain,1
+UTMB-26,8615,2007-10-22,15:18,post,96,Dolor (otro),Pain,3
+UTMB-28,8779,2007-04-28,12:30,pre,0,Otro,Other,0
+UTMB-28,8779,2007-04-29,19:40,mision,1,Dolor de cabeza,Headache,2
+UTMB-28,8779,2007-05-02,8:00,mision,4,Dolor (otro),Pain,4
+UTMB-28,8779,2007-05-04,16:47,mision,6,Dolor (otro),Pain,0
+UTMB-28,8779,2007-05-07,16:49,mision,9,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-05-08,7:30,mision,10,Otro,Other,0
+UTMB-28,8779,2007-05-16,19:45,mision,18,Otro,Other,0
+UTMB-28,8779,2007-05-16,20:45,mision,18,Otro,Other,0
+UTMB-28,8779,2007-05-18,13:55,mision,20,Dolor de cabeza,Headache,0
+UTMB-28,8779,2007-05-19,15:09,mision,21,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-05-26,21:45,mision,28,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-02,21:50,mision,35,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-04,16:30,mision,37,Otro,Other,0
+UTMB-28,8779,2007-06-05,15:37,mision,38,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-06,21:50,mision,39,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-12,21:35,mision,45,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-13,21:45,mision,46,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-15,21:50,mision,48,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-16,21:55,mision,49,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-17,15:57,mision,50,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-22,21:54,mision,55,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-28,8779,2007-06-25,17:20,mision,58,Dolor de cabeza,Headache,6
+UTMB-28,8779,2007-06-27,12:30,mision,60,Dolor de cabeza,Headache,4
+UTMB-28,8779,2007-07-07,20:15,mision,70,Otro,Other,5
+UTMB-28,8779,2007-07-10,7:20,mision,73,Dolor de cabeza,Headache,7
+UTMB-28,8779,2007-07-12,10:42,mision,75,Dolor de cabeza,Headache,4
+UTMB-28,8779,2007-07-12,15:00,mision,75,Dolor de cabeza,Headache,4
+UTMB-28,8779,2007-07-26,15:35,mision,89,Dolor (otro),Pain,6
+UTMB-28,8779,2007-07-26,20:40,mision,89,Dolor (otro),Pain,4
+UTMB-28,8779,2007-07-27,8:00,mision,90,Dolor (otro),Pain,2
+UTMB-28,8779,2007-07-28,12:35,post,91,Dolor de cabeza,Headache,2
+UTMB-28,8779,2007-07-28,12:35,post,91,Dolor (otro),Pain,4
+UTMB-28,8779,2007-07-28,15:16,post,91,Otro,Other,8
+UTMB-28,8779,2007-07-28,20:05,post,91,Dolor (otro),Pain,7
+UTMB-28,8779,2007-07-29,7:25,post,92,Dolor (otro),Pain,3
+UTMB-28,8779,2007-07-29,7:25,post,92,Dolor (otro),Pain,2
+UTMB-28,8779,2007-07-29,17:00,post,92,Dolor (otro),Pain,3
+UTMB-28,8779,2007-07-31,12:30,post,94,Dolor de cabeza,Headache,3
+UTMB-28,8779,2007-08-01,12:15,post,95,Dolor (otro),Pain,5
+UTMB-28,8779,2007-08-02,10:40,post,96,Dolor (otro),Pain,5
+UTMB-28,8779,2007-08-02,17:00,post,96,Dolor (otro),Pain,6
+UTMB-28,8779,2007-08-02,8:08,post,96,Dolor (otro),Pain,3
+UTMB-28,8779,2007-08-03,20:50,post,97,Dolor (otro),Pain,5
+UTMB-28,8779,2007-08-04,17:44,post,98,Dolor (otro),Pain,5
+UTMB-28,8779,2007-08-06,7:45,post,100,Dolor (otro),Pain,5
+UTMB-28,8779,2007-08-06,13:15,post,100,Dolor (otro),Pain,5
+UTMB-28,8779,2007-08-06,17:40,post,100,Dolor (otro),Pain,6
+UTMB-28,8779,2007-08-07,20:00,post,101,Dolor (otro),Pain,7
+UTMB-28,8779,2007-08-09,16:00,post,103,Dolor (otro),Pain,2
+UTMB-28,8779,2007-08-09,12:20,post,103,Dolor (otro),Pain,4
+UTMB-28,8779,2007-08-10,9:15,post,104,Dolor (otro),Pain,5
+UTMB-29,8881,2008-03-10,10:15,mision,8,Dolor de cabeza,Headache,4
+UTMB-29,8881,2008-03-11,15:42,mision,9,Otro,Other,0
+UTMB-29,8881,2008-03-17,18:30,mision,15,Otro,Other,0
+UTMB-29,8881,2008-03-18,21:35,mision,16,Otro,Other,0
+UTMB-29,8881,2008-04-02,11:30,mision,31,Dolor de cabeza,Headache,3
+UTMB-29,8881,2008-04-03,21:55,mision,32,Otro,Other,0
+UTMB-29,8881,2008-04-10,8:20,mision,39,Otro,Other,0
+UTMB-29,8881,2008-04-13,19:50,mision,42,Otro,Other,0
+UTMB-29,8881,2008-04-14,8:00,mision,43,Otro,Other,0
+UTMB-29,8881,2008-04-15,7:45,mision,44,Otro,Other,0
+UTMB-29,8881,2008-04-18,21:30,mision,47,Otro,Other,0
+UTMB-29,8881,2008-04-21,8:00,mision,50,Otro,Other,0
+UTMB-29,8881,2008-04-22,7:00,mision,51,Otro,Other,0
+UTMB-29,8881,2008-04-26,14:00,mision,55,Otro,Other,0
+UTMB-29,8881,2008-04-27,21:45,mision,56,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-04-27,21:00,mision,56,Otro,Other,0
+UTMB-29,8881,2008-04-28,21:55,mision,57,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-04-29,21:59,mision,58,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-04,21:40,mision,63,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-05,21:30,mision,64,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-06,21:30,mision,65,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-07,20:00,mision,66,Otro,Other,0
+UTMB-29,8881,2008-05-08,18:30,mision,67,Otro,Other,0
+UTMB-29,8881,2008-05-15,8:16,mision,74,Otro,Other,0
+UTMB-29,8881,2008-05-15,20:30,mision,74,Otro,Other,0
+UTMB-29,8881,2008-05-16,21:30,mision,75,Otro,Other,0
+UTMB-29,8881,2008-05-17,21:30,mision,76,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-17,21:30,mision,76,Otro,Other,0
+UTMB-29,8881,2008-05-17,21:42,mision,76,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-17,21:47,mision,76,Otro,Other,0
+UTMB-29,8881,2008-05-18,21:50,mision,77,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-19,19:45,mision,78,Otro,Other,0
+UTMB-29,8881,2008-05-20,21:30,mision,79,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-05-27,21:30,mision,86,Otro,Other,0
+UTMB-29,8881,2008-05-29,20:36,mision,88,Otro,Other,0
+UTMB-29,8881,2008-05-30,21:35,mision,89,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-06-02,7:35,post,92,Dolor (otro),Pain,3
+UTMB-29,8881,2008-06-02,17:00,post,92,Dolor (otro),Pain,5
+UTMB-29,8881,2008-06-03,20:00,post,93,Dolor (otro),Pain,9
+UTMB-29,8881,2008-06-03,10:00,post,93,Dolor (otro),Pain,8
+UTMB-29,8881,2008-06-03,19:45,post,93,Dolor (otro),Pain,7
+UTMB-29,8881,2008-06-04,8:00,post,94,Dolor (otro),Pain,8
+UTMB-29,8881,2008-06-04,8:00,post,94,Dolor (otro),Pain,10
+UTMB-29,8881,2008-06-05,21:00,post,95,Otro,Other,0
+UTMB-29,8881,2008-06-06,8:00,mision,96,Otro,Other,0
+UTMB-29,8881,2008-06-07,20:00,mision,97,Dolor (otro),Pain,5
+UTMB-29,8881,2008-06-07,10:41,post,97,Dolor (otro),Pain,8
+UTMB-29,8881,2008-06-07,18:50,post,97,Dolor (otro),Pain,7
+UTMB-29,8881,2008-06-07,23:00,post,97,Dificultad para dormir,Sleeping Difficulty,4
+UTMB-29,8881,2008-06-08,8:00,post,98,Dolor (otro),Pain,4
+UTMB-29,8881,2008-06-12,13:39,post,102,Otro,Other,4
+UTMB-29,8881,2008-06-12,20:10,post,102,Dolor (otro),Pain,0
+UTMB-29,8881,2008-06-12,21:40,post,102,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-29,8881,2008-06-13,11:15,post,103,Dolor (otro),Pain,4
+UTMB-30,8936,2013-01-09,20:00,pre,-12,Dolor (otro),Pain,2
+UTMB-30,8936,2013-01-14,16:45,pre,-7,Otro,Other,0
+UTMB-30,8936,2013-01-14,20:00,pre,-7,Dolor (otro),Pain,2
+UTMB-30,8936,2013-01-16,21:09,pre,-5,Otro,Other,0
+UTMB-30,8936,2013-01-21,13:00,pre,0,Otro,Other,0
+UTMB-30,8936,2013-01-21,21:30,pre,0,Dolor (otro),Pain,3
+UTMB-30,8936,2013-01-22,13:00,mision,1,Otro,Other,0
+UTMB-30,8936,2013-01-24,8:15,mision,3,Otro,Other,0
+UTMB-30,8936,2013-02-16,13:31,mision,26,Otro,Other,0
+UTMB-30,8936,2013-02-16,20:00,mision,26,Otro,Other,0
+UTMB-30,8936,2013-02-17,8:00,mision,27,Otro,Other,0
+UTMB-30,8936,2013-02-18,12:40,mision,28,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-02-19,11:40,mision,29,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-02-24,7:50,mision,34,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-02-24,17:27,mision,34,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-02-25,7:05,mision,35,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-02-25,7:55,mision,35,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-02-25,20:20,mision,35,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-02-26,19:45,mision,36,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-02,19:58,mision,40,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-03,20:30,mision,41,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-05,13:30,mision,43,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-12,19:20,mision,50,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-18,12:50,mision,56,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-19,14:30,mision,57,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-22,6:40,mision,60,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-24,8:00,mision,62,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-26,7:20,mision,64,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-03-26,11:04,mision,64,Otro,Other,0
+UTMB-30,8936,2013-03-26,11:10,mision,64,Dolor (otro),Pain,3
+UTMB-30,8936,2013-03-27,12:35,mision,65,Otro,Other,0
+UTMB-30,8936,2013-03-27,20:00,mision,65,Dolor (otro),Pain,2
+UTMB-30,8936,2013-03-28,14:05,mision,66,Dolor (otro),Pain,0
+UTMB-30,8936,2013-03-28,20:15,mision,66,Dolor (otro),Pain,2
+UTMB-30,8936,2013-03-29,8:00,mision,67,Otro,Other,0
+UTMB-30,8936,2013-03-30,7:15,mision,68,Otro,Other,0
+UTMB-30,8936,2013-03-30,20:00,mision,68,Otro,Other,0
+UTMB-30,8936,2013-04-02,7:30,post,71,Otro,Other,0
+UTMB-30,8936,2013-04-02,7:40,post,71,Mareo,Dizziness,0
+UTMB-30,8936,2013-04-02,17:00,post,71,Dolor (otro),Pain,6
+UTMB-30,8936,2013-04-03,7:45,post,72,Dolor (otro),Pain,4
+UTMB-30,8936,2013-04-03,8:17,post,72,Dolor (otro),Pain,6
+UTMB-30,8936,2013-04-03,20:00,post,72,Dolor (otro),Pain,7
+UTMB-30,8936,2013-04-04,16:10,post,73,Dolor (otro),Pain,10
+UTMB-30,8936,2013-04-04,20:00,post,73,Dolor (otro),Pain,2
+UTMB-30,8936,2013-04-04,20:00,post,73,Dolor (otro),Pain,5
+UTMB-30,8936,2013-04-05,8:00,post,74,Dolor (otro),Pain,6
+UTMB-30,8936,2013-04-05,8:00,post,74,Dolor (otro),Pain,4
+UTMB-30,8936,2013-04-05,17:00,post,74,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-04-05,20:00,post,74,Dolor (otro),Pain,1
+UTMB-30,8936,2013-04-06,7:30,post,75,Piel seca,Dry Skin,0
+UTMB-30,8936,2013-04-06,8:00,post,75,Dolor (otro),Pain,3
+UTMB-30,8936,2013-04-06,8:00,post,75,Dolor (otro),Pain,3
+UTMB-30,8936,2013-04-06,16:30,post,75,Dolor (otro),Pain,1
+UTMB-30,8936,2013-04-06,16:30,post,75,Dolor (otro),Pain,1
+UTMB-30,8936,2013-04-06,19:30,post,75,Dolor (otro),Pain,1
+UTMB-30,8936,2013-04-06,19:30,post,75,Dolor (otro),Pain,1
+UTMB-30,8936,2013-04-08,8:40,post,77,Otro,Other,2
+UTMB-30,8936,2013-04-08,9:28,post,77,Otro,Other,1
+UTMB-32,9032,2009-04-14,19:39,mision,1,Dolor de cabeza,Headache,0
+UTMB-32,9032,2009-04-15,8:50,mision,2,Dolor (otro),Pain,5
+UTMB-32,9032,2009-04-15,19:15,mision,2,Dolor (otro),Pain,1
+UTMB-32,9032,2009-04-16,6:49,mision,3,Dolor (otro),Pain,0
+UTMB-32,9032,2009-04-16,9:44,mision,3,Estreñimiento,Constipation,0
+UTMB-32,9032,2009-04-22,7:51,mision,9,Otro,Other,0
+UTMB-32,9032,2009-04-23,20:08,mision,10,Dolor de cabeza,Headache,3
+UTMB-32,9032,2009-04-29,17:50,mision,16,Otro,Other,0
+UTMB-32,9032,2009-05-02,18:51,mision,19,Dolor (otro),Pain,3
+UTMB-32,9032,2009-05-04,20:35,mision,21,Dolor de cabeza,Headache,2
+UTMB-32,9032,2009-05-07,7:30,mision,24,Otro,Other,0
+UTMB-32,9032,2009-05-08,20:00,mision,25,Dolor (otro),Pain,5
+UTMB-32,9032,2009-05-20,7:46,mision,37,Otro,Other,0
+UTMB-32,9032,2009-06-02,17:55,mision,50,Dolor de cabeza,Headache,5
+UTMB-32,9032,2009-06-09,19:30,mision,57,Otro,Other,0
+UTMB-32,9032,2009-06-10,7:30,mision,58,Otro,Other,2
+UTMB-32,9032,2009-06-11,7:40,mision,59,Dolor (otro),Pain,1
+UTMB-32,9032,2009-06-13,12:20,post,61,Mareo,Dizziness,0
+UTMB-32,9032,2009-06-13,14:40,post,61,Otro,Other,0
+UTMB-32,9032,2009-06-13,21:00,post,61,Otro,Other,0
+UTMB-32,9032,2009-06-14,6:00,post,62,Dolor (otro),Pain,8
+UTMB-32,9032,2009-06-14,15:30,post,62,Otro,Other,0
+UTMB-32,9032,2009-06-14,18:23,post,62,Dolor (otro),Pain,7
+UTMB-32,9032,2009-06-14,19:25,post,62,Otro,Other,5
+UTMB-32,9032,2009-06-14,21:30,post,62,Dolor (otro),Pain,5
+UTMB-32,9032,2009-06-18,18:00,post,66,Dolor (otro),Pain,1
+UTMB-32,9032,2009-06-19,8:00,post,67,Dolor (otro),Pain,2
+UTMB-32,9032,2009-06-21,19:30,post,69,Otro,Other,1
+UTMB-32,9032,2009-06-22,16:36,post,70,Dolor (otro),Pain,3
+UTMB-32,9032,2009-06-24,10:47,post,72,Otro,Other,4
+UTMB-33,9139,2009-03-06,23:00,pre,-11,Dolor (otro),Pain,3
+UTMB-33,9139,2009-03-18,19:15,mision,1,Dolor (otro),Pain,2
+UTMB-33,9139,2009-03-19,18:27,mision,2,Dolor (otro),Pain,3
+UTMB-33,9139,2009-03-23,20:20,mision,6,Otro,Other,0
+UTMB-33,9139,2009-04-13,21:20,mision,27,Otro,Other,0
+UTMB-33,9139,2009-04-17,18:45,mision,31,Dolor de cabeza,Headache,3
+UTMB-33,9139,2009-04-23,15:50,mision,37,Otro,Other,0
+UTMB-33,9139,2009-04-27,7:45,mision,41,Mareo,Dizziness,0
+UTMB-33,9139,2009-04-29,14:05,mision,43,Otro,Other,0
+UTMB-33,9139,2009-04-30,13:40,mision,44,Otro,Other,0
+UTMB-33,9139,2009-05-01,17:49,mision,45,Otro,Other,0
+UTMB-33,9139,2009-05-04,16:36,mision,48,Otro,Other,0
+UTMB-33,9139,2009-05-04,17:57,mision,48,Otro,Other,0
+UTMB-33,9139,2009-05-04,21:20,mision,48,Dolor (otro),Pain,0
+UTMB-33,9139,2009-05-07,7:30,mision,51,Otro,Other,0
+UTMB-33,9139,2009-05-11,20:55,mision,55,Dolor (otro),Pain,0
+UTMB-33,9139,2009-05-12,7:55,mision,56,Dolor (otro),Pain,2
+UTMB-33,9139,2009-05-17,13:40,post,61,Dolor (otro),Pain,4
+UTMB-33,9139,2009-05-18,10:15,post,62,Dolor (otro),Pain,0
+UTMB-33,9139,2009-05-19,19:30,post,63,Dolor (otro),Pain,0
+UTMB-33,9139,2009-05-19,19:30,post,63,Dolor (otro),Pain,3
+UTMB-33,9139,2009-05-20,17:45,post,64,Dolor (otro),Pain,1
+UTMB-34,9314,2009-03-09,21:50,pre,-13,Otro,Other,0
+UTMB-34,9314,2009-03-13,6:00,pre,-9,Otro,Other,0
+UTMB-34,9314,2009-03-15,6:05,pre,-7,Otro,Other,0
+UTMB-34,9314,2009-03-18,19:20,pre,-4,Otro,Other,0
+UTMB-34,9314,2009-03-24,20:04,mision,2,Otro,Other,0
+UTMB-34,9314,2009-03-27,8:00,mision,5,Estreñimiento,Constipation,0
+UTMB-34,9314,2009-03-30,15:36,mision,8,Otro,Other,0
+UTMB-34,9314,2009-04-23,9:00,mision,32,Estreñimiento,Constipation,0
+UTMB-34,9314,2009-04-24,7:00,mision,33,Otro,Other,0
+UTMB-34,9314,2009-04-24,7:15,mision,33,Estreñimiento,Constipation,0
+UTMB-34,9314,2009-04-27,20:50,mision,36,Otro,Other,0
+UTMB-34,9314,2009-05-11,20:52,mision,50,Dolor de cabeza,Headache,2
+UTMB-34,9314,2009-05-14,11:05,mision,53,Estreñimiento,Constipation,0
+UTMB-34,9314,2009-05-18,10:38,mision,57,Otro,Other,0
+UTMB-34,9314,2009-05-22,11:30,post,61,Otro,Other,0
+UTMB-34,9314,2009-05-22,13:30,post,61,Mareo,Dizziness,0
+UTMB-34,9314,2009-05-22,20:00,post,61,Otro,Other,0
+UTMB-34,9314,2009-05-25,17:00,post,64,Otro,Other,0
+UTMB-34,9314,2009-05-27,13:56,post,66,Otro,Other,0
+UTMB-34,9314,2009-06-03,16:00,post,73,Otro,Other,0
+UTMB-35,9485,2009-06-08,7:30,mision,2,Dolor (otro),Pain,3
+UTMB-35,9485,2009-06-08,9:30,mision,2,Dolor (otro),Pain,3
+UTMB-35,9485,2009-06-08,13:00,mision,2,Otro,Other,3
+UTMB-35,9485,2009-06-08,19:45,mision,2,Dolor (otro),Pain,2
+UTMB-35,9485,2009-06-09,8:00,mision,3,Dolor (otro),Pain,1
+UTMB-35,9485,2009-06-09,8:00,mision,3,Dolor (otro),Pain,1
+UTMB-35,9485,2009-06-09,19:25,mision,3,Dolor (otro),Pain,0
+UTMB-35,9485,2009-06-09,17:00,mision,3,Otro,Other,0
+UTMB-35,9485,2009-06-10,7:08,mision,4,Dolor (otro),Pain,1
+UTMB-35,9485,2009-06-10,15:35,mision,4,Dolor (otro),Pain,0
+UTMB-35,9485,2009-06-10,18:00,mision,4,Otro,Other,1
+UTMB-35,9485,2009-06-11,7:43,mision,5,Dolor (otro),Pain,4
+UTMB-35,9485,2009-06-12,19:40,mision,6,Otro,Other,2
+UTMB-35,9485,2009-06-12,19:40,mision,6,Otro,Other,2
+UTMB-35,9485,2009-06-13,15:37,mision,7,Otro,Other,0
+UTMB-35,9485,2009-06-13,17:03,mision,7,Dolor de cabeza,Headache,4
+UTMB-35,9485,2009-06-14,14:24,mision,8,Otro,Other,0
+UTMB-35,9485,2009-06-16,20:05,mision,10,Dolor de cabeza,Headache,2
+UTMB-35,9485,2009-06-17,19:25,mision,11,Otro,Other,0
+UTMB-35,9485,2009-06-17,19:25,mision,11,Otro,Other,0
+UTMB-35,9485,2009-06-18,18:48,mision,12,Dolor de cabeza,Headache,4
+UTMB-35,9485,2009-06-28,14:45,mision,22,Otro,Other,0
+UTMB-35,9485,2009-06-29,6:00,mision,23,Dolor (otro),Pain,0
+UTMB-35,9485,2009-07-07,15:05,mision,31,Dolor de cabeza,Headache,3
+UTMB-35,9485,2009-07-10,12:30,mision,34,Otro,Other,0
+UTMB-35,9485,2009-07-12,11:15,mision,36,Dolor de cabeza,Headache,3
+UTMB-35,9485,2009-07-17,19:30,mision,41,Otro,Other,0
+UTMB-35,9485,2009-07-18,4:30,mision,42,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-35,9485,2009-07-18,15:17,mision,42,Otro,Other,0
+UTMB-35,9485,2009-07-18,21:46,mision,42,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-35,9485,2009-07-19,6:00,mision,43,Dolor (otro),Pain,0
+UTMB-35,9485,2009-07-24,7:30,mision,48,Dolor de cabeza,Headache,6
+UTMB-35,9485,2009-07-31,12:45,mision,55,Otro,Other,0
+UTMB-35,9485,2009-08-03,16:20,mision,58,Dolor (otro),Pain,3
+UTMB-35,9485,2009-08-03,16:51,mision,58,Dolor de cabeza,Headache,3
+UTMB-35,9485,2009-08-03,21:35,mision,58,Dificultad para dormir,Sleeping Difficulty,0
+UTMB-35,9485,2009-08-06,13:20,post,61,Otro,Other,0
+UTMB-35,9485,2009-08-06,16:21,post,61,Otro,Other,0
+UTMB-35,9485,2009-08-06,17:25,post,61,Otro,Other,0
+UTMB-35,9485,2009-08-06,18:25,post,61,Dolor (otro),Pain,3
+UTMB-35,9485,2009-08-07,8:00,post,62,Dolor (otro),Pain,2
+UTMB-35,9485,2009-08-07,8:00,post,62,Dolor (otro),Pain,2
+UTMB-35,9485,2009-08-07,13:00,post,62,Otro,Other,0
+UTMB-35,9485,2009-08-07,19:30,post,62,Dolor (otro),Pain,1
+UTMB-35,9485,2009-08-09,16:15,post,64,Otro,Other,2
+UTMB-35,9485,2009-08-10,7:15,post,65,Dolor (otro),Pain,0
+UTMB-35,9485,2009-08-10,18:00,post,65,Dolor (otro),Pain,1
+UTMB-35,9485,2009-08-12,15:00,post,67,Otro,Other,0
+UTMB-35,9485,2009-08-18,7:50,post,73,Dolor (otro),Pain,3
+UTMB-36,992,2005-02-22,10:00,,-8,diarrhea,diarrhea,
+UTMB-36,992,2005-02-22,13:00,,-8,rectal burning from diarrhea,rectal burning from diarrhea,
+UTMB-36,992,2005-02-22,22:15,,-8,c/o abd. cramping,c/o abd. cramping,
+UTMB-36,992,2005-02-23,10:00,,-7,diarrhea,diarrhea,
+UTMB-36,992,2005-02-23,12:05,,-7,skin irritation (anal area),skin irritation (anal area),
+UTMB-36,992,2005-02-24,12:30,,-6,Dolor de cabeza,headache 8 of 10,
+UTMB-36,992,2005-02-24,13:30,,-6,Dolor de cabeza,headache 6 of 10,
+UTMB-36,992,2005-03-03,21:00,,1,Dolor (otro),muscle biopsy site pain,
+UTMB-36,992,2005-03-04,10:30,,2,Dolor de espalda,backache,
+UTMB-36,992,2005-03-04,14:20,,2,Dolor de espalda,backache,
+UTMB-36,992,2005-03-05,8:00,,3,Dolor de espalda,back pain,
+UTMB-36,992,2005-03-05,Not reported,,3,Dolor de espalda,back pain,
+UTMB-36,992,2005-03-05,21:00,,3,Dolor de espalda,back pain,
+UTMB-36,992,2005-03-06,10:00,,4,Dolor de espalda,back pain,
+UTMB-36,992,2005-03-09,11:00,,7,Dolor de espalda,backache,
+UTMB-36,992,2005-03-09,21:00,,7,Estreñimiento,constipation,
+UTMB-36,992,2005-03-16,17:00,,14,Dolor (otro),leg pain,
+UTMB-36,992,2005-03-17,6:15,,15,Mareo,dizziness,
+UTMB-36,992,2005-03-18,7:30,,16,Mareo,dizziness,
+UTMB-36,992,2005-03-19,2:40,,17,Dolor de cabeza,"headache ""all over"" 5 on scale of 0 -10.",
+UTMB-36,992,2005-03-19,17:00,,17,Mareo,dizziness,
+UTMB-36,992,2005-03-20,8:30,,18,Mareo,dizziness,
+UTMB-36,992,2005-03-21,8:00,,19,Mareo,"""feeling dizzy""",
+UTMB-36,992,2005-03-23,11:30,,21,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-03-23,14:00,,21,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-03-23,19:45,,21,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-03-31,16:00,,29,Dolor (otro),canker sore in mouth,
+UTMB-36,992,2005-03-31,20:15,,29,Dolor (otro),c/o biopsy site pain left vastus lat. Area,
+UTMB-36,992,2005-04-01,7:00,,30,Dolor (otro),canker sore in mouth,
+UTMB-36,992,2005-04-21,12:30,,50,Dolor de cabeza,slight headache,
+UTMB-36,992,2005-04-23,17:30,,52,Mareo,"""feeling dizzy after this test.""",
+UTMB-36,992,2005-04-25,14:15,,54,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-04-29,10:00,,58,Dolor (otro),"leg pain ""5"" (scale 0 - 10)",
+UTMB-36,992,2005-04-29,16:05,,58,Dolor (otro),"leg pain ""6 - 7""",
+UTMB-36,992,2005-04-29,19:15,,58,Dolor (otro),"""ache"" to left lateral thigh biopsy site = ""8"" on pain scale (0 - 10).  C/o increased pain x hour.",
+UTMB-36,992,2005-04-29,21:45,,58,Dolor (otro),"""ache"" persistent to left lateral thigh biopsy site",
+UTMB-36,992,2005-05-01,12:15,,60,Dolor de cabeza,HA (head ache) - due to nitro used during testing,
+UTMB-36,992,2005-05-01,20:00,,60,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-05-15,10:50,,74,insect bites,insect bites,
+UTMB-36,992,2005-05-15,20:55,,74,Dolor (otro),cankers in mouth are painful,
+UTMB-36,992,2005-05-16,8:00,,75,Dolor (otro),mouth - sore,
+UTMB-36,992,2005-05-16,16:00,,75,Dolor de cabeza,headache,
+UTMB-36,992,2005-05-16,18:58,,75,Dolor de cabeza,"c/o HA (head ache) = ""12"" on 0 - 10 scale.  States HA to all regions of head.",
+UTMB-36,992,2005-05-16,20:55,,75,Dolor de cabeza,"HA remains = ""12""",
+UTMB-36,992,2005-05-17,8:30,,76,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-05-17,12:10,,76,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-05-17,14:10,,76,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-05-18,9:25,,77,right thigh cramping,right thigh cramping,
+UTMB-36,992,2005-05-18,11:30,,77,abd cramping related to menses per pt.,abd cramping related to menses per pt.,
+UTMB-36,992,2005-05-18,19:08,,77,Dolor (otro),right LE cramp. Sharp pain = 6-7 on pain scale,
+UTMB-36,992,2005-05-25,10:10,,84,"""morning sickness"" upset stomach","""morning sickness"" upset stomach",
+UTMB-36,992,2005-05-26,7:10,,85,Náusea o vómito,voices vomiting in the shower,
+UTMB-36,992,2005-05-28,12:10,,87,Dolor (otro),"pain in the right side ""around kidney area"".",
+UTMB-36,992,2005-05-31,16:00,,90,Dolor de cabeza,HA (head ache),
+UTMB-36,992,2005-06-01,19:37,,91,Mareo,"c/o ""dizziness"" + aching to left ankle after 3 laps on functional mobility test.",
+UTMB-36,992,2005-06-01,20:10,,91,Dolor de cabeza,"c/o ""ache"" to joints of left bilat. LE, to back to neck & to frontal region of head. Pain = ""12-15"" on pain scale.",
+UTMB-36,992,2005-06-02,13:45,,92,Dolor de espalda,"backache ""8""",
+UTMB-36,992,2005-06-02,19:00,,92,Dolor de espalda,"back ache, legs ache, body ache",
+UTMB-36,992,2005-06-03,20:15,,93,Dolor de espalda,back ache lower calves/thighs ache,
+UTMB-36,992,2005-06-04,15:20,,94,Dolor de espalda,backache,
+UTMB-36,992,2005-06-04,21:30,,94,Dolor de espalda,back/leg ache,
+UTMB-36,992,2005-06-05,6:45,,95,Dolor de espalda,addendum: Back ache,
+UTMB-36,992,2005-06-05,12:35,,95,Dolor de espalda,backache,
+UTMB-36,992,2005-06-06,14:15,,96,Dolor de espalda,backache,
+UTMB-36,992,2005-06-06,21:00,,96,"""tightness"" to bilat anterior thighs, very minimal discomfort, unable to rate on 0-10 scale. Requests ibuprofen.","""tightness"" to bilat anterior thighs, very minimal discomfort, unable to rate on 0-10 scale. Requests ibuprofen.",
+UTMB-36,992,2005-06-07,8:30,,97,Dolor (otro),muscle soreness,
+UTMB-36,992,2005-06-08,9:40,,98,Dolor (otro),"muscle ""soreness, stiffness""",
+UTMB-36,992,2005-06-09,10:25,,99,Dolor (otro),right top of foot pain/cramp,
+UTMB-36,992,2005-06-09,19:30,,99,Dolor (otro),body aches,
+UTMB-36,992,2005-06-11,14:00,,101,Dolor de cabeza,"HA (head ache), neck ache",
+UTMB-36,992,2005-06-12,11:00,,102,Dolor (otro),"muscle soreness ""all over"" worse in bilateral calves",
+UTMB-36,992,2005-06-14,13:30,,104,menses cramping,menses cramping,

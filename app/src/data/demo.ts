@@ -184,7 +184,7 @@ function buildCheckIns(): CheckIn[] {
   const list: CheckIn[] = []
   for (let d = 0; d <= LAST_DAY; d++) {
     // Lena checks in during the evening, so today's check-in is always still open.
-    list.push({ t: d + 0.875, feel: 'Fine', symptoms: [], mood: 3 + Math.floor(rand(d, 4) * 2) })
+    list.push({ t: d + 0.875, feel: 'Fine', symptoms: [], mood: 3 + Math.floor(rand(d, 4) * 2), team: 3 + Math.floor(rand(d, 9) * 3) })
   }
   return list
 }

@@ -22,6 +22,6 @@ describe('dashboard rendering', () => {
     const plots = html.match(/<article class="science-plot">[\s\S]*?<\/article>/g) ?? []
     for (const plot of plots) expect(plot.includes('stroke-dasharray')).toBe(false)
     expect(html).not.toMatch(/NaN|Infinity/)
-    expect(html).toContain('Explore Chest')
+    expect(html).toContain('Chest: Caution. Open details')
   })
 })

@@ -169,7 +169,7 @@ export function Symptoms() {
   const act = activeSymptoms(state, person.id, region)
   const all = symptomsFor(state, person.id, region)
   const action = act.length
-    ? actionFor(state, person, { kind: 'symptom', region, status: 'caution', label: act.map((s) => s.name).join(', ') })
+    ? actionFor(state, person, { kind: 'symptom', region, status: symptomStatus(state, person.id, region), label: act.map((s) => s.name).join(', ') })
     : undefined
   return (
     <div className="screen indicator-screen">
@@ -179,7 +179,7 @@ export function Symptoms() {
       </ScreenTitle>
       <section className="hero">
         <div className="title-2">{act.length ? act.map((s) => s.name).join(', ') : 'None reported'}</div>
-        <StatusMark status={act.length ? 'caution' : 'ok'} size={16} />
+        <StatusMark status={symptomStatus(state, person.id, region)} size={16} />
         <div className="tags">
           <Tag>From your check-in</Tag>
         </div>

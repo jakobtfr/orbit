@@ -5,6 +5,7 @@ import { HealthPrompt } from '../components/HealthPrompt'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
 import { LimitsCard } from '../components/dashboard/LimitsCard'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
+import { MUSCLE_GROUPS, muscleStatus, type MuscleKey } from '../lib/anatomy'
 import { metrics } from '../lib/dashboard'
 import { regionSummaries } from '../lib/judge'
 import { useStore } from '../lib/store'
@@ -20,11 +21,12 @@ export function Body() {
   if (!person) return <Missing />
   const summaries = regionSummaries(state, person)
   const base = `/body/${person.id}`
+  const muscleStatuses = Object.fromEntries((Object.keys(MUSCLE_GROUPS) as MuscleKey[]).map((k) => [k, muscleStatus(state, person, k)])) as Record<MuscleKey, ReturnType<typeof muscleStatus>>
   return <div className="screen dashboard-screen">
     <HealthPrompt />
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map">
-        <BodyFigure summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />
+        <BodyFigure muscleStatuses={muscleStatuses} summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />
       </section>
       <ActivityPanel state={state} person={person} />
       <section className="dashboard-column science-column" aria-label="Three health trend plots">

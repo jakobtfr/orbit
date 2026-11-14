@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { Tag } from '../components/Status'
 import { NextActionCard } from '../components/Tiles'
 import { REGIONS, REGION_ORDER } from '../lib/indicators'
-import { SYMPTOM_REGION, now } from '../lib/judge'
+import { SYMPTOM_REGION, now, symptomNext } from '../lib/judge'
 import { useStore } from '../lib/store'
 import type { CheckIn as CheckInData, RegionKey, Symptom } from '../lib/types'
 import { Missing, usePerson } from './common'
 
 const FEEL: CheckInData['feel'][] = ['Fine', 'Not quite right', 'Unwell']
-const SYMPTOMS = ['Headache', 'Skin rash', 'Cold or cough', 'Pain', 'Trouble sleeping', 'Dizziness', 'Stomach or digestion', 'Vision change', 'Other']
-const QUESTIONS = ['How do you feel today?', 'Any symptoms?', 'How is your mood?', 'Summary']
+const SYMPTOMS = ['Headache', 'Skin rash', 'Cold or cough', 'Pain', 'Trouble sleeping', 'Dizziness', 'Stomach or digestion', 'Nausea or motion sickness', 'Vision change', 'Injury', 'Joint pain after suit work', 'Other']
+const QUESTIONS = ['How do you feel today?', 'Any symptoms?', 'How are you and the crew?', 'Summary']
 
 export function CheckIn() {
   const person = usePerson()
@@ -23,6 +23,7 @@ export function CheckIn() {
   const [painRegion, setPainRegion] = useState<RegionKey | null>(null)
   const [pain, setPain] = useState<number | null>(null)
   const [mood, setMood] = useState<number | null>(null)
+  const [team, setTeam] = useState<number | null>(null)
   if (!person) return <Missing />
   const home = `/body/${person.id}`
 
@@ -33,7 +34,7 @@ export function CheckIn() {
   const ready = [
     feel !== null,
     none || (chosen.length > 0 && (!hasPain || (painRegion !== null && pain !== null))),
-    mood !== null,
+    mood !== null && team !== null,
     true,
   ][step]
 
@@ -42,7 +43,7 @@ export function CheckIn() {
     setChosen((c) => (c.includes(s) ? c.filter((x) => x !== s) : [...c, s]))
   }
   const finish = () => {
-    dispatch({ type: 'checkin', personId: person.id, checkin: { t: now(state), feel: feel!, symptoms, mood: mood! } })
+    dispatch({ type: 'checkin', personId: person.id, checkin: { t: now(state), feel: feel!, symptoms, mood: mood!, team: team! } })
     nav(home)
   }
 
@@ -110,6 +111,7 @@ export function CheckIn() {
 
       {step === 2 && (
         <>
+          <div className="label">How is your mood?</div>
           <div className="scale scale-wide" role="radiogroup" aria-label="Mood from 1 to 5">
             {[1, 2, 3, 4, 5].map((n) => (
               <button key={n} role="radio" aria-checked={mood === n} className={`btn btn-secondary btn-large ${mood === n ? 'is-selected' : ''}`} onClick={() => setMood(n)}>
@@ -118,7 +120,16 @@ export function CheckIn() {
             ))}
           </div>
           <div className="scale-ends label"><span>1 · Very low</span><span>5 · Very good</span></div>
-          <p className="body">Only you can see this.</p>
+          <div className="label">How is it going with the crew?</div>
+          <div className="scale scale-wide" role="radiogroup" aria-label="Working with the crew from 1 to 5">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button key={n} role="radio" aria-checked={team === n} className={`btn btn-secondary btn-large ${team === n ? 'is-selected' : ''}`} onClick={() => setTeam(n)}>
+                {n}
+              </button>
+            ))}
+          </div>
+          <div className="scale-ends label"><span>1 · Tense</span><span>5 · Working well</span></div>
+          <p className="body">Only you can see these answers.</p>
         </>
       )}
 
@@ -136,13 +147,13 @@ export function CheckIn() {
                 
               </li>
             ))}
-            <li><span>Mood: {mood} of 5 · only you can see this</span></li>
+            <li><span>Mood: {mood} of 5 · crew: {team} of 5 · only you can see this</span></li>
           </ul>
           {symptoms.length > 0 && (
             <NextActionCard
               action={{
                 observed: `Logged: ${symptoms.map((s) => s.name.toLowerCase()).join(', ')}. ${symptoms.length === 1 ? 'It' : 'They'} will be marked on your body.`,
-                next: 'Rest, drink water, and log how it feels at the next check-in. Tell the medical lead if it gets worse or lasts 3 days.',
+                next: symptomNext(symptoms.map((s) => s.name)),
               }}
             />
           )}

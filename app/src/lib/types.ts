@@ -51,6 +51,8 @@ export interface CheckIn {
   feel: 'Fine' | 'Not quite right' | 'Unwell'
   symptoms: Symptom[]
   mood: number
+  /** How it is going with the crew, 1 to 5. Private, like mood. */
+  team?: number
 }
 
 export interface PreflightValue {

@@ -274,8 +274,27 @@ export function activeSymptoms(state: AppState, personId: string, region?: Regio
   return symptomsFor(state, personId, region).filter((s) => t - s.t <= SYMPTOM_WINDOW_DAYS)
 }
 
+/** Symptoms that cannot wait for the next check-in. */
+const URGENT_SYMPTOMS = ['Joint pain after suit work']
+
+export function symptomLevel(name: string): 'caution' | 'warning' {
+  return URGENT_SYMPTOMS.includes(name) ? 'warning' : 'caution'
+}
+
+const SYMPTOM_NEXT_DEFAULT = 'Rest, drink water, and log how it feels at the next check-in. Tell the medical lead if it gets worse or lasts 3 days.'
+/** Next actions for symptoms where rest and water are the wrong advice. Draft wording, most urgent first. */
+const SYMPTOM_NEXT: [string, string][] = [
+  ['Joint pain after suit work', 'Stop work and tell the medical lead now. Joint pain after a pressure change can be decompression sickness, which is treated with oxygen and pressure, not rest.'],
+  ['Injury', 'Clean and cover any wound, rest the injured part, and tell the medical lead today.'],
+  ['Nausea or motion sickness', 'Move your head slowly, fix your eyes on one point, and sip water. It usually passes within 3 days of a change in gravity. Tell the medical lead if you cannot keep fluids down.'],
+]
+
+export function symptomNext(names: string[]): string {
+  return SYMPTOM_NEXT.find(([name]) => names.includes(name))?.[1] ?? SYMPTOM_NEXT_DEFAULT
+}
+
 export function symptomStatus(state: AppState, personId: string, region: RegionKey): StatusKey {
-  return activeSymptoms(state, personId, region).length ? 'caution' : 'ok'
+  return worst(activeSymptoms(state, personId, region).map((s) => symptomLevel(s.name)))
 }
 
 export const SYMPTOM_REGION: Record<string, RegionKey> = {
@@ -286,6 +305,9 @@ export const SYMPTOM_REGION: Record<string, RegionKey> = {
   'Cold or cough': 'chest',
   'Trouble sleeping': 'whole',
   'Stomach or digestion': 'whole',
+  'Nausea or motion sickness': 'whole',
+  'Joint pain after suit work': 'whole',
+  Injury: 'whole',
   Other: 'whole',
 }
 
@@ -331,7 +353,7 @@ export function attention(state: AppState, person: Person): AttentionItem[] {
   for (const region of REGION_ORDER) {
     const act = activeSymptoms(state, person.id, region)
     if (act.length) {
-      items.push({ kind: 'symptom', region, status: 'caution', label: act.map((s) => s.name).join(', ') })
+      items.push({ kind: 'symptom', region, status: worst(act.map((s) => symptomLevel(s.name))), label: act.map((s) => s.name).join(', ') })
     }
   }
   return items.sort((a, b) => SEVERITY[b.status] - SEVERITY[a.status])
@@ -363,7 +385,7 @@ export function actionFor(state: AppState, person: Person, item: AttentionItem):
         : ''
     return {
       observed: `Logged in a check-in: ${names}.${cabinLine}`,
-      next: 'Rest, drink water, and log how it feels at the next check-in. Tell the medical lead if it gets worse or lasts 3 days.',
+      next: symptomNext(activeSymptoms(state, person.id, item.region).map((s) => s.name)),
       button: { label: 'View symptom', to: `${base}/symptoms/${item.region}` },
     }
   }

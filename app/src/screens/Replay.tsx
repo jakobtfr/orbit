@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { StatusShape, Tag } from '../components/Status'
+import { StatusShape } from '../components/Status'
 import {
-  PERSONAL_RULE,
   SUBJECTS,
   VITALS,
   VITAL_INFO,
@@ -11,6 +10,7 @@ import {
   mainVital,
   personalLimit,
   subjectById,
+  volunteerName,
   totals,
   type Judged,
   type Subject,
@@ -21,7 +21,7 @@ import { ScreenTitle } from './common'
 /** Two volunteers that show the two halves of the story. Any other can be picked from the list. */
 const FEATURED = [
   { id: 'UTMB-01', label: 'Normal runs high', story: 'This volunteer’s blood pressure is 132/80 before bed rest: right on Earth’s line of 130/80. Earth limits raise an alarm on most days. Against their own normal, almost nothing is unusual.' },
-  { id: 'UTMB-40', label: 'Slow heart-rate rise', story: 'Resting heart rate creeps up from 55 as the body deconditions in bed rest. It never comes near Earth’s line of 100, so Earth limits stay silent. ORBIT sees a rise of more than 20% against this volunteer’s own normal.' },
+  { id: 'UTMB-40', label: 'Slow heart-rate rise', story: 'Resting heart rate creeps up from 55 as the body gets used to lying still. It never comes near Earth’s line of 100, so Earth limits stay silent. ORBIT sees a rise of more than 20% against this volunteer’s own normal.' },
 ]
 
 const ALL = totals()
@@ -97,17 +97,12 @@ export function Replay() {
             <select className="input replay-select" aria-label="Other volunteer" value={featured ? '' : subject.id} onChange={(e) => e.target.value && pick(e.target.value)}>
               <option value="">Other volunteer…</option>
               {SUBJECTS.map((s) => (
-                <option key={s.id} value={s.id}>{s.id}</option>
+                <option key={s.id} value={s.id}>{volunteerName(s.id)}</option>
               ))}
             </select>
           </div>
         </div>
-        <p className="body prose">{featured?.story ?? `Volunteer ${subject.id}, ${judged.length} days in bed rest.`}</p>
-        <div className="tags">
-          <Tag>{subject.id}</Tag>
-          <Tag>MEASURED</Tag>
-          <Tag>NASA UTMB BED REST</Tag>
-        </div>
+        <p className="body prose">{featured?.story ?? `${volunteerName(subject.id)}, ${judged.length} days in bed rest.`}</p>
       </section>
 
       <section className="replay-player">
@@ -148,7 +143,7 @@ export function Replay() {
       </section>
 
       <p className="body-sm note">
-        Earth limits: heart rate over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on any single day. ORBIT: heart rate 20% above the person’s own value, blood pressure 20/15 above, or temperature 0.5 °C above, on two days in a row. Own values are the mean of the days before bed rest. Source: NASA Life Sciences Portal, UTMB bed rest case report forms, DOI 10.83263/wjw1-ta27. Bed rest is a ground stand-in for flight, and this data has no confirmed illness, so it shows fewer false alarms, not that real problems are caught.
+        Earth limits: heart rate over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on any single day. ORBIT: heart rate 20% above the person’s own value, upper or lower blood pressure 20 or 15 mmHg above, or temperature 0.5 °C above, on two days in a row. Own values are the average of the days before bed rest. Source: NASA bed-rest study records. Bed rest is a ground stand-in for flight, and this data has no confirmed illness, so it shows fewer false alarms, not that real problems are caught.
       </p>
     </div>
   )
@@ -258,7 +253,7 @@ function ReplayChart({ subject, days, index, vital }: { subject: Subject; days: 
   const lines = [
     { v: earth, label: `Earth ${fmt(vital, earth)}` },
     ...(own !== null ? [{ v: own, label: `Your normal ${fmt(vital, own)}`, dash: '2 4' }] : []),
-    ...(mine !== null ? [{ v: mine, label: `Yours ${PERSONAL_RULE[vital]}` }] : []),
+    ...(mine !== null ? [{ v: mine, label: 'Your limit' }] : []),
   ]
     .map((l) => ({ ...l, ly: y(l.v) + 4 }))
     .sort((a, b) => a.ly - b.ly)

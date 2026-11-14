@@ -169,7 +169,7 @@ export const INDICATORS: Record<IndicatorKey, IndicatorDef> = {
   },
   bone: {
     key: 'bone',
-    name: 'Bone load',
+    name: 'Bone protection',
     region: 'hips',
     rule: 'R9',
     unit: '% of plan',

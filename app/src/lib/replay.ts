@@ -36,6 +36,11 @@ export const SUBJECTS: Subject[] = data.subjects.map((s) => ({
   days: s.days.map(([day, hr, sys, dia, temp]) => ({ day: day as number, values: { hr, sys, dia, temp } })),
 }))
 
+/** A plain name for a study volunteer, such as "Volunteer 1" for UTMB-01. */
+export function volunteerName(id: string): string {
+  return `Volunteer ${Number(id.split('-')[1])}`
+}
+
 export function subjectById(id: string): Subject | undefined {
   return SUBJECTS.find((s) => s.id === id)
 }
@@ -62,13 +67,6 @@ export function personalLimit(v: Vital, b: Subject['baseline']): number | null {
     case 'temp':
       return b.temp! + 0.5
   }
-}
-
-export const PERSONAL_RULE: Record<Vital, string> = {
-  hr: '20% above own',
-  sys: '+20 over own',
-  dia: '+15 over own',
-  temp: '+0.5 °C over own',
 }
 
 export interface Judged extends Day {

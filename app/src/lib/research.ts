@@ -2,7 +2,7 @@ import { statistics } from './dashboard'
 import { personalLimit, type Subject, type Vital } from './replay'
 
 export const RESEARCH_VITALS: Vital[] = ['hr', 'sys', 'temp']
-export const RESEARCH_LABELS: Record<string, string> = { hr: 'Resting heart rate', sys: 'Systolic blood pressure', temp: 'Body temperature' }
+export const RESEARCH_LABELS: Record<string, string> = { hr: 'Resting heart rate', sys: 'Upper blood pressure', temp: 'Body temperature' }
 export function researchSeries(subject: Subject, vital: Vital, start: number, end: number) {
   return subject.days.filter((d) => d.day >= start && d.day <= end).flatMap((d) => {
     const value = d.values[vital]

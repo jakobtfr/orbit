@@ -85,17 +85,17 @@ The home screen. A bento grid of tiles in three columns; two on tablets, one on 
 ### Region and Muscle group
 
 - **Region:** the region name, one paragraph on what is watched there and why it matters in space, and a tile per indicator plus a symptoms tile, most serious first.
-- **Muscle group:** the muscle's name and function, a note that only whole-body exercise is tracked, tiles for exercise and bone load, and a link to report soreness in the check-in.
+- **Muscle group:** the muscle's name and function, a note that only whole-body exercise is tracked, tiles for exercise and bone protection, and a link to report soreness in the check-in.
 
 ### Indicator
 
 Top to bottom:
 
-1. The latest value with unit and limit arrow, status, and tags: provenance, confidence, rule ID, age, source.
+1. The latest value with unit and limit arrow, status, and two tags: age and source.
 2. **Compared with you:** before flight and the last 7 days, each with the difference from now.
 3. **Next-action card**, when the status calls for one.
 4. **Trend chart** (7 days, 30 days, whole mission). For heart rate, blood pressure, and temperature it draws **Earth's limit as a dashed line** next to the personal band and personal limit. Example: Lena's temperature of 38.0 °C on day 100 sits on Earth's fever line and shows In range, because her in-flight normal is about 37.8 °C.
-5. **Readings:** the last ten, with time, value, context, provenance, and source.
+5. **Readings:** the last ten, with time, value, context, and source.
 6. A "How to measure" link to Measure.
 
 Special cases: Unavailable shows the reason ("The standing test needs gravity."); No recent data shows the last value muted with its age; a modelled value says "Estimated, not measured." and never shows Warning (SH5).
@@ -107,7 +107,7 @@ Special cases: Unavailable shows the reason ("The standing test needs gravity.")
 
 ### Deep Data
 
-Real NASA UTMB bed-rest records, not Lena's data. A participant picker, 7/28/90-day windows, and an end day. Three figures (resting heart rate, systolic blood pressure, temperature) with daily observations, trailing seven-day mean ±1 SD, the pre-bed-rest mean, and the personal review threshold; each exports as SVG. Beside them a rule-based **Medical summary** (marked "Automated draft", not reviewed by a clinician) and short wellbeing prompts linking to Mental Health. CSV export, methods, and a link to Replay.
+Real NASA UTMB bed-rest records, not Lena's data. A volunteer picker ("Volunteer 1" and so on, no study codes), 7/28/90-day windows, and an end day. Three figures (resting heart rate, systolic blood pressure, temperature) with daily observations, trailing seven-day mean ±1 SD, the pre-bed-rest mean, and the personal review threshold; each exports as SVG. Beside them a rule-based **Medical summary** (marked "Automated draft", not reviewed by a clinician) and short wellbeing prompts linking to Mental Health. CSV export, methods, and a link to Replay.
 
 ### Mental Health
 
@@ -154,7 +154,7 @@ Sources: ERC 2021 and AHA 2020 basic life support; Hinkelbein et al. 2020, CPR i
 | Body weight | Whole body | R10 | Body mass device | Measured | 7 days |
 | Vision check | Head | R12 | Entered by hand | Self-reported | 30 days |
 | Symptoms | By region | None | Check-in | Self-reported | 2 days |
-| Bone load | Hips and spine | R9 | Estimated from exercise | Modelled | 1 day |
+| Bone protection | Hips and spine | R9 | Estimated from exercise | Modelled | 1 day |
 | Sleep | Activity | R6 | Wrist tracker | Measured | 1 day |
 | Exercise | Activity | R9 | Exercise machines | Measured | 1 day |
 | Radiation dose | Activity | R8 | Radiation monitor | Measured | 1 day |

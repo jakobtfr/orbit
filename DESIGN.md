@@ -115,7 +115,7 @@ One family: the system font, which is SF Pro on Apple devices. Inter is the self
 | `reading-xl` | 48 / 1.0 | 600 | −0.02em | The one value a screen is about |
 | `reading` | 28 / 1.1 | 600 | −0.01em | Value on a tile |
 | `data` | 13 / 1.4 | 400 | 0 | Units, timestamps, table cells |
-| `tag` | 12 / 1.3 | 500 | 0 | Provenance, confidence, rule ID |
+| `tag` | 12 / 1.3 | 500 | 0 | Age and source of a reading, step counters |
 
 Rules:
 
@@ -153,7 +153,7 @@ One indicator per tile, on `bg-surface`, with no edge. Top to bottom:
 1. Indicator name in `label`, `text-muted`.
 2. Value in `reading`, `text-primary`, with unit and limit arrow.
 3. Status shape and label in the status colour.
-4. A row of tags: provenance, confidence, and age of the reading.
+4. A tag with the age of the reading.
 
 The whole tile is one touch target and opens the indicator's detail screen.
 
@@ -161,9 +161,9 @@ The whole tile is one touch target and opens the indicator's detail screen.
 
 Small pill-shaped labels: `tag` text in `text-muted` on `bg-raised`. They never take a status colour.
 
-- **Provenance** ([SH5](docs/research/scientific-constraints.md#hard-constraints)): `MEASURED`, `SELF-REPORTED`, `MODELLED`. Scripted demo values carry their indicator's normal provenance; the README and submission say which data is scripted.
-- **Confidence** ([SS5](docs/research/scientific-constraints.md#soft-constraints)): `HIGH`, `MODERATE`, `LOW`.
-- **Source** ([SH1](docs/research/scientific-constraints.md#hard-constraints)): the rule ID, such as `R4`, linking to the source list.
+Tags only say things anyone understands: how old a reading is ("45 min ago"), where it came from ("Smart shirt"), or a step counter ("2 of 4").
+
+**No codes in the interface.** Rule IDs (`R4`), constraint IDs (`SH5`), confidence grades, upper-case provenance labels, study codes (`UTMB-01`), and statistics terms (SD, variance, n) stay in the docs and the code. On screen, say it in words: "Estimated, not measured." for a modelled value (SH5), "Volunteer 1" for a study subject, "7-day average" for a rolling mean. The rule behind each limit is documented in [`clinical-thresholds.md`](docs/research/clinical-thresholds.md#rule-table).
 
 ### Buttons
 
@@ -223,7 +223,8 @@ Run each against a finished screen.
 - [ ] On a screen where every indicator is in range, the only colours are small green shapes and the accent.
 - [ ] The accent appears only on things that can be pressed or focused, and on one filled button at most.
 - [ ] No tile shows green for a reading older than its maximum age.
-- [ ] Every value has a provenance tag, and every status has a confidence tag and a rule ID.
+- [ ] A person with no medical or technical training can read every label: no codes, abbreviations, or statistics terms.
+- [ ] Every modelled value says "Estimated, not measured."
 - [ ] Every piece of text is 12 px or larger, and none is dimmer than `text-muted` except on disabled controls.
 - [ ] No NASA logo appears anywhere in the app, video, or slides.
 

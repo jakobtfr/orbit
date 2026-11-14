@@ -125,18 +125,18 @@ export function CheckIn() {
       {step === 3 && (
         <>
           <ul className="summary">
-            <li><span>Feeling: {feel}</span><Tag>SELF-REPORTED</Tag></li>
-            {symptoms.length === 0 && <li><span>No symptoms</span><Tag>SELF-REPORTED</Tag></li>}
+            <li><span>Feeling: {feel}</span></li>
+            {symptoms.length === 0 && <li><span>No symptoms</span></li>}
             {symptoms.map((s) => (
               <li key={s.name}>
                 <span>
                   {s.name}
                   {s.name === 'Pain' && `: ${REGIONS[s.region].name.toLowerCase()}, ${s.pain} of 10`}
                 </span>
-                <Tag>SELF-REPORTED</Tag>
+                
               </li>
             ))}
-            <li><span>Mood: {mood} of 5 · only you can see this</span><Tag>SELF-REPORTED</Tag></li>
+            <li><span>Mood: {mood} of 5 · only you can see this</span></li>
           </ul>
           {symptoms.length > 0 && (
             <NextActionCard

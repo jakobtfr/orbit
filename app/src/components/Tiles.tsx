@@ -6,11 +6,6 @@ import { useStore } from '../lib/store'
 import type { Action, IndicatorKey, Person, Reading, RegionKey } from '../lib/types'
 import { STATUS, StatusMark, Tag } from './Status'
 
-/** Provenance tag for a reading (SH5). */
-export function provenanceTags(key: IndicatorKey, r?: Reading): string[] {
-  return [r?.provenance ?? INDICATORS[key].provenance]
-}
-
 export function ValueLine({ k, reading, arrow, status, size = 'reading' }: {
   k: IndicatorKey
   reading?: Reading
@@ -39,9 +34,6 @@ export function StatusTile({ person, k }: { person: Person; k: IndicatorKey }) {
       <ValueLine k={k} reading={j.latest} arrow={j.arrow} status={j.status} />
       <StatusMark status={j.status} />
       <div className="tags">
-        {j.latest && provenanceTags(k, j.latest).map((t) => <Tag key={t}>{t}</Tag>)}
-        <Tag>{def.confidence}</Tag>
-        <Tag>{def.rule}</Tag>
         {j.latest && <Tag>{age(now(state), j.latest.t)}</Tag>}
       </div>
     </Link>
@@ -58,9 +50,6 @@ export function SymptomTile({ person, region }: { person: Person; region: Region
       <div className="reading reading-text">{act.length ? act.map((s) => s.name).join(', ') : 'None reported'}</div>
       <StatusMark status={status} />
       <div className="tags">
-        <Tag>SELF-REPORTED</Tag>
-        <Tag>LOW</Tag>
-        <Tag>CHECK-IN</Tag>
         {act[0] && <Tag>{age(now(state), act[0].t)}</Tag>}
       </div>
     </Link>
@@ -72,7 +61,6 @@ export function NextActionCard({ action }: { action: Action }) {
     <section className="action-card" aria-label="Next action">
       <div className="action-head">
         <span className="label">Next action</span>
-        <Tag>DRAFT TEXT</Tag>
       </div>
       <p className="body">{action.observed}</p>
       <p className="title-3">{action.next}</p>

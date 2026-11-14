@@ -16,7 +16,8 @@ describe('dashboard rendering', () => {
     expect(html.match(/<strong>Radiation exposure<\/strong>/g)).toHaveLength(1)
     expect(html).toContain('href="/body/lena/check-in"')
     expect(html).toContain('href="/body/lena/measure/vision"')
-    expect(html).toContain('n=28')
+    expect(html).toContain('Day 100')
+    expect(html).not.toMatch(/\bSD\b|n=\d/)
     expect(html.match(/class="daily-mean-point"/g)).toHaveLength(84)
     const plots = html.match(/<article class="science-plot">[\s\S]*?<\/article>/g) ?? []
     for (const plot of plots) expect(plot.includes('stroke-dasharray')).toBe(false)

@@ -1,6 +1,6 @@
 import { useId, useRef } from 'react'
 import { downloadResearch, RESEARCH_LABELS, researchSummary } from '../../lib/research'
-import { VITAL_INFO, type Subject, type Vital } from '../../lib/replay'
+import { VITAL_INFO, volunteerName, type Subject, type Vital } from '../../lib/replay'
 
 function ticks(lo: number, hi: number, count = 5) {
   const raw = (hi - lo) / count
@@ -34,10 +34,10 @@ export function PaperPlot({ subject, vital, start, end }: { subject: Subject; vi
     else segment.push(point)
   }
   return <article className="paper-card">
-    <header><h2>{RESEARCH_LABELS[vital]}</h2><button onClick={() => { if (svg.current) downloadResearch(new XMLSerializer().serializeToString(svg.current), 'image/svg+xml', `${subject.id}-${vital}-D${start}-${end}.svg`) }} disabled={!series.length}>Save SVG ↓</button></header>
+    <header><h2>{RESEARCH_LABELS[vital]}</h2><button onClick={() => { if (svg.current) downloadResearch(new XMLSerializer().serializeToString(svg.current), 'image/svg+xml', `${subject.id}-${vital}-D${start}-${end}.svg`) }} disabled={!series.length}>Save image ↓</button></header>
     {series.length ? <svg ref={svg} xmlns="http://www.w3.org/2000/svg" className="paper-plot" viewBox="0 0 810 310" role="img" aria-label={`${RESEARCH_LABELS[vital]} for ${subject.id}: ${stats.n} measured observations, days ${start} to ${end}.`} style={{ background: '#1d1d1f', color: '#f5f5f7', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Inter Variable", sans-serif', fontSize: 12 }}>
-      <title>{`${subject.id} · ${RESEARCH_LABELS[vital]} · NASA UTMB bed-rest records`}</title>
-      <desc>White squares: observed daily values. Blue: trailing seven-day mean. Shading: plus or minus one sample SD, not instrument uncertainty. Grey: pre-bed-rest mean. Yellow: prototype personal review threshold.</desc>
+      <title>{`${volunteerName(subject.id)} · ${RESEARCH_LABELS[vital]} · NASA bed-rest study`}</title>
+      <desc>White squares: daily readings. Blue: 7-day average, with the shaded usual spread. Grey: normal before bed rest. Yellow: personal limit.</desc>
       <defs><clipPath id={clip}><rect x={left} y={top} width={right - left} height={bottom - top} /></clipPath></defs>
       <rect width="810" height="310" fill="#1d1d1f" />
       {yt.values.map((v) => <g key={v}><line x1={left} x2={right} y1={y(v)} y2={y(v)} stroke="#2c2c2e" strokeWidth=".55" /><text x={left - 11} y={y(v) + 4} textAnchor="end" fill="#f5f5f7">{Number(v.toFixed(2))}</text><path d={`M${left} ${y(v)}h6M${right} ${y(v)}h-6`} stroke="#8e8e93" /></g>)}
@@ -52,19 +52,19 @@ export function PaperPlot({ subject, vital, start, end }: { subject: Subject; vi
         })}
         {baseline !== null && <line x1={left} x2={right} y1={y(baseline)} y2={y(baseline)} stroke="#a1a1a6" strokeWidth="1" />}
         {limit !== null && <line x1={left} x2={right} y1={y(limit)} y2={y(limit)} stroke="#ffd60a" strokeWidth="1" />}
-        {series.map((p) => <rect key={p.day} className="study-observation" x={x(p.day) - 1.7} y={y(p.value) - 1.7} width="3.4" height="3.4" fill="#f5f5f7"><title>{`Day ${p.day}: ${p.value} ${info.unit}; 7d mean ${format(p.rolling.mean)}, SD ${format(p.rolling.sd)}, n=${p.rolling.n}`}</title></rect>)}
+        {series.map((p) => <rect key={p.day} className="study-observation" x={x(p.day) - 1.7} y={y(p.value) - 1.7} width="3.4" height="3.4" fill="#f5f5f7"><title>{`Day ${p.day}: ${p.value} ${info.unit} (7-day average ${format(p.rolling.mean)})`}</title></rect>)}
       </g>
       <rect x={left} y={top} width={right - left} height={bottom - top} fill="none" stroke="#48484a" strokeWidth=".9" />
       <text x="19" y={(top + bottom) / 2} transform={`rotate(-90 19 ${(top + bottom) / 2})`} textAnchor="middle" fill="#f5f5f7" fontSize="14">{RESEARCH_LABELS[vital]} ({info.unit})</text>
       <text x={(left + right) / 2} y="262" textAnchor="middle" fill="#f5f5f7" fontSize="14">Bed-rest day</text>
-      <text x={right - 10} y={top + 17} textAnchor="end" fill="#a1a1a6" fontSize="11">{subject.id} · n = {stats.n}</text>
+      <text x={right - 10} y={top + 17} textAnchor="end" fill="#a1a1a6" fontSize="11">{volunteerName(subject.id)}</text>
       <g transform="translate(72 290)" fontSize="10" fill="#a1a1a6">
         <rect x="0" y="-4" width="4" height="4" fill="#f5f5f7" /><text x="10" y="0">Observed</text>
-        <rect x="105" y="-7" width="22" height="10" fill="#0a84ff" opacity=".13" /><path d="M105 -2H127" stroke="#0a84ff" strokeWidth="1.5" /><text x="133" y="0">7d mean ±1 SD</text>
-        <path d="M280 -2H302" stroke="#a1a1a6" /><text x="309" y="0">Baseline</text>
-        <path d="M410 -2H432" stroke="#ffd60a" /><text x="439" y="0">Personal review threshold</text>
+        <rect x="105" y="-7" width="22" height="10" fill="#0a84ff" opacity=".13" /><path d="M105 -2H127" stroke="#0a84ff" strokeWidth="1.5" /><text x="133" y="0">7-day average and usual spread</text>
+        <path d="M310 -2H332" stroke="#a1a1a6" /><text x="339" y="0">Normal before bed rest</text>
+        <path d="M480 -2H502" stroke="#ffd60a" /><text x="509" y="0">Personal limit</text>
       </g>
     </svg> : <div className="paper-empty">No {RESEARCH_LABELS[vital].toLowerCase()} observations in this interval.</div>}
-    <footer><span>Mean <strong>{format(stats.mean)}</strong> {info.unit}</span><span>SD <strong>{format(stats.sd)}</strong></span><span>s² <strong>{stats.variance === undefined ? '—' : stats.variance.toFixed(2)}</strong> ({info.unit})²</span><span>n = {stats.n}</span></footer>
+    <footer><span>Average <strong>{format(stats.mean)}</strong> {info.unit}</span><span>{stats.n} {stats.n === 1 ? 'day' : 'days'} measured</span></footer>
   </article>
 }

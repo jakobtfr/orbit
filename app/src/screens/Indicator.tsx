@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Chart } from '../components/Chart'
 import { BackLink } from '../components/Shell'
 import { StatusMark, Tag } from '../components/Status'
-import { NextActionCard, ValueLine, provenanceTags } from '../components/Tiles'
+import { NextActionCard, ValueLine } from '../components/Tiles'
 import { FIRST_DAY } from '../data/demo'
 import { age, signed, stamp } from '../lib/format'
 import { INDICATORS, REGIONS, formatValue } from '../lib/indicators'
@@ -66,9 +66,6 @@ export function Indicator() {
         {def.provenance === 'MODELLED' && <p className="body-sm">Estimated, not measured.</p>}
         <StatusMark status={j.status} size={16} />
         <div className="tags">
-          {j.latest && provenanceTags(k, j.latest).map((p) => <Tag key={p}>{p}</Tag>)}
-          <Tag>{def.confidence}</Tag>
-          <Tag>{def.rule}</Tag>
           {j.latest && <Tag>{age(t, j.latest.t)}</Tag>}
           <Tag>{j.latest?.source ?? def.source}</Tag>
         </div>
@@ -134,7 +131,7 @@ export function Indicator() {
         ) : (
           <table className="table">
             <thead>
-              <tr><th>Time</th><th>Value</th><th>Context</th><th>Provenance</th><th>Source</th></tr>
+              <tr><th>Time</th><th>Value</th><th>Context</th><th>Source</th></tr>
             </thead>
             <tbody>
               {all.slice(-10).reverse().map((r, i) => (
@@ -142,7 +139,6 @@ export function Indicator() {
                   <td>{stamp(r.t)}</td>
                   <td className="cell-value">{formatValue(k, r)} {def.unit}</td>
                   <td>{ACTIVITY[r.activity]}</td>
-                  <td>{provenanceTags(k, r).join(' · ')}</td>
                   <td>{r.source}</td>
                 </tr>
               ))}
@@ -182,9 +178,7 @@ export function Symptoms() {
         <div className="title-2">{act.length ? act.map((s) => s.name).join(', ') : 'None reported'}</div>
         <StatusMark status={act.length ? 'caution' : 'ok'} size={16} />
         <div className="tags">
-          <Tag>SELF-REPORTED</Tag>
-          <Tag>LOW</Tag>
-          <Tag>CHECK-IN</Tag>
+          <Tag>From your check-in</Tag>
         </div>
       </section>
       {action && <NextActionCard action={{ ...action, button: undefined }} />}
@@ -195,7 +189,7 @@ export function Symptoms() {
         ) : (
           <table className="table">
             <thead>
-              <tr><th>Time</th><th>Symptom</th><th>Pain, 0 to 10</th><th>Provenance</th></tr>
+              <tr><th>Time</th><th>Symptom</th><th>Pain, 0 to 10</th></tr>
             </thead>
             <tbody>
               {all.slice(0, 10).map((s, i) => (
@@ -203,7 +197,6 @@ export function Symptoms() {
                   <td>{stamp(s.t)}</td>
                   <td className="cell-value">{s.name}</td>
                   <td>{s.pain ?? '—'}</td>
-                  <td>SELF-REPORTED</td>
                 </tr>
               ))}
             </tbody>

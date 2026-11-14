@@ -390,7 +390,7 @@ export function actionFor(state: AppState, person: Person, item: AttentionItem):
       }
     case 'bone':
       return {
-        observed: 'Less than 80% of the exercise plan was done in the last 14 days. Bone load is estimated, not measured.',
+        observed: 'Less than 80% of the exercise plan was done in the last 14 days. Bone protection is estimated from exercise, not measured.',
         next: 'Return to the full exercise plan. Report it to the ground at the next contact.',
       }
     case 'radiation':
@@ -442,14 +442,14 @@ export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {
       return {
         band: b.pre !== undefined ? [b.pre - 6, b.pre + 6] : undefined,
         bandLabel: 'Your normal',
-        limits: b.pre !== undefined ? [{ v: b.pre * 1.2, label: 'Yours +20%' }] : [],
+        limits: b.pre !== undefined ? [{ v: b.pre * 1.2, label: 'Your limit' }] : [],
         earth: { v: 100, label: 'Earth 100' },
       }
     case 'bp':
       return {
         band: b.pre !== undefined ? [b.pre - 6, b.pre + 6] : undefined,
         bandLabel: 'Your normal',
-        limits: b.pre !== undefined ? [{ v: b.pre + 20, label: 'Yours +20' }] : [],
+        limits: b.pre !== undefined ? [{ v: b.pre + 20, label: 'Your limit' }] : [],
         earth: { v: 130, label: 'Earth 130' },
       }
     case 'standing':
@@ -460,7 +460,7 @@ export function chartGuide(key: IndicatorKey, b: Baselines): ChartGuide {
       return {
         band: b.recent !== undefined ? [b.recent - 0.4, b.recent + 0.4] : undefined,
         bandLabel: 'Your last 7 days',
-        limits: b.recent !== undefined ? [{ v: b.recent + 0.5, label: 'Yours +0.5 °C' }] : [],
+        limits: b.recent !== undefined ? [{ v: b.recent + 0.5, label: 'Your limit' }] : [],
         earth: { v: 38.0, label: 'Earth 38.0' },
       }
     case 'weight': {

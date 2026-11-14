@@ -342,7 +342,7 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
    * Answers what the person said. With `hidden`, the text is an instruction to the model that the person never
    * sees, used to have the model open the call in its own words; `fallback` is what is said if the model cannot.
    */
-  const send = (text: string, opts: { hidden?: boolean; focus?: typeof focus; fallback?: DoctorReply & { choices?: Choice[] }; extra?: Choice[] } = {}) => {
+  const send = (text: string, opts: { hidden?: boolean; focus?: typeof focus; fallback?: DoctorReply & { choices?: Choice[] }; extra?: Choice[]; note?: string; talkOnly?: boolean } = {}) => {
     asking.current?.abort()
     const urgent = !opts.hidden && isUrgent(text)
     // A reading said aloud in a call about that reading is saved, and everything after it uses the new state.
@@ -413,10 +413,11 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
       { role: 'system', content: briefing(current, viewer, { focus: focusNow, camera: picture ? 'picture' : streamNow.current && seesNow.current ? 'on' : 'off', note: [
         heard && note ? `They have just told you a new reading in this message. ${note}. It is already in the readings above with its status.` : '',
         left ? `They have just said they do not want to deal with ${left.name}, and the app has put it aside. Say in a few words that you will leave it, then go on from whatever else they said, or ask what they would like to talk about instead.` : '',
+        opts.note ?? '',
         droppedNow.length ? `They do not want these in this call: ${droppedNow.join(', ')}. Do not start them, and do not bring them up or advise on them again unless they ask.` : '',
         procNow
           ? `You are going through the procedure "${procNow.title}" with them, and each step is shown to them in the call. They are on step ${at + 1} of ${procNow.steps.length}: "${procNow.steps[at]}" All its steps: ${procNow.steps.map((x, n) => `${n + 1}. ${x}`).join(' ')} You move through it for them. If what they just said shows this step is done, acknowledge it in a few words and end your answer with [[next]]. If it shows later steps are done too, end with [[step:N]], where N is the first step still to do. If it shows the whole procedure is done, end with [[finish]]. Example: they say "I am lying down and I had some water", you answer "Good. [[next]]". The app then reads the next step aloud, so never read out steps yourself. If they only ask a question about the step, answer it in one sentence with no tag. If they say they do not want to do this or talk about it, do not argue: say you will leave it, ask what they want instead, and end your answer with [[drop]]. The app then closes the procedure.`
-          : `What you mean to get done in this call, in order: ${todoNow.length ? todoNow.map((t) => t.id).join(', ') : 'nothing in particular'}. Procedures you can go through with them, as id: name: ${allProcedures(current, viewer).filter((x) => !droppedNow.includes(x.id)).map((x) => `${x.id}: ${x.kind === 'measure' ? `how to measure ${x.title.toLowerCase()}` : x.title} (${x.steps.length} steps)`).join('; ')}. You cannot read steps out yourself: the app does that. So when something needs doing, say in one short sentence what you will go through with them, and end your answer with [[start:ID]], using an id from this list. Example answer: "Dizziness fits your low blood pressure, so let us deal with that now. [[start:${todoNow[0]?.id ?? 'measure-bp'}]]" The app then shows the procedure and reads its first step aloud. Leave the tag out only when they asked a plain question that needs no action. If they say they do not want to deal with one of these, end your answer with [[drop:ID]] instead and move on to what they do want.`,
+          : `Procedures you can go through with them, as id: name: ${allProcedures(current, viewer).filter((x) => !droppedNow.includes(x.id)).map((x) => `${x.id}: ${x.kind === 'measure' ? `how to measure ${x.title.toLowerCase()}` : x.title} (${x.steps.length} steps)`).join('; ')}.${todoNow.length ? ` The ones their readings call for today: ${todoNow.map((t) => t.id).join(', ')}.` : ''} You cannot read steps out yourself: the app does that when you end your answer with [[start:ID]], using an id from this list. Most answers have no tag. Start a procedure only when they have told you a problem that this procedure deals with, or asked for it, or said yes to your offer of it. Never start one before they have said what is wrong, never because it is on the list, and never in an answer that asks them a question: ask first, and start it in a later answer. If what they describe fits none of these, help by talking and use no tag. When you do start one, say in one short sentence what you will go through with them and end with the tag. Example: you offered to go through one and they say "Yes, let us do that", you answer "Good, we will go through it now. [[start:ID]]" with its real id. The app then shows the procedure and reads its first step aloud. If they say they do not want to deal with one of these, end your answer with [[drop:ID]] instead and move on to what they do want.`,
       ].filter(Boolean).join(' ') || undefined }) },
       ...(opts.hidden ? [] : lines.slice(-10)).filter((l) => l.text).map((l): ChatMessage => ({ role: l.from === 'doctor' ? 'assistant' : 'user', content: l.text })),
       { role: 'user', content: text, images: picture ? [picture] : undefined },
@@ -451,8 +452,10 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
       // The model decided to act: start a procedure, move on in the one in hand, or close it. What follows is added to what is being said.
       const dropping = act === 'drop' ? (tag?.[2] && known.some((p) => p.id === tag[2]) ? [tag[2]] : procNow ? [procNow.id] : []) : []
       const put = dropping.length ? discard(dropping) : undefined
+      // A procedure is not started on a turn that is only for asking, or in an answer that asks the person something: they have not said yet what it is.
+      const mayStart = !opts.talkOnly && !/\?\s*$/.test(clean)
       const started = !tag || act === 'drop' ? undefined
-        : act === 'start' ? (tag[2] && !droppedNow.includes(tag[2]) ? startProcedure(tag[2], true) : undefined)
+        : act === 'start' ? (mayStart && tag[2] && !droppedNow.includes(tag[2]) ? startProcedure(tag[2], true) : undefined)
         : !procNow ? undefined
         : act === 'next' ? stepQuietly(at + 1)
         : act === 'step' ? (Number(tag[2]) > at + 1 ? stepQuietly(Number(tag[2]) - 1) : undefined)
@@ -466,7 +469,8 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
       }
       if (!clean && put) clean = put.text
       if (!clean) { fallBack(); return }
-      const fromModel = OPTIONS_TAG.exec(full)?.[1].split('|').map((x) => x.replace(/[*_#`"]/g, '').trim()).filter((x) => x && x.length <= 32).slice(0, 4).map((label): Choice => ({ label })) ?? []
+      // A label needs a real word in it: a small model sometimes echoes a placeholder such as A | B | C.
+      const fromModel = OPTIONS_TAG.exec(full)?.[1].split('|').map((x) => x.replace(/[*_#`"]/g, '').trim()).filter((x) => x.length <= 32 && /[a-z]{2}/i.test(x)).slice(0, 4).map((label): Choice => ({ label })) ?? []
       // Answers that come from the person's own data, such as the problems their readings point to, go first.
       const offered = started ? undefined : [...(opts.extra ?? []), ...fromModel].filter((c, n, all) => all.findIndex((x) => x.label.toLowerCase() === c.label.toLowerCase()) === n).slice(0, 6)
       setLines((ls) => ls.map((l) => (l.id === id ? { ...l, text: clean, note: started?.note ?? put?.note, choices: offered?.length ? offered : undefined } : l)))
@@ -563,7 +567,7 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
     setNotice(recognitionClass() ? '' : 'This browser cannot listen, so I will speak and you can type.')
     const name = viewer.name.split(' ')[0]
     send(focus
-      ? `[The call has just connected and they have not spoken yet. Open it yourself, in your own words and not the way you would open any other call. Greet ${name} in two or three words, say in one sentence why you are calling, going by what this call was opened about, then ask one question about how they are or what they notice. End with [[options: ...]] giving three or four likely answers to your question.]`
+      ? `[The call has just connected and they have not spoken yet. Open it yourself, in your own words and not the way you would open any other call. Greet ${name} in two or three words, say in one sentence why you are calling, going by what this call was opened about, then ask one question about how they are or what they notice. End with three or four likely answers to your question, in their words, such as [[options: Dizzy | Tired | Nothing unusual]] for a question about what they notice.]`
       : `[The call has just connected and they have not spoken yet. Open it yourself, in your own words and not the way you would open any other call. Greet ${name} in two or three words and ask what is wrong or what they need, in one short sentence. Do not mention any reading or finding yet, and give no options.]`,
     { hidden: true, fallback: first, extra: focus ? undefined : first.choices })
   }
@@ -605,7 +609,17 @@ export function Doctor({ about, onClose }: { about?: string; onClose: () => void
   const choices = lastLine?.from === 'doctor' && !proc && phase !== 'thinking' ? lastLine.choices : undefined
   const choose = (c: Choice) => {
     if (c.start) { startProcedure(c.start); return }
-    if (c.other && modelNow.current) { send(c.label); return }
+    if (c.other && modelNow.current) {
+      // "Something else" says only what it is not. The model asks what it is, and nothing is started on this turn.
+      const not = (lastLine?.choices ?? []).filter((x) => x.about).map((x) => x.label.toLowerCase())
+      send(c.label, {
+        talkOnly: true,
+        extra: WHERE,
+        fallback: { text: 'Where is it?', choices: WHERE },
+        note: `They tapped "Something else"${not.length ? `, so it is not ${not.join(' or ')}: do not bring ${not.length === 1 ? 'that' : 'those'} up` : ''}. They have not said what it is yet. Ask where the trouble is or what they notice, in one short question. Start no procedure and give no options: the app offers the parts of the body to tap.`,
+      })
+      return
+    }
     if (c.other) {
       setLines((ls) => [...ls, { id: nextId.current++, from: 'you', text: c.label }])
       announce('Where is it?', undefined, WHERE)

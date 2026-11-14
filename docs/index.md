@@ -49,6 +49,17 @@ Where each piece of information lives. Start here when you need a specific fact.
 | The five hypotheses, how to test each, and what would prove it wrong | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#hypotheses) |
 | Alert rates and symptom-versus-vitals results from replaying the bed-rest tables | [`solution/problems-and-hypotheses.md`](solution/problems-and-hypotheses.md#what-the-data-check-showed) |
 
+## Solution
+
+| What you need | Where to look |
+| --- | --- |
+| What ORBIT solves, in one sentence and per problem | [`solution/solution-overview.md`](solution/solution-overview.md#what-we-solve) |
+| How it works: the daily loop and the parts around it | [`solution/solution-overview.md`](solution/solution-overview.md#how-it-works) |
+| What ORBIT knows up front: values from before flight, flight information, the crew | [`solution/solution-overview.md`](solution/solution-overview.md#what-orbit-knows) |
+| Which onboard equipment feeds ORBIT | [`solution/solution-overview.md`](solution/solution-overview.md#where-the-data-comes-from) |
+| The 3D body view and the crew view | [`solution/solution-overview.md`](solution/solution-overview.md#what-the-crew-sees) |
+| Expected impact, and how solid each claim is | [`solution/solution-overview.md`](solution/solution-overview.md#impact) |
+
 ## Scientific constraints
 
 | What you need | Where to look |

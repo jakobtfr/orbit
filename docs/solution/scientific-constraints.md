@@ -6,7 +6,7 @@ Every constraint is built from the evidence already in this repo. File names poi
 
 - **Hard (SH):** breaking one makes the health output scientifically wrong or misleading in flight.
 - **Soft (SS):** makes the output more useful; skip if time runs out.
-- **R1–R12** are the rules in [`clinical-thresholds.md`](clinical-thresholds.md#rule-table).
+- **R1–R12** are the rules in [`clinical-thresholds.md`](../research/clinical-thresholds.md#rule-table).
 
 This file covers the science. It does not cover engineering constraints such as offline operation, compute, or privacy.
 
@@ -14,10 +14,10 @@ This file covers the science. It does not cover engineering constraints such as 
 
 Terrestrial medicine assumes Earth-normal bodies, gravity, and a doctor nearby. None of these holds in flight.
 
-- **The baseline moves.** Resting core temperature rises about 1.01 °C in flight. Systolic blood pressure fell from 122 to 111 mmHg in one cohort ([`clinical-thresholds.md`](clinical-thresholds.md#spaceflight-baseline-shifts)).
+- **The baseline moves.** Resting core temperature rises about 1.01 °C in flight. Systolic blood pressure fell from 122 to 111 mmHg in one cohort ([`clinical-thresholds.md`](../research/clinical-thresholds.md#spaceflight-baseline-shifts)).
 - **Some tests stop working.** A standing blood pressure test needs gravity. Bone density cannot be scanned onboard.
-- **Real events are rare.** Crew have about 3.40 clinical events per flight year ([`operations.md`](operations.md#how-often-people-actually-get-sick)). A check that runs daily will produce mostly false alarms unless it is designed not to.
-- **The evidence is thin.** Flight studies cover tens of people. The limits flight surgeons really use are not public ([`open-data.md`](open-data.md#10-what-is-not-openly-available)).
+- **Real events are rare.** Crew have about 3.40 clinical events per flight year ([`operations.md`](../research/operations.md#how-often-people-actually-get-sick)). A check that runs daily will produce mostly false alarms unless it is designed not to.
+- **The evidence is thin.** Flight studies cover tens of people. The limits flight surgeons really use are not public ([`open-data.md`](../research/open-data.md#10-what-is-not-openly-available)).
 
 ## Hard constraints
 
@@ -31,7 +31,7 @@ Terrestrial medicine assumes Earth-normal bodies, gravity, and a doctor nearby. 
 | **SH6** | No amber or red comes from a single unconfirmed reading, unless the value is in the immediate-danger range or symptoms are present. | Cuff position, cold hands, and movement cause bad readings. With 3.40 real events per year, even a 5% daily false-alarm rate gives about 18 false alarms per person per year. | Rules require a repeat reading or persistence over days, as R1, R2, R4, and R5 already specify. Red with symptoms skips the wait. |
 | **SH7** | Each reading is compared only with readings taken in the same context. | Temperature follows a daily cycle. Peak temperature during exercise runs 1.39 °C higher in flight than on Earth and can exceed 40 °C. Blood oxygen depends on cabin oxygen and suit state. | Every reading stores its unit, time, activity state (rest, exercise, after exercise), and environment mode. Resting rules reject non-resting readings. |
 | **SH8** | Missing or stale data is never shown as green. | No reading is not a normal reading. A green tile from last week's value is a false reassurance. | Each indicator has a maximum age. Past it, the status becomes "no recent data" and the app prompts for a measurement. |
-| **SH9** | The tool supports decisions; it does not diagnose. Treatment guidance is limited to sourced countermeasures and recognised first aid. | It is not a validated medical device. The mood rule (R7) is explicitly a heuristic. Wrong treatment advice with no doctor available is dangerous. | Wording says what was observed and what to do next, not what disease it is. Guidance draws on the countermeasures in [`operations.md`](operations.md#countermeasures-already-in-the-plan). No drug doses without a source. |
+| **SH9** | The tool supports decisions; it does not diagnose. Treatment guidance is limited to sourced countermeasures and recognised first aid. | It is not a validated medical device. The mood rule (R7) is explicitly a heuristic. Wrong treatment advice with no doctor available is dangerous. | Wording says what was observed and what to do next, not what disease it is. Guidance draws on the countermeasures in [`operations.md`](../research/operations.md#countermeasures-already-in-the-plan). No drug doses without a source. |
 | **SH10** | Rules are tested on the real tables in `data/`, and claims stop where that data stops. | The bed-rest data is a ground analog. It shows no temperature rise (+0.04 °C), so it cannot test the space-fever rule. Inspiration4 is four crew for three days. | Replay the bed-rest daily vitals through the rules and report alert rates. State "tested on analog data, not validated in flight" wherever results are shown. |
 
 ## Soft constraints
@@ -39,12 +39,12 @@ Terrestrial medicine assumes Earth-normal bodies, gravity, and a doctor nearby. 
 | ID | Constraint | Why | What we build |
 | --- | --- | --- | --- |
 | **SS1** | Show trends and rate of change, not only the latest value. | Deconditioning, weight loss, and sleep debt develop over weeks. R10 already requires a rolling trend. | A trend chart per indicator and a slope-based flag. |
-| **SS2** | Combine indicators where hazards interact. | NASA states the hazards feed off one another ([`resources.md`](resources.md#1-the-five-hazards-of-human-spaceflight)). Headache with high CO2 means something different from headache alone. | A few cross-indicator rules, such as symptoms plus R11, or heart rate plus temperature. Label them as heuristics. |
+| **SS2** | Combine indicators where hazards interact. | NASA states the hazards feed off one another ([`resources.md`](../challenge/resources.md#1-the-five-hazards-of-human-spaceflight)). Headache with high CO2 means something different from headache alone. | A few cross-indicator rules, such as symptoms plus R11, or heart rate plus temperature. Label them as heuristics. |
 | **SS3** | Adjust expectations to mission phase. | Clinical events cluster in the first month. Core temperature plateaus near flight day 75. Eye and bone risks rise with duration. About 30% have orthostatic intolerance after return. | Mission day is an input to the rules. Phase-specific prompts, for example eye checks later in the mission. |
 | **SS4** | Track countermeasure adherence as an early warning. | Exercise of 2 to 2.5 hours a day and an 8.5-hour sleep opportunity are the planned defences. Actual sleep averages 6.09 hours. | Log exercise and sleep against plan. Feed adherence into R6 and R9. |
 | **SS5** | Show how sure each rule is. | Confidence ranges from high (radiation limits) to low (bone prediction, mood). | Display the confidence label from the rule table beside each status. |
 | **SS6** | Record every alert and what followed. | Alert rates can only be tuned if false alarms are counted. | An alert log with outcome: confirmed, dismissed, or resolved. |
-| **SS7** | Account for learning effects in repeated cognitive tests. | Scores improve with practice, which can hide a decline ([`open-data.md`](open-data.md#mapping-indicators-to-sources)). | Compare against the person's post-practice plateau, not their first sessions. |
+| **SS7** | Account for learning effects in repeated cognitive tests. | Scores improve with practice, which can hide a decline ([`open-data.md`](../research/open-data.md#mapping-indicators-to-sources)). | Compare against the person's post-practice plateau, not their first sessions. |
 | **SS8** | Treat radiation as a cumulative career quantity. | The limit is 600 mSv over a career, with a 250 mSv design limit for a solar particle event (R8). Dose never resets. | A running total per person that carries previous missions, plus a daily rate. |
 | **SS9** | Allow personal factors to adjust a rule. | Age, sex, and medication change normal values. We have no flight-specific figures (*verify*). | A per-person notes field and optional per-person threshold overrides, each with a stated reason. |
 
@@ -83,7 +83,7 @@ Run each against the prototype. A failed test means the matching hard constraint
 
 All figures come from these repo files, which list the original papers and standards:
 
-- [`clinical-thresholds.md`](clinical-thresholds.md) — rules R1–R12, baseline shifts, and their source list
-- [`operations.md`](operations.md) — event rates, countermeasures, and crew medical training
-- [`open-data.md`](open-data.md) — what the real datasets can and cannot show
-- [`resources.md`](resources.md) — NASA's five hazards and 17 risks
+- [`clinical-thresholds.md`](../research/clinical-thresholds.md) — rules R1–R12, baseline shifts, and their source list
+- [`operations.md`](../research/operations.md) — event rates, countermeasures, and crew medical training
+- [`open-data.md`](../research/open-data.md) — what the real datasets can and cannot show
+- [`resources.md`](../challenge/resources.md) — NASA's five hazards and 17 risks

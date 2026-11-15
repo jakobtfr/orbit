@@ -1,5 +1,7 @@
 # Submission email (NASA Space Apps Heilbronn)
 
+**The version to send is [`EMAIL-B-final.md`](EMAIL-B-final.md).** The drafts below are kept for reference.
+
 Due: **today, Sun 15 Nov 2026, 15:00**. One email per team. Only a team member sends it.
 
 Pick version A or B. Copy everything between the lines of that version.

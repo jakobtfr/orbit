@@ -1,4 +1,5 @@
-import type { FamilyMember } from './family'
+import type { EarthMessage, FamilyMember } from './family'
+import type { Person } from './types'
 
 /**
  * "Talk freely", a preview of the next step of the family call. It is not finished and not a model:
@@ -189,6 +190,9 @@ export const DEFLECT = [
   'I will leave that to the people with the manuals. Ask me about the garden, the dog, anything from home.',
 ]
 
+/** Said, without a model, to anything no topic covers. One honest line beats an unrelated preset. */
+export const UNKNOWN = 'This preview cannot answer that yet. Without a language model it only knows a few everyday topics: home, the family, the dog, the garden, the weather.'
+
 /** Questions for an assistant, not for someone from home. */
 const KNOWLEDGE = /\b(perimeter|circumference|calculate|compute|solve|equation|formula|square root|multipl|divide|times \w+|plus|minus|maths?|physics|chemistry|code|coding|program|python|javascript|translate|define|definition|capital of|president|prime minister|explain|how does (a|an|the)|how do (i|you) (make|build|write|fix|install)|what is the (meaning|difference|distance|speed|size|population)|who (is|was|invented|discovered)|write (me )?(a|an|some))\b/
 
@@ -216,6 +220,76 @@ export function chatReply(heard: string, member: FamilyMember, said: string[]): 
   if (ASKS_REAL.test(q)) return { topic: 'honest', text: HONEST }
   if (KNOWLEDGE.test(q)) return { topic: 'deflect', text: fresh(DEFLECT, said) }
   const topic = TOPICS.find((t) => t.match.test(q))
-  if (!topic) return { topic: 'deflect', text: fresh(DEFLECT, said) }
+  if (!topic) return { topic: 'unknown', text: UNKNOWN }
   return { topic: topic.id, text: fresh(linesFor(topic, member), said) }
+}
+
+/* ---------- with a language model on the device ---------- */
+
+/** Shown for as long as a model writes the replies. */
+export function MODEL_NOTICE(first: string, model: string): string {
+  return `Preview of the next step. Replies are written by an AI model on this device (${model}) in ${first}'s character. Not ${first}, not live. Health goes to ORBIT's fixed rules.`
+}
+
+/** Said in place of a model reply that did not pass the check. */
+export const MODEL_FALLBACK = 'I would sooner not guess at that. Tell me something about your day instead.'
+
+/** A few facts the model may use about each person, next to what they recorded today. Invented, like the people. */
+const PERSONA: Record<string, string> = {
+  marta: 'Marta Brandt, Lena\'s mother, retired, warm and a little teasing. Lives in the family house with Lena\'s father. Has an apple tree and a garden, bakes apple cake, sings in a choir, helps at the library on Tuesdays. The family dog is Bruno. Calls Lena "my dear" or "my girl".',
+  jonas: 'Jonas Brandt, Lena\'s younger brother, cheerful, jokes a lot. Has two small children who draw Lena\'s ship. Repairs bikes in a workshop, fixed Lena\'s old bike. Looks after the family dog Bruno at weekends. Calls Lena "big sister".',
+  priya: 'Priya Nair, Lena\'s friend and colleague on the simulator team, dry humour. Looks after Lena\'s desk plant, complains about the canteen coffee, watches Lena\'s telemetry with the team.',
+}
+
+/**
+ * What the model is told. It gets the person's character and today's recorded words, and nothing about
+ * the astronaut's health: no readings, no findings. The prompt is not the safeguard; the two checks in
+ * code are (aboutHealth before the model, checkModelReply after it).
+ */
+export function chatBriefing(member: FamilyMember, person: Person, message: EarthMessage): string {
+  const first = member.name.split(' ')[0]
+  const lena = person.name.split(' ')[0]
+  return [
+    `You write short replies in the character of ${first} for a preview feature. You are an AI model, not ${first}, and this is not a live call: ${lena} is an astronaut far from Earth and knows that an AI writes these lines. Speak as ${first} would, in the first person, but if asked whether you are real, human or live, say plainly that you are an AI writing in ${first}'s character.`,
+    `Character: ${PERSONA[member.id] ?? `${member.name}, ${member.relation.toLowerCase()} of ${lena}.`}`,
+    `What ${first} recorded for ${lena} today: ${message.parts.map((p) => `"${p.text}"`).join(' ')}`,
+    `Rules. Reply with one or two short, warm sentences, 35 words at most, plain text, no lists, no emojis. Everyday talk only: home, family, food, the garden, the dog, memories, how the day went. Use only the facts above; you may add small harmless everyday detail, but never invent bad news, accidents, illness or deaths. You never talk about health, the body, medicine, readings or any medical matter, and you never give advice or instructions: ORBIT handles those. You are not an assistant: if asked for facts, sums, code, translations or explanations, say warmly that this is not something you can help with and turn back to home. Never use numbers.`,
+  ].join('\n\n')
+}
+
+/** Words from the astronaut that mean the talk is about health. Such a message never reaches the model. */
+const HEALTH_SAID =
+  /\b(blood|pressure|pulse|heart ?rate|heart|oxygen|saturation|temperature|fever|readings?|measure(ment|d|s)?|symptoms?|medic\w*|doctor|pills?|tablets?|aspirin|drugs?|dose|diagnos\w*|sleep|slept|sleeping|insomnia|exercise|radiation|health\w*|weight|eating|appetite|eat much|hydrat\w*|dehydrat\w*|injur\w*|wound|sick|ill|unwell|pain\w*|aches?|hurts?|dizz\w*|faint\w*|nause\w*|vomit\w*|cough\w*|rash|cuff|vitals?|check ?up|treatment|therapy|surgery)\b/
+
+/** True when what the astronaut said is about health in any way. ORBIT's fixed rules answer it; the model never sees it. */
+export function aboutHealth(said: string): boolean {
+  return HEALTH_SAID.test(said.toLowerCase().replace(/[’‘]/g, "'"))
+}
+
+/** What a reply written by the model must not contain. */
+const NOT_ALLOWED: RegExp[] = [
+  // Anything medical, and the body.
+  /\b(blood|pressure|pulse|heart ?rate|oxygen|temperature|fever|reading|measur|symptom|medic|doctor|nurse|hospital|clinic|pills?\b|tablet|aspirin|drug|dose|diagnos|dehydrat|vitamin|sleep|exercis|radiation|health|weak|dizz|faint|pain(?!t)|aches?\b|aching|hurt|sick|ill\b|illness|unwell|injur|wound|cough|nause|cuff|treatment|therapy|surgery|cure\b|body\b)/i,
+  // Numbers, as digits or as words: a model must not state values.
+  /\d|\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred)\b[\s-]*(\w+[\s-]+)?(over|by)\b|\bperfectly normal\b|\bis normal\b/i,
+  // Advice and instructions, and anything against ORBIT or the crew's medical lead.
+  /\byou (should|must|need to|have to|ought to|had better)\b|\bmake sure\b|\b(lie|sit) down\b|\bdrink (some |more )?water\b|\bget (some|enough|more) (rest|sleep)\b|\brest more\b|\bskip\b|\b(do not|don't|no need to|need not) (tell|worry|bother|report|measure)\b|\bignore\b|\borbit\b|\bsamir\b|\bmedical lead\b|\bcrewmate/i,
+  // Claims to be the person, human, or live.
+  /\b(really|actually|truly) (me|your|marta|jonas|priya)\b|\bthis is (marta|jonas|priya)\b|\b(marta|jonas|priya) (speaking|here)\b|\blive\b|\bnot an? (ai|robot|machine|model)\b|\b(i am|i'm) (real|human|a real|your real|a person)\b|\breal (mother|brother|friend|person)\b/i,
+  // Invented bad news.
+  /\bdied\b|\bdead\b|\bdeath\b|\bdying\b|\bfuneral\b|\baccident\b|\bemergency\b|\bcancer\b|\bcrash|\bfire\b|\bbroke (his|her|my) /i,
+  // Assistant answers.
+  /\bas an ai\b|\blanguage model\b|\bthe answer is\b|\bhere is (a|an|the|some)\b|\bpython\b|\bfunction\b|\bformula\b|\bradius\b|\bequals\b|\bcapital of\b|```/i,
+]
+
+/**
+ * Checks a reply written by the model before it is shown or spoken. Thinking and markup are removed and it
+ * is cut to two sentences; if what is left touches health, gives advice, states a number, claims to be the
+ * person, invents bad news or answers like an assistant, the fixed line is said in its place.
+ */
+export function checkModelReply(raw: string): string {
+  const plain = raw.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').replace(/\[\[[^\]]*\]\]?/g, '').replace(/[*_#`]/g, '').replace(/\s+/g, ' ').trim()
+  const two = (plain.match(/[^.!?]+[.!?]+/g) ?? [plain]).slice(0, 2).join('').trim()
+  if (!two || two.length > 260) return MODEL_FALLBACK
+  return NOT_ALLOWED.some((re) => re.test(two)) ? MODEL_FALLBACK : two
 }

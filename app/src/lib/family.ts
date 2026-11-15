@@ -1,6 +1,6 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
-import { chatReply } from './familyChat'
+import { aboutHealth, chatReply } from './familyChat'
 import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
 import { actionFor, attention, judge, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
@@ -147,7 +147,7 @@ export function memberOf(message: EarthMessage): FamilyMember {
 
 /* ---------- what is said in a call ---------- */
 
-export type SegmentLabel = 'Recorded on Earth' | 'AI voice' | 'ORBIT' | 'Scripted preview'
+export type SegmentLabel = 'Recorded on Earth' | 'AI voice' | 'ORBIT' | 'Scripted preview' | 'AI model'
 
 export interface Segment {
   /** recorded: the person's own words. link: fixed joining words in the AI voice. health: an ORBIT rule, word for word. */
@@ -205,6 +205,8 @@ export interface Turn {
   saved?: { key: IndicatorKey; v: number; v2?: number }
   /** True when the reading the call asked for was given and is back in range, so the call stops asking. */
   settled?: boolean
+  /** Everyday talk in the preview: a language model on the device may write the reply; the segment holds the preset line for when there is none. */
+  forModel?: boolean
   /** The recorded part that was played. */
   topic?: Topic
 }
@@ -274,7 +276,9 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
     }
   }
   // Only now, after urgent words, readings, symptoms and the reading ORBIT still wants, may a scripted line answer.
-  if (ctx.talkFreely) return { kind: 'preview', segments: [{ kind: 'preview', label: 'Scripted preview', text: chatReply(said, ctx.member, ctx.said ?? []).text }] }
+  // In the preview, anything about health goes to ORBIT's fixed rules, so that no model and no preset answers it.
+  if (ctx.talkFreely && aboutHealth(said)) return { kind: 'symptom', segments: [{ kind: 'health', label: 'ORBIT', text: reply(state, person, said).text }] }
+  if (ctx.talkFreely) return { kind: 'preview', forModel: true, segments: [{ kind: 'preview', label: 'Scripted preview', text: chatReply(said, ctx.member, ctx.said ?? []).text }] }
   const part = pickPart(said, ctx.message, ctx.played)
   if (part) return { kind: 'recorded', topic: part.topic, segments: [{ kind: 'recorded', label: 'Recorded on Earth', text: part.text, audio: part.audio, standIn: part.standIn }] }
   return { kind: 'nomore', segments: [{ kind: 'link', label: 'AI voice', text: noMore(state, ctx.member) }] }

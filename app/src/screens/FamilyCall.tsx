@@ -3,7 +3,8 @@ import { Mark } from '../components/Shell'
 import { useCall } from '../lib/call'
 import { speakable } from '../lib/doctor'
 import { MESSAGES, arrived, callScript, familyTurn, memberOf, recordedLabel, signalDelayMin, type Segment, type Topic } from '../lib/family'
-import { PREVIEW_NOTICE } from '../lib/familyChat'
+import { MODEL_NOTICE, PREVIEW_NOTICE, chatBriefing, checkModelReply } from '../lib/familyChat'
+import { chat, findModel, warm, type ChatMessage } from '../lib/localModel'
 import { privateLines } from '../lib/familyPrivate'
 import { useFamily } from '../lib/familyStore'
 import { INDICATORS, formatValue } from '../lib/indicators'
@@ -14,7 +15,7 @@ import '../doctor.css'
 import '../family.css'
 import '../family-chat.css'
 
-type Phase = 'ringing' | 'playing' | 'listening' | 'idle'
+type Phase = 'ringing' | 'playing' | 'thinking' | 'listening' | 'idle'
 
 interface Recognition {
   lang: string
@@ -62,6 +63,10 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   const [focus, setFocus] = useState<IndicatorKey | undefined>(undefined)
   /** The "talk freely" preview: scripted replies in place of the next recording. Off until the astronaut turns it on. */
   const [talkFreely, setTalkFreely] = useState(false)
+  /** The language model on this device, when one is running. It writes the preview's replies; without it the preset lines are used. */
+  const [model, setModel] = useState<string | null>(null)
+  /** The preview's talk so far, for the model: what was said and what it answered. */
+  const talk = useRef<ChatMessage[]>([])
   /** Scripted lines already said in this call. */
   const [scripted, setScripted] = useState<string[]>([])
   /** Senders whose message has been opened in this call. */
@@ -85,6 +90,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     load()
     synth?.addEventListener('voiceschanged', load)
     fetch(`${import.meta.env.BASE_URL}family/voice.json`).then((r) => (r.ok ? r.json() : {})).then((m) => { rendered.current = m as Record<string, string> }).catch(() => {})
+    findModel().then((m) => { if (alive.current && m) { setModel(m); warm(m) } })
     return () => {
       alive.current = false
       run.current++
@@ -198,7 +204,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     setYou(text)
     setSaved('')
     const turn = familyTurn(state, viewer, text, { member, message, played, focus, talkFreely, said: scripted })
-    addLines(privateLines(state, member, text, turn))
+    if (!(turn.kind === 'preview' && turn.forModel && model)) addLines(privateLines(state, member, text, turn))
     if (turn.kind === 'escalate') {
       setRolePlay(false)
       void play(turn.segments, 'stop')
@@ -211,6 +217,29 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
       if (turn.settled) setFocus(undefined)
     }
     if (turn.topic) setPlayed((p) => [...p, turn.topic!])
+    if (turn.kind === 'preview' && turn.forModel && model) {
+      // Everyday talk, and a model is running: it writes the reply, and the reply is checked before it is shown or spoken.
+      const mine = ++run.current
+      stopListening()
+      window.speechSynthesis?.cancel()
+      audio.current?.pause()
+      setShown(null)
+      setPhase('thinking')
+      let full = ''
+      const preset = turn.segments[0]
+      const asked: ChatMessage = { role: 'user', content: text }
+      chat(model, [{ role: 'system', content: chatBriefing(member, viewer, message) }, ...talk.current.slice(-8), asked], (piece) => { full += piece }, AbortSignal.timeout(20000), 0.7, { think: false, maxTokens: 90 })
+        .then(() => true, () => false)
+        .then((ok) => {
+          if (run.current !== mine || !alive.current) return
+          if (!ok || !full.trim()) { setScripted((x) => [...x, preset.text]); addLines(privateLines(state, member, text, turn)); void play([preset]); return }
+          const said = checkModelReply(full)
+          talk.current = [...talk.current, asked, { role: 'assistant', content: said }]
+          addLines([{ day: state.day, with: member.id, from: 'you', text }, { day: state.day, with: member.id, from: 'ai', text: said }])
+          void play([{ kind: 'preview', label: 'AI model', text: said }])
+        })
+      return
+    }
     if (turn.kind === 'preview') setScripted((x) => [...x, turn.segments[0].text])
     void play(turn.segments)
   }
@@ -262,14 +291,15 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
 
   const ringing = phase === 'ringing'
   const delay = Math.round(signalDelayMin(state.day))
-  const status = ringing ? 'Connecting…' : phase === 'playing' ? (shown?.label === 'Recorded on Earth' ? 'Playing the recording' : 'Speaking') : phase === 'listening' ? 'Listening' : muted ? 'You are muted' : 'Your turn'
+  const status = ringing ? 'Connecting…' : phase === 'playing' ? (shown?.label === 'Recorded on Earth' ? 'Playing the recording' : 'Speaking') : phase === 'thinking' ? 'Writing a reply…' : phase === 'listening' ? 'Listening' : muted ? 'You are muted' : 'Your turn'
   const left = message.parts.filter((p) => !played.includes(p.topic))
-  const chips = ringing || !rolePlay || phase === 'playing' ? [] : talkFreely ? [
+  const chips = ringing || !rolePlay || phase === 'playing' || phase === 'thinking' ? [] : talkFreely ? [
     ...(focus ? [{ label: 'Demo: say 112 over 70', say: 'It is 112 over 70 now' }] : []),
     { label: 'How are you?', say: 'How are you?' },
     { label: 'I miss you', say: 'I miss you' },
     { label: 'Tell me about the dog', say: 'Tell me about the dog' },
     { label: 'How is the weather?', say: 'How is the weather at home?' },
+    ...(model ? [{ label: 'What did you have for breakfast?', say: 'What did you have for breakfast?' }] : []),
   ] : [
     ...(focus ? [{ label: 'Demo: say 112 over 70', say: 'It is 112 over 70 now' }, { label: 'I am fine', say: 'I am fine' }] : []),
     ...(left.some((p) => p.topic === 'day') ? [{ label: 'How was your day?', say: 'How was your day?' }] : []),
@@ -297,7 +327,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
             ? <p className="doctor-caption is-quiet">{first} recorded a message for you. It is not a live call: you will hear the recording, and an AI voice links the parts.</p>
             : <>
                 {you && <p className="doctor-said">{you}</p>}
-                {shown && <p className={`family-label is-${shown.kind}`}>{shown.label}{shown.label === 'Recorded on Earth' ? ` · ${first}'s own words${shown.standIn ? ' · demo: AI-generated stand-in voice' : ''}` : shown.label === 'ORBIT' ? ' · fixed health rule, word for word' : shown.label === 'Scripted preview' ? ' · written by the team · AI voice · not ' + first : ' · AI-generated'}</p>}
+                {shown && <p className={`family-label is-${shown.kind}`}>{shown.label}{shown.label === 'Recorded on Earth' ? ` · ${first}'s own words${shown.standIn ? ' · demo: AI-generated stand-in voice' : ''}` : shown.label === 'ORBIT' ? ' · fixed health rule, word for word' : shown.label === 'Scripted preview' ? ' · written by the team · AI voice · not ' + first : shown.label === 'AI model' ? ` · written by an AI model in ${first}'s character · not ${first}` : ' · AI-generated'}</p>}
                 {shown && <p className={`doctor-caption ${rolePlay ? '' : 'is-urgent'}`}>{shown.text}</p>}
                 {hearing && <p className="doctor-said">{hearing}</p>}
                 {saved && <p className="doctor-saved">{saved}</p>}
@@ -307,7 +337,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
         {!ringing && rolePlay && (
           <div className={`family-chat-preview ${talkFreely ? 'is-on' : ''}`}>
             <button role="switch" aria-checked={talkFreely} onClick={() => setTalkFreely((on) => !on)}>{talkFreely ? 'Talk freely is on' : 'Talk freely (preview)'}</button>
-            {talkFreely && <p role="note">{PREVIEW_NOTICE} Health still goes to ORBIT.</p>}
+            {talkFreely && <p role="note">{model ? MODEL_NOTICE(first, model) : `${PREVIEW_NOTICE} Health still goes to ORBIT. No language model is running on this device.`}</p>}
           </div>
         )}
 

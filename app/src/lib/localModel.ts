@@ -42,11 +42,11 @@ export function warm(model: string): void {
 }
 
 /** Streams one answer, calling onToken for each piece of text as it arrives. A higher temperature gives more varied wording. */
-export async function chat(model: string, messages: ChatMessage[], onToken: (text: string) => void, signal?: AbortSignal, temperature = 0.3): Promise<void> {
+export async function chat(model: string, messages: ChatMessage[], onToken: (text: string) => void, signal?: AbortSignal, temperature = 0.3, extra: { think?: boolean; maxTokens?: number } = {}): Promise<void> {
   const res = await fetch(`${HOST}/api/chat`, {
     method: 'POST',
     signal,
-    body: JSON.stringify({ model, messages, stream: true, keep_alive: '30m', options: { temperature, num_predict: 110 } }),
+    body: JSON.stringify({ model, messages, stream: true, keep_alive: '30m', ...(extra.think === undefined ? {} : { think: extra.think }), options: { temperature, num_predict: extra.maxTokens ?? 110 } }),
   })
   if (!res.ok || !res.body) throw new Error(`Local model answered ${res.status}`)
   const reader = res.body.getReader()

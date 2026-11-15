@@ -4,6 +4,8 @@
 
 NASA Space Apps Challenge 2026 · [Create Health Monitoring Software for Astronauts on Space Missions](https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/)
 
+**[Open the live app](https://jakobtfr.github.io/orbit/)** · **[Slides with working links](https://jakobtfr.github.io/orbit/deck/)** (GitHub shows the PDF as pictures, so links inside it cannot be clicked there) · [Slides as PDF](docs/demo/orbit-demo.pdf)
+
 ## The problem
 
 Halfway to Mars, a question to a flight surgeon and its answer take more than 40 minutes. The crew must notice, judge, and act on health changes themselves, usually with about 40 hours of medical training.

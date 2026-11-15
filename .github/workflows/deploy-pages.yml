@@ -33,6 +33,12 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - name: Publish the clickable slide deck next to the app, at /deck/
+        run: |
+          mkdir -p dist/deck
+          cp -r ../docs/demo/img dist/deck/img
+          cp ../docs/demo/orbit-demo.pdf ../docs/demo/viewer.js dist/deck/
+          sed 's#</body>#<script src="viewer.js"></script></body>#' ../docs/demo/deck.html > dist/deck/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

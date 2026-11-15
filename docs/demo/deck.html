@@ -155,6 +155,10 @@
   .ph-cols b { display: block; font-size: 20px; color: var(--text); font-weight: 600; margin-bottom: 2px; }
   .ph-cols small { display: block; font-size: 16px; color: var(--dim); margin-top: 2px; }
   .ph-note { font-size: 19px; color: var(--dim); margin-top: 10px; }
+  .ic { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin-left: 10px; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent) !important; font-size: 17px; font-weight: 600; text-decoration: none !important; vertical-align: 0.15em; line-height: 1; letter-spacing: 0; }
+  .big .ic, h3 .ic { vertical-align: middle; }
+  .also { margin-top: 14px; font-size: 21px; color: var(--muted); line-height: 1.7; }
+  .also a { color: var(--accent); text-decoration: none; white-space: nowrap; }
   /* 7 */
   .s7 { padding-top: 140px; }
   .s7 h2 { font-size: 104px; }
@@ -203,7 +207,7 @@
 
   <div class="day">Mission day 100 · outbound to Mars</div>
   <h1>“Good morning,<br>Lena.”</h1>
-  <p class="sub">Her mother said it minutes ago. <span class="soft">At Mars, a voice from home travels up to 20 minutes. The answer takes 20 more. Nobody can talk like that.</span></p>
+  <p class="sub">Her mother said it minutes ago. <span class="soft">At Mars, a voice from home travels up to 20 minutes<a class="ic" href="https://www.nasa.gov/hrp/hazard-distance-from-earth/" aria-label="Source: NASA">↗</a>. The answer takes 20 more. Nobody can talk like that.</span></p>
   <p class="src">Signal delay “up to 20 minutes one way”: <a href="https://www.nasa.gov/hrp/hazard-distance-from-earth/">NASA Human Research Program</a>. Lena is ORBIT’s demo astronaut and is invented. The delay is not.</p>
 
   <div class="team">
@@ -224,25 +228,25 @@
   <div class="grid4">
     <div class="tile">
       <span class="label">Lonely</span>
-      <div class="big">0</div>
+      <div class="big">0<a class="ic" href="https://doi.org/10.3389/fphys.2021.750414" aria-label="Source">↗</a></div>
       <p><em>live calls home</em> at Mars distance. In orbit, less family contact already brings growing loneliness.</p>
       <p class="src"><a href="https://doi.org/10.3389/fphys.2021.750414">Gushin et al. 2021, Frontiers in Physiology</a> · NASA names it a stressor: <a href="https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-016-behavioral-health.pdf">NASA OCHMO-TB-016</a></p>
     </div>
     <div class="tile">
       <span class="label">Tired</span>
-      <div class="big">6.1 h</div>
+      <div class="big">6.1 h<a class="ic" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436/" aria-label="Source">↗</a></div>
       <p><em>of sleep a night</em> on the ISS. 8.5 h are scheduled. 3 of 4 crew took sleep medication.</p>
       <p class="src"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436/">Barger et al. 2014, Lancet Neurology</a> · 21 ISS crew; medication at least once, 12 of 16 asked</p>
     </div>
     <div class="tile">
       <span class="label">Quiet</span>
-      <div class="big">56%</div>
+      <div class="big">56%<a class="ic" href="https://doi.org/10.1097/JOM.0000000000002519" aria-label="Source">↗</a></div>
       <p><em>of pilots have avoided healthcare</em> for fear of losing their licence. Astronauts fear disqualification too.</p>
       <p class="src"><a href="https://doi.org/10.1097/JOM.0000000000002519">Hoffman et al. 2022</a>, 3,765 US pilots, anonymous survey · astronauts: <a href="https://www.nationalacademies.org/read/10218/chapter/8#174">National Academies, Safe Passage, 2001</a></p>
     </div>
     <div class="tile">
       <span class="label">And it gets worse</span>
-      <div class="big" style="font-size:62px; line-height:1.55">after halfway</div>
+      <div class="big" style="font-size:56px; line-height:1.7; white-space:nowrap">after halfway<a class="ic" href="https://doi.org/10.3389/fphys.2022.898841" aria-label="Source">↗</a></div>
       <p><em>is when problems are most likely</em> in Mars simulations on Earth.</p>
       <p class="src"><a href="https://doi.org/10.3389/fphys.2022.898841">Rosenberg et al. 2022, Frontiers in Physiology</a> · HI-SEAS, 18 people, 8 to 12 months</p>
     </div>
@@ -259,13 +263,13 @@
   <div class="cols">
     <div>
       <div class="huge">24</div>
-      <p class="hugecap">false alarms per person in six months, <span class="soft">in people who were healthy.</span></p>
+      <p class="hugecap">false alarms per person in six months<a class="ic" href="https://jakobtfr.github.io/orbit/#/replay" aria-label="Source: Replay">↗</a>, <span class="soft">in people who were healthy.</span></p>
       <p style="margin-top:22px; font-size:27px; max-width:900px">We ran Earth’s medical limits over NASA data from 29 healthy bed-rest volunteers. They raised an alarm on <em>13.5% of days</em>. A crew that gets false alarms stops believing them.</p>
       <p class="src" style="margin-top:16px">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Our analysis, checked by tests: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">method and every number</a></p>
     </div>
     <div class="side">
       <div class="tile">
-        <div class="big">+1 °C</div>
+        <div class="big">+1 °C<a class="ic" href="https://doi.org/10.1038/s41598-017-15560-w" aria-label="Source">↗</a></div>
         <p>The body runs warmer in flight. <em>38.0 °C is a fever on Earth and normal for Lena.</em> Earth’s limits cannot know that.</p>
         <p class="src"><a href="https://doi.org/10.1038/s41598-017-15560-w">Stahn et al. 2017, Scientific Reports</a> · ESA/Charité study of 11 ISS astronauts, not NASA data</p>
       </div>
@@ -287,9 +291,9 @@
   <h2>Health check first. <span class="soft">Then the call from home.</span></h2>
   <div class="cols">
     <div class="flow">
-      <div class="fstep"><i>1</i><div><h3>Her shirt flags low blood pressure. The call waits.</h3><img src="img/call-locked.png" alt="Live app: Marta recorded a message for you; the smart shirt recorded blood pressure outside her own limits, 86/54; button Repeat the reading"></div></div>
-      <div class="fstep"><i>2</i><div><h3>Lena repeats the reading.</h3><p>She measures again and saves it: 112/70, back in her range.</p></div></div>
-      <div class="fstep"><i>3</i><div><h3>The call unlocks.</h3><img src="img/call-unlocked.png" alt="Live app: incoming AI call from Marta Brandt, unlocked by your health check"></div></div>
+      <div class="fstep"><i>1</i><div><h3>Her shirt flags low blood pressure. The call waits.<a class="ic" href="https://jakobtfr.github.io/orbit/#/body/lena" aria-label="Source: dashboard">↗</a></h3><img src="img/call-locked.png" alt="Live app: Marta recorded a message for you; the smart shirt recorded blood pressure outside her own limits, 86/54; button Repeat the reading"></div></div>
+      <div class="fstep"><i>2</i><div><h3>Lena repeats the reading.<a class="ic" href="https://jakobtfr.github.io/orbit/#/body/lena/measure/bp" aria-label="Source: measure">↗</a></h3><p>She measures again and saves it: 112/70, back in her range.</p></div></div>
+      <div class="fstep"><i>3</i><div><h3>The call unlocks.<a class="ic" href="https://jakobtfr.github.io/orbit/#/family" aria-label="Source: family">↗</a></h3><img src="img/call-unlocked.png" alt="Live app: incoming AI call from Marta Brandt, unlocked by your health check"></div></div>
       <p class="src" style="font-size:20px">Crews in NASA’s Mars-delay studies “missed hearing voices”; “recordings were treasured”: <a href="https://ntrs.nasa.gov/api/citations/20250000703/downloads/2025%20HRP%20IWS%20Comm%20Delay.pdf">NASA HRP, 2025</a></p>
     </div>
     <div>
@@ -312,7 +316,7 @@
   <div class="voices">
     <div class="tile v1"><span class="label">Recorded on Earth</span><h3>Her mother</h3><p>Her own recording, played as it was recorded. ORBIT never rewrites it and never imitates her.</p></div>
     <div class="tile v2"><span class="label">AI voice</span><h3>The link</h3><p>Generated speech that joins the recordings. It never claims to be her mother, and it may not say one word about health.</p></div>
-    <div class="tile v3"><span class="label">ORBIT</span><h3>The health part</h3><p>Every health sentence comes word for word from fixed rules, spoken by a generated voice. No language model writes one, and the model never sees her readings.</p></div>
+    <div class="tile v3"><span class="label">ORBIT</span><h3>The health part<a class="ic" href="https://jakobtfr.github.io/orbit/#/family" aria-label="Source: family">↗</a></h3><p>Every health sentence comes word for word from fixed rules. A reading she says in the call is saved to her record. No language model writes a health sentence.</p></div>
   </div>
   <div class="rules">
     <div><b>Both sides agree first</b>The astronaut and each person at home opt in. Either can stop.</div>
@@ -333,11 +337,11 @@
   <div class="cols">
     <div>
       <div class="pair"><span class="from">13.5%</span><span class="arrow">→</span><span class="to">5.9%</span></div>
-      <p class="cap"><em>2.3× fewer false alarms.</em> Each reading judged against the person’s own normal, not Earth’s. Same two-day rule on both sides, 29 volunteers.</p>
+      <p class="cap"><em>2.3× fewer false alarms.</em><a class="ic" href="https://jakobtfr.github.io/orbit/#/replay" aria-label="Source: Replay">↗</a> Each reading judged against the person’s own normal, not Earth’s. Same two-day rule on both sides, 29 volunteers.</p>
       <div class="shot"><img src="img/replay-strip.png" alt="Replay screen: Earth limits 30 alarms, ORBIT 1 alarm"></div>
       <p class="shotcap">Real app screen. One NASA volunteer, 90 days: each red mark is an alarm.</p>
       <div class="phases">
-        <div class="ph-title">Her normal also follows the mission</div>
+        <div class="ph-title">Her normal also follows the mission<a class="ic" href="https://github.com/jakobtfr/orbit/blob/main/docs/research/phase-limits.md" aria-label="Source: phase limits">↗</a></div>
         <svg class="ph-line" viewBox="0 0 660 40" fill="none">
           <path d="M10 20 H650" stroke="#3a3a3f" stroke-width="2" stroke-dasharray="4 8"/>
           <circle cx="10" cy="20" r="9" fill="#5aa9ff"/><circle cx="177" cy="20" r="7" fill="#f5f5f7"/>
@@ -353,7 +357,7 @@
       </div>
     </div>
     <div class="bars">
-      <div class="ttl">And it misses less. Problems we planted into the same data, share caught:</div>
+      <div class="ttl">And it misses less. Problems we planted into the same data, share caught:<a class="ic" href="https://github.com/jakobtfr/orbit/blob/main/docs/research/miss-rate.md" aria-label="Source: method">↗</a></div>
       <div class="row"><div class="name">Fever<small>+1 °C for 3 days</small></div><div><div class="bar o"><u style="width:75.2%"></u><span>94%</span></div><div class="bar e"><u style="width:6.4%"></u><span>8%</span></div></div></div>
       <div class="row"><div class="name">Heart rate jump<small>+20 bpm for 5 days</small></div><div><div class="bar o"><u style="width:74.4%"></u><span>93%</span></div><div class="bar e"><u style="width:16%"></u><span>20%</span></div></div></div>
       <div class="row"><div class="name">Slow heart-rate drift<small>+0.5 bpm a day</small></div><div><div class="bar o"><u style="width:56.8%"></u><span>71%</span></div><div class="bar e"><u style="width:11.2%"></u><span>14%</span></div></div></div>
@@ -369,14 +373,7 @@
 
 <!-- ============ 7 · THE POINT ============ -->
 <section class="slide s7">
-  <svg class="orbits" viewBox="0 -60 1920 1080" fill="none">
-    <circle cx="960" cy="1620" r="640" stroke="#2c3a4d" stroke-width="2"/><circle cx="960" cy="1620" r="760" stroke="#4a3528" stroke-width="2"/>
-    <path d="M1290 935 L960 980" stroke="#ff9a5c" stroke-width="3" stroke-dasharray="3 12" stroke-linecap="round"/>
-    <circle cx="960" cy="980" r="13" fill="#5aa9ff"/><circle cx="960" cy="980" r="27" stroke="#5aa9ff" stroke-opacity=".35" stroke-width="2"/>
-    <circle cx="1290" cy="935" r="10" fill="#ff9a5c"/>
-    <circle cx="1125" cy="957" r="6" fill="#fff"/><circle cx="1125" cy="957" r="15" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
-    <text x="1160" y="1000" fill="#f5f5f7" font-size="20" font-weight="500">her reply, on its way home</text>
-  </svg>
+  
   <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>Why it matters</span></div>
   <h2>Nobody should fly to Mars alone.</h2>
   <p class="reply"><em>“Good morning, Mama.”</em> Her reply is on its way home. Her blood pressure is logged.</p>
@@ -385,6 +382,7 @@
       <li><em>Limits that follow each astronaut</em> through every mission phase, tested on NASA data</li>
       <li><em>The call from home,</em> unlocked only by a health check, with three labelled voices</li>
       <li><em>Runs on the device.</em> No contact with Earth needed, no new hardware</li>
+      <li class="also">Also in the app: <a href="https://jakobtfr.github.io/orbit/#/body/lena">dashboard ↗</a> · <a href="https://jakobtfr.github.io/orbit/#/body/lena">doctor call ↗</a> · <a href="https://jakobtfr.github.io/orbit/#/mental-health">diary ↗</a> · <a href="https://jakobtfr.github.io/orbit/#/replay">Replay ↗</a> · <a href="https://jakobtfr.github.io/orbit/#/family">talk freely ↗</a>, guided or with an optional open model in the browser</li>
     </ul></div>
     <div class="tile"><span class="label">Next</span><ul>
       <li><em>A personal model on the ship</em> that learns which changes matter for her. Not built: no labelled data yet</li>

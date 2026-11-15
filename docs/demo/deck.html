@@ -69,7 +69,7 @@
   .s3 .side p { font-size: 25px; margin-top: 10px; }
 
   /* 4 */
-  .s4 .cols { display: grid; grid-template-columns: 1fr 600px; gap: 90px; margin-top: 36px; flex: 1; align-items: start; }
+  .s4 .cols { display: grid; grid-template-columns: 1fr 560px; gap: 80px; margin-top: 36px; flex: 1; align-items: start; }
   .steps { display: flex; flex-direction: column; gap: 40px; padding-top: 10px; }
   .step { display: grid; grid-template-columns: 72px 1fr; gap: 26px; align-items: start; }
   .step i { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 30px; font-weight: 600; color: var(--accent); }
@@ -84,10 +84,16 @@
   .seg.rec .label { color: var(--rec); } .seg.rec { border-left: 4px solid var(--rec); }
   .seg.ai .label { color: var(--ai); } .seg.ai { border-left: 4px solid var(--ai); } .seg.ai p { color: var(--muted); }
   .seg.orb .label { color: var(--orb); } .seg.orb { border-left: 4px solid var(--orb); }
+  .flow { display: flex; flex-direction: column; gap: 26px; }
+  .fstep { display: grid; grid-template-columns: 64px 1fr; gap: 24px; align-items: start; }
+  .fstep > i, .chip i { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 28px; font-weight: 600; color: var(--accent); }
+  .fstep h3 { font-size: 36px; font-weight: 600; letter-spacing: -0.02em; margin-top: 8px; }
+  .fstep p { font-size: 26px; margin-top: 6px; }
+  .fstep img { display: block; width: 640px; margin-top: 14px; border-radius: 18px; }
   .callwrap { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
-  .callwrap img { display: block; width: 560px; border-radius: 30px; border: 1px solid var(--line); }
-  .chip { display: inline-flex; align-items: center; gap: 10px; font-size: 22px; color: var(--text); background: var(--tile); border: 1px solid var(--line); border-radius: 999px; padding: 10px 20px; }
-  .chip i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .callwrap img { display: block; width: 520px; border-radius: 30px; border: 1px solid var(--line); }
+  .chip { display: inline-flex; align-items: center; gap: 14px; font-size: 22px; line-height: 1.3; color: var(--text); background: var(--tile); border: 1px solid var(--line); border-radius: 999px; padding: 10px 20px; }
+  .chip i { width: 40px; height: 40px; font-size: 20px; flex: none; }
   .calls { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
   .calls figure { margin: 0; }
   .calls img { display: block; width: 100%; border-radius: 28px; border: 1px solid var(--line); }
@@ -164,7 +170,7 @@
   .foot .blk { font-size: 21px; line-height: 1.5; color: var(--muted); }
   .foot b { display: block; color: var(--dim); font-weight: 600; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
   .foot .links a { color: var(--accent); font-size: 24px; font-weight: 500; margin-right: 26px; }
-  .foot .links a.cta { display: inline-block; background: #005fc4; color: #fff; text-decoration: none; padding: 12px 26px; border-radius: 999px; font-weight: 600; }
+  .foot .links a.cta { display: inline-block; background: #005fc4; color: #fff; text-decoration: none; font-size: 28px; padding: 14px 32px; border-radius: 999px; font-weight: 600; }
   .foot .links { display: flex; align-items: center; flex-wrap: wrap; row-gap: 10px; margin-bottom: 10px; }
 </style>
 </head>
@@ -278,20 +284,20 @@
 <section class="slide s4">
   <svg class="orbits" viewBox="0 0 1920 1080" fill="none"><circle cx="960" cy="1500" r="700" stroke="#17171a" stroke-width="2"/><circle cx="960" cy="1500" r="940" stroke="#121214" stroke-width="2"/></svg>
   <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>Our idea</span></div>
-  <h2>The health check, <span class="soft">inside a call from home.</span></h2>
+  <h2>Health check first. <span class="soft">Then the call from home.</span></h2>
   <div class="cols">
-    <div class="steps">
-      <div class="step"><i>1</i><div><h3>Home records.</h3><p>Family and friends who agreed record a short message every day.</p></div></div>
-      <div class="step"><i>2</i><div><h3>ORBIT plays it as a call.</h3><p>In Lena’s free time. She talks back, and her words go home as her reply.</p></div></div>
-      <div class="step"><i>3</i><div><h3>The call carries the check.</h3><p>When a reading is off, ORBIT says so inside the call and asks for today’s numbers. She says them, and they are saved.</p></div></div>
-      <p class="src" style="font-size:21px; margin-top:-6px">NASA’s own delay studies found that with Mars-like delays, crews “missed hearing voices”, and “Recordings were treasured”: <a href="https://ntrs.nasa.gov/api/citations/20250000703/downloads/2025%20HRP%20IWS%20Comm%20Delay.pdf">NASA HRP workshop, 2025</a></p>
+    <div class="flow">
+      <div class="fstep"><i>1</i><div><h3>Her mother’s message waits, locked.</h3><img src="img/call-locked.png" alt="Live app: Marta recorded a message for you, locked until today's health check is done"></div></div>
+      <div class="fstep"><i>2</i><div><h3>Lena does today’s check-in.</h3><p>Four short steps: how she feels, any symptoms, two quick ratings.</p></div></div>
+      <div class="fstep"><i>3</i><div><h3>The call unlocks.</h3><img src="img/call-unlocked.png" alt="Live app: incoming AI call from Marta Brandt, unlocked by today's check"></div></div>
+      <p class="src" style="font-size:20px">No check, no call. Crews in NASA’s Mars-delay studies “missed hearing voices”; “recordings were treasured”: <a href="https://ntrs.nasa.gov/api/citations/20250000703/downloads/2025%20HRP%20IWS%20Comm%20Delay.pdf">NASA HRP, 2025</a></p>
     </div>
     <div>
       <div class="callwrap">
-        <span class="chip"><i style="background:var(--rec)"></i>Her mother’s recorded message plays first. Then:</span>
-        <img src="img/call-orbit.png" alt="ORBIT call screen during Marta's call, speaking a fixed health rule about low blood pressure, labelled ORBIT">
+        <span class="chip"><i>4</i>In the call, ORBIT asks for the reading. She says it, and it is saved.</span>
+        <img src="img/call-orbit.png" alt="Live app call screen: ORBIT speaks a fixed health rule about low blood pressure">
       </div>
-      <p class="shotcap4">Real app screen, mid-call. Try it: <a href="https://jakobtfr.github.io/orbit/#/family">live app → Family → Play as a call</a></p>
+      <p class="shotcap4">Real screens from the live app. Try it: <a href="https://jakobtfr.github.io/orbit/">jakobtfr.github.io/orbit</a></p>
     </div>
   </div>
   <div class="next">A machine speaks between her mother’s words. Is that safe<span>?</span></div>
@@ -312,7 +318,7 @@
     <div><b>Both sides agree first</b>The astronaut and each person at home opt in. Either can stop.</div>
     <div><b>Urgent ends the call</b>Chest pain or trouble breathing: the role-play stops and ORBIT names the medical lead.</div>
     <div><b>Private stays private</b>The talk is kept encrypted on the device, apart from the health record. The medical lead cannot see it.</div>
-    <div><b>Only in free time</b>Calls are offered after waking and before sleep, not during work.</div>
+    <div><b>Health first</b>No check, no call. The call unlocks only after today’s check-in, a rule agreed before launch.</div>
   </div>
   <p class="ack"><b>AI in this product:</b> the linking voice, ORBIT’s spoken prompts and the virtual doctor are AI-generated, and every call is labelled AI. In this demo the family is invented, so their messages are also spoken by a generated voice (Kokoro-82M).</p>
   <div class="next">Rules are only as good as the limits behind them. Are ORBIT’s right<span>?</span></div>
@@ -377,13 +383,14 @@
   <div class="three">
     <div class="tile"><span class="label">Built today</span><ul>
       <li><em>Limits that follow each astronaut</em> through every mission phase, tested on NASA data</li>
-      <li><em>The family call</em> that carries the health check, with three labelled voices</li>
+      <li><em>The call from home,</em> unlocked by today’s check, with three labelled voices</li>
       <li><em>Runs on the device.</em> No contact with Earth needed, no new hardware</li>
     </ul></div>
     <div class="tile"><span class="label">Next</span><ul>
-      <li><em>A personal model on the ship</em> that learns from each reading and how she says she felt which changes matter for her. Nothing leaves the ship. Not built: no labelled data exists yet to train it</li>
-      <li><em>Video,</em> once an open-source face model is good enough</li>
-      <li><em>Flight data</em> and a clinician’s review</li>
+      <li><em>A personal model on the ship</em> that learns which changes matter for her. Not built: no labelled data yet</li>
+      <li><em>Her family’s own voice,</em> with their consent, for a freer talk</li>
+      <li><em>The smart shirt</em> starts a check when a reading drifts</li>
+      <li><em>Video,</em> flight data, and a clinician’s review</li>
     </ul></div>
     <div class="tile"><span class="label">Honest limits</span><ul>
       <li>Prototype, not a medical device</li>

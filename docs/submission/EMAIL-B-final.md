@@ -1,6 +1,6 @@
 # Final email, version B (to send)
 
-Matches `main` at 406a16a, live since 14:27. The model download (e1bf924) is not live, so the email does not mention it.
+Matches `main` at 3961734, live since 14:35.
 
 Names confirmed by Mohit, 15 Nov 13:50. Links checked without login at 14:08: live app, repository and PDF on `main` all 200. Due 15:00.
 
@@ -32,7 +32,7 @@ Such a monitor fails in two ways:
 **Our two ideas**
 
 1. **Judge every astronaut against their own normal for the current phase of the mission, not Earth's.** Outbound, on Mars, the return, and the days after landing each get their own expected values, learned from NASA data and the astronaut's own readings, and held inside hard bounds so a slow real problem can never be learned as "normal".
-2. **Make the health check the key to the best moment of the day: a call from home.** A live call is impossible at Mars distance (4 to 24 minutes per direction). So family who opt in record a message each day, and ORBIT plays it as a call. The rule is simple: no check, no call. Today's message stays locked until the astronaut finishes the 4-step daily check-in. If a reading is off, the call carries one health prompt, word for word from ORBIT's fixed medical rules. A language model never writes a health sentence. The astronaut says the number back, ORBIT saves and judges it, and the call goes on. Urgent words end the call at once and name the medical lead.
+2. **Make the health check the key to the best moment of the day: a call from home.** A live call is impossible at Mars distance (4 to 24 minutes per direction). So family who opt in record a message each day, and ORBIT plays it as a call. The rule is simple: no check, no call. Messages stay locked while a health check is pending: when nothing was checked that day, or when a worn sensor records a reading outside the astronaut's own limits, which makes a repeat reading mandatory. Open the live app and you see it: the smart shirt recorded 86/54, the call is locked, and a repeat reading unlocks it. If a reading is off, the call carries one health prompt, word for word from ORBIT's fixed medical rules. A language model never writes a health sentence. The astronaut says the number back, ORBIT saves and judges it, and the call goes on. Urgent words end the call at once and name the medical lead.
 
 **What we proved on real NASA data**
 
@@ -49,16 +49,16 @@ Automated tests reproduce every number. A separate Python script, written apart 
 | | In the submitted prototype | In the full ORBIT |
 |---|---|---|
 | Personal, phase-aware limits | Built and tested on NASA data | Same, then tested on flight data |
-| Vital signs | Scripted demo astronaut, with day-to-day scatter from the NASA data | Onboard sensors (smart shirt, wrist tracker); a reading outside the astronaut's limits also asks for a check before the call (not built) |
+| Vital signs | Scripted demo astronaut, with day-to-day scatter from the NASA data | Onboard sensors (smart shirt, wrist tracker) |
 | Family messages | Invented people; voices are AI speech (Kokoro-82M), labelled AI on screen and in every file | Real recordings by real family members, with their consent |
-| The call | Unlocked by the daily check-in; plays recorded lines and ORBIT's fixed sentences; a language model never writes a health sentence. A "Talk freely" preview shows a guided conversation, scripted and labelled as staged | **Next step, not built yet:** a real-time conversation in the family member's own cloned voice, only with their consent; health sentences stay ORBIT's fixed rules |
+| The call | Unlocked by the pending health check; plays recorded lines and ORBIT's fixed sentences; a language model never writes a health sentence. "Talk freely" (preview, labelled staged) offers a choice: a guided conversation the team wrote, or an open model (Qwen2.5 1.5B) that runs in the visitor's browser; code keeps health talk away from the model and checks every reply | **Next step, not built yet:** a real-time conversation in the family member's own cloned voice, only with their consent; health sentences stay ORBIT's fixed rules |
 | Where it runs | In the browser, no server | On the spacecraft, no contact with Earth needed |
 
 If ORBIT goes to the next round, we would like to show the next step running live on our own machine.
 
 **Honest limits.** Bed rest is a ground stand-in for flight. The in-flight temperature rise comes from an ESA/Charité study of ISS crew, not from NASA bed rest. Mars values are estimates. No clinician has reviewed the limits yet, and the family call is not yet tested with crews or families. ORBIT is a prototype, not a medical device.
 
-**Use of AI.** We used an AI coding assistant (Claude) to help write code, tests and documentation. The demo voices are AI speech from the open model Kokoro-82M, labelled as AI. The team chose the challenge, framed the problem, came up with both ideas and made every product decision.
+**Use of AI.** We used an AI coding assistant (Claude) to help write code, tests and documentation. The demo voices are AI speech from the open model Kokoro-82M, labelled as AI. In "Talk freely", the visitor may load an open language model into their own browser (Qwen2.5 1.5B through WebLLM, both Apache 2.0); it writes only everyday small talk, labelled "written by an AI model", never a health sentence. The team chose the challenge, framed the problem, came up with both ideas and made every product decision.
 
 **Why it matters beyond Mars.** The same two ideas fit anyone far from a doctor: polar stations, ships, remote communities. They could also fit an older parent at home, whose family calls every day anyway.
 

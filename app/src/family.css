@@ -1,47 +1,119 @@
-/* The family call, the Family page, and the incoming-call card. */
+/* The family call, the Family page, and the incoming-call card. Colours and radii are ORBIT's own tokens (styles.css). */
 
-.family-ai { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: var(--radius-full); background: #ffd60a; color: #000; font: 700 11px/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
-.family-from { margin-top: -8px; color: var(--text-muted); font-size: 12px; }
-.family-call .doctor-avatar.family-avatar { background: linear-gradient(160deg, #5e4b8b, #b0577a); color: #fff; font: 600 34px/1 var(--font-sans); }
-.family-call.is-orbit { border-color: var(--status-warning); }
-.family-label { align-self: center; padding: 3px 10px; border-radius: var(--radius-full); font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
-.family-label.is-recorded { background: rgba(176, 87, 122, 0.22); color: #f0a8c4; }
-.family-label.is-link { background: rgba(255, 214, 10, 0.16); color: #ffd60a; }
-.family-label.is-health { background: rgba(74, 163, 255, 0.16); color: var(--accent); }
-.family-ring { align-self: stretch; display: flex; gap: 10px; }
-.family-ring .btn { flex: 1; justify-content: center; min-height: 44px; }
-.family-next button { box-shadow: inset 0 0 0 1px rgba(240, 168, 196, 0.5); }
+/* The AI label: always visible, quiet outline in ORBIT's caution yellow. */
+.family-ai { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: var(--radius-full); box-shadow: inset 0 0 0 1px var(--status-caution); color: var(--status-caution); font: 600 10.5px/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+.family-from { margin-top: -8px; color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 
-.family-incoming { position: fixed; right: 20px; bottom: 20px; z-index: 55; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 40px); padding: 14px 16px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 18px; background: #1c1c1f; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7); animation: family-in 0.4s ease-out; }
-.family-incoming > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.family-incoming strong { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 14px; }
-.family-incoming > div > span { color: var(--text-muted); font-size: 12px; }
-@keyframes family-in { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Faces: neutral discs with an orbit ring, one calm tone per person. */
+.family-face { --tone: var(--border-control); flex: none; position: relative; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-raised); box-shadow: inset 0 0 0 1.5px var(--tone); color: var(--text-primary); font: 600 13px/1 var(--font-sans); letter-spacing: 0.02em; }
+.family-face.is-you { --tone: var(--accent); }
+.family-face.is-large { width: 64px; height: 64px; font-size: 19px; }
+li:nth-child(3n + 1) > .family-face { --tone: var(--status-ok); }
+li:nth-child(3n + 2) > .family-face { --tone: var(--accent); }
+li:nth-child(3n) > .family-face { --tone: var(--status-stale); }
+.family-list li:first-child > .family-face.is-you { --tone: var(--border-control); }
 
-.family-face { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(160deg, #5e4b8b, #b0577a); color: #fff; font: 600 14px/1 var(--font-sans); }
-.family-face.is-you { background: var(--bg-raised); }
-.family-sub { max-width: 68ch; margin-top: 8px; color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
+/* Page head: the signal on its way from Earth. */
+.family-sub { max-width: 62ch; margin-top: 10px; color: var(--text-secondary); font-size: 16px; line-height: 1.5; }
 .family-page .planet-panel { max-width: 920px; }
-.family-list { display: flex; flex-direction: column; gap: 14px; list-style: none; }
-.family-list li { display: flex; align-items: center; gap: 14px; }
+.family-signal { position: relative; display: flex; align-items: center; gap: 12px; max-width: 520px; margin-top: 22px; color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.family-signal::before { content: attr(data-from); }
+.family-signal::after { content: attr(data-to); white-space: nowrap; }
+.family-signal i { position: relative; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-control) 50%, transparent 0) 0 0 / 8px 1px repeat-x; }
+.family-signal i::before, .family-signal i::after { content: ''; position: absolute; top: -3px; width: 7px; height: 7px; border-radius: 50%; }
+.family-signal i::before { left: 0; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: family-signal 5s linear infinite; }
+.family-signal i::after { right: 0; box-shadow: inset 0 0 0 1.5px var(--text-muted); }
+@keyframes family-signal { from { left: 0; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } to { left: calc(100% - 7px); opacity: 0; } }
+
+/* Today's messages: one card per person. */
+.family-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; list-style: none; }
+.family-card { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 20px; border-radius: var(--radius-md); background: var(--bg-raised); transition: transform var(--duration-base) ease-out, background var(--duration-base) ease-out; }
+.family-card:hover { transform: translateY(-2px); background: var(--bg-hover); }
+.family-card strong { margin-top: 10px; color: var(--text-primary); font: 600 17px/1.25 var(--font-sans); letter-spacing: -0.01em; }
+.family-card-meta { color: var(--text-muted); font-size: 13px; line-height: 1.45; font-variant-numeric: tabular-nums; }
+.family-card .btn { align-self: stretch; justify-content: center; gap: 8px; margin-top: 14px; min-height: 40px; }
+.family-card.is-new .family-face::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--tone); opacity: 0; animation: family-pulse 2.4s ease-out infinite; }
+.family-parts { display: flex; gap: 4px; margin-top: 8px; }
+.family-parts i { width: 18px; height: 3px; border-radius: 2px; background: var(--border-control); }
+.family-card.is-new .family-parts i { background: var(--text-secondary); }
+@keyframes family-pulse { from { transform: scale(0.92); opacity: 0.9; } to { transform: scale(1.28); opacity: 0; } }
+
+/* Opt-in rows. */
+.family-list { display: flex; flex-direction: column; list-style: none; }
+.family-list li { display: flex; align-items: center; gap: 14px; padding: 14px 0; }
+.family-list li + li { border-top: 1px solid var(--border-subtle); }
+.family-list li:first-child { padding-top: 0; }
+.family-list li:last-child { padding-bottom: 0; }
 .family-list li > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .family-list strong { color: var(--text-primary); font-size: 15px; }
 .family-list li > div > span { color: var(--text-muted); font-size: 13px; line-height: 1.45; }
 .family-empty { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
-.family-switch { flex: none; position: relative; width: 44px; height: 26px; border-radius: 13px; background: var(--bg-raised); cursor: pointer; transition: background var(--duration-fast) ease-out; }
-.family-switch i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform var(--duration-fast) ease-out; }
+.family-switch { flex: none; position: relative; width: 44px; height: 26px; border-radius: 13px; background: var(--bg-hover); cursor: pointer; transition: background var(--duration-base) ease-out; }
+.family-switch i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); transition: transform var(--duration-base) cubic-bezier(0.3, 1.4, 0.6, 1); }
 .family-switch.is-on { background: var(--status-ok); }
 .family-switch.is-on i { transform: translateX(18px); }
-.family-rules { display: flex; flex-direction: column; gap: 8px; padding-left: 18px; color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
-.family-rules b { color: var(--text-primary); font-weight: 600; }
-.family-log { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; list-style: none; color: var(--text-primary); font-size: 14px; line-height: 1.45; }
-.family-log li span { display: block; color: var(--text-muted); font-size: 11px; }
-.family-log li.is-you { padding-left: 14px; border-left: 2px solid var(--accent); }
+.family-switch:active i { width: 24px; }
 
-/* The call has more to show than the doctor's: keep the face small so the words and their label always fit. */
+/* The three voices, in the same colours the call uses. */
+.family-voices { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; list-style: none; }
+.family-voices li { --tone: var(--status-ok); padding: 18px; border-radius: var(--radius-md); background: var(--bg-raised); color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+.family-voices li.is-link { --tone: var(--status-caution); }
+.family-voices li.is-health { --tone: var(--accent); }
+.family-voices b { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-primary); font: 600 15px/1.3 var(--font-sans); }
+.family-voices b::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--tone); }
+.family-more { margin-top: 16px; }
+.family-more summary { width: fit-content; color: var(--accent); font-size: 14px; cursor: pointer; list-style: none; }
+.family-more summary::-webkit-details-marker { display: none; }
+.family-more summary::after { content: ' ›'; }
+.family-more[open] summary::after { content: ' ⌄'; }
+.family-more summary:hover { text-decoration: underline; }
+.family-rules { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; list-style: none; color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+.family-rules b { color: var(--text-primary); font-weight: 600; }
+
+/* The private conversation, as a thread. */
+.family-log { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 16px; list-style: none; color: var(--text-primary); font-size: 15px; line-height: 1.45; }
+.family-log li { max-width: min(560px, 86%); padding: 10px 14px; border-radius: 18px 18px 18px 6px; background: var(--bg-raised); }
+.family-log li span { display: block; margin-bottom: 2px; color: var(--text-muted); font-size: 11px; letter-spacing: 0.02em; }
+.family-log li.is-you { align-self: flex-end; border-radius: 18px 18px 6px 18px; background: var(--accent-fill); color: var(--text-on-accent); }
+.family-log li.is-you span { color: rgba(255, 255, 255, 0.7); }
+
+/* The incoming call card. */
+.family-incoming { position: fixed; right: 20px; bottom: 20px; z-index: 55; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 40px); padding: 14px 16px; border-radius: var(--radius-lg); background: rgba(44, 44, 46, 0.82); -webkit-backdrop-filter: blur(24px) saturate(1.4); backdrop-filter: blur(24px) saturate(1.4); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), var(--shadow-dialog); animation: family-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.1); }
+.family-incoming > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; margin-right: 6px; }
+.family-incoming strong { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 15px; }
+.family-incoming > div > span { color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.family-incoming .family-face { --tone: var(--status-ok); width: 44px; height: 44px; }
+.family-incoming .family-face::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--status-ok); animation: family-pulse 1.6s ease-out infinite; }
+.family-incoming .btn { min-height: 36px; border-radius: var(--radius-full); }
+.family-incoming .btn-primary { background: var(--status-ok); color: #000; }
+.family-incoming .btn-primary:hover { background: #3be067; }
+@keyframes family-in { from { transform: translateY(24px) scale(0.96); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* The call itself. One face, one line of words, the label of who is speaking. */
 .family-call { gap: 12px; }
-.family-call .doctor-face { margin-top: 8px; gap: 10px; }
-.family-call .doctor-avatar { width: 84px; height: 84px; }
-.family-call .doctor-avatar.family-avatar { font-size: 26px; }
+.family-call.is-orbit { border-color: var(--status-warning); }
+.family-call .doctor-face { margin-top: 12px; gap: 12px; }
+.family-call .doctor-avatar { width: 96px; height: 96px; }
+.family-call .doctor-avatar.family-avatar { background: var(--bg-raised); box-shadow: inset 0 0 0 1.5px var(--border-control); color: var(--text-primary); font: 600 30px/1 var(--font-sans); letter-spacing: 0.02em; }
+.family-call.is-speaking .doctor-avatar.family-avatar { animation: family-voice 1.8s ease-out infinite; }
+.family-call.is-calling .doctor-avatar.family-avatar { animation: family-voice 1.2s ease-out infinite; }
+.family-call.is-listening .doctor-avatar.family-avatar { box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 0 5px rgba(74, 163, 255, 0.18); }
+@keyframes family-voice {
+  0% { box-shadow: inset 0 0 0 1.5px var(--status-ok), 0 0 0 0 rgba(48, 209, 88, 0.45), 0 0 0 0 rgba(48, 209, 88, 0.25); }
+  100% { box-shadow: inset 0 0 0 1.5px var(--status-ok), 0 0 0 14px rgba(48, 209, 88, 0), 0 0 0 28px rgba(48, 209, 88, 0); }
+}
 .family-call .doctor-words { justify-content: center; }
-.family-call .doctor-caption { font-size: 16px; }
+.family-call .doctor-caption { font-size: 19px; line-height: 1.45; letter-spacing: -0.01em; text-wrap: balance; }
+.family-label { --tone: var(--status-ok); align-self: center; max-width: 34ch; color: var(--text-muted); font-size: 12px; font-weight: 500; line-height: 1.5; letter-spacing: 0.01em; text-align: center; text-wrap: balance; }
+.family-label::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--tone); }
+.family-label.is-link { --tone: var(--status-caution); }
+.family-label.is-health { --tone: var(--accent); }
+.family-ring { align-self: stretch; display: flex; gap: 10px; }
+.family-ring .btn { flex: 1; justify-content: center; min-height: 44px; }
+.family-next button { box-shadow: inset 0 0 0 1px rgba(74, 163, 255, 0.5); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .family-signal i::before, .family-face::after, .family-call .doctor-avatar.family-avatar, .family-incoming { animation: none !important; }
+}
+@media (max-width: 600px) { .family-signal { max-width: 100%; } .family-incoming { left: 12px; right: 12px; bottom: 12px; flex-wrap: wrap; } }
+.family-cards, .family-list, .family-voices, .family-rules, .family-log { margin: 0; padding: 0; }

@@ -20,17 +20,19 @@ export function Family() {
   const free = offDuty(now(state))
   const first = viewer.name.split(' ')[0]
   return <div className="planet-page family-page">
-    <header className="planet-page-title"><div><p className="eyebrow">MESSAGES FROM EARTH</p><h1>Family</h1><p className="family-sub">Every family call is AI. Today a signal takes {delay} min one way, so nobody can talk to you live. Your people record a message each day, and ORBIT plays it as a call in your off-duty time.</p></div><span className="privacy-label">Private · on this device</span></header>
+    <header className="planet-page-title"><div><p className="eyebrow">MESSAGES FROM EARTH</p><h1>Family</h1><p className="family-sub">Every family call is AI. Today a signal takes {delay} min one way, so nobody can talk to you live. Your people record a message each day, and ORBIT plays it as a call in your off-duty time.</p><div className="family-signal" aria-hidden="true" data-from="Earth" data-to={`You · ${delay} min one way`}><i /></div></div><span className="privacy-label">Private · on this device</span></header>
 
     <section className="planet-panel">
       <header><h2>Today's messages</h2><span>{free ? 'You are off duty now' : 'Calls wait until you are off duty'}</span></header>
       {!optIn.astronaut && kept !== 'loading' && <p className="family-empty">You have opted out. No message is shown or played until you opt in again.</p>}
       {optIn.astronaut && !inbox.length && <p className="family-empty">No message has arrived yet today.</p>}
-      <ul className="family-list">
-        {inbox.map((m) => { const who = memberOf(m); return <li key={m.id}>
-          <span className="family-face" aria-hidden="true">{letters(who.name)}</span>
-          <div><strong>{who.name}</strong><span>{who.relation} · {recordedLabel(state, m).replace('Message from Earth, ', '')} · {m.parts.length} parts</span></div>
-          <button className="btn btn-primary" disabled={!free} onClick={() => openFamilyCall(m.id)}>Play as a call</button>
+      <ul className="family-cards">
+        {inbox.map((m, n) => { const who = memberOf(m); return <li key={m.id} className={`family-card ${n === 0 ? 'is-new' : ''}`}>
+          <span className="family-face is-large" aria-hidden="true">{letters(who.name)}</span>
+          <strong>{who.name}</strong>
+          <span className="family-card-meta">{who.relation} · {recordedLabel(state, m).replace('Message from Earth, ', '')} · {m.parts.length} parts</span>
+          <span className="family-parts" aria-hidden="true">{m.parts.map((_, i) => <i key={i} />)}</span>
+          <button className="btn btn-primary" disabled={!free} onClick={() => openFamilyCall(m.id)}><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6L10.5 6z" fill="currentColor" /></svg>Play as a call</button>
         </li> })}
       </ul>
     </section>
@@ -53,15 +55,19 @@ export function Family() {
 
     <section className="planet-panel">
       <header><h2>What is real and what is AI</h2></header>
+      <ul className="family-voices">
+        <li className="is-recorded"><b>Recorded on Earth.</b> The person's own words, played as they recorded them. ORBIT never rewrites them.</li>
+        <li className="is-link"><b>AI voice.</b> AI-generated speech that says a few fixed linking sentences. No language model takes part in a family call, so nothing is invented in your people's name.</li>
+        <li className="is-health"><b>ORBIT.</b> Health prompts and answers to a symptom are ORBIT's fixed rules, word for word, in AI-generated speech.</li>
+      </ul>
+      <details className="family-more"><summary>Readings, urgent words, privacy and this demo</summary>
       <ul className="family-rules">
-        <li><b>Recorded on Earth.</b> The person's own words, played as they recorded them. ORBIT never rewrites them.</li>
-        <li><b>AI voice.</b> AI-generated speech that says a few fixed linking sentences. No language model takes part in a family call, so nothing is invented in your people's name.</li>
-        <li><b>ORBIT.</b> Health prompts and answers to a symptom are ORBIT's fixed rules, word for word, in AI-generated speech.</li>
         <li><b>A reading counts, not "I am fine".</b> A reading you say in a call is saved to your health record and judged again.</li>
         <li><b>Urgent words end the call.</b> Chest pain, trouble breathing and the like go straight to the medical lead.</li>
         <li><b>Private.</b> What you and your people say is stored encrypted on this device, apart from your health record. Readings, symptoms and urgent words go to the health side and are not kept in it.</li>
         <li><b>Demo.</b> The people and their messages here are invented. Their voices are AI-generated stand-ins for real recordings, made with the open model Kokoro-82M, and each audio file says so in its metadata.</li>
       </ul>
+      </details>
     </section>
 
     <section className="planet-panel">

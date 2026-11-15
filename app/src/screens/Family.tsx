@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { IncomingFamilyCall } from '../components/IncomingFamilyCall'
 import { FAMILY, MESSAGES, arrived, familyLock, memberOf, offDuty, recordedLabel, signalDelayMin } from '../lib/family'
 import { useFamily } from '../lib/familyStore'
 import { now } from '../lib/judge'
@@ -23,13 +22,13 @@ export function Family() {
   const first = viewer.name.split(' ')[0]
   const lock = familyLock(state, viewer)
   return <div className="planet-page family-page">
-    <header className="planet-page-title"><div><p className="eyebrow">MESSAGES FROM EARTH</p><h1>Family</h1><p className="family-sub">Every family call is AI. Today a signal takes {delay} min one way, so nobody can talk to you live. Your people record a message each day, and ORBIT plays it as a call in your off-duty time, once today's health check is done.</p><div className="family-signal" aria-hidden="true" data-from="Earth" data-to={`You · ${delay} min one way`}><i /></div></div><span className="privacy-label">Private · on this device</span></header>
+    <header className="planet-page-title"><div><p className="eyebrow">MESSAGES FROM EARTH</p><h1>Family</h1><p className="family-sub">Every family call is AI. Today a signal takes {delay} min one way, so nobody can talk to you live. Your people record a message each day, and ORBIT plays it as a call in your off-duty time, once no health check is pending.</p><div className="family-signal" aria-hidden="true" data-from="Earth" data-to={`You · ${delay} min one way`}><i /></div></div><span className="privacy-label">Private · on this device</span></header>
 
     <section className="planet-panel">
-      <header><h2>Today's messages</h2><span>{lock.locked ? 'Locked until today\'s check is done' : free ? 'Unlocked by today\'s check · you are off duty now' : 'Unlocked · calls wait until you are off duty'}</span></header>
+      <header><h2>Today's messages</h2><span>{lock.locked ? 'Locked while a health check is pending' : free ? 'Unlocked by your health check · you are off duty now' : 'Unlocked · calls wait until you are off duty'}</span></header>
       {optIn.astronaut && !!inbox.length && (lock.locked
-        ? <p className="family-lock" role="status"><span aria-hidden="true">🔒</span> The family call is the reward for today's health check. {lock.todo} <Link className="btn btn-primary" to={lock.to}>Do today's check-in</Link></p>
-        : <p className="family-lock is-open" role="status"><span aria-hidden="true">🔓</span> Today's check is done. Your messages are unlocked.</p>)}
+        ? <p className="family-lock" role="status"><span aria-hidden="true">🔒</span> The family call is the reward for your health check. {lock.why} {lock.todo} <Link className="btn btn-primary" to={lock.to}>{lock.button}</Link></p>
+        : <p className="family-lock is-open" role="status"><span aria-hidden="true">🔓</span> Your health check is done. Your messages are unlocked.</p>)}
       {!optIn.astronaut && kept !== 'loading' && <p className="family-empty">You have opted out. No message is shown or played until you opt in again.</p>}
       {optIn.astronaut && !inbox.length && <p className="family-empty">No message has arrived yet today.</p>}
       <ul className="family-cards">
@@ -87,6 +86,5 @@ export function Family() {
       </ul>
       {!!log.length && <button className="btn btn-secondary" onClick={clearLog}>Delete this conversation</button>}
     </section>
-    <IncomingFamilyCall />
   </div>
 }

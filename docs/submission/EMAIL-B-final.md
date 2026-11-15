@@ -1,8 +1,6 @@
 # Final email, version B (to send)
 
-**Check before sending:** if commit 8d2f12c (optional on-device language model for small talk in the call) is pushed, add this sentence at the end of the "Use of AI" paragraph:
-"In the family call, an optional on-device language model may answer everyday small talk in the family member's character, labelled "AI model"; health talk never reaches it, and code checks every reply before it is shown."
-If it is not pushed, send as is. Every other sentence is true either way.
+Matches `main` at 406a16a, live since 14:27. The model download (e1bf924) is not live, so the email does not mention it.
 
 Names confirmed by Mohit, 15 Nov 13:50. Links checked without login at 14:08: live app, repository and PDF on `main` all 200. Due 15:00.
 
@@ -34,7 +32,7 @@ Such a monitor fails in two ways:
 **Our two ideas**
 
 1. **Judge every astronaut against their own normal for the current phase of the mission, not Earth's.** Outbound, on Mars, the return, and the days after landing each get their own expected values, learned from NASA data and the astronaut's own readings, and held inside hard bounds so a slow real problem can never be learned as "normal".
-2. **Put the health check inside the best moment of the day: a call from home.** A live call is impossible at Mars distance (4 to 24 minutes per direction). So family who opt in record a message each day, and ORBIT plays it as a call. If a reading is off, the call carries one health prompt, word for word from ORBIT's fixed medical rules. A language model never writes a health sentence. The astronaut says the number back, ORBIT saves and judges it, and the call goes on. Urgent words end the call at once and name the medical lead.
+2. **Make the health check the key to the best moment of the day: a call from home.** A live call is impossible at Mars distance (4 to 24 minutes per direction). So family who opt in record a message each day, and ORBIT plays it as a call. The rule is simple: no check, no call. Today's message stays locked until the astronaut finishes the 4-step daily check-in. If a reading is off, the call carries one health prompt, word for word from ORBIT's fixed medical rules. A language model never writes a health sentence. The astronaut says the number back, ORBIT saves and judges it, and the call goes on. Urgent words end the call at once and name the medical lead.
 
 **What we proved on real NASA data**
 
@@ -51,9 +49,9 @@ Automated tests reproduce every number. A separate Python script, written apart 
 | | In the submitted prototype | In the full ORBIT |
 |---|---|---|
 | Personal, phase-aware limits | Built and tested on NASA data | Same, then tested on flight data |
-| Vital signs | Scripted demo astronaut, with day-to-day scatter from the NASA data | Onboard sensors (smart shirt, wrist tracker) |
+| Vital signs | Scripted demo astronaut, with day-to-day scatter from the NASA data | Onboard sensors (smart shirt, wrist tracker); a reading outside the astronaut's limits also asks for a check before the call (not built) |
 | Family messages | Invented people; voices are AI speech (Kokoro-82M), labelled AI on screen and in every file | Real recordings by real family members, with their consent |
-| The call | Plays recorded lines and ORBIT's fixed sentences; a language model never writes a health sentence | **Next step, not built yet:** a real-time conversation in the family member's own cloned voice, only with their consent; health sentences stay ORBIT's fixed rules |
+| The call | Unlocked by the daily check-in; plays recorded lines and ORBIT's fixed sentences; a language model never writes a health sentence. A "Talk freely" preview shows a guided conversation, scripted and labelled as staged | **Next step, not built yet:** a real-time conversation in the family member's own cloned voice, only with their consent; health sentences stay ORBIT's fixed rules |
 | Where it runs | In the browser, no server | On the spacecraft, no contact with Earth needed |
 
 If ORBIT goes to the next round, we would like to show the next step running live on our own machine.

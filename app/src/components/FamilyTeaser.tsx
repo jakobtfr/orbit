@@ -18,8 +18,8 @@ export function FamilyTeaser() {
   return (
     <aside className="family-waiting" aria-label="A message from home is waiting">
       <span className="family-face" aria-hidden="true">{who.name.split(' ').map((w) => w[0]).join('')}</span>
-      <div><strong>{first} recorded a message for you</strong><span>{more > 0 ? `${more} more from home · ` : ''}Locked until today's health check is done</span></div>
-      <Link className="btn btn-primary" to={lock.to}>Do today's check-in</Link>
+      <div><strong>{first} recorded a message for you</strong><span>{more > 0 ? `${more} more from home · ` : ''}{lock.why || 'Locked until your health check is done'}</span></div>
+      <Link className="btn btn-primary" to={lock.to}>{lock.button || 'Do the health check'}</Link>
     </aside>
   )
 }

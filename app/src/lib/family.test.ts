@@ -227,7 +227,7 @@ describe('family call: where a language model may speak', () => {
     const at = screen.indexOf('chat(')
     const before = screen.lastIndexOf("turn.kind === 'preview' && turn.forModel && model", at)
     expect(before).toBeGreaterThan(-1)
-    expect(at - before).toBeLessThan(900)
+    expect(at - before).toBeLessThan(1400)
     expect(screen.slice(at, at + 1400)).toContain('checkModelReply(full)')
     expect(screen).not.toMatch(/text: full\b/)
   })

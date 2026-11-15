@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { phaseFor } from '../lib/mission'
 import { CallProvider, useCall } from '../lib/call'
 import { FamilyProvider, useFamily } from '../lib/familyStore'
+import { IncomingFamilyCall } from './IncomingFamilyCall'
 import { useStore } from '../lib/store'
 import { Doctor } from '../screens/Doctor'
 import { FamilyCall } from '../screens/FamilyCall'
@@ -43,6 +44,7 @@ function ShellFrame() {
       </nav>
       <main className="main" ref={mainRef}><Outlet /></main>
       {call && <Doctor about={call.about} onClose={closeCall} />}
+      <IncomingFamilyCall />
       {calling && !call && <FamilyCall key={calling} messageId={calling} onClose={closeFamilyCall} />}
     </div>
   </div>

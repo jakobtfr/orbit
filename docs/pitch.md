@@ -1,6 +1,6 @@
 # ORBIT pitch
 
-Written 2026-11-15. Follows the deck [`demo/deck.html`](demo/deck.html) ([PDF](demo/orbit-demo.pdf)), slide by slide. Every number here is on a slide with its source link.
+Written 2026-11-15. Follows the deck [`demo/deck.html`](demo/deck.html) ([PDF](demo/orbit-demo.pdf)), slide by slide. Every number here is on a slide with its source link. The live app link returned 404 at 13:26, so the slides link the code and the method on GitHub.
 
 ## One sentence
 
@@ -41,6 +41,10 @@ On the way to Mars nobody can call home, so ORBIT plays each day's recorded mess
 **Slide 7, why it matters.**
 > "Good morning, Mama." Lena's reply is on its way home, and her blood pressure is logged. Next comes video, when an open-source face model is good enough. ORBIT is a prototype, not a medical device. Nobody should fly to Mars alone.
 
+## If the team submits the app without the family call
+
+Use [`demo/deck-fallback.html`](demo/deck-fallback.html) ([PDF](demo/orbit-demo-fallback.pdf)). Slides 1 to 3 are the same. Slide 4 is the limits ("ORBIT judges Lena against her own normal"), slide 5 the proof, slide 6 the family call as the next step, marked as not in the submitted app. For this version, speak about the call in the future: "next, we put the health check inside a call from home". Do not say "ORBIT plays it as a call".
+
 ## Hard questions
 
 ### The family call
@@ -50,12 +54,12 @@ On the way to Mars nobody can call home, so ORBIT plays each day's recorded mess
 | "Is this creepy? An AI that plays her mother?" | "It does not play her mother. Her mother's voice is her own recording, played as recorded. The AI voice only links the recordings, says it is an AI, and is labelled on screen. Both sides opt in, and either can stop." |
 | "Does the AI give medical advice?" | "No. Every health sentence is taken word for word from ORBIT's fixed rules. The language model never sees her readings, and a filter blocks any model sentence that mentions health." |
 | "Does it waste crew time?" | "It is offered only in free time, after waking and before sleep. The check happens inside a call she wants to take, so it replaces a chore; it does not add one." |
-| "What does NASA see?" | "The readings she says in the call are saved as self-reported readings, like any other reading. What NASA gets from the private part of the call is not decided yet. Our position: health readings go to the medical lead, private talk stays private." (Not verified in the app: check with the family-call build before saying more.) |
+| "What does NASA see?" | "Only the readings. A reading she says in the call is saved to her health record as self-reported. The private talk is kept encrypted on the device, apart from the health record, and the medical lead cannot see it." |
 | "What if she says she feels fine?" | "ORBIT goes by the reading, not by the feeling. It asks again for the number." |
 | "What about an emergency in the call?" | "Chest pain or trouble breathing ends the role-play at once. ORBIT speaks alone and names the medical lead." |
 | "Can you send a daily recording to Mars?" | "A signal takes up to 20 minutes one way, so it arrives late, not live. That is why it is a recording." (Data-rate figures: being checked; do not quote a number until verified.) |
 | "Why no video?" | "We left it out on purpose. We found no open-source face model good enough to put a family on screen. Video is the next step." |
-| "Is the voice in the demo real?" | Say exactly what the demo uses: a team member's recording or a generated voice. If generated, say so first. |
+| "Is the voice in the demo real?" | "No. Lena's family is invented, so in the demo every voice is generated speech, and the slide says so. In the design, the family part is the person's own recording." |
 
 ### The limits and the proof
 

@@ -75,15 +75,18 @@
   .step i { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--mars); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 30px; font-weight: 600; color: var(--mars); }
   .step h3 { font-size: 38px; font-weight: 600; letter-spacing: -0.02em; }
   .step p { font-size: 27px; margin-top: 6px; }
-  .call { background: var(--tile); border: 1px solid var(--line); border-radius: 28px; padding: 26px; display: flex; flex-direction: column; gap: 12px; }
+  .call { display: flex; flex-direction: column; gap: 10px; }
   .call .head { display: flex; justify-content: space-between; align-items: baseline; font-size: 20px; color: var(--dim); margin-bottom: 6px; }
   .call .head b { font-size: 26px; color: var(--text); font-weight: 600; }
-  .seg { border-radius: 20px; padding: 16px 22px 18px; background: #1c1c20; }
+  .seg { border-radius: 18px; padding: 12px 20px 14px; background: #17171b; }
   .seg .label { font-size: 15px; display: block; margin-bottom: 6px; }
-  .seg p { font-size: 23px; line-height: 1.35; color: var(--text); margin: 0; }
+  .seg p { font-size: 22px; line-height: 1.35; color: var(--text); margin: 0; }
   .seg.rec .label { color: var(--earth); } .seg.rec { border-left: 4px solid var(--earth); }
   .seg.ai .label { color: var(--muted); } .seg.ai { border-left: 4px solid var(--dim); } .seg.ai p { color: var(--muted); }
   .seg.orb .label { color: var(--mars); } .seg.orb { border-left: 4px solid var(--mars); }
+  .shot4 { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); }
+  .shot4 img { display: block; width: 100%; }
+  .shotcap4 { font-size: 19px; color: var(--dim); margin: 10px 0 16px; }
   .call .note { font-size: 18px; color: var(--dim); line-height: 1.4; }
   .placeholder { outline: 3px dashed #ffd60a; outline-offset: 6px; }
   .phtag { position: absolute !important; z-index: 3 !important; background: #ffd60a; color: #000; font-size: 18px; font-weight: 700; padding: 6px 12px; border-radius: 8px; letter-spacing: 0.06em; }
@@ -232,7 +235,7 @@
       <div class="huge">24</div>
       <p class="hugecap">false alarms per person in six months, <span class="soft">in people who were healthy.</span></p>
       <p style="margin-top:22px; font-size:27px; max-width:900px">We ran Earth’s medical limits over NASA data from 29 healthy bed-rest volunteers. They raised an alarm on <em>13.5% of days</em>. A crew that gets false alarms stops believing them.</p>
-      <p class="src" style="margin-top:16px">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Our analysis, checked by tests: <a href="https://jakobtfr.github.io/orbit/#/replay">Replay screen in the live app</a></p>
+      <p class="src" style="margin-top:16px">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Our analysis, checked by tests: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">method and every number</a></p>
     </div>
     <div class="side">
       <div class="tile">
@@ -258,19 +261,17 @@
   <h2>The health check, <span class="soft">inside a call from home.</span></h2>
   <div class="cols">
     <div class="steps">
-      <div class="step"><i>1</i><div><h3>Home records.</h3><p>Family and friends who agreed record a short message every day. It travels to the ship like any other data.</p></div></div>
+      <div class="step"><i>1</i><div><h3>Home records.</h3><p>Family and friends who agreed record a short message every day.</p></div></div>
       <div class="step"><i>2</i><div><h3>ORBIT plays it as a call.</h3><p>In Lena’s free time. She talks back, and her words go home as her reply.</p></div></div>
       <div class="step"><i>3</i><div><h3>The call carries the check.</h3><p>When a reading is off, ORBIT says so inside the call and asks for today’s numbers. She says them, and they are saved.</p></div></div>
     </div>
-    <div style="position:relative">
-      <span class="phtag" style="right:-6px; top:-22px">PLACEHOLDER · real app screen follows</span>
-      <div class="call placeholder">
-        <div class="head"><b>Marta Brandt · Mother</b><span>Message from Earth</span></div>
+    <div>
+      <div class="shot4"><img src="img/family-messages.png" alt="ORBIT Family screen: today's messages from Marta, Jonas and Priya, each with Play as a call"></div>
+      <p class="shotcap4">Real app screen. Below: what Lena hears when she answers, in the app’s own words.</p>
+      <div class="call">
         <div class="seg rec"><span class="label">Recorded on Earth</span><p>Good morning, Lena. It is me. I am sitting in the kitchen with your coffee cup, the blue one.</p></div>
         <div class="seg ai"><span class="label">AI voice</span><p>One thing before the next message. ORBIT asked to say this to you in its own words.</p></div>
         <div class="seg orb"><span class="label">ORBIT</span><p>Blood pressure has been well below your normal in this phase on two readings in a row. Sit or lie down, drink water, and repeat the reading after 5 minutes.</p></div>
-        <div class="seg ai"><span class="label">AI voice</span><p>When you have taken it, tell me the numbers. Then we go on.</p></div>
-        <p class="note">Words from the app’s demo call. Marta is invented, like Lena.</p>
       </div>
     </div>
   </div>
@@ -285,16 +286,16 @@
   <h2>Three voices. <span class="soft">Each one labelled on screen.</span></h2>
   <div class="voices">
     <div class="tile v1"><span class="label">Recorded on Earth</span><h3>Her mother</h3><p>Her own recording, played as it was recorded. ORBIT never rewrites it and never imitates her.</p></div>
-    <div class="tile v2"><span class="label">AI voice</span><h3>The link</h3><p>Joins the recordings. It says it is an AI. It may not say one word about health; a filter blocks it.</p></div>
-    <div class="tile v3"><span class="label">ORBIT</span><h3>The health part</h3><p>Every health sentence comes word for word from fixed rules. No language model writes one, and the model never sees her readings.</p></div>
+    <div class="tile v2"><span class="label">AI voice</span><h3>The link</h3><p>Generated speech that joins the recordings. It never claims to be her mother, and it may not say one word about health.</p></div>
+    <div class="tile v3"><span class="label">ORBIT</span><h3>The health part</h3><p>Every health sentence comes word for word from fixed rules, spoken by a generated voice. No language model writes one, and the model never sees her readings.</p></div>
   </div>
   <div class="rules">
     <div><b>Both sides agree first</b>The astronaut and each person at home opt in. Either can stop.</div>
     <div><b>Urgent ends the call</b>Chest pain or trouble breathing: the role-play stops and ORBIT names the medical lead.</div>
-    <div><b>Feeling fine is not a reading</b>ORBIT goes by the number and asks again.</div>
+    <div><b>Private stays private</b>The talk is kept encrypted on the device, apart from the health record. The medical lead cannot see it.</div>
     <div><b>Only in free time</b>Calls are offered after waking and before sleep, not during work.</div>
   </div>
-  <p class="ack"><b>AI in this product:</b> the linking voice and the virtual doctor are AI-generated and labelled as AI wherever they speak. ORBIT is a prototype, not a medical device.</p>
+  <p class="ack"><b>AI in this product:</b> the linking voice, ORBIT’s spoken prompts and the virtual doctor are AI-generated, and every call is labelled AI. In this demo the family is invented, so their messages are also spoken by a generated voice.</p>
   <div class="next">Rules are only as good as the limits behind them. Are ORBIT’s right<span>?</span></div>
   <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="4.3" cy="19.9" r="4" fill="#ff9a5c"/></svg>5 / 7</div>
 </section>
@@ -319,7 +320,7 @@
       <div class="row weak"><div class="name">Small blood-pressure rise<small>+15/+9 mmHg for 3 days</small></div><div><div class="bar o"><u style="width:20.8%"></u><span>26%</span></div><div class="bar e"><u style="width:40%"></u><span>50%</span></div></div></div>
       <div class="legend"><span><i style="background:var(--green)"></i>ORBIT</span><span><i style="background:#55555c"></i>Earth’s fixed limits</span><span><i style="background:var(--mars)"></i>Where Earth’s limits do better</span></div>
       <p class="honest"><b>Honest limits.</b> Bed rest is a ground stand-in for flight. The data holds no real illness, so the problems are planted. Small blood-pressure rises: Earth’s limits catch more.</p>
-      <p class="src">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Method and every number: <a href="https://github.com/jakobtfr/orbit/blob/main/docs/research/miss-rate.md">miss-rate.md</a> · Try it: <a href="https://jakobtfr.github.io/orbit/#/replay">Replay in the live app</a></p>
+      <p class="src">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Method and every number: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">miss-rate.md</a> · Limits per mission phase: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/phase-limits.md">phase-limits.md</a></p>
     </div>
   </div>
   <div class="next">What is built, and what comes next<span>?</span></div>
@@ -334,7 +335,7 @@
     <circle cx="760" cy="1012" r="13" fill="#5aa9ff"/><circle cx="760" cy="1012" r="27" stroke="#5aa9ff" stroke-opacity=".35" stroke-width="2"/>
     <circle cx="1290" cy="935" r="10" fill="#ff9a5c"/>
     <circle cx="930" cy="987" r="6" fill="#fff"/><circle cx="930" cy="987" r="15" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
-    <text x="952" y="958" fill="#f5f5f7" font-size="20" font-weight="500">her reply, on its way home</text>
+    <text x="940" y="946" fill="#f5f5f7" font-size="20" font-weight="500">her reply, on its way home</text>
   </svg>
   <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>Why it matters</span></div>
   <h2>Nobody should fly to Mars alone.</h2>
@@ -357,8 +358,8 @@
   </div>
   <div class="foot">
     <div class="blk"><b>Team TUM</b>Jakob Friedrich · Lukas Fuchs · Mohit Nandanwar · Patryk Ostern<br>NASA Space Apps Challenge 2026 · Create Health Monitoring Software for Astronauts on Space Missions</div>
-    <div class="blk"><div class="links"><a href="https://jakobtfr.github.io/orbit/">Live app</a><a href="https://github.com/jakobtfr/orbit">Code</a><a href="https://doi.org/10.83263/wjw1-ta27">NASA data</a></div>
-    <span style="font-size:19px; color:var(--dim)">AI use: the app’s linking voice and virtual doctor are AI. The team used an AI assistant (Claude) for code, source search and text; the team checked every number against its source.</span></div>
+    <div class="blk"><div class="links"><a href="https://github.com/jakobtfr/orbit">Code</a><a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">Method</a><a href="https://doi.org/10.83263/wjw1-ta27">NASA data</a></div>
+    <span style="font-size:19px; color:var(--dim)">AI use: every voice in the demo call and the virtual doctor are AI-generated. The team used an AI assistant (Claude) for code, source search and text; the team checked every number against its source.</span></div>
   </div>
   <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="17" cy="4" r="4" fill="#ff9a5c"/></svg>7 / 7</div>
 </section>

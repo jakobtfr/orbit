@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ORBIT — Project Demo</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  :root {
+    --bg: #000; --tile: #131316; --line: #2a2a2f;
+    --text: #f5f5f7; --muted: #a1a1a6; --dim: #6e6e73;
+    --earth: #5aa9ff; --mars: #ff9a5c; --red: #ff6961; --green: #30d158;
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  a { color: inherit; text-decoration: underline; text-decoration-color: rgba(90,169,255,.7); text-underline-offset: 5px; text-decoration-thickness: 2px; }
+  .slide { position: relative; width: 1920px; height: 1080px; padding: 150px 120px 150px; display: flex; flex-direction: column; overflow: hidden; page-break-after: always; break-after: page; background: #000; }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  .slide > * { position: relative; z-index: 1; }
+  .orbits { position: absolute !important; z-index: 0 !important; inset: 0; width: 1920px; height: 1080px; pointer-events: none; }
+
+  /* chrome on every slide */
+  .top { position: absolute !important; left: 120px; right: 120px; top: 64px; display: flex; align-items: center; justify-content: space-between; font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); font-weight: 600; }
+  .top .brand { display: inline-flex; align-items: center; gap: 14px; color: var(--text); letter-spacing: 0.1em; }
+  .next { position: absolute !important; left: 120px; right: 320px; bottom: 62px; display: flex; align-items: center; gap: 20px; font-size: 30px; color: var(--text); font-weight: 500; letter-spacing: -0.01em; }
+  .next::before { content: ''; flex: none; width: 56px; height: 2px; background: var(--mars); }
+  .next span { color: var(--mars); margin-left: -20px; }
+  .prog { position: absolute !important; right: 120px; bottom: 50px; display: flex; align-items: center; gap: 14px; font-size: 20px; color: var(--dim); }
+
+  h1 { font-size: 132px; font-weight: 600; letter-spacing: -0.04em; line-height: 1.0; }
+  h2 { font-size: 76px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.06; max-width: 1560px; }
+  h2 .soft, h1 .soft { color: var(--dim); }
+  p { font-size: 30px; line-height: 1.4; color: var(--muted); }
+  em { font-style: normal; color: var(--text); }
+  .src { font-size: 20px; color: var(--dim); line-height: 1.45; }
+  .src a { color: var(--muted); }
+  .tile { background: var(--tile); border: 1px solid var(--line); border-radius: 28px; padding: 36px 36px 30px; display: flex; flex-direction: column; }
+  .label { font-size: 20px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+  .big { font-size: 96px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: var(--text); }
+  .tile p { font-size: 26px; line-height: 1.35; margin-top: 14px; }
+  .tile .src { margin-top: auto; padding-top: 18px; }
+
+  /* 1 */
+  .s1 { justify-content: center; padding-top: 120px; }
+  .s1 .day { font-size: 26px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mars); font-weight: 600; margin-bottom: 36px; }
+  .s1 .sub { margin-top: 44px; font-size: 40px; line-height: 1.3; color: var(--text); max-width: 1000px; letter-spacing: -0.015em; }
+  .s1 .sub .soft { color: var(--muted); }
+  .s1 .src { margin-top: 26px; max-width: 900px; }
+  .s1 .team { position: absolute !important; left: 120px; right: 120px; bottom: 132px; display: flex; gap: 64px; font-size: 22px; color: var(--muted); line-height: 1.45; }
+  .s1 .team b { display: block; color: var(--dim); font-weight: 600; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+  .s1 .team em { font-weight: 500; }
+
+  /* 2 */
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; flex: 1; }
+  .grid4 .tile { padding: 30px 32px 26px; }
+  .grid4 .big { font-size: 96px; }
+  .grid4 .tile p { font-size: 27px; margin-top: 16px; }
+  .grid4 .tile .src { font-size: 19px; margin-top: auto; padding-top: 14px; }
+  .grid4 .label { color: var(--mars); margin-bottom: 16px; }
+
+  /* 3 */
+  .s3 .cols { display: grid; grid-template-columns: 1fr 640px; gap: 72px; margin-top: 44px; flex: 1; }
+  .s3 .huge { font-size: 300px; font-weight: 600; letter-spacing: -0.05em; line-height: 0.9; color: var(--red); }
+  .s3 .hugecap { font-size: 40px; color: var(--text); line-height: 1.2; letter-spacing: -0.02em; margin-top: 18px; max-width: 880px; }
+  .s3 .hugecap .soft { color: var(--muted); }
+  .s3 .side { display: flex; flex-direction: column; gap: 24px; }
+  .s3 .side .tile { flex: 1; padding: 30px 34px 26px; }
+  .s3 .side .big { font-size: 68px; }
+  .s3 .side p { font-size: 25px; margin-top: 10px; }
+
+  /* 4 */
+  .s4 .cols { display: grid; grid-template-columns: 1fr 780px; gap: 72px; margin-top: 56px; flex: 1; align-items: start; }
+  .steps { display: flex; flex-direction: column; gap: 40px; padding-top: 10px; }
+  .step { display: grid; grid-template-columns: 72px 1fr; gap: 26px; align-items: start; }
+  .step i { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--mars); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 30px; font-weight: 600; color: var(--mars); }
+  .step h3 { font-size: 38px; font-weight: 600; letter-spacing: -0.02em; }
+  .step p { font-size: 27px; margin-top: 6px; }
+  .call { display: flex; flex-direction: column; gap: 10px; }
+  .call .head { display: flex; justify-content: space-between; align-items: baseline; font-size: 20px; color: var(--dim); margin-bottom: 6px; }
+  .call .head b { font-size: 26px; color: var(--text); font-weight: 600; }
+  .seg { border-radius: 18px; padding: 12px 20px 14px; background: #17171b; }
+  .seg .label { font-size: 15px; display: block; margin-bottom: 6px; }
+  .seg p { font-size: 22px; line-height: 1.35; color: var(--text); margin: 0; }
+  .seg.rec .label { color: var(--earth); } .seg.rec { border-left: 4px solid var(--earth); }
+  .seg.ai .label { color: var(--muted); } .seg.ai { border-left: 4px solid var(--dim); } .seg.ai p { color: var(--muted); }
+  .seg.orb .label { color: var(--mars); } .seg.orb { border-left: 4px solid var(--mars); }
+  .shot4 { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); }
+  .shot4 img { display: block; width: 100%; }
+  .shotcap4 { font-size: 19px; color: var(--dim); margin: 10px 0 16px; }
+  .call .note { font-size: 18px; color: var(--dim); line-height: 1.4; }
+  .placeholder { outline: 3px dashed #ffd60a; outline-offset: 6px; }
+  .phtag { position: absolute !important; z-index: 3 !important; background: #ffd60a; color: #000; font-size: 18px; font-weight: 700; padding: 6px 12px; border-radius: 8px; letter-spacing: 0.06em; }
+
+  /* 5 */
+  .voices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .voices .tile { padding: 36px 38px; min-height: 380px; }
+  .voices h3 { font-size: 44px; font-weight: 600; letter-spacing: -0.025em; margin-top: 16px; }
+  .voices p { font-size: 28px; }
+  .v1 { border-top: 4px solid var(--earth); } .v1 .label { color: var(--earth); }
+  .v2 { border-top: 4px solid var(--dim); } .v2 .label { color: var(--muted); }
+  .v3 { border-top: 4px solid var(--mars); } .v3 .label { color: var(--mars); }
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
+  .rules div { font-size: 23px; line-height: 1.35; color: var(--muted); padding-left: 22px; border-left: 2px solid var(--line); }
+  .rules b { display: block; color: var(--text); font-weight: 600; font-size: 25px; margin-bottom: 4px; }
+  .ack { margin-top: 40px; font-size: 22px; color: var(--muted); }
+  .ack b { color: var(--text); font-weight: 600; }
+
+  /* 6 */
+  .s6 .cols { display: grid; grid-template-columns: 660px 1fr; gap: 80px; margin-top: 48px; flex: 1; }
+  .pair { display: flex; align-items: baseline; gap: 22px; white-space: nowrap; }
+  .pair .from { font-size: 76px; font-weight: 600; letter-spacing: -0.04em; color: var(--red); }
+  .pair .arrow { font-size: 52px; color: var(--dim); }
+  .pair .to { font-size: 128px; font-weight: 600; letter-spacing: -0.045em; color: var(--green); line-height: 1; }
+  .s6 .cap { font-size: 27px; margin-top: 14px; }
+  .s6 .shot { margin-top: 36px; border-radius: 20px; overflow: hidden; border: 1px solid var(--line); }
+  .s6 .shot img { display: block; width: 100%; }
+  .s6 .shotcap { font-size: 19px; color: var(--dim); margin-top: 10px; line-height: 1.4; }
+  .bars { display: flex; flex-direction: column; gap: 24px; }
+  .bars .ttl { font-size: 27px; color: var(--muted); margin-bottom: 4px; }
+  .row { display: grid; grid-template-columns: 290px 1fr; gap: 24px; align-items: center; }
+  .row .name { font-size: 26px; color: var(--text); line-height: 1.2; }
+  .row .name small { display: block; font-size: 19px; color: var(--dim); }
+  .bar { display: flex; align-items: center; gap: 14px; height: 36px; }
+  .bar u { display: block; height: 100%; border-radius: 6px; text-decoration: none; }
+  .bar span { font-size: 24px; font-weight: 600; }
+  .bar.o u { background: var(--green); } .bar.o span { color: var(--green); }
+  .bar.e u { background: #55555c; } .bar.e span { color: var(--muted); }
+  .bar.e { height: 22px; margin-top: 6px; } .bar.e span { font-size: 20px; font-weight: 500; }
+  .row.weak .bar.o u { background: var(--mars); } .row.weak .bar.o span { color: var(--mars); }
+  .legend { display: flex; gap: 30px; font-size: 20px; color: var(--muted); margin-top: 4px; }
+  .legend i { display: inline-block; width: 16px; height: 16px; border-radius: 4px; margin-right: 8px; vertical-align: -2px; }
+  .s6 .honest { font-size: 21px; color: var(--muted); line-height: 1.4; margin-top: 12px; }
+  .s6 .honest b { color: var(--mars); font-weight: 600; }
+
+  /* 7 */
+  .s7 { padding-top: 150px; }
+  .s7 h2 { font-size: 104px; }
+  .s7 .reply { font-size: 34px; color: var(--muted); margin-top: 22px; max-width: 1400px; line-height: 1.3; }
+  .s7 .reply em { color: var(--text); }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 36px; }
+  .three .tile { padding: 32px 34px; }
+  .three .label { color: var(--mars); margin-bottom: 14px; }
+  .three ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .three li { font-size: 25px; line-height: 1.35; color: var(--muted); }
+  .three li em { font-weight: 500; }
+  .foot { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; margin-top: 28px; }
+  .foot .blk { font-size: 21px; line-height: 1.5; color: var(--muted); }
+  .foot b { display: block; color: var(--dim); font-weight: 600; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+  .foot .links a { color: var(--earth); font-size: 24px; font-weight: 500; margin-right: 26px; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 · THE MOMENT ============ -->
+<section class="slide s1">
+  <svg class="orbits" viewBox="0 0 1920 1080" fill="none">
+    <defs>
+      <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffd9a8" stop-opacity=".5"/><stop offset="1" stop-color="#ffd9a8" stop-opacity="0"/></radialGradient>
+      <linearGradient id="sig" x1="1290" y1="700" x2="1650" y2="250" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5aa9ff"/><stop offset="1" stop-color="#ff9a5c"/></linearGradient>
+    </defs>
+    <circle cx="1560" cy="560" r="230" fill="url(#sun)"/>
+    <circle cx="1560" cy="560" r="10" fill="#ffe2b8"/>
+    <circle cx="1560" cy="560" r="305" stroke="#2c3a4d" stroke-width="2"/>
+    <circle cx="1560" cy="560" r="465" stroke="#4a3528" stroke-width="2"/>
+    <circle cx="1560" cy="560" r="640" stroke="#17171a" stroke-width="2"/>
+    <!-- Earth on inner orbit, Mars on outer -->
+    <path d="M1322 751 L1790 156" stroke="url(#sig)" stroke-width="3" stroke-dasharray="3 14" stroke-linecap="round"/>
+    <circle cx="1322" cy="751" r="17" fill="#5aa9ff"/>
+    <circle cx="1322" cy="751" r="34" stroke="#5aa9ff" stroke-opacity=".35" stroke-width="2"/>
+    <circle cx="1790" cy="156" r="13" fill="#ff9a5c"/>
+    <circle cx="1612" cy="382" r="7" fill="#fff"/>
+    <circle cx="1612" cy="382" r="18" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+    <text x="1232" y="812" fill="#5aa9ff" font-size="22" font-weight="600" letter-spacing="2">EARTH</text>
+    <text x="1700" y="118" fill="#ff9a5c" font-size="22" font-weight="600" letter-spacing="2">MARS</text>
+    <text x="1582" y="372" text-anchor="end" fill="#f5f5f7" font-size="22" font-weight="500">her mother’s voice, on its way</text>
+  </svg>
+  <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>NASA Space Apps Challenge 2026</span></div>
+
+  <div class="day">Mission day 100 · outbound to Mars</div>
+  <h1>“Good morning,<br>Lena.”</h1>
+  <p class="sub">Her mother said it minutes ago. <span class="soft">At Mars, a voice from home travels up to 20 minutes. The answer takes 20 more. Nobody can talk like that.</span></p>
+  <p class="src">Signal delay “up to 20 minutes one way”: <a href="https://www.nasa.gov/hrp/hazard-distance-from-earth/">NASA Human Research Program</a>. Lena is ORBIT’s demo astronaut and is invented. The delay is not.</p>
+
+  <div class="team">
+    <div><b>Team</b><em>Team TUM</em></div>
+    <div><b>Members</b><em>Jakob Friedrich · Lukas Fuchs · Mohit Nandanwar · Patryk Ostern</em></div>
+    <div><b>Challenge</b><em>Create Health Monitoring Software for Astronauts on Space Missions</em></div>
+  </div>
+  <div class="next">What does that silence do to a crew<span>?</span></div>
+  <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="27.2" cy="8.9" r="4" fill="#ff9a5c"/></svg>1 / 7</div>
+</section>
+
+<!-- ============ 2 · THE PROBLEM ============ -->
+<section class="slide s2">
+  <svg class="orbits" viewBox="0 0 1920 1080" fill="none"><circle cx="1960" cy="-60" r="420" stroke="#17171a" stroke-width="2"/><circle cx="1960" cy="-60" r="620" stroke="#121214" stroke-width="2"/></svg>
+  <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>The problem</span></div>
+  <h2>Far from home, crews get lonely, tired, <span class="soft">and quiet about their health.</span></h2>
+  <div class="grid4">
+    <div class="tile">
+      <span class="label">Lonely</span>
+      <div class="big">0</div>
+      <p><em>live calls home</em> at Mars distance. In orbit, less family contact already brings growing loneliness.</p>
+      <p class="src"><a href="https://doi.org/10.3389/fphys.2021.750414">Gushin et al. 2021, Frontiers in Physiology</a> · NASA names it a stressor: <a href="https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-016-behavioral-health.pdf">NASA OCHMO-TB-016</a></p>
+    </div>
+    <div class="tile">
+      <span class="label">Tired</span>
+      <div class="big">6.1 h</div>
+      <p><em>of sleep a night</em> on the ISS. 8.5 h are scheduled. 3 of 4 crew took sleep medication.</p>
+      <p class="src"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436/">Barger et al. 2014, Lancet Neurology</a> · 21 ISS crew; medication at least once, 12 of 16 asked</p>
+    </div>
+    <div class="tile">
+      <span class="label">Quiet</span>
+      <div class="big">56%</div>
+      <p><em>of pilots have avoided healthcare</em> for fear of losing their licence. Astronauts fear disqualification too.</p>
+      <p class="src"><a href="https://doi.org/10.1097/JOM.0000000000002519">Hoffman et al. 2022</a>, 3,765 US pilots, anonymous survey · astronauts: <a href="https://www.nationalacademies.org/read/10218/chapter/8#174">National Academies, Safe Passage, 2001</a></p>
+    </div>
+    <div class="tile">
+      <span class="label">And it gets worse</span>
+      <div class="big" style="font-size:62px; line-height:1.55">after halfway</div>
+      <p><em>is when problems are most likely</em> in Mars simulations on Earth.</p>
+      <p class="src"><a href="https://doi.org/10.3389/fphys.2022.898841">Rosenberg et al. 2022, Frontiers in Physiology</a> · HI-SEAS, 18 people, 8 to 12 months</p>
+    </div>
+  </div>
+  <div class="next">So who notices when something is wrong<span>?</span></div>
+  <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="29.7" cy="19.9" r="4" fill="#ff9a5c"/></svg>2 / 7</div>
+</section>
+
+<!-- ============ 3 · WHY TODAY'S TOOLS FAIL ============ -->
+<section class="slide s3">
+  <svg class="orbits" viewBox="0 0 1920 1080" fill="none"><circle cx="-80" cy="1160" r="520" stroke="#17171a" stroke-width="2"/><circle cx="-80" cy="1160" r="760" stroke="#121214" stroke-width="2"/></svg>
+  <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>Why today’s tools fail</span></div>
+  <h2>The health check is a chore. <span class="soft">And it cries wolf.</span></h2>
+  <div class="cols">
+    <div>
+      <div class="huge">24</div>
+      <p class="hugecap">false alarms per person in six months, <span class="soft">in people who were healthy.</span></p>
+      <p style="margin-top:22px; font-size:27px; max-width:900px">We ran Earth’s medical limits over NASA data from 29 healthy bed-rest volunteers. They raised an alarm on <em>13.5% of days</em>. A crew that gets false alarms stops believing them.</p>
+      <p class="src" style="margin-top:16px">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Our analysis, checked by tests: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">method and every number</a></p>
+    </div>
+    <div class="side">
+      <div class="tile">
+        <div class="big">+1 °C</div>
+        <p>The body runs warmer in flight. <em>38.0 °C is a fever on Earth and normal for Lena.</em> Earth’s limits cannot know that.</p>
+        <p class="src"><a href="https://doi.org/10.1038/s41598-017-15560-w">Stahn et al. 2017, Scientific Reports</a> · ESA/Charité study of 11 ISS astronauts, not NASA data</p>
+      </div>
+      <div class="tile">
+        <div class="big" style="font-size:44px; line-height:1.15; letter-spacing:-0.025em">“the most restricted resource”</div>
+        <p>is how NASA describes crew time in flight. A check that costs time and is often wrong gets skipped.</p>
+        <p class="src"><a href="https://ntrs.nasa.gov/api/citations/20170000487/downloads/20170000487.pdf">NASA ISS Medical Projects, 2017</a> · about research time on the ISS</p>
+      </div>
+    </div>
+  </div>
+  <div class="next">What if the alarm knew Lena, and not only Earth<span>?</span></div>
+  <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="22.6" cy="28.7" r="4" fill="#ff9a5c"/></svg>3 / 7</div>
+</section>
+
+<!-- ============ 4 · WHAT WE BUILT ============ -->
+<section class="slide s4">
+  <svg class="orbits" viewBox="0 0 1920 1080" fill="none"><circle cx="960" cy="1500" r="700" stroke="#17171a" stroke-width="2"/><circle cx="960" cy="1500" r="940" stroke="#121214" stroke-width="2"/></svg>
+  <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>What we built</span></div>
+  <h2>ORBIT judges Lena against <span class="soft">her own normal, not Earth’s.</span></h2>
+  <div class="cols" style="grid-template-columns: 1fr 800px; margin-top: 44px">
+    <div class="steps" style="gap:30px">
+      <div class="step"><i>1</i><div><h3>Her normal follows the mission.</h3><p>Outbound, on Mars, return, back on Earth: each phase has its own expected change, taken from NASA bed-rest data and her own readings.</p></div></div>
+      <div class="step"><i>2</i><div><h3>Quiet when she is fine.</h3><p>38.0 °C is a fever on Earth. In flight it is in range for Lena, so ORBIT raises no alarm.</p></div></div>
+      <div class="step"><i>3</i><div><h3>One clear step when she is not.</h3><p>Blood pressure 86/54: sit or lie down, drink water, repeat the reading after 5 minutes.</p></div></div>
+    </div>
+    <div>
+      <div class="shot4"><img src="img/temp-in-range.png" alt="ORBIT body temperature screen: 38.0 °C, in range, compared with before flight and the last 7 days"></div>
+      <p class="shotcap4">Real app screen, mission day 100. The +1 °C in flight is from an ESA/Charité study (<a href="https://doi.org/10.1038/s41598-017-15560-w">Stahn et al. 2017</a>), and the app says so.</p>
+    </div>
+  </div>
+  <div class="next">Does that hold on real data<span>?</span></div>
+  <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="11.4" cy="28.7" r="4" fill="#ff9a5c"/></svg>4 / 7</div>
+</section>
+
+<!-- ============ 5 · THE PROOF ============ -->
+<section class="slide s6">
+  <svg class="orbits" viewBox="0 0 1920 1080" fill="none"><circle cx="-100" cy="-80" r="460" stroke="#17171a" stroke-width="2"/><circle cx="-100" cy="-80" r="700" stroke="#121214" stroke-width="2"/></svg>
+  <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>The proof</span></div>
+  <h2>We tested the limits <span class="soft">on 2,184 days of NASA data.</span></h2>
+  <div class="cols">
+    <div>
+      <div class="pair"><span class="from">13.5%</span><span class="arrow">→</span><span class="to">5.9%</span></div>
+      <p class="cap"><em>2.3× fewer false alarms.</em> ORBIT judges each reading against the person’s own normal, not Earth’s. Same two-day rule on both sides, 29 volunteers.</p>
+      <div class="shot"><img src="img/replay-strip.png" alt="Replay screen: Earth limits 30 alarms, ORBIT 1 alarm"></div>
+      <p class="shotcap">Real app screen. One NASA volunteer, 90 days: each red mark is an alarm.</p>
+    </div>
+    <div class="bars">
+      <div class="ttl">And it misses less. Problems we planted into the same data, share caught:</div>
+      <div class="row"><div class="name">Fever<small>+1 °C for 3 days</small></div><div><div class="bar o"><u style="width:75.2%"></u><span>94%</span></div><div class="bar e"><u style="width:6.4%"></u><span>8%</span></div></div></div>
+      <div class="row"><div class="name">Heart rate jump<small>+20 bpm for 5 days</small></div><div><div class="bar o"><u style="width:74.4%"></u><span>93%</span></div><div class="bar e"><u style="width:16%"></u><span>20%</span></div></div></div>
+      <div class="row"><div class="name">Slow heart-rate drift<small>+0.5 bpm a day</small></div><div><div class="bar o"><u style="width:56.8%"></u><span>71%</span></div><div class="bar e"><u style="width:11.2%"></u><span>14%</span></div></div></div>
+      <div class="row weak"><div class="name">Small blood-pressure rise<small>+15/+9 mmHg for 3 days</small></div><div><div class="bar o"><u style="width:20.8%"></u><span>26%</span></div><div class="bar e"><u style="width:40%"></u><span>50%</span></div></div></div>
+      <div class="legend"><span><i style="background:var(--green)"></i>ORBIT</span><span><i style="background:#55555c"></i>Earth’s fixed limits</span><span><i style="background:var(--mars)"></i>Where Earth’s limits do better</span></div>
+      <p class="honest"><b>Honest limits.</b> Bed rest is a ground stand-in for flight. The data holds no real illness, so the problems are planted. Small blood-pressure rises: Earth’s limits catch more.</p>
+      <p class="src">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Method and every number: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">miss-rate.md</a> · Limits per mission phase: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/phase-limits.md">phase-limits.md</a></p>
+    </div>
+  </div>
+  <div class="next">The alarms are right. But Lena is still alone<span>.</span></div>
+  <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="4.3" cy="19.9" r="4" fill="#ff9a5c"/></svg>5 / 7</div>
+</section>
+
+<!-- ============ 6 · NEXT STEP ============ -->
+<section class="slide s4">
+  <svg class="orbits" viewBox="0 0 1920 1080" fill="none"><circle cx="2000" cy="1100" r="480" stroke="#17171a" stroke-width="2"/><circle cx="2000" cy="1100" r="700" stroke="#121214" stroke-width="2"/></svg>
+  <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span style="color:#ffd60a">Next step · not in the submitted app</span></div>
+  <h2>Next: the health check, <span class="soft">inside a call from home.</span></h2>
+  <div class="cols">
+    <div class="steps" style="gap:30px">
+      <div class="step"><i>1</i><div><h3>Home records.</h3><p>Family and friends who agree record a short message every day. A live call is impossible, a recording is not.</p></div></div>
+      <div class="step"><i>2</i><div><h3>ORBIT plays it as a call.</h3><p>In Lena’s free time. Every call is labelled AI, and both sides opt in.</p></div></div>
+      <div class="step"><i>3</i><div><h3>The call carries the check.</h3><p>Health sentences come word for word from ORBIT’s fixed rules, never from a language model. Urgent symptoms go to the medical lead.</p></div></div>
+    </div>
+    <div>
+      <p class="shotcap4" style="margin-top:0; font-size:21px; color:var(--muted)">How a call is designed to sound. Three voices, each labelled:</p>
+      <div class="call">
+        <div class="seg rec"><span class="label">Recorded on Earth · her mother’s own recording</span><p>Good morning, Lena. It is me. I am sitting in the kitchen with your coffee cup, the blue one.</p></div>
+        <div class="seg ai"><span class="label">AI voice · only links the recordings</span><p>One thing before the next message. ORBIT asked to say this to you in its own words.</p></div>
+        <div class="seg orb"><span class="label">ORBIT · fixed rules, word for word</span><p>Blood pressure has been well below your normal in this phase on two readings in a row. Sit or lie down, drink water, and repeat the reading after 5 minutes.</p></div>
+      </div>
+      <p class="shotcap4" style="margin-top:16px">A design by the team, in development. It is not part of the app we submit. Lena and her mother are invented.</p>
+    </div>
+  </div>
+  <div class="next">What is built today, and what is not<span>?</span></div>
+  <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="6.8" cy="8.9" r="4" fill="#ff9a5c"/></svg>6 / 7</div>
+</section>
+
+<!-- ============ 7 · THE POINT ============ -->
+<section class="slide s7">
+  <svg class="orbits" viewBox="0 0 1920 1080" fill="none">
+    <circle cx="960" cy="1620" r="640" stroke="#2c3a4d" stroke-width="2"/><circle cx="960" cy="1620" r="760" stroke="#4a3528" stroke-width="2"/>
+    <path d="M1290 935 L760 1012" stroke="#ff9a5c" stroke-width="3" stroke-dasharray="3 12" stroke-linecap="round"/>
+    <circle cx="760" cy="1012" r="13" fill="#5aa9ff"/><circle cx="760" cy="1012" r="27" stroke="#5aa9ff" stroke-opacity=".35" stroke-width="2"/>
+    <circle cx="1290" cy="935" r="10" fill="#ff9a5c"/>
+    <circle cx="930" cy="987" r="6" fill="#fff"/><circle cx="930" cy="987" r="15" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+    
+  </svg>
+  <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>Why it matters</span></div>
+  <h2>Nobody should fly to Mars alone.</h2>
+  <p class="reply">Today ORBIT gives Lena alarms she can trust. Next it brings her mother’s voice with them, so that one day she answers: <em>“Good morning, Mama.”</em></p>
+  <div class="three">
+    <div class="tile"><span class="label">Built today</span><ul>
+      <li><em>Limits that follow each astronaut</em> through every mission phase, tested on NASA data</li>
+      <li><em>One next step</em> for every reading that is off, and a virtual doctor on the device</li>
+      <li><em>Runs on the device.</em> No contact with Earth needed, no new hardware</li>
+    </ul></div>
+    <div class="tile"><span class="label">Next</span><ul>
+      <li><em>The call from home</em> that carries the health check: voice first, in development</li>
+      <li><em>Video</em> later: no open-source face model is good enough yet to put a family on screen</li>
+      <li><em>Flight data</em> and a clinician’s review of every limit</li>
+    </ul></div>
+    <div class="tile"><span class="label">Honest limits</span><ul>
+      <li>Prototype, not a medical device</li>
+      <li>Bed rest stands in for flight. The +1 °C is from an ESA study. Mars values are estimates</li>
+      <li>Lena and her readings are scripted</li>
+    </ul></div>
+  </div>
+  <div class="foot">
+    <div class="blk"><b>Team TUM</b>Jakob Friedrich · Lukas Fuchs · Mohit Nandanwar · Patryk Ostern<br>NASA Space Apps Challenge 2026 · Create Health Monitoring Software for Astronauts on Space Missions</div>
+    <div class="blk"><div class="links"><a href="https://github.com/jakobtfr/orbit">Code</a><a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">Method</a><a href="https://doi.org/10.83263/wjw1-ta27">NASA data</a></div>
+    <span style="font-size:19px; color:var(--dim)">AI use: the app’s virtual doctor is AI and is labelled as AI. The team used an AI assistant (Claude) for code, source search and text; the team checked every number against its source.</span></div>
+  </div>
+  <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="17" cy="4" r="4" fill="#ff9a5c"/></svg>7 / 7</div>
+</section>
+
+</body>
+</html>

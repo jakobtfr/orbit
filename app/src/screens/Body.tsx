@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
 import { HealthPrompt } from '../components/HealthPrompt'
+import { FamilyTeaser } from '../components/FamilyTeaser'
 import { IncomingFamilyCall } from '../components/IncomingFamilyCall'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
@@ -24,6 +25,7 @@ export function Body() {
   return <div className="screen dashboard-screen">
     <HealthPrompt />
     <IncomingFamilyCall />
+    <FamilyTeaser />
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map">
         <BodyFigure muscleStatuses={muscleStatuses} summaries={summaries} active={active} onActive={setActive} onSelect={(r) => nav(`${base}/region/${r}`)} onMuscleSelect={(m) => nav(`${base}/muscle/${m}`)} />

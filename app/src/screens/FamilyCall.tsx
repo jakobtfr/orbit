@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Mark } from '../components/Shell'
-import { BROWSER_MODEL, LOAD_LABEL, LOAD_NOTE, browserChat, canRunInBrowser, loadBrowserModel } from '../lib/browserModel'
+import { BROWSER_MODEL, CHOICE_NOTE, GUIDED_CHOICE, LOAD_FAILED_LINE, NO_GPU_LINE, browserChat, canRunInBrowser, loadBrowserModel, modelChoice } from '../lib/browserModel'
 import { useCall } from '../lib/call'
 import { speakable } from '../lib/doctor'
 import { MESSAGES, arrived, callScript, familyTurn, memberOf, recordedLabel, signalDelayMin, type Segment, type Topic } from '../lib/family'
@@ -16,6 +16,9 @@ import { doctorVoice, rankVoices } from '../lib/voices'
 import '../doctor.css'
 import '../family.css'
 import '../family-chat.css'
+
+/** Talk freely: off, the choice between the two ways, or one of them. There is no way in around the choice. */
+type Mode = 'off' | 'choosing' | 'guided' | 'model'
 
 type Phase = 'ringing' | 'playing' | 'thinking' | 'listening' | 'idle'
 
@@ -64,14 +67,17 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   /** The reading the health part asked for, until it has been given. */
   const [focus, setFocus] = useState<IndicatorKey | undefined>(undefined)
   /** The "talk freely" preview: scripted replies in place of the next recording. Off until the astronaut turns it on. */
-  const [talkFreely, setTalkFreely] = useState(false)
+  const [mode, setMode] = useState<Mode>('off')
+  const talkFreely = mode === 'guided' || mode === 'model'
+  /** Why the guided conversation took over from the model, when it did. */
+  const [fellBack, setFellBack] = useState('')
   /** The language model on this device, when one is running. It writes the preview's replies; without it the preset lines are used. */
   const [ollama, setOllama] = useState<string | null>(null)
   /** The model in the browser, for where nothing is installed: not asked for, loading, ready, or failed. */
   const [inBrowser, setInBrowser] = useState<'off' | 'loading' | 'ready' | 'failed'>('off')
   const [loaded, setLoaded] = useState('')
   /** The model that writes the preview's replies: the one on the device, else the one loaded in the browser. */
-  const model = ollama ?? (inBrowser === 'ready' ? BROWSER_MODEL.name : null)
+  const model = mode === 'model' ? ollama ?? (inBrowser === 'ready' ? BROWSER_MODEL.name : null) : null
   /** The preview's talk so far, for the model: what was said and what it answered. */
   const talk = useRef<ChatMessage[]>([])
   /** What the guided conversation offers to say next; before the first reply, everything this person can answer. */
@@ -89,6 +95,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   /** Pre-rendered speech for fixed sentences, by their text. */
   const rendered = useRef<Record<string, string>>({})
   const mutedNow = useRef(false)
+  const noGpu = useRef(false)
   const sendRef = useRef<(text: string) => void>(() => {})
   const alive = useRef(true)
 
@@ -102,6 +109,8 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     // `localStorage['orbit-no-ollama'] = '1'` leaves the model on the device aside, to try the browser model on a machine that has both.
     let aside = false
     try { aside = window.localStorage.getItem('orbit-no-ollama') === '1' } catch { /* storage blocked */ }
+    // `localStorage['orbit-no-webgpu'] = '1'` makes this browser count as one without WebGPU, to try that fallback.
+    try { noGpu.current = window.localStorage.getItem('orbit-no-webgpu') === '1' } catch { /* storage blocked */ }
     if (!aside) findModel().then((m) => { if (alive.current && m) { setOllama(m); warm(m) } })
     return () => {
       alive.current = false
@@ -288,10 +297,19 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
 
   const loadInBrowser = () => {
     setInBrowser('loading')
-    setLoaded('Starting…')
+    setLoaded('starting')
     loadBrowserModel((share, text) => { if (alive.current) setLoaded(`${Math.round(share * 100)}%${/(\d+)MB fetched/.test(text) ? ` · ${/(\d+)MB fetched/.exec(text)![1]} MB` : ''}`) })
-      .then(() => { if (alive.current) setInBrowser('ready') }, () => { if (alive.current) setInBrowser('failed') })
+      .then(() => { if (alive.current) setInBrowser('ready') }, () => { if (alive.current) { setInBrowser('failed'); setFellBack(LOAD_FAILED_LINE); setMode('guided') } })
   }
+  /** The model was chosen: the one on the device if there is one, else the one in the browser, loaded now. */
+  const chooseModel = () => {
+    setFellBack('')
+    if (ollama || inBrowser === 'ready') { setMode('model'); return }
+    if (noGpu.current || !canRunInBrowser()) { setFellBack(NO_GPU_LINE); setMode('guided'); return }
+    setMode('model')
+    if (inBrowser !== 'loading') loadInBrowser()
+  }
+  const chooseGuided = () => { setFellBack(''); setMode('guided') }
 
   const submit = (e: FormEvent) => {
     e.preventDefault()
@@ -363,11 +381,17 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
         )}
         {!ringing && rolePlay && (
           <div className={`family-chat-preview ${talkFreely ? 'is-on' : ''}`}>
-            <button role="switch" aria-checked={talkFreely} onClick={() => setTalkFreely((on) => !on)}>{talkFreely ? 'Talk freely is on' : 'Talk freely (preview)'}</button>
-            {talkFreely && <p role="note">{GUIDE_NOTICE} {model ? `Anything else you type is answered by an AI model on this ${ollama ? 'device' : 'laptop, in the browser'} (${model}) in ${first}'s character.` : 'Anything else you type gets an honest "not yet".'} Health goes to ORBIT's fixed rules.</p>}
-            {talkFreely && !ollama && inBrowser === 'off' && canRunInBrowser() && <><button className="family-chat-load" onClick={loadInBrowser}>{LOAD_LABEL}</button><p role="note" className="family-chat-quiet">{LOAD_NOTE}</p></>}
-            {talkFreely && inBrowser === 'loading' && <p role="status" className="family-chat-quiet">Loading {BROWSER_MODEL.name}: {loaded}</p>}
-            {talkFreely && inBrowser === 'failed' && <p role="alert" className="family-chat-quiet">The model could not be loaded in this browser. The suggestions still work.</p>}
+            <button role="switch" aria-checked={mode !== 'off'} onClick={() => setMode((m) => (m === 'off' ? 'choosing' : 'off'))}>{mode === 'off' ? 'Talk freely (preview)' : mode === 'choosing' ? 'Talk freely: choose how' : mode === 'model' ? 'Talk freely: AI model' : 'Talk freely: guided'}</button>
+            {mode === 'choosing' && (
+              <div className="family-chat-choice" role="group" aria-label="How do you want to talk freely?">
+                <button className="family-chat-load" onClick={chooseModel}>{modelChoice(ollama)}</button>
+                <button className="family-chat-load" onClick={chooseGuided}>{GUIDED_CHOICE}</button>
+                <p className="family-chat-quiet">{CHOICE_NOTE}</p>
+              </div>
+            )}
+            {talkFreely && fellBack && <p role="alert" className="family-chat-quiet">{fellBack}</p>}
+            {talkFreely && <p role="note">{GUIDE_NOTICE} {model ? `Anything else you type is answered by an AI model on this ${ollama ? 'device' : 'laptop, in the browser'} (${model}) in ${first}'s character.` : mode === 'model' ? 'The model is still loading; until then anything else you type gets an honest "not yet".' : 'Anything else you type gets an honest "not yet".'} Health goes to ORBIT's fixed rules. <button className="family-chat-change" onClick={() => setMode('choosing')}>Change</button></p>}
+            {mode === 'model' && inBrowser === 'loading' && <p role="status" className="family-chat-quiet">Downloading {BROWSER_MODEL.name}: {loaded}</p>}
           </div>
         )}
 

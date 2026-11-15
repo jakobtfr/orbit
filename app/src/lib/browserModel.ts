@@ -17,8 +17,18 @@ export const BROWSER_MODEL = {
   downloadGB: 0.9,
 } as const
 
-export const LOAD_LABEL = `Load an AI model in this browser (about ${BROWSER_MODEL.downloadGB} GB)`
-export const LOAD_NOTE = `For this demo only. The open model ${BROWSER_MODEL.name} (${BROWSER_MODEL.licence}) is downloaded once, about ${BROWSER_MODEL.downloadGB} GB, and then runs on this laptop. Nothing you type leaves it. Needs Chrome or Edge on a recent computer.`
+/** The model option, as its button says it. With a model already on the device nothing is downloaded. */
+export function modelChoice(onDevice: string | null): string {
+  return onDevice
+    ? `Use the on-device model (${onDevice}, already installed, nothing is sent anywhere)`
+    : `Load the on-device model (about ${Math.round(BROWSER_MODEL.downloadGB * 1000)} MB, runs in this browser, nothing is sent anywhere)`
+}
+
+export const GUIDED_CHOICE = 'Use the guided conversation (scripted, instant)'
+export const CHOICE_NOTE = `Both are for this demo, and you can change it at any time. The model is the open ${BROWSER_MODEL.name} (${BROWSER_MODEL.licence}); it needs Chrome or Edge on a recent computer.`
+/** Said when the model option cannot be used, before the guided conversation takes over. */
+export const NO_GPU_LINE = 'This browser cannot run the model: it has no WebGPU. The guided conversation is used instead.'
+export const LOAD_FAILED_LINE = 'The model could not be downloaded. The guided conversation is used instead.'
 
 /** True when this browser can run the model: it needs WebGPU. */
 export function canRunInBrowser(nav: object | undefined = typeof navigator === 'undefined' ? undefined : navigator): boolean {

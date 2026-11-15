@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import pkg from '../../package.json'
 import screen from '../screens/FamilyCall.tsx?raw'
-import { BROWSER_MODEL, LOAD_LABEL, LOAD_NOTE, browserChat, canRunInBrowser } from './browserModel'
+import { BROWSER_MODEL, CHOICE_NOTE, GUIDED_CHOICE, LOAD_FAILED_LINE, NO_GPU_LINE, browserChat, canRunInBrowser, modelChoice } from './browserModel'
 
 describe('model in the browser, for the demo on the live site', () => {
   it('uses an open model with a licence that allows government and commercial use', () => {
@@ -9,11 +9,36 @@ describe('model in the browser, for the demo on the live site', () => {
     expect(BROWSER_MODEL.id).toBe('Qwen2.5-1.5B-Instruct-q4f16_1-MLC')
   })
 
-  it('states the download size on the button before anything is downloaded', () => {
-    expect(LOAD_LABEL).toContain(`${BROWSER_MODEL.downloadGB} GB`)
-    expect(LOAD_NOTE).toMatch(/demo only/i)
-    expect(LOAD_NOTE).toMatch(/Nothing you type leaves/)
-    expect(LOAD_NOTE).toContain(BROWSER_MODEL.licence)
+  it('states the real download size on the model button, and that nothing is sent anywhere', () => {
+    expect(modelChoice(null)).toBe('Load the on-device model (about 900 MB, runs in this browser, nothing is sent anywhere)')
+    expect(modelChoice('qwen3:8b')).toMatch(/qwen3:8b, already installed, nothing is sent anywhere/)
+    expect(GUIDED_CHOICE).toBe('Use the guided conversation (scripted, instant)')
+    expect(CHOICE_NOTE).toMatch(/for this demo/)
+    expect(CHOICE_NOTE).toMatch(/change it at any time/)
+    expect(CHOICE_NOTE).toContain(BROWSER_MODEL.licence)
+  })
+
+  it('makes the person choose before talk freely starts: no default path around the choice', () => {
+    expect(screen).toMatch(/useState<Mode>\('off'\)/)
+    // The switch only ever opens the choice or turns talk freely off.
+    expect(screen).toMatch(/setMode\(\(m\) => \(m === 'off' \? 'choosing' : 'off'\)\)/)
+    // Talk freely is on only in one of the two chosen modes.
+    expect(screen).toMatch(/const talkFreely = mode === 'guided' \|\| mode === 'model'/)
+    expect(screen).toMatch(/onClick=\{chooseModel\}/)
+    expect(screen).toMatch(/onClick=\{chooseGuided\}/)
+    expect(screen).toMatch(/setMode\('choosing'\)/)
+  })
+
+  it('falls back to the guided conversation with one honest line when the model cannot run or load', () => {
+    expect(NO_GPU_LINE).toMatch(/no WebGPU/)
+    expect(NO_GPU_LINE).toMatch(/guided conversation is used instead/)
+    expect(LOAD_FAILED_LINE).toMatch(/could not be downloaded/)
+    expect(screen).toMatch(/setFellBack\(NO_GPU_LINE\); setMode\('guided'\)/)
+    expect(screen).toMatch(/setFellBack\(LOAD_FAILED_LINE\); setMode\('guided'\)/)
+  })
+
+  it('uses the model only when the model was chosen, never in the guided conversation', () => {
+    expect(screen).toMatch(/const model = mode === 'model' \?/)
   })
 
   it('is offered only where the browser can run it', () => {
@@ -28,7 +53,6 @@ describe('model in the browser, for the demo on the live site', () => {
 
   it('loads the library only when the button is pressed, never when the page opens', () => {
     expect(screen).not.toMatch(/from '@mlc-ai\/web-llm'/)
-    expect(screen).toMatch(/onClick=\{loadInBrowser\}/)
     expect(screen.match(/loadBrowserModel\(/g) ?? []).toHaveLength(1)
   })
 

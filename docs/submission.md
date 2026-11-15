@@ -12,27 +12,29 @@ ORBIT
 
 ## High-Level Project Summary
 
-ORBIT is health monitoring software for astronauts on long missions, built around one idea: judge each astronaut against their own normal, not Earth's, and let that normal follow the mission. The body changes with gravity: in weightlessness temperature runs about 1 °C higher, and after landing the heart runs fast for days. Earth's medical limits raise alarms for healthy crew again and again. Halfway to Mars, where every question to a doctor takes over 40 minutes to answer, a crew that gets false alarms stops trusting them and then misses the real one.
+ORBIT is health monitoring software for astronauts on long missions, built around one idea: judge each astronaut against their own normal, not Earth's, and let that normal follow the mission. The body changes with gravity: in weightlessness temperature runs about 1 °C higher, and after landing the heart runs fast for days. Earth's medical limits raise alarms for healthy crew again and again. On the way to Mars, where a question to a doctor on Earth and its answer can take up to 48 minutes, a crew that gets false alarms stops trusting them and then misses the real one.
 
 ORBIT learns each astronaut's normal for every phase of the mission (outbound, on Mars, return, back on Earth) from NASA bed-rest data and their own readings, within hard bounds, so a slow real problem is never learned as normal.
 
 We tested the idea on real NASA bed-rest data from 29 healthy volunteers over 2,184 days, with the same rule on both sides. Earth's limits raised an alarm on 13.5% of days; ORBIT on 5.9%, 2.3 times fewer. For fevers and heart-rate rises, fewer alarms did not mean missing more: when we planted known problems into the same data, ORBIT caught 94% of fevers of +1 °C (Earth's limits: 8%) and 93% of heart-rate rises of 20 bpm (Earth: 20%). Earth's limits do better on small blood-pressure rises, and we show that too.
 
-Around this sits a dashboard any crew member can read, step-by-step procedures, and a virtual doctor that runs on the device without contact with Earth.
+Around this sits a dashboard any crew member can read, step-by-step procedures, a virtual doctor that runs on the device without contact with Earth, and an opt-in family call: family members record a message each day, ORBIT plays it as a call in the astronaut's off-duty time, and when a reading is off the call carries one health prompt, word for word from ORBIT's fixed rules. A language model never writes a health sentence, and every AI voice is labelled. Next step, not built: a real-time conversation in the family member's own cloned voice, only with their consent.
 
 ## Link to Project Demo
 
-https://github.com/jakobtfr/orbit/blob/family-call/docs/demo/orbit-demo.pdf
+https://github.com/jakobtfr/orbit/blob/main/docs/demo/orbit-demo.pdf
 
-(Works only after branch `family-call` is pushed. Checked 15 Nov 13:40: not pushed yet. `blob/main` is 404 until PR #1 is merged.)
+(Opens without login, checked 15 Nov 14:08.)
 
 A 7-slide deck (PDF), at most 7 slides as the rules require. Source: [`demo/deck.html`](demo/deck.html), screenshots of the running app in `demo/img/`. Re-export with Chrome: open the HTML and print to PDF, or `chrome --headless --print-to-pdf=orbit-demo.pdf deck.html`.
 
 ## Link to Final Project
 
-Code: https://github.com/jakobtfr/orbit/tree/family-call (works only after `family-call` is pushed)
+Live app, opens in the browser, nothing to install: https://jakobtfr.github.io/orbit/
 
-Live app (add only after it loads; 404 on 15 Nov 13:25 because GitHub Pages is off): https://jakobtfr.github.io/orbit/
+Code: https://github.com/jakobtfr/orbit
+
+(Both open without login, checked 15 Nov 14:08.)
 
 The live app opens on mission day 100 of a Mars mission. The evidence is under Replay (`#/replay`). The virtual doctor uses its built-in answers on the live site; its local language model runs only where Ollama is installed. To run locally: `cd app && npm install && npm run dev`.
 
@@ -107,12 +109,22 @@ Yes. We used Claude (Anthropic), an AI coding assistant, to help write and refac
 - Hollanek and Nowaczyk-Basińska, Griefbots, Deadbots, Postmortem Avatars, Philosophy & Technology 37:63, 2024 (risks of AI copies of loved ones; why ORBIT plays real recordings and labels every AI voice). https://doi.org/10.1007/s13347-024-00744-w
 - Regulation (EU) 2024/1689 (AI Act), Article 50 (people must be told when they talk to an AI system). http://publications.europa.eu/resource/celex/32024R1689
 - Gushin et al., Frontiers in Physiology 12:750414, 2021 (signal delay up to 24 minutes each way; less contact with home brings growing loneliness). https://doi.org/10.3389/fphys.2021.750414
+- Hoffman et al., J Occup Environ Med, 2022 (56% of 3,765 US pilots avoid healthcare; anonymous survey; shown on the slides). https://doi.org/10.1097/JOM.0000000000002519
+- Rosenberg et al., Frontiers in Physiology 13:898841, 2022 (HI-SEAS Mars analog, 18 people: adverse conditions most likely after the halfway point; shown on the slides). https://doi.org/10.3389/fphys.2022.898841
+- NASA OCHMO-TB-016 Behavioral Health (stressor "limited communication with home"; mitigation "private communication with family"). https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-016-behavioral-health.pdf
+- NASA HRP Investigators' Workshop 2025, communication delay panel (crews under Mars-like delay missed hearing voices; recordings were treasured; quoted on the slides). https://ntrs.nasa.gov/api/citations/20250000703/downloads/2025%20HRP%20IWS%20Comm%20Delay.pdf
+- NASA ISS Medical Projects briefing, 2017 (in-flight crew time is the most restricted resource, said about ISS research; quoted on the slides). https://ntrs.nasa.gov/api/citations/20170000487/downloads/20170000487.pdf
+- NASA HRP, Hazard: Distance from Earth (signal delay). https://www.nasa.gov/hrp/hazard-distance-from-earth/
+- Barger et al., full text (sleep figures on the slides). https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436/
 - Billica et al., Perception of the medical risk of spaceflight, Aviat Space Environ Med 67(5), 1996 (serious-event rate).
 
 **Code, fonts, and design**
 
+- Data extracts: [ydtoloza/astronaut-health-dataset](https://github.com/ydtoloza/astronaut-health-dataset), a community project that assembled cleaned tables from NASA's UTMB bed-rest datasets and Inspiration4 (OSD-569, OSD-575). We took only its real NASA data tables (`data/utmb/`, `data/inspiration4/`), dropped its simulated columns and free-text fields, and none of its code. The repository has no licence file; the underlying NASA datasets are CC0-1.0 per DataCite, and we cite NASA's DOIs as the source. Details: `data/README.md`.
 - Anatomical SVG paths adapted from [Kacmisz/react-body-map](https://github.com/Kacmisz/react-body-map), a fork of hashangit/react-body-map, MIT licence. Attribution in `app/src/components/anatomy/NOTICE.md`.
 - [Inter](https://rsms.me/inter/) typeface, SIL Open Font License 1.1.
+- [Geist Mono](https://vercel.com/font) typeface, SIL Open Font License 1.1. Both fonts are bundled through [Fontsource](https://fontsource.org) (`@fontsource-variable/inter`, `@fontsource/geist-mono`); licence texts in `app/public/licenses/`.
+- [three.js](https://threejs.org), [@react-three/fiber](https://github.com/pmndrs/react-three-fiber) and [@react-three/drei](https://github.com/pmndrs/drei), MIT, for the body figure (`app/src/components/bodyShape.ts`).
 - [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) speech model, Apache 2.0, MLX copy [mlx-community/Kokoro-82M-8bit](https://huggingface.co/mlx-community/Kokoro-82M-8bit), run with [mlx-audio](https://github.com/Blaizzy/mlx-audio), MIT. Used to render the family call's voices.
 - [Whisper large-v3-turbo](https://huggingface.co/openai/whisper-large-v3-turbo), MIT. Used only to check that the rendered audio says the written words.
 - [Qwen3 8B](https://huggingface.co/Qwen/Qwen3-8B), Apache 2.0, through [Ollama](https://ollama.com). The optional local language model of the virtual doctor (the app uses whichever model is installed in Ollama). It takes no part in the family call.

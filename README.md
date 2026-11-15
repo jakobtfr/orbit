@@ -32,6 +32,7 @@ The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). 
 - **One next action.** When something is off, ORBIT says what to do next in plain words: repeat the reading, apply a countermeasure, or contact the ground.
 - **How to measure.** Step-by-step instructions for each reading, and a two-minute daily symptom check-in.
 - **Call the doctor.** When a reading is off or a symptom was logged, the dashboard says so and offers an immediate call. The call is a pop-up like a phone call, which can be minimised to the corner: a simulated doctor speaks briefly, listens, goes through procedures with you one step at a time, and guides you through that one problem a step at a time, and can look at what you show the camera. It helps with anything you raise, not a fixed list of conditions. It runs on the device, with a local language model through Ollama when one is installed and built-in answers when not, so it works without contact with Earth.
+- **Family call (opt-in, always labelled AI).** A live call home is not possible at Mars distance: a signal takes about 4 to 24 minutes one way. People on Earth who opted in record a short message each day, and ORBIT plays the newest one as a call in the astronaut's off-duty time, with an "AI call" label for the whole call and "Message from Earth, recorded 47 min ago". The call carries one health prompt: ORBIT's fixed rule, word for word, never a language model's words. A reading said in the call is saved and judged again, urgent words end the call and name the medical lead, and the conversation is stored encrypted on the device, apart from the health record. Open it from the card on the dashboard or under **Family**.
 - **Spaceflight risks in the rules.** All 17 risks named by NASA's Human Research Program are mapped to what ORBIT measures or asks in the check-in. A next action names the risk its finding bears on, and the doctor is told which risks have a finding behind them.
 - **Resources.** Every procedure on board, one step at a time, each step acted out by a small animated astronaut: what is needed today and how to take each reading. It runs on the device, with no contact with Earth.
 - **Replay.** The full bed-rest comparison: pick any of the 29 volunteers and watch both rule sets judge the same days.
@@ -68,11 +69,14 @@ All other values shown for the demo astronaut, Lena Brandt, are scripted. The fu
 
 - A prototype, not a medical device. Status rules are simplified from published values and have not been reviewed by a clinician.
 - No flight hardware is connected. Device feeds are scripted.
+- The family call is untested with crews or families: we do not know yet whether a health prompt inside a call from home helps, or harms trust in the call. Its people and voices are invented for the demo; no real person's voice is copied. Speech recognition uses the browser, which on some browsers sends audio to a server; a flight version needs an on-board model.
 - The virtual doctor is simulated. It repeats what the prototype rules find in your readings; it does not diagnose, and its wording still needs review by a medical professional. Anything that sounds urgent is handed to the medical lead.
 
 ## AI assistance
 
-The team used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests, to search and summarise published sources, and to draft documentation. The team chose the challenge, framed the problem, and made the product decisions. Every figure shown in the app is recomputed from the source data by automated tests. No images, video, or audio were generated with AI.
+The team used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests, to search and summarise published sources, and to draft documentation. The team chose the challenge, framed the problem, and made the product decisions. Every figure shown in the app is recomputed from the source data by automated tests. No images or video were generated with AI.
+
+**AI-generated audio.** All 21 voice files of the family call (`app/public/family/*.m4a`) are AI-generated speech: the demo family members (invented people), the linking voice, and ORBIT's rule sentences. They were rendered on our own machine with the open model [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) (Apache 2.0) by `app/scripts/render_family_voice.py`, using Kokoro's synthetic preset voices, not copies of any person. Each file says so in its metadata, and the app labels every voice on screen. The idea of the family call is the team's own.
 
 ## Repository
 

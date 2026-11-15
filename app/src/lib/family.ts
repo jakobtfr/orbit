@@ -3,7 +3,7 @@ import { age } from './format'
 import { aboutHealth, chatReply } from './familyChat'
 import { GUIDE, chipsFor, guidedReply } from './familyGuide'
 import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
-import { actionFor, attention, judge, now } from './judge'
+import { actionFor, attention, checkedInToday, judge, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
 import type { AppState, IndicatorKey, Person, Reading } from './types'
 
@@ -131,6 +131,33 @@ export function arrived(state: AppState, messages: EarthMessage[], optIn: OptIn)
     .filter((m) => optIn.people[m.from] && m.recorded + delay <= t && t - m.recorded <= 1.5)
     .sort((a, b) => b.recorded - a.recorded)
 }
+
+/**
+ * The family call is the reward for today's check: the day's messages stay locked until today's daily
+ * check-in is saved. Who has sent something is still shown, so there is a reason to do it.
+ */
+export interface FamilyLock {
+  locked: boolean
+  /** The one thing left to do, in a sentence. */
+  todo: string
+  /** Where to do it. */
+  to: string
+}
+
+export function familyLock(state: AppState, person: Person): FamilyLock {
+  return { locked: !checkedInToday(state, person.id), todo: 'Do today\'s check-in to unlock your messages.', to: `/body/${person.id}/check-in` }
+}
+
+/**
+ * The message whose call rings now, if any: today's check is done, both sides opted in, the signal has
+ * arrived, and it is off-duty time. `t` is the time on board, for testing other hours.
+ */
+export function incomingCall(state: AppState, person: Person, optIn: OptIn, t: number = now(state)): EarthMessage | undefined {
+  if (familyLock(state, person).locked || !offDuty(t)) return undefined
+  return arrived(state, messagesToday(), optIn)[0]
+}
+
+function messagesToday(): EarthMessage[] { return MESSAGES }
 
 export function recordedLabel(state: AppState, message: EarthMessage): string {
   return `Message from Earth, recorded ${age(now(state), message.recorded)}`

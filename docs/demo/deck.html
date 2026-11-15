@@ -287,15 +287,15 @@
   <h2>Health check first. <span class="soft">Then the call from home.</span></h2>
   <div class="cols">
     <div class="flow">
-      <div class="fstep"><i>1</i><div><h3>Her mother’s message waits, locked.</h3><img src="img/call-locked.png" alt="Live app: Marta recorded a message for you, locked until today's health check is done"></div></div>
-      <div class="fstep"><i>2</i><div><h3>Lena does today’s check-in.</h3><p>Four short steps: how she feels, any symptoms, two quick ratings.</p></div></div>
-      <div class="fstep"><i>3</i><div><h3>The call unlocks.</h3><img src="img/call-unlocked.png" alt="Live app: incoming AI call from Marta Brandt, unlocked by today's check"></div></div>
-      <p class="src" style="font-size:20px">No check, no call. Crews in NASA’s Mars-delay studies “missed hearing voices”; “recordings were treasured”: <a href="https://ntrs.nasa.gov/api/citations/20250000703/downloads/2025%20HRP%20IWS%20Comm%20Delay.pdf">NASA HRP, 2025</a></p>
+      <div class="fstep"><i>1</i><div><h3>Her shirt flags low blood pressure. The call waits.</h3><img src="img/call-locked.png" alt="Live app: Marta recorded a message for you; the smart shirt recorded blood pressure outside her own limits, 86/54; button Repeat the reading"></div></div>
+      <div class="fstep"><i>2</i><div><h3>Lena repeats the reading.</h3><p>She measures again and saves it: 112/70, back in her range.</p></div></div>
+      <div class="fstep"><i>3</i><div><h3>The call unlocks.</h3><img src="img/call-unlocked.png" alt="Live app: incoming AI call from Marta Brandt, unlocked by your health check"></div></div>
+      <p class="src" style="font-size:20px">Crews in NASA’s Mars-delay studies “missed hearing voices”; “recordings were treasured”: <a href="https://ntrs.nasa.gov/api/citations/20250000703/downloads/2025%20HRP%20IWS%20Comm%20Delay.pdf">NASA HRP, 2025</a></p>
     </div>
     <div>
       <div class="callwrap">
-        <span class="chip"><i>4</i>In the call, ORBIT asks for the reading. She says it, and it is saved.</span>
-        <img src="img/call-orbit.png" alt="Live app call screen: ORBIT speaks a fixed health rule about low blood pressure">
+        <span class="chip"><i>4</i>She hears her mother. Any health words in a call are ORBIT’s fixed rules.</span>
+        <img src="img/call-mother.png" alt="Live app call screen: Marta's message plays, labelled Recorded on Earth, demo AI-generated stand-in voice">
       </div>
       <p class="shotcap4">Real screens from the live app. Try it: <a href="https://jakobtfr.github.io/orbit/">jakobtfr.github.io/orbit</a></p>
     </div>
@@ -318,7 +318,7 @@
     <div><b>Both sides agree first</b>The astronaut and each person at home opt in. Either can stop.</div>
     <div><b>Urgent ends the call</b>Chest pain or trouble breathing: the role-play stops and ORBIT names the medical lead.</div>
     <div><b>Private stays private</b>The talk is kept encrypted on the device, apart from the health record. The medical lead cannot see it.</div>
-    <div><b>Health first</b>No check, no call. The call unlocks only after today’s check-in, a rule agreed before launch.</div>
+    <div><b>Health first</b>No check, no call. A reading outside her limits, or a missed daily check, locks the call until it is done.</div>
   </div>
   <p class="ack"><b>AI in this product:</b> the linking voice, ORBIT’s spoken prompts and the virtual doctor are AI-generated, and every call is labelled AI. In this demo the family is invented, so their messages are also spoken by a generated voice (Kokoro-82M).</p>
   <div class="next">Rules are only as good as the limits behind them. Are ORBIT’s right<span>?</span></div>
@@ -383,14 +383,14 @@
   <div class="three">
     <div class="tile"><span class="label">Built today</span><ul>
       <li><em>Limits that follow each astronaut</em> through every mission phase, tested on NASA data</li>
-      <li><em>The call from home,</em> unlocked by today’s check, with three labelled voices</li>
+      <li><em>The call from home,</em> unlocked only by a health check, with three labelled voices</li>
       <li><em>Runs on the device.</em> No contact with Earth needed, no new hardware</li>
     </ul></div>
     <div class="tile"><span class="label">Next</span><ul>
       <li><em>A personal model on the ship</em> that learns which changes matter for her. Not built: no labelled data yet</li>
       <li><em>Her family’s own voice,</em> with their consent, for a freer talk</li>
-      <li><em>The smart shirt</em> starts a check when a reading drifts</li>
-      <li><em>Video,</em> flight data, and a clinician’s review</li>
+            <li><em>Video,</em> once an open-source face model is good enough</li>
+      <li><em>Flight data</em> and a clinician’s review</li>
     </ul></div>
     <div class="tile"><span class="label">Honest limits</span><ul>
       <li>Prototype, not a medical device</li>

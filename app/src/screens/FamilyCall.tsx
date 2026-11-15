@@ -12,7 +12,7 @@ import type { IndicatorKey } from '../lib/types'
 import { doctorVoice, rankVoices } from '../lib/voices'
 import '../doctor.css'
 import '../family.css'
-import '../familyPreview.css'
+import '../family-chat.css'
 
 type Phase = 'ringing' | 'playing' | 'listening' | 'idle'
 
@@ -305,7 +305,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
         </div>
 
         {!ringing && rolePlay && (
-          <div className={`family-preview ${talkFreely ? 'is-on' : ''}`}>
+          <div className={`family-chat-preview ${talkFreely ? 'is-on' : ''}`}>
             <button role="switch" aria-checked={talkFreely} onClick={() => setTalkFreely((on) => !on)}>{talkFreely ? 'Talk freely is on' : 'Talk freely (preview)'}</button>
             {talkFreely && <p role="note">{PREVIEW_NOTICE} Health still goes to ORBIT.</p>}
           </div>

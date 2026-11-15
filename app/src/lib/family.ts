@@ -1,6 +1,7 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
 import { aboutHealth, chatReply } from './familyChat'
+import { GUIDE, chipsFor, guidedReply } from './familyGuide'
 import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
 import { actionFor, attention, judge, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
@@ -207,6 +208,8 @@ export interface Turn {
   settled?: boolean
   /** Everyday talk in the preview: a language model on the device may write the reply; the segment holds the preset line for when there is none. */
   forModel?: boolean
+  /** Things to say next, offered after a reply of the guided conversation. */
+  next?: string[]
   /** The recorded part that was played. */
   topic?: Topic
 }
@@ -278,6 +281,9 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
   // Only now, after urgent words, readings, symptoms and the reading ORBIT still wants, may a scripted line answer.
   // In the preview, anything about health goes to ORBIT's fixed rules, so that no model and no preset answers it.
   if (ctx.talkFreely && aboutHealth(said)) return { kind: 'symptom', segments: [{ kind: 'health', label: 'ORBIT', text: reply(state, person, said).text }] }
+  // A suggestion of the guided conversation, tapped, typed or said, gets its written reply in the person's rendered voice.
+  const guided = ctx.talkFreely ? guidedReply(said, ctx.member) : undefined
+  if (guided) return { kind: 'preview', next: chipsFor(ctx.member, guided.next), segments: [{ kind: 'preview', label: 'Scripted preview', text: guided.text, audio: guided.audio }] }
   if (ctx.talkFreely) return { kind: 'preview', forModel: true, segments: [{ kind: 'preview', label: 'Scripted preview', text: chatReply(said, ctx.member, ctx.said ?? []).text }] }
   const part = pickPart(said, ctx.message, ctx.played)
   if (part) return { kind: 'recorded', topic: part.topic, segments: [{ kind: 'recorded', label: 'Recorded on Earth', text: part.text, audio: part.audio, standIn: part.standIn }] }
@@ -305,6 +311,7 @@ export interface VoiceLine { file: string; voice: string; text: string; say: str
 export function voiceLines(state: AppState, person: Person): VoiceLine[] {
   const out: VoiceLine[] = []
   for (const m of MESSAGES) for (const p of m.parts) if (p.audio) out.push({ file: p.audio, voice: m.from, text: p.text, say: speakable(p.text) })
+  for (const f of FAMILY) for (const n of GUIDE[f.id] ?? []) out.push({ file: `family/${f.id}-talk-${n.id}.m4a`, voice: f.id, text: n.reply, say: speakable(n.reply) })
   const fixed: [string, string][] = [['ai', LINK.handOver], ['ai', LINK.ask], ['ai', NUDGE], ...FAMILY.map((f): [string, string] => ['ai', noMore(state, f)])]
   const f = finding(state, person)
   if (f) {

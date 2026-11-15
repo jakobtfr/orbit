@@ -3,8 +3,9 @@ import { Mark } from '../components/Shell'
 import { useCall } from '../lib/call'
 import { speakable } from '../lib/doctor'
 import { MESSAGES, arrived, callScript, familyTurn, memberOf, recordedLabel, signalDelayMin, type Segment, type Topic } from '../lib/family'
-import { MODEL_NOTICE, PREVIEW_NOTICE, chatBriefing, checkModelReply } from '../lib/familyChat'
+import { chatBriefing, checkModelReply } from '../lib/familyChat'
 import { chat, findModel, warm, type ChatMessage } from '../lib/localModel'
+import { GUIDE_NOTICE, startChips } from '../lib/familyGuide'
 import { privateLines } from '../lib/familyPrivate'
 import { useFamily } from '../lib/familyStore'
 import { INDICATORS, formatValue } from '../lib/indicators'
@@ -67,6 +68,8 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   const [model, setModel] = useState<string | null>(null)
   /** The preview's talk so far, for the model: what was said and what it answered. */
   const talk = useRef<ChatMessage[]>([])
+  /** What the guided conversation offers to say next; before the first reply, everything this person can answer. */
+  const [offered, setOffered] = useState<string[] | null>(null)
   /** Scripted lines already said in this call. */
   const [scripted, setScripted] = useState<string[]>([])
   /** Senders whose message has been opened in this call. */
@@ -217,6 +220,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
       if (turn.settled) setFocus(undefined)
     }
     if (turn.topic) setPlayed((p) => [...p, turn.topic!])
+    if (turn.next) setOffered(turn.next)
     if (turn.kind === 'preview' && turn.forModel && model) {
       // Everyday talk, and a model is running: it writes the reply, and the reply is checked before it is shown or spoken.
       const mine = ++run.current
@@ -259,6 +263,8 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     if (!m) return
     const who = memberOf(m)
     setCurrent(id)
+    setOffered(null)
+    talk.current = []
     setPlayed([m.parts[0].topic])
     setHeardFrom((h) => [...h, who.id])
     setYou('')
@@ -295,11 +301,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   const left = message.parts.filter((p) => !played.includes(p.topic))
   const chips = ringing || !rolePlay || phase === 'playing' || phase === 'thinking' ? [] : talkFreely ? [
     ...(focus ? [{ label: 'Demo: say 112 over 70', say: 'It is 112 over 70 now' }] : []),
-    { label: 'How are you?', say: 'How are you?' },
-    { label: 'I miss you', say: 'I miss you' },
-    { label: 'Tell me about the dog', say: 'Tell me about the dog' },
-    { label: 'How is the weather?', say: 'How is the weather at home?' },
-    ...(model ? [{ label: 'What did you have for breakfast?', say: 'What did you have for breakfast?' }] : []),
+    ...(offered ?? startChips(member)).map((say) => ({ label: say, say })),
   ] : [
     ...(focus ? [{ label: 'Demo: say 112 over 70', say: 'It is 112 over 70 now' }, { label: 'I am fine', say: 'I am fine' }] : []),
     ...(left.some((p) => p.topic === 'day') ? [{ label: 'How was your day?', say: 'How was your day?' }] : []),
@@ -334,18 +336,18 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
               </>}
         </div>
 
-        {!ringing && rolePlay && (
-          <div className={`family-chat-preview ${talkFreely ? 'is-on' : ''}`}>
-            <button role="switch" aria-checked={talkFreely} onClick={() => setTalkFreely((on) => !on)}>{talkFreely ? 'Talk freely is on' : 'Talk freely (preview)'}</button>
-            {talkFreely && <p role="note">{model ? MODEL_NOTICE(first, model) : `${PREVIEW_NOTICE} Health still goes to ORBIT. No language model is running on this device.`}</p>}
-          </div>
-        )}
-
         {!!chips.length && (
           <div className="doctor-choices" role="group" aria-label="Answers you can tap">
             {chips.map((c) => <button key={c.label} onClick={() => send(c.say)}>{c.label}</button>)}
           </div>
         )}
+        {!ringing && rolePlay && (
+          <div className={`family-chat-preview ${talkFreely ? 'is-on' : ''}`}>
+            <button role="switch" aria-checked={talkFreely} onClick={() => setTalkFreely((on) => !on)}>{talkFreely ? 'Talk freely is on' : 'Talk freely (preview)'}</button>
+            {talkFreely && <p role="note">{GUIDE_NOTICE} {model ? `Anything else you type is answered by an AI model on this device (${model}) in ${first}'s character.` : 'Anything else you type gets an honest "not yet".'} Health goes to ORBIT's fixed rules.</p>}
+          </div>
+        )}
+
         {!ringing && rolePlay && phase !== 'playing' && !!others.length && (
           <div className="doctor-choices family-next" role="group" aria-label="More messages from Earth">
             {others.map((m) => <button key={m.id} onClick={() => next(m.id)}>Next message: {memberOf(m).name.split(' ')[0]}</button>)}

@@ -191,7 +191,7 @@ export const DEFLECT = [
 ]
 
 /** Said, without a model, to anything no topic covers. One honest line beats an unrelated preset. */
-export const UNKNOWN = 'This preview cannot answer that yet. Without a language model it only knows a few everyday topics: home, the family, the dog, the garden, the weather.'
+export const UNKNOWN = 'I cannot answer that yet. This demo only covers a few topics, so try one of the suggestions on screen.'
 
 /** Questions for an assistant, not for someone from home. */
 const KNOWLEDGE = /\b(perimeter|circumference|calculate|compute|solve|equation|formula|square root|multipl|divide|times \w+|plus|minus|maths?|physics|chemistry|code|coding|program|python|javascript|translate|define|definition|capital of|president|prime minister|explain|how does (a|an|the)|how do (i|you) (make|build|write|fix|install)|what is the (meaning|difference|distance|speed|size|population)|who (is|was|invented|discovered)|write (me )?(a|an|some))\b/

@@ -121,6 +121,7 @@ describe('talk freely without a model', () => {
       expect(r.text).toBe(UNKNOWN)
     }
     expect(UNKNOWN).toMatch(/cannot answer that yet/)
+    expect(UNKNOWN).toMatch(/only covers a few topics/)
   })
 })
 

@@ -4,7 +4,7 @@
 "In the family call, an optional on-device language model may answer everyday small talk in the family member's character, labelled "AI model"; health talk never reaches it, and code checks every reply before it is shown."
 If it is not pushed, send as is. Every other sentence is true either way.
 
-Names confirmed by Mohit, 15 Nov 13:50. Links checked without login at 13:48. Due 15:00.
+Names confirmed by Mohit, 15 Nov 13:50. Links checked without login at 14:08: live app, repository and PDF on `main` all 200. Due 15:00.
 
 **To:** harasgarzondiaz@gmail.com
 **Subject:** ORBIT (Team TUM): an astronaut's own normal, proven on NASA data, and a health check inside a call from home
@@ -18,8 +18,9 @@ Here is Team TUM's submission for NASA Space Apps Heilbronn 2026.
 **Team:** Team TUM (Jakob Friedrich, Lukas Fuchs, Mohit Nandanwar, Patryk Ostern)
 **Project:** ORBIT
 **Challenge:** Create Health Monitoring Software for Astronauts on Space Missions
-**Code (GitHub):** https://github.com/jakobtfr/orbit/tree/family-call
-**Demo (7 slides):** https://github.com/jakobtfr/orbit/blob/family-call/docs/demo/orbit-demo.pdf
+**Live app (opens in the browser, nothing to install):** https://jakobtfr.github.io/orbit/
+**Code (GitHub):** https://github.com/jakobtfr/orbit
+**Demo (7 slides):** https://github.com/jakobtfr/orbit/blob/main/docs/demo/orbit-demo.pdf
 
 **The problem, in one scene**
 
@@ -43,7 +44,7 @@ We replayed NASA's UTMB head-down bed-rest study (29 volunteers, 2,184 days of d
 - **More real problems caught, not fewer.** We planted known problems into the real readings. Fever of +1 °C: ORBIT caught 94%, Earth's limits 8%. Heart rate +20 bpm: 93% against 20%.
 - **We show where we lose.** On small blood-pressure rises Earth's limits do better (50% against 26%). The app and our documents show it.
 
-Automated tests reproduce every number. A separate Python script, written apart from the app code, rechecks all 65 planted-problem results and matches. In the app, the Replay screen lets anyone watch both rule sets judge the same NASA days, volunteer by volunteer.
+Automated tests reproduce every number. A separate Python script, written apart from the app code, rechecks all 65 planted-problem results and matches. In the live app, the Replay screen lets anyone watch both rule sets judge the same NASA days, volunteer by volunteer.
 
 **What is built, and what the demo changes**
 

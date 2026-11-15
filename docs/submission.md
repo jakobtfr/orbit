@@ -22,15 +22,17 @@ Around this sits a dashboard any crew member can read, step-by-step procedures, 
 
 ## Link to Project Demo
 
-https://github.com/jakobtfr/orbit/blob/main/docs/demo/orbit-demo.pdf
+https://github.com/jakobtfr/orbit/blob/phase-limits/docs/demo/orbit-demo.pdf
+
+(Checked 15 Nov 13:25: the `blob/main` link is 404 until PR #1 is merged; the `phase-limits` link opens without login.)
 
 A 7-slide deck (PDF), at most 7 slides as the rules require. Source: [`demo/deck.html`](demo/deck.html), screenshots of the running app in `demo/img/`. Re-export with Chrome: open the HTML and print to PDF, or `chrome --headless --print-to-pdf=orbit-demo.pdf deck.html`.
 
 ## Link to Final Project
 
-Live app, no install or login: https://jakobtfr.github.io/orbit/
+Code: https://github.com/jakobtfr/orbit/tree/phase-limits
 
-Code: https://github.com/jakobtfr/orbit
+Live app (add only after it loads; 404 on 15 Nov 13:25 because GitHub Pages is off): https://jakobtfr.github.io/orbit/
 
 The live app opens on mission day 100 of a Mars mission. The evidence is under Replay (`#/replay`). The virtual doctor uses its built-in answers on the live site; its local language model runs only where Ollama is installed. To run locally: `cd app && npm install && npm run dev`.
 

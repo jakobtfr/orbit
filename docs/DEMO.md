@@ -10,7 +10,7 @@ ORBIT is a prototype. This page says plainly which parts of the demo run for rea
 | The health prompt inside the family call | ORBIT's fixed rule is read out word for word. No language model writes it | Tests compare each health sentence with the rule's own text |
 | A reading said or typed in the call | Saved to the health record and judged again; "I am fine" is not accepted as a reading | Tests, and clicked through in the running app |
 | Symptoms and urgent words | A symptom gets ORBIT's fixed answer. Urgent words end the call and name the medical lead | Tests, and clicked through in the running app |
-| The call as the reward for today's check | The day's family messages stay locked until today's daily check-in is saved; then they unlock and the call rings. Who has sent something is shown while locked | Tests, and clicked through in the running app |
+| The call as the reward for the health check | Family messages stay locked while a health check is pending, and the page says why. A check is pending when a worn sensor records a reading outside the astronaut's own limits (a repeat reading by hand is then mandatory), or when nothing was checked that day. In the demo the smart shirt recorded 86/54, so the repeat blood-pressure reading unlocks the call | Tests for both triggers, and clicked through in the running app |
 | Opt-in of both sides | No message is shown unless the astronaut and the sender are both opted in, and not before the signal can have arrived | Tests |
 | Private conversation | Stored on the device with AES-GCM encryption and a key the browser will not export, apart from the health record. Readings, symptoms and urgent words are never stored in it | Tests, and checked in the browser's storage |
 

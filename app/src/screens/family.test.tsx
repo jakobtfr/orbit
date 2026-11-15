@@ -71,10 +71,9 @@ describe('Family call', () => {
 })
 
 describe('Dashboard', () => {
-  it('does not ring while today\'s check is still to do: the call is the reward for it', () => {
-    const html = page('/body/lena')
-    expect(html).not.toContain('family-incoming')
-    expect(text(html)).toContain('Daily check-in')
+  it('does not ring while a health check is pending: the call is the reward for it', () => {
+    expect(page('/body/lena')).not.toContain('family-incoming')
+    expect(page('/family')).not.toContain('family-incoming')
   })
 })
 
@@ -91,8 +90,9 @@ describe('Family screen while locked', () => {
   })
 
   it('says in one line what unlocks them, with a button straight to the check', () => {
-    expect(t).toContain('The family call is the reward for today\'s health check.')
-    expect(t).toContain('Do today\'s check-in to unlock your messages.')
-    expect(html).toContain('href="/body/lena/check-in"')
+    expect(t).toContain('The family call is the reward for your health check.')
+    expect(t).toMatch(/Your .+ recorded blood pressure outside your own limits \(86\/54 mmHg\)\./)
+    expect(t).toContain('Repeat the reading to unlock your messages.')
+    expect(html).toContain('href="/body/lena/measure/bp"')
   })
 })

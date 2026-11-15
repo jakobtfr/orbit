@@ -3,7 +3,8 @@ import { age } from './format'
 import { HONEST, aboutHealth, asksReal, chatReply } from './familyChat'
 import { GUIDE, chipsFor, guidedReply } from './familyGuide'
 import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
-import { actionFor, attention, checkedInToday, judge, now } from './judge'
+import { INDICATORS, formatValue } from './indicators'
+import { actionFor, attention, judge, lastCheckIn, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
 import type { AppState, IndicatorKey, Person, Reading } from './types'
 
@@ -133,19 +134,77 @@ export function arrived(state: AppState, messages: EarthMessage[], optIn: OptIn)
 }
 
 /**
- * The family call is the reward for today's check: the day's messages stay locked until today's daily
- * check-in is saved. Who has sent something is still shown, so there is a reason to do it.
+ * The family call is the reward for the health check: the day's messages stay locked while a check is
+ * pending. Who has sent something is still shown, so there is a reason to do it. A check becomes pending
+ * in two ways.
+ *  - Triggered: a worn sensor records a reading outside the astronaut's own limits. A repeat reading,
+ *    taken by hand, is then mandatory, at once.
+ *  - Routine: nothing was checked for ROUTINE_CHECK_EVERY_DAYS. A check-in or a reading taken by hand counts.
  */
+
+/** How often the routine check is due, in days. ORBIT's two-in-a-row rule needs a reading every day. */
+export const ROUTINE_CHECK_EVERY_DAYS = 1
+
+/** What the worn sensors measure without the astronaut doing anything. */
+const WORN: IndicatorKey[] = ['bp', 'hr', 'spo2', 'rr', 'temp']
+
+export interface PendingCheck {
+  kind: 'triggered' | 'routine'
+  /** The reading to repeat, for a triggered check. */
+  key?: IndicatorKey
+  /** Why it is pending, in one sentence. */
+  why: string
+  /** What to do, in one sentence. */
+  todo: string
+  /** Where to do it, and what the button there says. */
+  to: string
+  button: string
+}
+
+/** A reading the astronaut took: entered by hand or said aloud, not sent by a sensor. */
+const byHand = (key: IndicatorKey, r: Reading) => r.source !== INDICATORS[key].source
+
+/** The health checks that are pending now, the triggered ones first. Empty when calls may come through. */
+export function pendingChecks(state: AppState, person: Person): PendingCheck[] {
+  const t = now(state)
+  const out: PendingCheck[] = []
+  for (const key of WORN) {
+    const j = judge(state, person, key)
+    if (!j.latest || j.status === 'ok' || j.status === 'stale' || j.status === 'unavailable' || byHand(key, j.latest)) continue
+    const def = INDICATORS[key]
+    const unit = def.unit.startsWith('%') ? def.unit : ` ${def.unit}`
+    out.push({
+      kind: 'triggered',
+      key,
+      why: `Your ${def.source.toLowerCase()} recorded ${def.name.toLowerCase()} outside your own limits (${formatValue(key, j.latest)}${unit}).`,
+      todo: 'Repeat the reading to unlock your messages.',
+      to: `/body/${person.id}/measure/${key}`,
+      button: 'Repeat the reading',
+    })
+  }
+  const mine = state.readings[person.id] ?? {}
+  const hand = (Object.keys(mine) as IndicatorKey[]).flatMap((key) => (mine[key] ?? []).filter((r) => r.t <= t && byHand(key, r)).map((r) => r.t))
+  const last = Math.max(lastCheckIn(state, person.id)?.t ?? -Infinity, ...hand)
+  if (Math.floor(t) - Math.floor(last) >= ROUTINE_CHECK_EVERY_DAYS) {
+    out.push({ kind: 'routine', why: 'Today\'s health check is still to do.', todo: 'Do today\'s check-in to unlock your messages.', to: `/body/${person.id}/check-in`, button: 'Do today\'s check-in' })
+  }
+  return out
+}
+
 export interface FamilyLock {
   locked: boolean
-  /** The one thing left to do, in a sentence. */
+  pending: PendingCheck[]
+  /** The first pending check: why, what to do, and where. Empty strings when nothing is pending. */
+  why: string
   todo: string
-  /** Where to do it. */
   to: string
+  button: string
 }
 
 export function familyLock(state: AppState, person: Person): FamilyLock {
-  return { locked: !checkedInToday(state, person.id), todo: 'Do today\'s check-in to unlock your messages.', to: `/body/${person.id}/check-in` }
+  const pending = pendingChecks(state, person)
+  const first = pending[0]
+  return { locked: pending.length > 0, pending, why: first?.why ?? '', todo: first?.todo ?? '', to: first?.to ?? '', button: first?.button ?? '' }
 }
 
 /**

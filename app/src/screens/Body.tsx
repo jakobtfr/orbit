@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { BodyFigure } from '../components/BodyFigure'
 import { HealthPrompt } from '../components/HealthPrompt'
 import { FamilyTeaser } from '../components/FamilyTeaser'
-import { IncomingFamilyCall } from '../components/IncomingFamilyCall'
 import { ActivityPanel } from '../components/dashboard/ActivityPanel'
 import { ScientificPlot } from '../components/dashboard/ScientificPlot'
 import { MUSCLE_GROUPS, muscleStatus, type MuscleKey } from '../lib/anatomy'
@@ -24,7 +23,6 @@ export function Body() {
   const muscleStatuses = Object.fromEntries((Object.keys(MUSCLE_GROUPS) as MuscleKey[]).map((k) => [k, muscleStatus(state, person, k)])) as Record<MuscleKey, ReturnType<typeof muscleStatus>>
   return <div className="screen dashboard-screen">
     <HealthPrompt />
-    <IncomingFamilyCall />
     <FamilyTeaser />
     <div className="dashboard-grid">
       <section className="dashboard-column body-column" aria-label="Interactive body map">

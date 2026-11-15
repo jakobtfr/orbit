@@ -59,7 +59,7 @@ export function Family() {
         <li><b>ORBIT.</b> Health prompts are ORBIT's fixed rules, word for word, in AI-generated speech. A language model never writes them.</li>
         <li><b>A reading counts, not "I am fine".</b> A reading you say in a call is saved to your health record and judged again.</li>
         <li><b>Urgent words end the call.</b> Chest pain, trouble breathing and the like go straight to the medical lead.</li>
-        <li><b>Demo.</b> The people and their messages here are invented.</li>
+        <li><b>Demo.</b> The people and their messages here are invented. Their voices are AI-generated stand-ins for real recordings, made with the open model Kokoro-82M, and each audio file says so in its metadata.</li>
       </ul>
     </section>
 

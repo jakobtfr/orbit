@@ -1,0 +1,128 @@
+[
+ {
+  "file": "family/marta-100-hello.m4a",
+  "voice": "marta",
+  "text": "Good morning, Lena. It is me. I am sitting in the kitchen with your coffee cup, the blue one. I use it now, I hope that is all right.",
+  "say": "Good morning, Lena. It is me. I am sitting in the kitchen with your coffee cup, the blue one. I use it now, I hope that is all right."
+ },
+ {
+  "file": "family/marta-100-day.m4a",
+  "voice": "marta",
+  "text": "Yesterday I picked the last apples from the tree behind the house. Your father says there are too many, and then he eats four.",
+  "say": "Yesterday I picked the last apples from the tree behind the house. Your father says there are too many, and then he eats four."
+ },
+ {
+  "file": "family/marta-100-story.m4a",
+  "voice": "marta",
+  "text": "Do you remember the night we slept in the garden to count shooting stars? You counted eleven. I think about that when I look up now.",
+  "say": "Do you remember the night we slept in the garden to count shooting stars? You counted eleven. I think about that when I look up now."
+ },
+ {
+  "file": "family/marta-100-care.m4a",
+  "voice": "marta",
+  "text": "Look after yourself up there. Do the small things, even the boring ones. I want you back just as you left.",
+  "say": "Look after yourself up there. Do the small things, even the boring ones. I want you back just as you left."
+ },
+ {
+  "file": "family/marta-100-bye.m4a",
+  "voice": "marta",
+  "text": "I will record again tomorrow morning. I love you. Goodbye for now.",
+  "say": "I will record again tomorrow morning. I love you. Goodbye for now."
+ },
+ {
+  "file": "family/jonas-100-hello.m4a",
+  "voice": "jonas",
+  "text": "Hey Lena, Jonas here. The kids drew your ship again. This time it has six windows and a dog.",
+  "say": "Hey Lena, Jonas here. The kids drew your ship again. This time it has six windows and a dog."
+ },
+ {
+  "file": "family/jonas-100-day.m4a",
+  "voice": "jonas",
+  "text": "I finally fixed your old bike. It is waiting in the garage for when you are back.",
+  "say": "I finally fixed your old bike. It is waiting in the garage for when you are back."
+ },
+ {
+  "file": "family/jonas-100-bye.m4a",
+  "voice": "jonas",
+  "text": "Talk tomorrow. Well, you know what I mean. Bye.",
+  "say": "Talk tomorrow. Well, you know what I mean. Bye."
+ },
+ {
+  "file": "family/priya-100-hello.m4a",
+  "voice": "priya",
+  "text": "Lena, it is Priya. The whole simulator team watched your docking replay at lunch. Nobody touched their food.",
+  "say": "Lena, it is Priya. The whole simulator team watched your docking replay at lunch. Nobody touched their food."
+ },
+ {
+  "file": "family/priya-100-story.m4a",
+  "voice": "priya",
+  "text": "Your desk plant is alive. I am as surprised as you are.",
+  "say": "Your desk plant is alive. I am as surprised as you are."
+ },
+ {
+  "file": "family/priya-100-bye.m4a",
+  "voice": "priya",
+  "text": "More tomorrow. Fly safe.",
+  "say": "More tomorrow. Fly safe."
+ },
+ {
+  "file": "family/ai-01.m4a",
+  "voice": "ai",
+  "text": "One thing before the next message. ORBIT asked to say this to you in its own words.",
+  "say": "One thing before the next message. Orbit asked to say this to you in its own words."
+ },
+ {
+  "file": "family/ai-02.m4a",
+  "voice": "ai",
+  "text": "When you have taken it, tell me the numbers. Then we go on.",
+  "say": "When you have taken it, tell me the numbers. Then we go on."
+ },
+ {
+  "file": "family/ai-03.m4a",
+  "voice": "ai",
+  "text": "Good to hear. ORBIT goes by the reading, not by how you feel, so it asks again.",
+  "say": "Good to hear. Orbit goes by the reading, not by how you feel, so it asks again."
+ },
+ {
+  "file": "family/ai-04.m4a",
+  "voice": "ai",
+  "text": "I only have what was recorded today. Say anything you like: it goes to Earth as your reply.",
+  "say": "I only have what was recorded today. Say anything you like: it goes to Earth as your reply."
+ },
+ {
+  "file": "family/ai-05.m4a",
+  "voice": "ai",
+  "text": "That is all Marta recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.",
+  "say": "That is all Marta recorded today. What you just said is saved as your reply and reaches Earth in about 5 minutes."
+ },
+ {
+  "file": "family/ai-06.m4a",
+  "voice": "ai",
+  "text": "That is all Jonas recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.",
+  "say": "That is all Jonas recorded today. What you just said is saved as your reply and reaches Earth in about 5 minutes."
+ },
+ {
+  "file": "family/ai-07.m4a",
+  "voice": "ai",
+  "text": "That is all Priya recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.",
+  "say": "That is all Priya recorded today. What you just said is saved as your reply and reaches Earth in about 5 minutes."
+ },
+ {
+  "file": "family/orbit-08.m4a",
+  "voice": "orbit",
+  "text": "Blood pressure has been well below your normal in this phase (Outbound to Mars: about 112/67) on two readings in a row.",
+  "say": "Blood pressure has been well below your normal in this phase (Outbound to Mars: about 112 over 67) on two readings in a row."
+ },
+ {
+  "file": "family/orbit-09.m4a",
+  "voice": "orbit",
+  "text": "Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today.",
+  "say": "Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today."
+ },
+ {
+  "file": "family/orbit-10.m4a",
+  "voice": "orbit",
+  "text": "Thank you. 112/70 mmHg is back in your usual range. Take it easy for an hour and check again this evening.",
+  "say": "Thank you. 112 over 70 millimetres of mercury is back in your usual range. Take it easy for an hour and check again this evening."
+ }
+]

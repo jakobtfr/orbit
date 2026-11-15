@@ -1,6 +1,6 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
-import { afterReading, heardReading, isUrgent, reply } from './doctor'
+import { afterReading, heardReading, isUrgent, reply, speakable } from './doctor'
 import { actionFor, attention, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
 import type { AppState, IndicatorKey, Person, Reading } from './types'
@@ -27,7 +27,13 @@ export interface FamilyMember {
 export type Topic = 'hello' | 'day' | 'story' | 'care' | 'bye'
 
 /** One recorded piece of a message. The call plays these; it never rewrites them. */
-export interface Part { topic: Topic; text: string; audio?: string }
+export interface Part {
+  topic: Topic
+  text: string
+  audio?: string
+  /** True when the audio is not the person's recording but AI-generated speech standing in for it, as in the demo. */
+  standIn?: boolean
+}
 
 export interface EarthMessage {
   id: string
@@ -48,8 +54,11 @@ export const FAMILY: FamilyMember[] = [
 
 const at = (day: number, hour: number, minute = 0) => day + (hour * 60 + minute) / 1440
 
-/** Demo messages for the day the app opens on (mission day 100, 08:15 on board). */
-export const MESSAGES: EarthMessage[] = [
+/**
+ * Demo messages for the day the app opens on (mission day 100, 08:15 on board). The people are invented,
+ * so their audio is AI-generated speech standing in for a recording, and the call says so.
+ */
+const DEMO: EarthMessage[] = [
   {
     id: 'marta-100', from: 'marta', recorded: at(100, 7, 28),
     parts: [
@@ -78,9 +87,14 @@ export const MESSAGES: EarthMessage[] = [
   },
 ]
 
+export const MESSAGES: EarthMessage[] = DEMO.map((m) => ({ ...m, parts: m.parts.map((p) => ({ ...p, standIn: true })) }))
+
 /* ---------- when a message can be heard ---------- */
 
-/** NASA gives about 4 minutes one way at Mars' closest approach and about 24 at its farthest. */
+/**
+ * NASA gives about 4 minutes one way at Mars' closest approach and around 24 at its farthest
+ * ("Space Communications: 7 Things You Need to Know", nasa.gov, 2020). Other NASA papers give 20 to 22 as the most.
+ */
 export const DELAY_MIN = 4
 export const DELAY_MAX = 24
 const SYNODIC_DAYS = 780
@@ -140,6 +154,8 @@ export interface Segment {
   label: SegmentLabel
   text: string
   audio?: string
+  /** A recorded part whose audio is an AI-generated stand-in. */
+  standIn?: boolean
   /** The reading a health sentence is about. */
   key?: IndicatorKey
 }
@@ -167,7 +183,7 @@ export const LINK = {
 /** The call as it opens: the person's greeting as recorded, then the one thing ORBIT wants said. */
 export function callScript(state: AppState, person: Person, message: EarthMessage): Segment[] {
   const hello = message.parts[0]
-  const out: Segment[] = [{ kind: 'recorded', label: 'Recorded on Earth', text: hello.text, audio: hello.audio }]
+  const out: Segment[] = [{ kind: 'recorded', label: 'Recorded on Earth', text: hello.text, audio: hello.audio, standIn: hello.standIn }]
   const f = finding(state, person)
   if (!f) return out
   out.push({ kind: 'link', label: 'AI voice', text: LINK.handOver })
@@ -242,15 +258,17 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
     return {
       kind: 'nudge',
       segments: [
-        { kind: 'link', label: 'AI voice', text: 'Good to hear. ORBIT goes by the reading, not by how you feel, so it asks again.' },
+        { kind: 'link', label: 'AI voice', text: NUDGE },
         { kind: 'health', label: 'ORBIT', text: f.action.next, key: f.item.key },
       ],
     }
   }
   const part = pickPart(said, ctx.message, ctx.played)
-  if (part) return { kind: 'recorded', topic: part.topic, segments: [{ kind: 'recorded', label: 'Recorded on Earth', text: part.text, audio: part.audio }] }
+  if (part) return { kind: 'recorded', topic: part.topic, segments: [{ kind: 'recorded', label: 'Recorded on Earth', text: part.text, audio: part.audio, standIn: part.standIn }] }
   return { kind: 'smalltalk', segments: [{ kind: 'link', label: 'AI voice', text: noMore(state, ctx.member) }] }
 }
+
+export const NUDGE = 'Good to hear. ORBIT goes by the reading, not by how you feel, so it asks again.'
 
 /** Said when every recorded part has been played. */
 export function noMore(state: AppState, member: FamilyMember): string {
@@ -284,4 +302,30 @@ export function personaBriefing(member: FamilyMember, person: Person, message: E
     'You never speak about health, the body, readings, medicine, rest, or sleep, and you never give advice. ORBIT says those parts itself. If they bring up health, say only that ORBIT will answer that.',
     `If something sounds serious, say only: tell ${medicalLead()} now.`,
   ].join('\n\n')
+}
+
+/* ---------- speech rendered ahead of time ---------- */
+
+/** One line of speech to render to a file: who speaks, the words shown, and the words as a voice should read them. */
+export interface VoiceLine { file: string; voice: string; text: string; say: string }
+
+/**
+ * Every line of the demo call that can be rendered ahead of time: the demo messages, the fixed linking
+ * words, and ORBIT's rule sentences for the demo day. scripts/render_family_voice.py turns this list
+ * into audio, and a test keeps the list equal to what the rules say today.
+ */
+export function voiceLines(state: AppState, person: Person): VoiceLine[] {
+  const out: VoiceLine[] = []
+  for (const m of MESSAGES) for (const p of m.parts) if (p.audio) out.push({ file: p.audio, voice: m.from, text: p.text, say: speakable(p.text) })
+  const fixed: [string, string][] = [['ai', LINK.handOver], ['ai', LINK.ask], ['ai', NUDGE], ['ai', SMALL_TALK_FALLBACK], ...FAMILY.map((f): [string, string] => ['ai', noMore(state, f)])]
+  const f = finding(state, person)
+  if (f) {
+    fixed.push(['orbit', f.action.observed], ['orbit', f.action.next])
+    if (f.item.key === 'bp') {
+      const after = familyTurn(state, person, 'It is 112 over 70 now', { member: FAMILY[0], message: MESSAGES[0], played: [], focus: 'bp' })
+      fixed.push(['orbit', after.segments[0].text])
+    }
+  }
+  fixed.forEach(([voice, text], n) => out.push({ file: `family/${voice}-${String(n + 1).padStart(2, '0')}.m4a`, voice, text, say: speakable(text) }))
+  return out
 }

@@ -224,6 +224,14 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   }
   useEffect(() => { sendRef.current = send })
 
+  // The astronaut already answered on the incoming-call card, so it rings for a moment and connects.
+  const connect = useRef(accept)
+  connect.current = accept
+  useEffect(() => {
+    const id = window.setTimeout(() => connect.current(), 1500)
+    return () => window.clearTimeout(id)
+  }, [])
+
   const others = arrived(state, MESSAGES, optIn).filter((m) => m.id !== message.id && !heardFrom.includes(m.from))
   const next = (id: string) => {
     const m = MESSAGES.find((x) => x.id === id)
@@ -235,7 +243,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     setYou('')
     setSaved('')
     addLines([{ day: state.day, with: who.id, from: 'recorded', text: m.parts[0].text }])
-    void play([{ kind: 'recorded', label: 'Recorded on Earth', text: m.parts[0].text, audio: m.parts[0].audio }])
+    void play([{ kind: 'recorded', label: 'Recorded on Earth', text: m.parts[0].text, audio: m.parts[0].audio, standIn: m.parts[0].standIn }])
   }
 
   const submit = (e: FormEvent) => {
@@ -262,7 +270,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
 
   const ringing = phase === 'ringing'
   const delay = Math.round(signalDelayMin(state.day))
-  const status = ringing ? 'Incoming call' : phase === 'playing' ? (shown?.label === 'Recorded on Earth' ? 'Playing the recording' : 'Speaking') : phase === 'listening' ? 'Listening' : muted ? 'You are muted' : 'Your turn'
+  const status = ringing ? 'Connecting…' : phase === 'playing' ? (shown?.label === 'Recorded on Earth' ? 'Playing the recording' : 'Speaking') : phase === 'listening' ? 'Listening' : muted ? 'You are muted' : 'Your turn'
   const left = message.parts.filter((p) => !played.includes(p.topic))
   const chips = ringing || !rolePlay || phase === 'playing' ? [] : [
     ...(focus ? [{ label: 'It is 112 over 70', say: 'It is 112 over 70 now' }, { label: 'I am fine', say: 'I am fine' }] : []),
@@ -291,19 +299,12 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
             ? <p className="doctor-caption is-quiet">{first} recorded a message for you. It is not a live call: you will hear the recording, and an AI voice links the parts.</p>
             : <>
                 {you && <p className="doctor-said">{you}</p>}
-                {shown && <p className={`family-label is-${shown.kind}`}>{shown.label}{shown.label === 'Recorded on Earth' ? ` · ${first}'s own words` : shown.label === 'ORBIT' ? ' · fixed health rule, word for word' : ' · AI-generated'}</p>}
+                {shown && <p className={`family-label is-${shown.kind}`}>{shown.label}{shown.label === 'Recorded on Earth' ? ` · ${first}'s own words${shown.standIn ? ' · demo: AI-generated stand-in voice' : ''}` : shown.label === 'ORBIT' ? ' · fixed health rule, word for word' : ' · AI-generated'}</p>}
                 {shown && <p className={`doctor-caption ${rolePlay ? '' : 'is-urgent'}`}>{shown.text}</p>}
                 {hearing && <p className="doctor-said">{hearing}</p>}
                 {saved && <p className="doctor-saved">{saved}</p>}
               </>}
         </div>
-
-        {ringing && (
-          <div className="family-ring">
-            <button className="btn btn-secondary" onClick={onClose}>Later</button>
-            <button className="btn btn-primary" autoFocus onClick={accept}>Answer</button>
-          </div>
-        )}
 
         {!!chips.length && (
           <div className="doctor-choices" role="group" aria-label="Answers you can tap">
@@ -321,7 +322,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
           </div>
         )}
 
-        {notice && <p className="doctor-notice" role="alert">{notice}</p>}
+        {notice && rolePlay && <p className="doctor-notice" role="alert">{notice}</p>}
 
         {!ringing && rolePlay && (
           <form className="doctor-form" onSubmit={submit}>
@@ -338,7 +339,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 13.5c5-4.5 12-4.5 17 0l-2.2 2.6-3.1-1.3v-2.4a9 9 0 0 0-6.4 0v2.4l-3.1 1.3Z" /></svg>
           </button>
         </div>
-        <p className="doctor-fine">Not live. Recordings are the person's own words. The AI voice and ORBIT's lines are AI-generated speech. Your side of this call stays private, apart from your health record.</p>
+        <p className="doctor-fine">Not live. In this demo every voice is AI-generated speech (Kokoro-82M); a real recording would be the person's own. Your side of this call stays private, apart from your health record.</p>
       </div>
     </div>
   )

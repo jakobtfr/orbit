@@ -211,3 +211,29 @@ describe('family call: the language model cannot speak about health', () => {
     for (const h of healthTexts(s, LENA)) expect(b).not.toContain(h)
   })
 })
+
+import rendered from '../../public/family/lines.json'
+import { voiceLines } from './family'
+
+describe('family call: rendered speech', () => {
+  it('matches the words the rules give today, so no stale audio is ever played for a rule', () => {
+    const lines = voiceLines(initialState(), LENA)
+    if (import.meta.env.VITE_PRINT_LINES) console.log(`LINES${JSON.stringify(lines)}LINES`)
+    expect(rendered).toEqual(lines)
+  })
+
+  it('renders every ORBIT sentence of the demo call from the rules', () => {
+    const s = initialState()
+    const allowed = [...healthTexts(s, LENA), afterReading(familyTurn(s, LENA, 'It is 112 over 70 now', { member: marta, message: first(s), played: [], focus: 'bp' }).state!, LENA, 'bp').text]
+    for (const l of voiceLines(s, LENA)) if (l.voice === 'orbit') expect(allowed).toContain(l.text)
+  })
+})
+
+describe('family call: the demo is honest about its voices', () => {
+  it('marks every demo recording as an AI-generated stand-in, in the data and in the call', () => {
+    const s = initialState()
+    for (const m of MESSAGES) for (const p of m.parts) expect(p.standIn).toBe(true)
+    expect(callScript(s, LENA, first(s))[0].standIn).toBe(true)
+    expect(familyTurn(s, LENA, 'How was your day?', { member: marta, message: first(s), played: ['hello'] }).segments[0].standIn).toBe(true)
+  })
+})

@@ -38,6 +38,10 @@ The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). 
 - **Measurements and Mental Health.** Lena's own measurements, explored one indicator at a time against her normal, with CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
 - **Place.** The mission day sets it. Outbound and return are the spacecraft; the stay on Mars is the surface. The standing test needs gravity, and the radiation review line follows the place.
 
+## Try it
+
+Live app, no install: **https://jakobtfr.github.io/orbit/** (published from `main` by `.github/workflows/deploy-pages.yml` after the tests pass).
+
 ## Run it
 
 ```sh

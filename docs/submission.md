@@ -28,9 +28,11 @@ A 7-slide deck (PDF), at most 7 slides as the rules require. Source: [`demo/deck
 
 ## Link to Final Project
 
-https://github.com/jakobtfr/orbit
+Live app, no install or login: https://jakobtfr.github.io/orbit/
 
-The app runs locally: `cd app && npm install && npm run dev`. Instructions are in the README.
+Code: https://github.com/jakobtfr/orbit
+
+The live app opens on mission day 100 of a Mars mission. The evidence is under Replay (`#/replay`). The virtual doctor uses its built-in answers on the live site; its local language model runs only where Ollama is installed. To run locally: `cd app && npm install && npm run dev`.
 
 ## Detailed Project Description
 

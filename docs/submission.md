@@ -1,6 +1,6 @@
 # Project Submission Text
 
-Written 2026-11-14, updated 2026-11-15 to match the app. One section per field on the Space Apps Project Submission page, ready to paste. Field instructions are from the [Project Submission Guide](https://www.spaceappschallenge.org/resources/project-submission-guide/). Submission closes Sunday, November 15, 2026, 11:59 p.m. local time.
+Written 2026-11-14, updated 2026-11-15 to match the app. One section per field on the Space Apps Project Submission page, ready to paste. Field instructions are from the [Project Submission Guide](https://www.spaceappschallenge.org/resources/project-submission-guide/). Heilbronn deadline: Sunday, November 15, 2026, 15:00, by email (see `submission/EMAIL.md`). This file is version B (with the family call); version A is `submission/submission-A.md`.
 
 Before submitting: the repository must be public, and both links must open in a private browser window without a login.
 
@@ -22,15 +22,15 @@ Around this sits a dashboard any crew member can read, step-by-step procedures, 
 
 ## Link to Project Demo
 
-https://github.com/jakobtfr/orbit/blob/phase-limits/docs/demo/orbit-demo.pdf
+https://github.com/jakobtfr/orbit/blob/family-call/docs/demo/orbit-demo.pdf
 
-(Checked 15 Nov 13:25: the `blob/main` link is 404 until PR #1 is merged; the `phase-limits` link opens without login.)
+(Works only after branch `family-call` is pushed. Checked 15 Nov 13:40: not pushed yet. `blob/main` is 404 until PR #1 is merged.)
 
 A 7-slide deck (PDF), at most 7 slides as the rules require. Source: [`demo/deck.html`](demo/deck.html), screenshots of the running app in `demo/img/`. Re-export with Chrome: open the HTML and print to PDF, or `chrome --headless --print-to-pdf=orbit-demo.pdf deck.html`.
 
 ## Link to Final Project
 
-Code: https://github.com/jakobtfr/orbit/tree/phase-limits
+Code: https://github.com/jakobtfr/orbit/tree/family-call (works only after `family-call` is pushed)
 
 Live app (add only after it loads; 404 on 15 Nov 13:25 because GitHub Pages is off): https://jakobtfr.github.io/orbit/
 
@@ -54,13 +54,13 @@ The live app opens on mission day 100 of a Mars mission. The evidence is under R
 2. **False alarms.** Every day is judged by Earth's limits (pulse over 100, blood pressure 130/80 or more, temperature 38.0 °C or more) and by personal limits (pulse 20% above the person's own normal, blood pressure 20/15 mmHg above, or temperature 0.5 °C above), both needing two days in a row: 13.5% against 5.9% of days. On single days: 25.5% against 16.5%. A stricter Earth cutoff of 140/90 gives 5.4% but is still one line for everyone.
 3. **Missed problems.** Fevers, heart-rate jumps, slow heart-rate drifts, and blood-pressure rises and drops are added to each volunteer's real readings. A problem counts as caught only where the rule had not already alarmed. A separate Python script recomputes all 65 results and matches the app.
 
-Automated tests (160) reproduce the headline numbers and check the family call's rules (every health sentence comes from the fixed rules, urgent words end the call, a spoken reading is saved and judged again); the separate Python script rechecks all 65 planted-problem results. The demo astronaut's readings are scripted, with day-to-day variation taken from the same NASA data. The demo spacecraft's radiation dose stays under NASA's daily design limit of 1.3 mSv in free space ([NASA OCHMO standards overview, 2021](https://www.nasa.gov/sites/default/files/atoms/files/ochmo_standards_overview_sept_15_2021_francisco.pdf)).
+Automated tests (158) reproduce the headline numbers and check the family call's rules (every health sentence comes from the fixed rules, urgent words end the call, a spoken reading is saved and judged again); the separate Python script rechecks all 65 planted-problem results. The demo astronaut's readings are scripted, with day-to-day variation taken from the same NASA data. The demo spacecraft's radiation dose stays under NASA's daily design limit of 1.3 mSv in free space ([NASA OCHMO standards overview, 2021](https://www.nasa.gov/sites/default/files/atoms/files/ochmo_standards_overview_sept_15_2021_francisco.pdf)).
 
 **Benefits.** 2.3 times fewer false alarms on real data with the same rule on both sides, while catching more fevers and heart-rate changes, so the alarms that remain are believed. Limits that know the mission phase, including the risky days after landing. A tool written for a crew member with about 40 hours of medical training, not a doctor. No new hardware, and no contact with Earth needed. The same idea fits anyone far from a doctor on Earth: remote communities, ships, and polar stations.
 
 **What we hope to achieve.** A working example of the onboard decision support NASA says exploration missions need. Next steps: test the phase limits on flight data, test with people who have no medical training, and have a clinician review the limits and the doctor's wording.
 
-**Limits.** Bed rest is a ground stand-in for flight. It shows no in-flight temperature rise, and flight studies disagree on how much blood pressure changes; ORBIT says where each value comes from. NASA has no data for long stays at Mars gravity, so those values are estimates. The data contains no real illness, so missed problems are tested with planted ones, which are simpler than real illness. ORBIT catches fewer of the smaller blood-pressure rises than Earth's limits. Neither Replay rule set has a low side, so both miss every planted drop; the app's low-pressure rule is not tested on NASA data. Missed problems are tested with the Replay's rules, not the live phase-aware limits. Limits have not been reviewed by a clinician. The family call is untested with crews or families: we do not know yet whether a health prompt inside a call from home helps, or harms trust in the call. Its people and voices are invented for the demo; no real person's voice is copied. Speech recognition uses the browser, which on some browsers sends audio to a server; a flight version needs an on-board model. ORBIT is a prototype, not a medical device.
+**Limits.** Bed rest is a ground stand-in for flight. It shows no in-flight temperature rise, and flight studies disagree on how much blood pressure changes; ORBIT says where each value comes from. NASA has no data for long stays at Mars gravity, so those values are estimates. The data contains no real illness, so missed problems are tested with planted ones, which are simpler than real illness. ORBIT catches fewer of the smaller blood-pressure rises than Earth's limits. Neither Replay rule set has a low side, so both miss every planted drop; the app's low-pressure rule is not tested on NASA data. Missed problems are tested with the Replay's rules, not the live phase-aware limits. Limits have not been reviewed by a clinician. The family call is untested with crews or families: we do not know yet whether a health prompt inside a call from home helps, or harms trust in the call. Its people and voices are invented for the demo; no real person's voice is copied. Speech recognition uses the browser, which on some browsers sends audio to a server; a flight version needs an on-board model. Answering the call by microphone is not verified yet in a real browser. ORBIT is a prototype, not a medical device.
 
 **Tools.** TypeScript, React, React Router, Vite, Vitest, SVG for all charts and the body map, Python with uv for the data export and the separate check, Ollama for the optional local doctor model, the browser's speech functions for the doctor's voice and for listening, Kokoro-82M through mlx-audio for the family call's rendered voices, Whisper large-v3-turbo to check the rendered audio, the browser's Web Crypto (AES-GCM) for the private conversation, Git and GitHub.
 
@@ -68,7 +68,7 @@ Automated tests (160) reproduce the headline numbers and check the family call's
 
 > Check this answer with the whole team before submitting. It is not shown to judges, but it must be true.
 
-Yes. We used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests; to search and summarise published sources; and to draft and edit documentation and this submission text. The team chose the challenge, framed the problem, made the product decisions, and reviewed the output. Every figure shown in the app is recomputed from the source data by automated tests. No images or video were generated with SI. Audio: all 21 voice files of the family call (`app/public/family/*.m4a`) are SI-generated speech, made on our own machine with the open model Kokoro-82M (Apache 2.0) from text the team wrote and from ORBIT's fixed rule sentences; each file says so in its metadata (artist, comment, genre), and the app labels every voice on screen. The voices are Kokoro's synthetic presets, not copies of any person. The idea of the family call is the team's own. In the product, the optional virtual doctor runs a local language model on the device; every limit, judgement, and urgent-symptom check is fixed code, not model output. In the family call the language model may say one linking sentence when no recording is left, and a filter replaces it if it mentions health or claims to be the person. The repository README states that AI assistance was used.
+Yes. We used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests; to search and summarise published sources; and to draft and edit documentation and this submission text. The team chose the challenge, framed the problem, made the product decisions, and reviewed the output. Every figure shown in the app is recomputed from the source data by automated tests. No images or video were generated with SI. Audio: all 20 voice files of the family call (`app/public/family/*.m4a`) are SI-generated speech, made on our own machine with the open model Kokoro-82M (Apache 2.0) from text the team wrote and from ORBIT's fixed rule sentences; each file says so in its metadata (artist, comment, genre), and the app labels every voice on screen. The voices are Kokoro's synthetic presets, not copies of any person. The idea of the family call is the team's own. In the product, the optional virtual doctor runs a local language model on the device; every limit, judgement, and urgent-symptom check is fixed code, not model output. No language model takes part in the family call: every word is a recorded line or one of ORBIT's fixed sentences. The repository README states that AI assistance was used.
 
 ## NASA Data
 
@@ -112,7 +112,7 @@ Yes. We used Claude (Anthropic), an AI coding assistant, to help write and refac
 - [Inter](https://rsms.me/inter/) typeface, SIL Open Font License 1.1.
 - [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) speech model, Apache 2.0, MLX copy [mlx-community/Kokoro-82M-8bit](https://huggingface.co/mlx-community/Kokoro-82M-8bit), run with [mlx-audio](https://github.com/Blaizzy/mlx-audio), MIT. Used to render the family call's voices.
 - [Whisper large-v3-turbo](https://huggingface.co/openai/whisper-large-v3-turbo), MIT. Used only to check that the rendered audio says the written words.
-- [Qwen3 8B](https://huggingface.co/Qwen/Qwen3-8B), Apache 2.0, through [Ollama](https://ollama.com). The optional local language model.
+- [Qwen3 8B](https://huggingface.co/Qwen/Qwen3-8B), Apache 2.0, through [Ollama](https://ollama.com). The optional local language model of the virtual doctor (the app uses whichever model is installed in Ollama). It takes no part in the family call.
 - [React](https://react.dev), [React Router](https://reactrouter.com), [Vite](https://vite.dev), [Vitest](https://vitest.dev), [TypeScript](https://www.typescriptlang.org), all MIT or Apache 2.0.
 - Colour palette based on the [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/color) dark-mode system colours, adjusted for contrast.
 - No NASA logos or insignia are used.

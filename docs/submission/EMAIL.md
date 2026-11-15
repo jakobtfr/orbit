@@ -87,7 +87,7 @@ https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/
 
 ORBIT is health monitoring software for astronauts on long missions such as Mars. It judges each astronaut against their own normal for the current mission phase (outbound, on Mars, return, back on Earth), not against Earth's fixed medical limits. In space the body changes: core temperature runs about 1 °C higher, and after landing the heart runs fast for days. Earth's limits then raise false alarms for healthy crew, and a crew that gets false alarms stops trusting them. ORBIT shows a body map, trend charts and one plain next action for each finding, written for a crew member with about 40 hours of medical training, and works with no contact with Earth.
 
-ORBIT also has an opt-in family call. At Mars distance a signal takes about 4 to 24 minutes one way, so a live call home is not possible. Family and friends who opt in record a short message each day, and ORBIT plays it as a call in the astronaut's off-duty time. The call is always labelled AI. When a reading is off, the call also carries one health prompt, read word for word from ORBIT's fixed rules. No language model takes part in the call. Urgent words end the call and name the crew's medical lead.
+ORBIT also has an opt-in family call. At Mars distance a signal takes about 4 to 24 minutes one way, so a live call home is not possible. Family and friends who opt in record a short message each day, and ORBIT plays it as a call in the astronaut's off-duty time. The call is always labelled AI. When a reading is off, the call also carries one health prompt, read word for word from ORBIT's fixed rules. No language model takes part in the call. Urgent words end the call and name the crew's medical lead. Our next step, not built yet: a real-time conversational call in the family member's own cloned voice, made only with that person's consent. Today the call plays recorded lines in synthetic voices.
 
 **How we used NASA data**
 
@@ -126,7 +126,8 @@ Mohit Nandanwar, for Team TUM
 |---|---|
 | github.com/jakobtfr/orbit/tree/phase-limits | 200 |
 | …/blob/phase-limits/docs/demo/orbit-demo.pdf | 200 (old deck, no names) |
-| …/tree/family-call, …/blob/family-call/… | 404: branch not pushed |
+| …/tree/family-call | 200 (rechecked 13:48, head a73d8f4) |
+| …/blob/family-call/docs/demo/orbit-demo.pdf | 200 (rechecked 13:48) |
 | …/blob/main/docs/demo/orbit-demo.pdf | 404: main deleted `docs/demo` |
 | jakobtfr.github.io/orbit | 404: Pages off |
 | Space Apps challenge page | 200 |

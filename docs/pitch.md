@@ -39,7 +39,7 @@ On the way to Mars nobody can call home, so ORBIT plays each day's recorded mess
 > So we tested the limits on 2,184 days of NASA bed-rest data. Same two-day rule on both sides: Earth's limits alarm on 13.5% of days, ORBIT on 5.9%. That is 2.3 times fewer false alarms. And it misses less. We planted known problems into the same data: ORBIT caught 94% of fevers, Earth's limits 8%. One honest weak spot: for small blood-pressure rises, Earth's limits catch more, 50% against 26%.
 
 **Slide 7, why it matters.**
-> "Good morning, Mama." Lena's reply is on its way home, and her blood pressure is logged. Next comes video, when an open-source face model is good enough. ORBIT is a prototype, not a medical device. Nobody should fly to Mars alone.
+> "Good morning, Mama." Lena's reply is on its way home, and her blood pressure is logged. Next: a personal model on the ship that learns, from each reading and how she says she felt, which changes matter for her. And video, when an open-source face model is good enough. ORBIT is a prototype, not a medical device. Nobody should fly to Mars alone.
 
 ## If the team submits the app without the family call
 
@@ -53,11 +53,13 @@ Use [`demo/deck-fallback.html`](demo/deck-fallback.html) ([PDF](demo/orbit-demo-
 |---|---|
 | "Is this creepy? An AI that plays her mother?" | "It does not play her mother. Her mother's voice is her own recording, played as recorded. The AI voice only links the recordings, says it is an AI, and is labelled on screen. Both sides opt in, and either can stop." |
 | "Does the AI give medical advice?" | "No. Every health sentence is taken word for word from ORBIT's fixed rules. The language model never sees her readings, and a filter blocks any model sentence that mentions health." |
+| "So a sick or sad astronaut gets no family contact?" | "Health comes first. The call unlocks after today's health check, and the check takes about 2 minutes. The astronaut agrees to this rule before launch. A crew member who feels bad is exactly the one whose readings matter most, so they measure first, then they talk to their family." (Team decision of 15 Nov; being built, not on the live site yet. Do not say it is live until it is.) |
 | "Does it waste crew time?" | "It is offered only in free time, after waking and before sleep. The check happens inside a call she wants to take, so it replaces a chore; it does not add one." |
 | "What does NASA see?" | "Only the readings. A reading she says in the call is saved to her health record as self-reported. The private talk is kept encrypted on the device, apart from the health record, and the medical lead cannot see it." |
 | "What if she says she feels fine?" | "ORBIT goes by the reading, not by the feeling. It asks again for the number." |
 | "What about an emergency in the call?" | "Chest pain or trouble breathing ends the role-play at once. ORBIT speaks alone and names the medical lead." |
 | "Can you send a daily recording to Mars?" | "A signal takes up to 20 minutes one way, so it arrives late, not live. That is why it is a recording." (Data-rate figures: being checked; do not quote a number until verified.) |
+| "Why is the personal model not built?" | "It needs labelled data: a reading plus how the astronaut felt, over a mission. That does not exist yet. Our demo astronaut is scripted, and the NASA bed-rest data has no confirmed illness, so we could not train or test it honestly. The call collects exactly that pair, and it stays on the ship." |
 | "Why no video?" | "We left it out on purpose. We found no open-source face model good enough to put a family on screen. Video is the next step." |
 | "Is the voice in the demo real?" | "No. Lena's family is invented, so in the demo every voice is generated speech, and the slide says so. In the design, the family part is the person's own recording." |
 

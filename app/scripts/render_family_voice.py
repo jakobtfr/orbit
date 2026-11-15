@@ -51,7 +51,7 @@ VOICES = {
     "orbit": ("bm_george", 1.0),
 }
 # Names that are not in Kokoro's dictionary, with their sounds, so they are not skipped. Only the speech uses these; the words shown stay as written.
-SOUNDS = {"Marta": "mˈɑɹtə", "Jonas": "jˈoʊnəs", "Priya": "pɹˈiːə"}
+SOUNDS = {"Marta": "mˈɑɹtə", "Jonas": "jˈoʊnəs", "Priya": "pɹˈiːə", "Bruno": "bɹˈuːnoʊ"}
 NOTE = "AI-generated speech (SI). Model: Kokoro-82M, Apache-2.0. Synthetic preset voice, not a real person. Demo stand-in for a recorded family message."
 
 root = Path(__file__).resolve().parent.parent / "public"

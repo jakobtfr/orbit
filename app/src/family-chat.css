@@ -10,4 +10,4 @@
 .family-call { overflow-y: auto; }
 .family-call:has(.family-chat-preview.is-on) .doctor-avatar { width: 56px; height: 56px; font-size: 18px; }
 .family-call:has(.family-chat-preview.is-on) .doctor-face { margin-top: 0; gap: 6px; }
-.family-call:has(.family-chat-preview.is-on) .family-next, .family-call:has(.family-chat-preview.is-on) .doctor-fine { display: none; }
+.family-call:has(.family-chat-preview.is-on) .doctor-fine { display: none; }

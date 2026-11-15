@@ -6,7 +6,7 @@
 <style>
   @page { size: 1920px 1080px; margin: 0; }
   :root {
-    --bg: #000; --tile: #131316; --line: #2a2a2f;
+    --bg: #000; --tile: #1d1d1f; --line: #2c2c2e; --accent: #4aa3ff; --rec: #30d158; --ai: #ffd60a; --orb: #4aa3ff; --caution: #ffd60a;
     --text: #f5f5f7; --muted: #a1a1a6; --dim: #6e6e73;
     --earth: #5aa9ff; --mars: #ff9a5c; --red: #ff6961; --green: #30d158;
     --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Inter', sans-serif;
@@ -23,8 +23,8 @@
   .top { position: absolute !important; left: 120px; right: 120px; top: 64px; display: flex; align-items: center; justify-content: space-between; font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); font-weight: 600; }
   .top .brand { display: inline-flex; align-items: center; gap: 14px; color: var(--text); letter-spacing: 0.1em; }
   .next { position: absolute !important; left: 120px; right: 320px; bottom: 62px; display: flex; align-items: center; gap: 20px; font-size: 30px; color: var(--text); font-weight: 500; letter-spacing: -0.01em; }
-  .next::before { content: ''; flex: none; width: 56px; height: 2px; background: var(--mars); }
-  .next span { color: var(--mars); margin-left: -20px; }
+  .next::before { content: ''; flex: none; width: 56px; height: 2px; background: var(--accent); }
+  .next span { color: var(--accent); margin-left: -20px; }
   .prog { position: absolute !important; right: 120px; bottom: 50px; display: flex; align-items: center; gap: 14px; font-size: 20px; color: var(--dim); }
 
   h1 { font-size: 132px; font-weight: 600; letter-spacing: -0.04em; line-height: 1.0; }
@@ -46,7 +46,7 @@
   .s1 .sub { margin-top: 44px; font-size: 40px; line-height: 1.3; color: var(--text); max-width: 1000px; letter-spacing: -0.015em; }
   .s1 .sub .soft { color: var(--muted); }
   .s1 .src { margin-top: 26px; max-width: 900px; }
-  .s1 .team { position: absolute !important; left: 120px; right: 120px; bottom: 132px; display: flex; gap: 64px; font-size: 22px; color: var(--muted); line-height: 1.45; }
+  .s1 .team { position: absolute !important; left: 120px; right: 120px; bottom: 132px; display: grid; grid-template-columns: 170px 1.15fr 1fr 170px; gap: 48px; font-size: 22px; color: var(--muted); line-height: 1.45; }
   .s1 .team b { display: block; color: var(--dim); font-weight: 600; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
   .s1 .team em { font-weight: 500; }
 
@@ -56,7 +56,7 @@
   .grid4 .big { font-size: 96px; }
   .grid4 .tile p { font-size: 27px; margin-top: 16px; }
   .grid4 .tile .src { font-size: 19px; margin-top: auto; padding-top: 14px; }
-  .grid4 .label { color: var(--mars); margin-bottom: 16px; }
+  .grid4 .label { color: var(--accent); margin-bottom: 16px; }
 
   /* 3 */
   .s3 .cols { display: grid; grid-template-columns: 1fr 640px; gap: 72px; margin-top: 44px; flex: 1; }
@@ -69,10 +69,10 @@
   .s3 .side p { font-size: 25px; margin-top: 10px; }
 
   /* 4 */
-  .s4 .cols { display: grid; grid-template-columns: 1fr 780px; gap: 72px; margin-top: 56px; flex: 1; align-items: start; }
+  .s4 .cols { display: grid; grid-template-columns: 1fr 600px; gap: 90px; margin-top: 36px; flex: 1; align-items: start; }
   .steps { display: flex; flex-direction: column; gap: 40px; padding-top: 10px; }
   .step { display: grid; grid-template-columns: 72px 1fr; gap: 26px; align-items: start; }
-  .step i { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--mars); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 30px; font-weight: 600; color: var(--mars); }
+  .step i { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 30px; font-weight: 600; color: var(--accent); }
   .step h3 { font-size: 38px; font-weight: 600; letter-spacing: -0.02em; }
   .step p { font-size: 27px; margin-top: 6px; }
   .call { display: flex; flex-direction: column; gap: 10px; }
@@ -81,9 +81,18 @@
   .seg { border-radius: 18px; padding: 12px 20px 14px; background: #17171b; }
   .seg .label { font-size: 15px; display: block; margin-bottom: 6px; }
   .seg p { font-size: 22px; line-height: 1.35; color: var(--text); margin: 0; }
-  .seg.rec .label { color: var(--earth); } .seg.rec { border-left: 4px solid var(--earth); }
-  .seg.ai .label { color: var(--muted); } .seg.ai { border-left: 4px solid var(--dim); } .seg.ai p { color: var(--muted); }
-  .seg.orb .label { color: var(--mars); } .seg.orb { border-left: 4px solid var(--mars); }
+  .seg.rec .label { color: var(--rec); } .seg.rec { border-left: 4px solid var(--rec); }
+  .seg.ai .label { color: var(--ai); } .seg.ai { border-left: 4px solid var(--ai); } .seg.ai p { color: var(--muted); }
+  .seg.orb .label { color: var(--orb); } .seg.orb { border-left: 4px solid var(--orb); }
+  .callwrap { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .callwrap img { display: block; width: 560px; border-radius: 30px; border: 1px solid var(--line); }
+  .chip { display: inline-flex; align-items: center; gap: 10px; font-size: 22px; color: var(--text); background: var(--tile); border: 1px solid var(--line); border-radius: 999px; padding: 10px 20px; }
+  .chip i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .calls { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .calls figure { margin: 0; }
+  .calls img { display: block; width: 100%; border-radius: 28px; border: 1px solid var(--line); }
+  .calls figcaption { margin-top: 12px; font-size: 22px; color: var(--text); font-weight: 500; display: flex; align-items: center; gap: 10px; }
+  .calls figcaption i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
   .shot4 { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); }
   .shot4 img { display: block; width: 100%; }
   .shotcap4 { font-size: 19px; color: var(--dim); margin: 10px 0 16px; }
@@ -96,9 +105,9 @@
   .voices .tile { padding: 36px 38px; min-height: 380px; }
   .voices h3 { font-size: 44px; font-weight: 600; letter-spacing: -0.025em; margin-top: 16px; }
   .voices p { font-size: 28px; }
-  .v1 { border-top: 4px solid var(--earth); } .v1 .label { color: var(--earth); }
-  .v2 { border-top: 4px solid var(--dim); } .v2 .label { color: var(--muted); }
-  .v3 { border-top: 4px solid var(--mars); } .v3 .label { color: var(--mars); }
+  .v1 { border-top: 4px solid var(--rec); } .v1 .label { color: var(--rec); }
+  .v2 { border-top: 4px solid var(--ai); } .v2 .label { color: var(--ai); }
+  .v3 { border-top: 4px solid var(--orb); } .v3 .label { color: var(--orb); }
   .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
   .rules div { font-size: 23px; line-height: 1.35; color: var(--muted); padding-left: 22px; border-left: 2px solid var(--line); }
   .rules b { display: block; color: var(--text); font-weight: 600; font-size: 25px; margin-bottom: 4px; }
@@ -126,11 +135,11 @@
   .bar.o u { background: var(--green); } .bar.o span { color: var(--green); }
   .bar.e u { background: #55555c; } .bar.e span { color: var(--muted); }
   .bar.e { height: 22px; margin-top: 6px; } .bar.e span { font-size: 20px; font-weight: 500; }
-  .row.weak .bar.o u { background: var(--mars); } .row.weak .bar.o span { color: var(--mars); }
+  .row.weak .bar.o u { background: var(--caution); } .row.weak .bar.o span { color: var(--caution); }
   .legend { display: flex; gap: 30px; font-size: 20px; color: var(--muted); margin-top: 4px; }
   .legend i { display: inline-block; width: 16px; height: 16px; border-radius: 4px; margin-right: 8px; vertical-align: -2px; }
   .s6 .honest { font-size: 21px; color: var(--muted); line-height: 1.4; margin-top: 12px; }
-  .s6 .honest b { color: var(--mars); font-weight: 600; }
+  .s6 .honest b { color: var(--caution); font-weight: 600; }
 
   .phases { margin-top: 22px; }
   .ph-title { font-size: 25px; color: var(--text); font-weight: 600; letter-spacing: -0.01em; }
@@ -141,20 +150,22 @@
   .ph-cols small { display: block; font-size: 16px; color: var(--dim); margin-top: 2px; }
   .ph-note { font-size: 19px; color: var(--dim); margin-top: 10px; }
   /* 7 */
-  .s7 { padding-top: 150px; }
+  .s7 { padding-top: 140px; }
   .s7 h2 { font-size: 104px; }
   .s7 .reply { font-size: 34px; color: var(--muted); margin-top: 22px; max-width: 1400px; line-height: 1.3; }
   .s7 .reply em { color: var(--text); }
   .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 36px; }
   .three .tile { padding: 32px 34px; }
-  .three .label { color: var(--mars); margin-bottom: 14px; }
+  .three .label { color: var(--accent); margin-bottom: 14px; }
   .three ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .three li { font-size: 25px; line-height: 1.35; color: var(--muted); }
   .three li em { font-weight: 500; }
   .foot { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; margin-top: 28px; }
   .foot .blk { font-size: 21px; line-height: 1.5; color: var(--muted); }
   .foot b { display: block; color: var(--dim); font-weight: 600; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
-  .foot .links a { color: var(--earth); font-size: 24px; font-weight: 500; margin-right: 26px; }
+  .foot .links a { color: var(--accent); font-size: 24px; font-weight: 500; margin-right: 26px; }
+  .foot .links a.cta { display: inline-block; background: #005fc4; color: #fff; text-decoration: none; padding: 12px 26px; border-radius: 999px; font-weight: 600; }
+  .foot .links { display: flex; align-items: center; flex-wrap: wrap; row-gap: 10px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -193,6 +204,7 @@
     <div><b>Team</b><em>Team TUM</em></div>
     <div><b>Members</b><em>Jakob Friedrich · Lukas Fuchs · Mohit Nandanwar · Patryk Ostern</em></div>
     <div><b>Challenge</b><em>Create Health Monitoring Software for Astronauts on Space Missions</em></div>
+    <div><b>Try it</b><a href="https://jakobtfr.github.io/orbit/" style="color:var(--accent); font-weight:500">Live app ↗</a></div>
   </div>
   <div class="next">What does that silence do to a crew<span>?</span></div>
   <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="27.2" cy="8.9" r="4" fill="#ff9a5c"/></svg>1 / 7</div>
@@ -275,13 +287,11 @@
       <p class="src" style="font-size:21px; margin-top:-6px">NASA’s own delay studies found that with Mars-like delays, crews “missed hearing voices”, and “Recordings were treasured”: <a href="https://ntrs.nasa.gov/api/citations/20250000703/downloads/2025%20HRP%20IWS%20Comm%20Delay.pdf">NASA HRP workshop, 2025</a></p>
     </div>
     <div>
-      <div class="shot4"><img src="img/family-messages.png" alt="ORBIT Family screen: today's messages from Marta, Jonas and Priya, each with Play as a call"></div>
-      <p class="shotcap4">Real app screen. Below: what Lena hears when she answers, in the app’s own words.</p>
-      <div class="call">
-        <div class="seg rec"><span class="label">Recorded on Earth</span><p>Good morning, Lena. It is me. I am sitting in the kitchen with your coffee cup, the blue one.</p></div>
-        <div class="seg ai"><span class="label">AI voice</span><p>One thing before the next message. ORBIT asked to say this to you in its own words.</p></div>
-        <div class="seg orb"><span class="label">ORBIT</span><p>Blood pressure has been well below your normal in this phase on two readings in a row. Sit or lie down, drink water, and repeat the reading after 5 minutes.</p></div>
+      <div class="callwrap">
+        <span class="chip"><i style="background:var(--rec)"></i>Her mother’s recorded message plays first. Then:</span>
+        <img src="img/call-orbit.png" alt="ORBIT call screen during Marta's call, speaking a fixed health rule about low blood pressure, labelled ORBIT">
       </div>
+      <p class="shotcap4">Real app screen, mid-call. Try it: <a href="https://jakobtfr.github.io/orbit/#/family">live app → Family → Play as a call</a></p>
     </div>
   </div>
   <div class="next">A machine speaks between her mother’s words. Is that safe<span>?</span></div>
@@ -304,7 +314,7 @@
     <div><b>Private stays private</b>The talk is kept encrypted on the device, apart from the health record. The medical lead cannot see it.</div>
     <div><b>Only in free time</b>Calls are offered after waking and before sleep, not during work.</div>
   </div>
-  <p class="ack"><b>AI in this product:</b> the linking voice, ORBIT’s spoken prompts and the virtual doctor are AI-generated, and every call is labelled AI. In this demo the family is invented, so their messages are also spoken by a generated voice.</p>
+  <p class="ack"><b>AI in this product:</b> the linking voice, ORBIT’s spoken prompts and the virtual doctor are AI-generated, and every call is labelled AI. In this demo the family is invented, so their messages are also spoken by a generated voice (Kokoro-82M).</p>
   <div class="next">Rules are only as good as the limits behind them. Are ORBIT’s right<span>?</span></div>
   <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="4.3" cy="19.9" r="4" fill="#ff9a5c"/></svg>5 / 7</div>
 </section>
@@ -342,9 +352,9 @@
       <div class="row"><div class="name">Heart rate jump<small>+20 bpm for 5 days</small></div><div><div class="bar o"><u style="width:74.4%"></u><span>93%</span></div><div class="bar e"><u style="width:16%"></u><span>20%</span></div></div></div>
       <div class="row"><div class="name">Slow heart-rate drift<small>+0.5 bpm a day</small></div><div><div class="bar o"><u style="width:56.8%"></u><span>71%</span></div><div class="bar e"><u style="width:11.2%"></u><span>14%</span></div></div></div>
       <div class="row weak"><div class="name">Small blood-pressure rise<small>+15/+9 mmHg for 3 days</small></div><div><div class="bar o"><u style="width:20.8%"></u><span>26%</span></div><div class="bar e"><u style="width:40%"></u><span>50%</span></div></div></div>
-      <div class="legend"><span><i style="background:var(--green)"></i>ORBIT</span><span><i style="background:#55555c"></i>Earth’s fixed limits</span><span><i style="background:var(--mars)"></i>Where Earth’s limits do better</span></div>
+      <div class="legend"><span><i style="background:var(--green)"></i>ORBIT</span><span><i style="background:#55555c"></i>Earth’s fixed limits</span><span><i style="background:var(--caution)"></i>Where Earth’s limits do better</span></div>
       <p class="honest"><b>Honest limits.</b> Bed rest is a ground stand-in for flight. The data holds no real illness, so the problems are planted. Small blood-pressure rises: Earth’s limits catch more.</p>
-      <p class="src">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Method and every number: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">miss-rate.md</a> · Limits per mission phase: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/phase-limits.md">phase-limits.md</a></p>
+      <p class="src">Data: <a href="https://doi.org/10.83263/wjw1-ta27">NASA Life Sciences Portal, UTMB bed-rest study</a> · Method and every number: <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">miss-rate.md</a> · <a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/phase-limits.md">phase-limits.md</a> · Try it: <a href="https://jakobtfr.github.io/orbit/#/replay">Replay in the live app</a></p>
     </div>
   </div>
   <div class="next">What is built, and what comes next<span>?</span></div>
@@ -353,17 +363,17 @@
 
 <!-- ============ 7 · THE POINT ============ -->
 <section class="slide s7">
-  <svg class="orbits" viewBox="0 0 1920 1080" fill="none">
+  <svg class="orbits" viewBox="0 -60 1920 1080" fill="none">
     <circle cx="960" cy="1620" r="640" stroke="#2c3a4d" stroke-width="2"/><circle cx="960" cy="1620" r="760" stroke="#4a3528" stroke-width="2"/>
-    <path d="M1290 935 L760 1012" stroke="#ff9a5c" stroke-width="3" stroke-dasharray="3 12" stroke-linecap="round"/>
-    <circle cx="760" cy="1012" r="13" fill="#5aa9ff"/><circle cx="760" cy="1012" r="27" stroke="#5aa9ff" stroke-opacity=".35" stroke-width="2"/>
+    <path d="M1290 935 L960 980" stroke="#ff9a5c" stroke-width="3" stroke-dasharray="3 12" stroke-linecap="round"/>
+    <circle cx="960" cy="980" r="13" fill="#5aa9ff"/><circle cx="960" cy="980" r="27" stroke="#5aa9ff" stroke-opacity=".35" stroke-width="2"/>
     <circle cx="1290" cy="935" r="10" fill="#ff9a5c"/>
-    <circle cx="930" cy="987" r="6" fill="#fff"/><circle cx="930" cy="987" r="15" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
-    <text x="940" y="946" fill="#f5f5f7" font-size="20" font-weight="500">her reply, on its way home</text>
+    <circle cx="1125" cy="957" r="6" fill="#fff"/><circle cx="1125" cy="957" r="15" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+    <text x="1160" y="1000" fill="#f5f5f7" font-size="20" font-weight="500">her reply, on its way home</text>
   </svg>
   <div class="top"><span class="brand"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#f5f5f7" stroke-width="1.6"/><circle cx="17.66" cy="6.34" r="2.3" fill="#f5f5f7"/></svg>ORBIT</span><span>Why it matters</span></div>
   <h2>Nobody should fly to Mars alone.</h2>
-  <p class="reply"><em>“Good morning, Mama.”</em> Lena’s reply is on its way home. Her blood pressure is logged. Tomorrow there is another call.</p>
+  <p class="reply"><em>“Good morning, Mama.”</em> Her reply is on its way home. Her blood pressure is logged.</p>
   <div class="three">
     <div class="tile"><span class="label">Built today</span><ul>
       <li><em>Limits that follow each astronaut</em> through every mission phase, tested on NASA data</li>
@@ -371,8 +381,9 @@
       <li><em>Runs on the device.</em> No contact with Earth needed, no new hardware</li>
     </ul></div>
     <div class="tile"><span class="label">Next</span><ul>
-      <li><em>Video.</em> We left it out on purpose: no open-source face model is good enough yet to put a family on screen. When one is, the call becomes a video call</li>
-      <li><em>Flight data</em> and a clinician’s review of every limit</li>
+      <li><em>A personal model on the ship</em> that learns from each reading and how she says she felt which changes matter for her. Nothing leaves the ship. Not built: no labelled data exists yet to train it</li>
+      <li><em>Video,</em> once an open-source face model is good enough</li>
+      <li><em>Flight data</em> and a clinician’s review</li>
     </ul></div>
     <div class="tile"><span class="label">Honest limits</span><ul>
       <li>Prototype, not a medical device</li>
@@ -382,8 +393,8 @@
   </div>
   <div class="foot">
     <div class="blk"><b>Team TUM</b>Jakob Friedrich · Lukas Fuchs · Mohit Nandanwar · Patryk Ostern<br>NASA Space Apps Challenge 2026 · Create Health Monitoring Software for Astronauts on Space Missions</div>
-    <div class="blk"><div class="links"><a href="https://github.com/jakobtfr/orbit">Code</a><a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">Method</a><a href="https://doi.org/10.83263/wjw1-ta27">NASA data</a></div>
-    <span style="font-size:19px; color:var(--dim)">AI use: every voice in the demo call and the virtual doctor are AI-generated. The team used an AI assistant (Claude) for code, source search and text; the team checked every number against its source.</span></div>
+    <div class="blk"><div class="links"><a class="cta" href="https://jakobtfr.github.io/orbit/">Open the live app ↗</a><a href="https://github.com/jakobtfr/orbit">Code</a><a href="https://github.com/jakobtfr/orbit/blob/phase-limits/docs/research/miss-rate.md">Method</a><a href="https://doi.org/10.83263/wjw1-ta27">NASA data</a></div>
+    <span style="font-size:19px; color:var(--dim)">AI use: all call voices and the virtual doctor are AI-generated. An AI assistant (Claude) helped with code, search and text; the team checked every number.</span></div>
   </div>
   <div class="prog"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="13" stroke="#3a3a3f" stroke-width="2"/><circle cx="17" cy="4" r="4" fill="#ff9a5c"/></svg>7 / 7</div>
 </section>

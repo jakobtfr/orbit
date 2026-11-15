@@ -217,10 +217,19 @@ describe('family call: what the astronaut says', () => {
   })
 })
 
-describe('family call: no language model', () => {
-  it('builds every turn from recordings and fixed sentences only', () => {
+describe('family call: where a language model may speak', () => {
+  it('keeps the call\'s rules free of any model: recordings, fixed sentences and ORBIT only', () => {
     expect(source).not.toMatch(/localModel|findModel|chat\(/)
-    expect(screen).not.toMatch(/localModel|findModel|chat\(/)
+  })
+
+  it('lets a model write only in the talk-freely preview, and checks every reply before it is shown', () => {
+    expect(screen.match(/\bchat\(/g) ?? []).toHaveLength(1)
+    const at = screen.indexOf('chat(')
+    const before = screen.lastIndexOf("turn.kind === 'preview' && turn.forModel && model", at)
+    expect(before).toBeGreaterThan(-1)
+    expect(at - before).toBeLessThan(900)
+    expect(screen.slice(at, at + 1400)).toContain('checkModelReply(full)')
+    expect(screen).not.toMatch(/text: full\b/)
   })
 })
 

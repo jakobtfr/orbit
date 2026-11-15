@@ -66,6 +66,102 @@
   "say": "More tomorrow. Fly safe."
  },
  {
+  "file": "family/marta-talk-home.m4a",
+  "voice": "marta",
+  "text": "Everyone is well. Your father ate the apples I had put aside for the cake, so now it is a smaller cake. Jonas brings the children on Sunday, and Bruno sits under your chair as if you were only late for dinner.",
+  "say": "Everyone is well. Your father ate the apples I had put aside for the cake, so now it is a smaller cake. Jonas brings the children on Sunday, and Bruno sits under your chair as if you were only late for dinner."
+ },
+ {
+  "file": "family/marta-talk-miss.m4a",
+  "voice": "marta",
+  "text": "I miss you too, my girl. I drink from your blue cup every morning, so the kitchen feels a little less empty. And at night I look up and say good night to the sky.",
+  "say": "I miss you too, my girl. I drink from your blue cup every morning, so the kitchen feels a little less empty. And at night I look up and say good night to the sky."
+ },
+ {
+  "file": "family/marta-talk-today.m4a",
+  "voice": "marta",
+  "text": "I picked the last apples and baked the cake with too much cinnamon, the way you like it. Then I sat down with my coffee and recorded this message for you. That was the best part of my day.",
+  "say": "I picked the last apples and baked the cake with too much cinnamon, the way you like it. Then I sat down with my coffee and recorded this message for you. That was the best part of my day."
+ },
+ {
+  "file": "family/marta-talk-dog.m4a",
+  "voice": "marta",
+  "text": "Bruno dug up my tulip bulbs again. I was cross for a moment, and then he looked at me. He still waits by the door around the time you used to come home.",
+  "say": "Bruno dug up my tulip bulbs again. I was cross for a moment, and then he looked at me. He still waits by the door around the time you used to come home."
+ },
+ {
+  "file": "family/marta-talk-stars.m4a",
+  "voice": "marta",
+  "text": "Of course I remember. We lay in the garden under the old blanket and you counted eleven. You said you would go up there one day, and I laughed. I am not laughing now. I am proud.",
+  "say": "Of course I remember. We lay in the garden under the old blanket and you counted eleven. You said you would go up there one day, and I laughed. I am not laughing now. I am proud."
+ },
+ {
+  "file": "family/marta-talk-night.m4a",
+  "voice": "marta",
+  "text": "Good night, my dear. Think of the kitchen, the radio, and the smell of apple cake. I will record again tomorrow morning. I love you.",
+  "say": "Good night, my dear. Think of the kitchen, the radio, and the smell of apple cake. I will record again tomorrow morning. I love you."
+ },
+ {
+  "file": "family/jonas-talk-home.m4a",
+  "voice": "jonas",
+  "text": "Everyone is fine. The kids drew your ship again, and it hangs on the fridge next to the one with six windows and a dog. Mum feeds all of us on Sunday.",
+  "say": "Everyone is fine. The kids drew your ship again, and it hangs on the fridge next to the one with six windows and a dog. Mum feeds all of us on Sunday."
+ },
+ {
+  "file": "family/jonas-talk-kids.m4a",
+  "voice": "jonas",
+  "text": "They tell the whole playground that their aunt flies to Mars. The small one asked if you can see her wave. I said yes, so please wave back.",
+  "say": "They tell the whole playground that their aunt flies to Mars. The small one asked if you can see her wave. I said yes, so please wave back."
+ },
+ {
+  "file": "family/jonas-talk-bike.m4a",
+  "voice": "jonas",
+  "text": "Fixed, oiled, and waiting in the garage. I took it for a test ride. Fine, a few test rides. When you are back, we ride to the lake.",
+  "say": "Fixed, oiled, and waiting in the garage. I took it for a test ride. Fine, a few test rides. When you are back, we ride to the lake."
+ },
+ {
+  "file": "family/jonas-talk-miss.m4a",
+  "voice": "jonas",
+  "text": "I miss you too, big sister. Nobody argues with me about the music in the car any more. It is far too peaceful.",
+  "say": "I miss you too, big sister. Nobody argues with me about the music in the car any more. It is far too peaceful."
+ },
+ {
+  "file": "family/jonas-talk-night.m4a",
+  "voice": "jonas",
+  "text": "Good night, Lena. The kids picked a star for you tonight. Talk tomorrow. Well, you know what I mean.",
+  "say": "Good night, Lena. The kids picked a star for you tonight. Talk tomorrow. Well, you know what I mean."
+ },
+ {
+  "file": "family/priya-talk-home.m4a",
+  "voice": "priya",
+  "text": "Loud and proud. We watched your docking replay again at lunch, and again nobody touched their food. Your chair is empty and nobody may sit in it. My rule.",
+  "say": "Loud and proud. We watched your docking replay again at lunch, and again nobody touched their food. Your chair is empty and nobody may sit in it. My rule."
+ },
+ {
+  "file": "family/priya-talk-plant.m4a",
+  "voice": "priya",
+  "text": "Alive, and I am as surprised as you are. I talk to it about flight rules. It has a new leaf, and I take full credit for that.",
+  "say": "Alive, and I am as surprised as you are. I talk to it about flight rules. It has a new leaf, and I take full credit for that."
+ },
+ {
+  "file": "family/priya-talk-today.m4a",
+  "voice": "priya",
+  "text": "Simulator runs all morning with the new trainees, on your old checklist. They complained about it. I told them it was your fault.",
+  "say": "Simulator runs all morning with the new trainees, on your old checklist. They complained about it. I told them it was your fault."
+ },
+ {
+  "file": "family/priya-talk-miss.m4a",
+  "voice": "priya",
+  "text": "We miss you here too. Lunch is quieter without you stealing my fries. Come back and steal them.",
+  "say": "We miss you here too. Lunch is quieter without you stealing my fries. Come back and steal them."
+ },
+ {
+  "file": "family/priya-talk-night.m4a",
+  "voice": "priya",
+  "text": "Good night, Lena. Fly safe. More tomorrow.",
+  "say": "Good night, Lena. Fly safe. More tomorrow."
+ },
+ {
   "file": "family/ai-01.m4a",
   "voice": "ai",
   "text": "One thing before the next message. ORBIT asked to say this to you in its own words.",

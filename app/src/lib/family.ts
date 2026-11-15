@@ -1,8 +1,9 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
-import { chatReply } from './familyChat'
+import { aboutHealth, chatReply } from './familyChat'
+import { GUIDE, chipsFor, guidedReply } from './familyGuide'
 import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
-import { actionFor, attention, judge, now } from './judge'
+import { actionFor, attention, checkedInToday, judge, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
 import type { AppState, IndicatorKey, Person, Reading } from './types'
 
@@ -131,6 +132,33 @@ export function arrived(state: AppState, messages: EarthMessage[], optIn: OptIn)
     .sort((a, b) => b.recorded - a.recorded)
 }
 
+/**
+ * The family call is the reward for today's check: the day's messages stay locked until today's daily
+ * check-in is saved. Who has sent something is still shown, so there is a reason to do it.
+ */
+export interface FamilyLock {
+  locked: boolean
+  /** The one thing left to do, in a sentence. */
+  todo: string
+  /** Where to do it. */
+  to: string
+}
+
+export function familyLock(state: AppState, person: Person): FamilyLock {
+  return { locked: !checkedInToday(state, person.id), todo: 'Do today\'s check-in to unlock your messages.', to: `/body/${person.id}/check-in` }
+}
+
+/**
+ * The message whose call rings now, if any: today's check is done, both sides opted in, the signal has
+ * arrived, and it is off-duty time. `t` is the time on board, for testing other hours.
+ */
+export function incomingCall(state: AppState, person: Person, optIn: OptIn, t: number = now(state)): EarthMessage | undefined {
+  if (familyLock(state, person).locked || !offDuty(t)) return undefined
+  return arrived(state, messagesToday(), optIn)[0]
+}
+
+function messagesToday(): EarthMessage[] { return MESSAGES }
+
 export function recordedLabel(state: AppState, message: EarthMessage): string {
   return `Message from Earth, recorded ${age(now(state), message.recorded)}`
 }
@@ -147,7 +175,7 @@ export function memberOf(message: EarthMessage): FamilyMember {
 
 /* ---------- what is said in a call ---------- */
 
-export type SegmentLabel = 'Recorded on Earth' | 'AI voice' | 'ORBIT' | 'Scripted preview'
+export type SegmentLabel = 'Recorded on Earth' | 'AI voice' | 'ORBIT' | 'Scripted preview' | 'AI model'
 
 export interface Segment {
   /** recorded: the person's own words. link: fixed joining words in the AI voice. health: an ORBIT rule, word for word. */
@@ -205,6 +233,10 @@ export interface Turn {
   saved?: { key: IndicatorKey; v: number; v2?: number }
   /** True when the reading the call asked for was given and is back in range, so the call stops asking. */
   settled?: boolean
+  /** Everyday talk in the preview: a language model on the device may write the reply; the segment holds the preset line for when there is none. */
+  forModel?: boolean
+  /** Things to say next, offered after a reply of the guided conversation. */
+  next?: string[]
   /** The recorded part that was played. */
   topic?: Topic
 }
@@ -274,7 +306,12 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
     }
   }
   // Only now, after urgent words, readings, symptoms and the reading ORBIT still wants, may a scripted line answer.
-  if (ctx.talkFreely) return { kind: 'preview', segments: [{ kind: 'preview', label: 'Scripted preview', text: chatReply(said, ctx.member, ctx.said ?? []).text }] }
+  // In the preview, anything about health goes to ORBIT's fixed rules, so that no model and no preset answers it.
+  if (ctx.talkFreely && aboutHealth(said)) return { kind: 'symptom', segments: [{ kind: 'health', label: 'ORBIT', text: reply(state, person, said).text }] }
+  // A suggestion of the guided conversation, tapped, typed or said, gets its written reply in the person's rendered voice.
+  const guided = ctx.talkFreely ? guidedReply(said, ctx.member) : undefined
+  if (guided) return { kind: 'preview', next: chipsFor(ctx.member, guided.next), segments: [{ kind: 'preview', label: 'Scripted preview', text: guided.text, audio: guided.audio }] }
+  if (ctx.talkFreely) return { kind: 'preview', forModel: true, segments: [{ kind: 'preview', label: 'Scripted preview', text: chatReply(said, ctx.member, ctx.said ?? []).text }] }
   const part = pickPart(said, ctx.message, ctx.played)
   if (part) return { kind: 'recorded', topic: part.topic, segments: [{ kind: 'recorded', label: 'Recorded on Earth', text: part.text, audio: part.audio, standIn: part.standIn }] }
   return { kind: 'nomore', segments: [{ kind: 'link', label: 'AI voice', text: noMore(state, ctx.member) }] }
@@ -301,6 +338,7 @@ export interface VoiceLine { file: string; voice: string; text: string; say: str
 export function voiceLines(state: AppState, person: Person): VoiceLine[] {
   const out: VoiceLine[] = []
   for (const m of MESSAGES) for (const p of m.parts) if (p.audio) out.push({ file: p.audio, voice: m.from, text: p.text, say: speakable(p.text) })
+  for (const f of FAMILY) for (const n of GUIDE[f.id] ?? []) out.push({ file: `family/${f.id}-talk-${n.id}.m4a`, voice: f.id, text: n.reply, say: speakable(n.reply) })
   const fixed: [string, string][] = [['ai', LINK.handOver], ['ai', LINK.ask], ['ai', NUDGE], ...FAMILY.map((f): [string, string] => ['ai', noMore(state, f)])]
   const f = finding(state, person)
   if (f) {

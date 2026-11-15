@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { reply } from './doctor'
 import { FAMILY, MESSAGES, familyTurn } from './family'
-import { DEFLECT, HONEST, PREVIEW_NOTICE, TOPICS, chatReply, linesFor } from './familyChat'
+import { DEFLECT, HONEST, PREVIEW_NOTICE, TOPICS, UNKNOWN, chatReply, linesFor } from './familyChat'
 import { privateLines } from './familyPrivate'
 
 const [marta, jonas, priya] = FAMILY
@@ -11,7 +11,7 @@ const free = { member: marta, message: MESSAGES[0], played: ['hello' as const], 
 
 /** Anything a preset line must never touch: the body, readings, medicine, advice on them, and numbers. */
 const HEALTH = /\d|blood|pressure|pulse|heart rate|oxygen|temperature|fever|reading|measure|symptom|dizz|faint|pain|ache|hurt|sick|\bill\b|medic|doctor|pill|tablet|drug|dose|diagnos|dehydrat|\brest\b|sleep|exercise|radiation|health|treat|cure/i
-const everyLine = () => [...TOPICS.flatMap((t) => FAMILY.flatMap((f) => linesFor(t, f))), ...DEFLECT, HONEST]
+const everyLine = () => [...TOPICS.flatMap((t) => FAMILY.flatMap((f) => linesFor(t, f))), ...DEFLECT, HONEST, UNKNOWN]
 
 describe('talk freely preview: preset topics', () => {
   it('has at least 20 topics, each with 2 or more lines for every person', () => {
@@ -67,8 +67,8 @@ describe('talk freely preview: it is not an assistant', () => {
     expect(r.text).not.toMatch(/\d|radius|pi\b|paris|lima|hola|def |import /i)
   })
 
-  it('deflects what no topic covers', () => {
-    expect(chatReply('zxcv qwerty', marta, []).topic).toBe('deflect')
+  it('says honestly that it cannot answer what no topic covers', () => {
+    expect(chatReply('zxcv qwerty', marta, []).topic).toBe('unknown')
   })
 
   it('says honestly what it is when asked', () => {

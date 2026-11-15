@@ -8,7 +8,7 @@ import { Body } from './Body'
 import { Family } from './Family'
 import { FamilyCall } from './FamilyCall'
 
-const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
+const text = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/&#x27;/g, "'").replace(/\s+/g, ' ')
 
 function page(path: string) {
   return renderToStaticMarkup(<MemoryRouter initialEntries={[path]}><StoreProvider><Routes><Route element={<Shell />}><Route path="/family" element={<Family />} /><Route path="/body/:pid" element={<Body />} /></Route></Routes></StoreProvider></MemoryRouter>)
@@ -71,9 +71,28 @@ describe('Family call', () => {
 })
 
 describe('Dashboard', () => {
-  it('offers the incoming family call in off-duty time', () => {
-    const t = text(page('/body/lena'))
-    expect(t).toContain('Marta Brandt')
-    expect(t).toContain('AI call')
+  it('does not ring while today\'s check is still to do: the call is the reward for it', () => {
+    const html = page('/body/lena')
+    expect(html).not.toContain('family-incoming')
+    expect(text(html)).toContain('Daily check-in')
+  })
+})
+
+describe('Family screen while locked', () => {
+  const html = page('/family')
+  const t = text(html)
+
+  it('shows who has sent something, but nothing can be played', () => {
+    expect(t).toContain('Marta recorded a message for you')
+    expect(t).toContain('Jonas recorded a message for you')
+    expect(t).toContain('Priya recorded a message for you')
+    expect(t).not.toContain('Play as a call')
+    expect((t.match(/Locked(?! until)/g) ?? []).length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('says in one line what unlocks them, with a button straight to the check', () => {
+    expect(t).toContain('The family call is the reward for today\'s health check.')
+    expect(t).toContain('Do today\'s check-in to unlock your messages.')
+    expect(html).toContain('href="/body/lena/check-in"')
   })
 })

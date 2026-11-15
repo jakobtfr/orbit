@@ -22,7 +22,7 @@ export function privateLines(state: AppState, member: FamilyMember, said: string
   const out: PrivateLine[] = [{ ...base, from: 'you', text: said }]
   for (const seg of turn.segments) {
     if (seg.kind === 'recorded') out.push({ ...base, from: 'recorded', text: seg.text })
-    else if (seg.kind === 'link') out.push({ ...base, from: 'ai', text: seg.text })
+    else if (seg.kind === 'link' || seg.kind === 'preview') out.push({ ...base, from: 'ai', text: seg.text })
   }
   return out
 }

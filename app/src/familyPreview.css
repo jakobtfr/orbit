@@ -1,0 +1,13 @@
+/* The "talk freely" preview in the family call: a switch, and a notice that stays for as long as it is on. */
+.family-preview { align-self: stretch; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.family-preview button { min-height: 28px; padding: 0 12px; border-radius: var(--radius-full); box-shadow: inset 0 0 0 1px var(--status-caution); color: var(--status-caution); font: 600 12px/1 var(--font-sans); cursor: pointer; }
+.family-preview button:hover { background: rgba(255, 214, 10, 0.1); }
+.family-preview.is-on button { background: var(--status-caution); color: #000; }
+.family-preview p { padding: 6px 10px; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--status-caution); color: var(--status-caution); font-size: 11px; line-height: 1.4; }
+.family-label.is-preview { --tone: var(--status-caution); color: var(--status-caution); }
+/* With the preview on there is more on screen: the words keep their room, and what is not needed makes way. */
+.family-call .doctor-words { flex: 1 0 auto; }
+.family-call { overflow-y: auto; }
+.family-call:has(.family-preview.is-on) .doctor-avatar { width: 56px; height: 56px; font-size: 18px; }
+.family-call:has(.family-preview.is-on) .doctor-face { margin-top: 0; gap: 6px; }
+.family-call:has(.family-preview.is-on) .family-next, .family-call:has(.family-preview.is-on) .doctor-fine { display: none; }

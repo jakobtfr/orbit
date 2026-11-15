@@ -1,5 +1,6 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
+import { chatReply } from './familyChat'
 import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
 import { actionFor, attention, judge, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
@@ -146,11 +147,11 @@ export function memberOf(message: EarthMessage): FamilyMember {
 
 /* ---------- what is said in a call ---------- */
 
-export type SegmentLabel = 'Recorded on Earth' | 'AI voice' | 'ORBIT'
+export type SegmentLabel = 'Recorded on Earth' | 'AI voice' | 'ORBIT' | 'Scripted preview'
 
 export interface Segment {
   /** recorded: the person's own words. link: fixed joining words in the AI voice. health: an ORBIT rule, word for word. */
-  kind: 'recorded' | 'link' | 'health'
+  kind: 'recorded' | 'link' | 'health' | 'preview'
   label: SegmentLabel
   text: string
   audio?: string
@@ -194,7 +195,7 @@ export function callScript(state: AppState, person: Person, message: EarthMessag
 }
 
 export interface Turn {
-  kind: 'escalate' | 'reading' | 'symptom' | 'nudge' | 'recorded' | 'nomore'
+  kind: 'escalate' | 'reading' | 'symptom' | 'nudge' | 'recorded' | 'nomore' | 'preview'
   segments: Segment[]
   /** The role-play is over: the call shows ORBIT only and points to a person. */
   endsRolePlay?: boolean
@@ -215,6 +216,10 @@ export interface CallContext {
   played: Topic[]
   /** The reading the health part was about, so a bare number counts for it. */
   focus?: IndicatorKey
+  /** The "talk freely" preview is on: small talk gets a scripted line (familyChat.ts) and not the next recording. */
+  talkFreely?: boolean
+  /** Scripted lines already said in this call, so they are not repeated. */
+  said?: string[]
 }
 
 const FINE = /\b(i'?m|i am|i feel|feeling|doing) (fine|good|great|ok|okay|well|alright|all right)\b|^(fine|good|great|ok|okay|all good|not bad)\b|\b(do not|don'?t) (worry|need)\b|\b(later|not now|tomorrow)\b/
@@ -268,6 +273,8 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
       ],
     }
   }
+  // Only now, after urgent words, readings, symptoms and the reading ORBIT still wants, may a scripted line answer.
+  if (ctx.talkFreely) return { kind: 'preview', segments: [{ kind: 'preview', label: 'Scripted preview', text: chatReply(said, ctx.member, ctx.said ?? []).text }] }
   const part = pickPart(said, ctx.message, ctx.played)
   if (part) return { kind: 'recorded', topic: part.topic, segments: [{ kind: 'recorded', label: 'Recorded on Earth', text: part.text, audio: part.audio, standIn: part.standIn }] }
   return { kind: 'nomore', segments: [{ kind: 'link', label: 'AI voice', text: noMore(state, ctx.member) }] }

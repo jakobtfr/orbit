@@ -3,6 +3,7 @@ import { Mark } from '../components/Shell'
 import { useCall } from '../lib/call'
 import { speakable } from '../lib/doctor'
 import { MESSAGES, arrived, callScript, familyTurn, memberOf, recordedLabel, signalDelayMin, type Segment, type Topic } from '../lib/family'
+import { PREVIEW_NOTICE } from '../lib/familyChat'
 import { privateLines } from '../lib/familyPrivate'
 import { useFamily } from '../lib/familyStore'
 import { INDICATORS, formatValue } from '../lib/indicators'
@@ -11,6 +12,7 @@ import type { IndicatorKey } from '../lib/types'
 import { doctorVoice, rankVoices } from '../lib/voices'
 import '../doctor.css'
 import '../family.css'
+import '../familyPreview.css'
 
 type Phase = 'ringing' | 'playing' | 'listening' | 'idle'
 
@@ -58,6 +60,10 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   const [played, setPlayed] = useState<Topic[]>([])
   /** The reading the health part asked for, until it has been given. */
   const [focus, setFocus] = useState<IndicatorKey | undefined>(undefined)
+  /** The "talk freely" preview: scripted replies in place of the next recording. Off until the astronaut turns it on. */
+  const [talkFreely, setTalkFreely] = useState(false)
+  /** Scripted lines already said in this call. */
+  const [scripted, setScripted] = useState<string[]>([])
   /** Senders whose message has been opened in this call. */
   const [heardFrom, setHeardFrom] = useState<string[]>([])
 
@@ -191,7 +197,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     if (!rolePlay) return
     setYou(text)
     setSaved('')
-    const turn = familyTurn(state, viewer, text, { member, message, played, focus })
+    const turn = familyTurn(state, viewer, text, { member, message, played, focus, talkFreely, said: scripted })
     addLines(privateLines(state, member, text, turn))
     if (turn.kind === 'escalate') {
       setRolePlay(false)
@@ -205,6 +211,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
       if (turn.settled) setFocus(undefined)
     }
     if (turn.topic) setPlayed((p) => [...p, turn.topic!])
+    if (turn.kind === 'preview') setScripted((x) => [...x, turn.segments[0].text])
     void play(turn.segments)
   }
   useEffect(() => { sendRef.current = send })
@@ -257,7 +264,13 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   const delay = Math.round(signalDelayMin(state.day))
   const status = ringing ? 'Connecting…' : phase === 'playing' ? (shown?.label === 'Recorded on Earth' ? 'Playing the recording' : 'Speaking') : phase === 'listening' ? 'Listening' : muted ? 'You are muted' : 'Your turn'
   const left = message.parts.filter((p) => !played.includes(p.topic))
-  const chips = ringing || !rolePlay || phase === 'playing' ? [] : [
+  const chips = ringing || !rolePlay || phase === 'playing' ? [] : talkFreely ? [
+    ...(focus ? [{ label: 'Demo: say 112 over 70', say: 'It is 112 over 70 now' }] : []),
+    { label: 'How are you?', say: 'How are you?' },
+    { label: 'I miss you', say: 'I miss you' },
+    { label: 'Tell me about the dog', say: 'Tell me about the dog' },
+    { label: 'How is the weather?', say: 'How is the weather at home?' },
+  ] : [
     ...(focus ? [{ label: 'Demo: say 112 over 70', say: 'It is 112 over 70 now' }, { label: 'I am fine', say: 'I am fine' }] : []),
     ...(left.some((p) => p.topic === 'day') ? [{ label: 'How was your day?', say: 'How was your day?' }] : []),
     ...(left.some((p) => p.topic === 'story') ? [{ label: 'Tell me a story', say: 'Tell me a story' }] : []),
@@ -284,12 +297,19 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
             ? <p className="doctor-caption is-quiet">{first} recorded a message for you. It is not a live call: you will hear the recording, and an AI voice links the parts.</p>
             : <>
                 {you && <p className="doctor-said">{you}</p>}
-                {shown && <p className={`family-label is-${shown.kind}`}>{shown.label}{shown.label === 'Recorded on Earth' ? ` · ${first}'s own words${shown.standIn ? ' · demo: AI-generated stand-in voice' : ''}` : shown.label === 'ORBIT' ? ' · fixed health rule, word for word' : ' · AI-generated'}</p>}
+                {shown && <p className={`family-label is-${shown.kind}`}>{shown.label}{shown.label === 'Recorded on Earth' ? ` · ${first}'s own words${shown.standIn ? ' · demo: AI-generated stand-in voice' : ''}` : shown.label === 'ORBIT' ? ' · fixed health rule, word for word' : shown.label === 'Scripted preview' ? ' · written by the team · AI voice · not ' + first : ' · AI-generated'}</p>}
                 {shown && <p className={`doctor-caption ${rolePlay ? '' : 'is-urgent'}`}>{shown.text}</p>}
                 {hearing && <p className="doctor-said">{hearing}</p>}
                 {saved && <p className="doctor-saved">{saved}</p>}
               </>}
         </div>
+
+        {!ringing && rolePlay && (
+          <div className={`family-preview ${talkFreely ? 'is-on' : ''}`}>
+            <button role="switch" aria-checked={talkFreely} onClick={() => setTalkFreely((on) => !on)}>{talkFreely ? 'Talk freely is on' : 'Talk freely (preview)'}</button>
+            {talkFreely && <p role="note">{PREVIEW_NOTICE} Health still goes to ORBIT.</p>}
+          </div>
+        )}
 
         {!!chips.length && (
           <div className="doctor-choices" role="group" aria-label="Answers you can tap">

@@ -50,7 +50,7 @@ export function earthLimit(v: Vital): number {
   return { hr: 100, sys: 130, dia: 80, temp: 38.0 }[v]
 }
 
-function earthOver(v: Vital, x: number): boolean {
+export function earthOver(v: Vital, x: number): boolean {
   return v === 'hr' ? x > 100 : x >= earthLimit(v)
 }
 
@@ -74,39 +74,71 @@ export interface Judged extends Day {
   earth: Vital[]
   /** Vitals over the personal limit today. */
   over: Vital[]
+  /** Earth limits, any single day. */
   earthAlarm: boolean
+  /** Earth limits with ORBIT's own confirmation rule: over today and the day before. The fair comparison. */
+  earthConfirmed: boolean
+  /** A stricter Earth cutoff, any single day: pulse over 100, 140/90, or 38.0 °C. */
+  earthStrict: boolean
+  /** ORBIT, any single day. */
+  orbitSingle: boolean
   /** ORBIT alarms only when the day before was also over a personal limit (one odd reading is not an alarm). */
   orbitAlarm: boolean
 }
 
+export function strictOver(v: Vital, x: number): boolean {
+  return v === 'sys' ? x >= 140 : v === 'dia' ? x >= 90 : earthOver(v, x)
+}
+
 export function judgeSubject(s: Subject): Judged[] {
   let prevOver = false
+  let prevEarth = false
   return s.days.map((d) => {
-    const earth = VITALS.filter((v) => d.values[v] !== null && earthOver(v, d.values[v]!))
+    const has = (v: Vital) => d.values[v] !== null
+    const earth = VITALS.filter((v) => has(v) && earthOver(v, d.values[v]!))
     const over = VITALS.filter((v) => {
       const x = d.values[v]
       const limit = personalLimit(v, s.baseline)
       return x !== null && limit !== null && x >= limit
     })
-    const orbitAlarm = over.length > 0 && prevOver
-    prevOver = over.length > 0
-    return { ...d, earth, over, earthAlarm: earth.length > 0, orbitAlarm }
+    const earthAlarm = earth.length > 0
+    const orbitSingle = over.length > 0
+    const judged = {
+      ...d,
+      earth,
+      over,
+      earthAlarm,
+      earthConfirmed: earthAlarm && prevEarth,
+      earthStrict: VITALS.some((v) => has(v) && strictOver(v, d.values[v]!)),
+      orbitSingle,
+      orbitAlarm: orbitSingle && prevOver,
+    }
+    prevOver = orbitSingle
+    prevEarth = earthAlarm
+    return judged
   })
 }
 
 export interface Totals {
   subjects: number
   days: number
+  /** Days with an alarm under each rule, see Judged. */
   earth: number
+  earthConfirmed: number
+  earthStrict: number
+  orbitSingle: number
   orbit: number
 }
 
 export function totals(subjects: Subject[] = SUBJECTS): Totals {
-  const t: Totals = { subjects: subjects.length, days: 0, earth: 0, orbit: 0 }
+  const t: Totals = { subjects: subjects.length, days: 0, earth: 0, earthConfirmed: 0, earthStrict: 0, orbitSingle: 0, orbit: 0 }
   for (const s of subjects) {
     for (const d of judgeSubject(s)) {
       t.days++
       if (d.earthAlarm) t.earth++
+      if (d.earthConfirmed) t.earthConfirmed++
+      if (d.earthStrict) t.earthStrict++
+      if (d.orbitSingle) t.orbitSingle++
       if (d.orbitAlarm) t.orbit++
     }
   }

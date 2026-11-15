@@ -1,0 +1,11 @@
+{
+ "One thing before the next message. ORBIT asked to say this to you in its own words.": "family/ai-01.m4a",
+ "When you have taken it, tell me the numbers. Then we go on.": "family/ai-02.m4a",
+ "Good to hear. ORBIT goes by the reading, not by how you feel, so it asks again.": "family/ai-03.m4a",
+ "That is all Marta recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.": "family/ai-04.m4a",
+ "That is all Jonas recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.": "family/ai-05.m4a",
+ "That is all Priya recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.": "family/ai-06.m4a",
+ "Blood pressure has been well below your normal in this phase (Outbound to Mars: about 112/67) on two readings in a row.": "family/orbit-07.m4a",
+ "Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today.": "family/orbit-08.m4a",
+ "Thank you. 112/70 mmHg is back in your usual range. Take it easy for an hour and check again this evening.": "family/orbit-09.m4a"
+}

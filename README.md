@@ -12,29 +12,36 @@ Their bodies also change in flight: core temperature runs about 1 °C higher, bl
 
 ## What we found in NASA data
 
-We replayed NASA's UTMB head-down bed-rest study, the standard way to imitate weightlessness on the ground: 29 healthy volunteers, 2,184 days of daily vital signs. Every day was judged twice.
+We replayed NASA's UTMB head-down bed-rest study, the standard way to imitate weightlessness on the ground: 29 healthy volunteers, 2,184 days of daily vital signs. Every day was judged with the same rule on both sides: an alarm only when two days in a row are over the line.
 
-| Rule set | Days with an alarm | Alarms per person in 6 months |
+| Rule set, 2 days in a row | Days with an alarm | Alarms per person in 6 months |
 | --- | --- | --- |
-| Earth limits (pulse > 100, BP ≥ 130/80, temperature ≥ 38.0 °C) | **25.5%** | **46** |
-| ORBIT: the person's own pre-bed-rest values, confirmed on two days | **5.9%** | **11** |
+| Earth limits (pulse > 100, BP ≥ 130/80, temperature ≥ 38.0 °C) | **13.5%** | **24** |
+| ORBIT: the person's own pre-bed-rest values | **5.9%** | **11** |
+
+That is 2.3 times fewer alarms. Counted on single days instead, Earth limits alarm on 25.5% of days and ORBIT on 16.5%. A stricter Earth cutoff of 140/90 alarms on 5.4% of single days, but it is still one line for everyone and misses the slow rise below.
 
 The personal rule also sees what Earth's limits miss. One volunteer's resting heart rate drifted from 55 to about 75 bpm during bed rest. That never reaches Earth's line of 100, so Earth limits stay silent; ORBIT flags a rise of more than 20%.
 
-The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). Bed rest is a ground stand-in for flight and the data has no confirmed illness, so it shows fewer false alarms, not that every real problem is caught. Details: [problems and hypotheses](docs/solution/problems-and-hypotheses.md#what-the-data-check-showed).
+The result is reproduced by the app's own tests (`app/src/lib/replay.test.ts`). Bed rest is a ground stand-in for flight and the data has no confirmed illness, so missed problems are tested by planting known ones into the real readings: ORBIT caught 94% of +1 °C fevers (Earth's limits 8%) and 93% of +20 bpm heart-rate rises (Earth 20%), but fewer small blood-pressure rises (26% against 50%). These use the Replay's rules, not the live phase-aware limits ([`miss-rate.md`](docs/research/miss-rate.md)). Details: [problems and hypotheses](docs/solution/problems-and-hypotheses.md#what-the-data-check-showed).
 
 ## What ORBIT does
 
 - **Personal dashboard.** An anatomical body map, daily activity and sleep, one list of today's risks and open checks, and trend plots for heart rate, core temperature, and radiation dose rate.
-- **Your normal, not Earth's.** Every indicator is judged against the astronaut's own values from before flight and in flight. Indicator charts draw Earth's limit next to the personal one, so the difference is visible.
+- **Your normal, not Earth's, for each phase of the mission.** Heart rate, blood pressure, and temperature are judged against the astronaut's own normal for the current phase (outbound, on Mars, return, back on Earth): their pre-flight value plus the change NASA bed-rest data shows for that gravity, plus their own learned offset, held within the range NASA's data shows between people. Limits are wider for 14 days after each gravity change. Fixed danger values never move. Indicator charts draw Earth's limit next to the personal one. Method: [`phase-limits.md`](docs/research/phase-limits.md).
 - **One next action.** When something is off, ORBIT says what to do next in plain words: repeat the reading, apply a countermeasure, or contact the ground.
 - **How to measure.** Step-by-step instructions for each reading, and a two-minute daily symptom check-in.
 - **Call the doctor.** When a reading is off or a symptom was logged, the dashboard says so and offers an immediate call. The call is a pop-up like a phone call, which can be minimised to the corner: a simulated doctor speaks briefly, listens, goes through procedures with you one step at a time, and guides you through that one problem a step at a time, and can look at what you show the camera. It helps with anything you raise, not a fixed list of conditions. It runs on the device, with a local language model through Ollama when one is installed and built-in answers when not, so it works without contact with Earth.
+- **Family call (opt-in, always labelled AI).** A live call home is not possible at Mars distance: a signal takes about 4 to 24 minutes one way. People on Earth who opted in record a short message each day, and ORBIT plays the newest one as a call in the astronaut's off-duty time, with an "AI call" label for the whole call and "Message from Earth, recorded 47 min ago". The call carries one health prompt: ORBIT's fixed rule, word for word, never a language model's words. A reading said in the call is saved and judged again, urgent words end the call and name the medical lead, and the conversation is stored encrypted on the device, apart from the health record. Open it from the card on the dashboard or under **Family**. **Talk freely (preview, not finished):** a switch in the call lets the astronaut chat about everyday things. The replies are about 180 scripted lines on 22 topics, written by the team, in an AI voice; no language model runs. A notice says so for as long as it is on. Knowledge questions get a friendly no, and anything about health still goes to ORBIT's fixed rules.
 - **Spaceflight risks in the rules.** All 17 risks named by NASA's Human Research Program are mapped to what ORBIT measures or asks in the check-in. A next action names the risk its finding bears on, and the doctor is told which risks have a finding behind them.
 - **Resources.** Every procedure on board, one step at a time, each step acted out by a small animated astronaut: what is needed today and how to take each reading. It runs on the device, with no contact with Earth.
 - **Replay.** The full bed-rest comparison: pick any of the 29 volunteers and watch both rule sets judge the same days.
 - **Measurements and Mental Health.** Lena's own measurements, explored one indicator at a time against her normal, with CSV export; a private mood, energy, and journal check-in that only the astronaut sees.
 - **Place.** The mission day sets it. Outbound and return are the spacecraft; the stay on Mars is the surface. The standing test needs gravity, and the radiation review line follows the place.
+
+## Try it
+
+Live app, no install: **https://jakobtfr.github.io/orbit/** (published from `main` by `.github/workflows/deploy-pages.yml` after the tests pass).
 
 ## Run it
 
@@ -62,11 +69,14 @@ All other values shown for the demo astronaut, Lena Brandt, are scripted. The fu
 
 - A prototype, not a medical device. Status rules are simplified from published values and have not been reviewed by a clinician.
 - No flight hardware is connected. Device feeds are scripted.
+- The family call is untested with crews or families: we do not know yet whether a health prompt inside a call from home helps, or harms trust in the call. Its people and voices are invented for the demo; no real person's voice is copied. Speech recognition uses the browser, which on some browsers sends audio to a server; a flight version needs an on-board model.
 - The virtual doctor is simulated. It repeats what the prototype rules find in your readings; it does not diagnose, and its wording still needs review by a medical professional. Anything that sounds urgent is handed to the medical lead.
 
 ## AI assistance
 
-The team used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests, to search and summarise published sources, and to draft documentation. The team chose the challenge, framed the problem, and made the product decisions. Every figure shown in the app is recomputed from the source data by automated tests. No images, video, or audio were generated with AI.
+The team used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests, to search and summarise published sources, and to draft documentation. The team chose the challenge, framed the problem, and made the product decisions. Every figure shown in the app is recomputed from the source data by automated tests. No images or video were generated with AI.
+
+**AI-generated audio.** All 20 voice files of the family call (`app/public/family/*.m4a`) are AI-generated speech: the demo family members (invented people), the linking voice, and ORBIT's rule sentences. They were rendered on our own machine with the open model [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) (Apache 2.0) by `app/scripts/render_family_voice.py`, using Kokoro's synthetic preset voices, not copies of any person. Each file says so in its metadata, and the app labels every voice on screen. The idea of the family call is the team's own.
 
 ## Repository
 

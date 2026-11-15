@@ -16,15 +16,23 @@ import {
   type Subject,
   type Vital,
 } from '../lib/replay'
+import { PROBLEMS, score } from '../lib/missRate'
 import { ScreenTitle } from './common'
 
 /** Two volunteers that show the two halves of the story. Any other can be picked from the list. */
 const FEATURED = [
-  { id: 'UTMB-01', label: 'Normal runs high', story: 'This volunteer’s blood pressure is 132/80 before bed rest: right on Earth’s line of 130/80. Earth limits raise an alarm on most days. Against their own normal, almost nothing is unusual.' },
+  { id: 'UTMB-01', label: 'Normal runs high', story: 'This volunteer’s blood pressure is 132/80 before bed rest: right on Earth’s line of 130/80. Even with the same two-day check, Earth limits raise an alarm on a third of the days. Against their own normal, almost nothing is unusual.' },
   { id: 'UTMB-40', label: 'Slow heart-rate rise', story: 'Resting heart rate creeps up from 55 as the body gets used to lying still. It never comes near Earth’s line of 100, so Earth limits stay silent. ORBIT sees a rise of more than 20% against this volunteer’s own normal.' },
 ]
 
 const ALL = totals()
+
+/** Planted problems shown on the screen; the full set is in docs/research/miss-rate.md. */
+const SHOWN = ['fever-1.0', 'hr-20', 'drift-0.5', 'bp-up-15', 'bp-up-25', 'bp-down-20']
+const MISSES = SHOWN.map((id) => {
+  const p = PROBLEMS.find((cand) => cand['key'] === id)!
+  return { name: p.name, score: score(p) }
+})
 const pct = (n: number, d: number) => `${((n / d) * 100).toFixed(1)}%`
 const per180 = (n: number, d: number) => Math.round((n / d) * 180)
 const fmt = (v: Vital, x: number) => x.toFixed(VITAL_INFO[v].decimals)
@@ -61,7 +69,7 @@ export function Replay() {
   }, [playing, judged.length])
 
   const shown = judged.slice(0, index + 1)
-  const earth = shown.filter((d) => d.earthAlarm).length
+  const earth = shown.filter((d) => d.earthConfirmed).length
   const orbit = shown.filter((d) => d.orbitAlarm).length
   const today = judged[index]
   const featured = FEATURED.find((f) => f.id === subject.id)
@@ -73,15 +81,54 @@ export function Replay() {
 
   return (
     <div className="screen replay-screen">
-      <ScreenTitle sub="Real NASA bed-rest data. Healthy volunteers lay tilted head-down for 60 to 90 days, the standard way to imitate weightlessness on the ground. Every day is judged twice: once by Earth’s fixed limits, once by ORBIT against the person’s own values from before.">
+      <ScreenTitle sub="Real NASA bed-rest data. Healthy volunteers lay tilted head-down for 60 to 90 days, the standard way to imitate weightlessness on the ground. Every day is judged twice with the same rule, an alarm only when two days in a row are over the line: once by Earth’s fixed limits, once by ORBIT against the person’s own values from before.">
         Earth’s normal or yours?
       </ScreenTitle>
 
       <section className="replay-totals" aria-label="All volunteers">
-        <Total title="Earth limits" share={pct(ALL.earth, ALL.days)} per={per180(ALL.earth, ALL.days)} />
-        <Total title="ORBIT, your own normal" share={pct(ALL.orbit, ALL.days)} per={per180(ALL.orbit, ALL.days)} />
+        <Total title="Earth limits, 2 days in a row" share={pct(ALL.earthConfirmed, ALL.days)} per={per180(ALL.earthConfirmed, ALL.days)} />
+        <Total title="ORBIT, 2 days in a row" share={pct(ALL.orbit, ALL.days)} per={per180(ALL.orbit, ALL.days)} />
         <p className="body-sm note replay-totals-note">
-          All {ALL.subjects} volunteers, {ALL.days.toLocaleString('en')} days. Everyone was healthy, so an alarm here is almost always a false one. A crew that gets an alarm on one day in four stops trusting it.
+          All {ALL.subjects} volunteers, {ALL.days.toLocaleString('en')} days. Same rule on both sides: {(ALL.earthConfirmed / ALL.orbit).toFixed(1)} times fewer alarms. Everyone was healthy, so an alarm here is almost always a false one.
+        </p>
+        <table className="table replay-compare">
+          <caption className="label">Every way of counting, share of days with an alarm</caption>
+          <thead>
+            <tr><th scope="col">Rule</th><th scope="col">Any single day</th><th scope="col">2 days in a row</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row" className="cell-name">Earth limits (100 bpm, 130/80, 38.0 °C)</th><td className="cell-value">{pct(ALL.earth, ALL.days)}</td><td className="cell-value">{pct(ALL.earthConfirmed, ALL.days)}</td></tr>
+            <tr><th scope="row" className="cell-name">Stricter Earth limits (140/90)</th><td className="cell-value">{pct(ALL.earthStrict, ALL.days)}</td><td className="cell-value">–</td></tr>
+            <tr><th scope="row" className="cell-name">ORBIT, your own normal</th><td className="cell-value">{pct(ALL.orbitSingle, ALL.days)}</td><td className="cell-value">{pct(ALL.orbit, ALL.days)}</td></tr>
+          </tbody>
+        </table>
+        <p className="body-sm note replay-totals-note">
+          A stricter Earth cutoff of 140/90 alarms less often, but it is still one line for everyone: it misses the slow heart-rate rise below, which stays far under 100 bpm.
+        </p>
+      </section>
+
+      <section aria-labelledby="miss-title">
+        <h2 className="title-2" id="miss-title">Does ORBIT miss real problems?</h2>
+        <p className="body prose">
+          Fewer alarms are only good if real problems still get through. This data has no real illness, so known problems were added on top of every volunteer’s real readings, three times each. Both rule sets use the same two-day rule, here on the same vital both days. A case counts only where the rule had not already raised an alarm before the problem was added.
+        </p>
+        <table className="table replay-compare">
+          <caption className="label">Share of planted problems caught (caught of cases)</caption>
+          <thead>
+            <tr><th scope="col">Planted problem</th><th scope="col">Earth limits</th><th scope="col">ORBIT</th></tr>
+          </thead>
+          <tbody>
+            {MISSES.map(({ name, score: s }) => (
+              <tr key={name}>
+                <th scope="row" className="cell-name">{name}</th>
+                <td className="cell-value">{caughtText(s.caughtClean.earth2, s.nClean.earth2)}</td>
+                <td className="cell-value">{caughtText(s.caughtClean.orbit2, s.nClean.orbit2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="body-sm note">
+          ORBIT catches far more fevers and heart-rate changes. Earth limits catch more of the smaller blood-pressure rises (+15 and +25), because 130/80 sits close to many people’s normal; they pay for it with false alarms. Neither rule set here looks at drops, so both miss every planted drop. The app itself flags low blood pressure, but the Replay does not test that rule. Planted problems are simple steps and ramps, not real illness. Every size, and a separate check of every number: docs/research/miss-rate.md.
         </p>
       </section>
 
@@ -122,7 +169,7 @@ export function Replay() {
           <span className="data replay-day">Day {today.day} of {judged[judged.length - 1].day}</span>
         </div>
 
-        <Lane title="Earth limits" count={earth} days={judged} index={index} alarm={(d) => d.earthAlarm} />
+        <Lane title="Earth limits" count={earth} days={judged} index={index} alarm={(d) => d.earthConfirmed} />
         <Lane title="ORBIT" count={orbit} days={judged} index={index} alarm={(d) => d.orbitAlarm} />
 
         <Today subject={subject} day={today} />
@@ -143,10 +190,14 @@ export function Replay() {
       </section>
 
       <p className="body-sm note">
-        Earth limits: heart rate over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on any single day. ORBIT: heart rate 20% above the person’s own value, upper or lower blood pressure 20 or 15 mmHg above, or temperature 0.5 °C above, on two days in a row. Own values are the average of the days before bed rest. Source: NASA bed-rest study records. Bed rest is a ground stand-in for flight, and this data has no confirmed illness, so it shows fewer false alarms, not that real problems are caught.
+        Earth limits: heart rate over 100, blood pressure 130/80 or more, temperature 38.0 °C or more, on two days in a row. ORBIT: heart rate 20% above the person’s own value, upper or lower blood pressure 20 or 15 mmHg above, or temperature 0.5 °C above, on two days in a row. Own values are the average of the days before bed rest. Source: NASA bed-rest study records. Bed rest is a ground stand-in for flight, and this data has no confirmed illness: real problems are tested only with the planted problems above.
       </p>
     </div>
   )
+}
+
+function caughtText(share: number, n: number): string {
+  return `${Math.round(share * 100)}% (${Math.round(share * n)} of ${n})`
 }
 
 function Total({ title, share, per }: { title: string; share: string; per: number }) {
@@ -200,7 +251,7 @@ function Today({ subject, day }: { subject: Subject; day: Judged }) {
   return (
     <div className="today">
       <div className="today-verdicts">
-        <Verdict who="Earth limits" alarm={day.earthAlarm} />
+        <Verdict who="Earth limits" alarm={day.earthConfirmed} note={!day.earthConfirmed && day.earthAlarm ? 'Over once. Repeat the reading before raising an alarm.' : undefined} />
         <Verdict who="ORBIT" alarm={day.orbitAlarm} note={!day.orbitAlarm && day.over.length > 0 ? 'Over once. Repeat the reading before raising an alarm.' : undefined} />
       </div>
       {lines}

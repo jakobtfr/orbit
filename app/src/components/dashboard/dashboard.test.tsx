@@ -15,7 +15,8 @@ describe('dashboard rendering', () => {
     expect(html).not.toContain('health-chat')
     expect(html.match(/class="dashboard-column /g)).toHaveLength(3)
     expect(html).toContain('Risks &amp; checks')
-    expect(html.match(/<strong>Radiation exposure<\/strong>/g)).toHaveLength(1)
+    // The demo spacecraft stays under NASA's 1.3 mSv a day, so today's dose is not a risk.
+    expect(html).not.toContain('<strong>Radiation exposure</strong>')
     expect(html).toContain('href="/body/lena/check-in"')
     expect(html).not.toContain('Vision check')
     expect(html).not.toContain('Earth limits vs. your normal')
@@ -32,12 +33,19 @@ describe('dashboard rendering', () => {
 describe('risks and checks', () => {
   it('lists only risks and the checks still open today: red, then yellow, then checks', () => {
     const rows = risksAndChecks(initialState(), LENA)
+    expect(rows.map((r) => `${r.kind}: ${r.title}`)).toEqual(['caution: Blood pressure', 'check: Daily check-in'])
+  })
+  it('puts a day over NASA’s 1.3 mSv design limit first, in red', () => {
+    const s = initialState()
+    const today = s.readings.lena.radiation!.find((r) => r.t === 100)!
+    today.v += 1.5
+    const rows = risksAndChecks(s, LENA)
     expect(rows.map((r) => `${r.kind}: ${r.title}`)).toEqual(['warning: Radiation exposure', 'caution: Blood pressure', 'check: Daily check-in'])
   })
   it('drops the check-in once it is done and the blood pressure once it is back in range', () => {
     const s = initialState()
     s.readings.lena.bp!.filter((r) => r.t > 99).forEach((r) => { r.v = 110; r.v2 = 66 })
     s.checkins.lena.push({ t: 100.3, feel: 'Fine', symptoms: [], mood: 4 })
-    expect(risksAndChecks(s, LENA).map((r) => r.title)).toEqual(['Radiation exposure'])
+    expect(risksAndChecks(s, LENA).map((r) => r.title)).toEqual([])
   })
 })

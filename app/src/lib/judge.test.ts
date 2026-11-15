@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { INDICATOR_ORDER } from './indicators'
-import { attention, checkedInToday, judge, regionStatus } from './judge'
+import { LANDING_DAY } from './mission'
+import { metrics } from './dashboard'
+import { attention, baselines, chartGuide, checkedInToday, classify, judge, regionStatus } from './judge'
 import type { AppState, IndicatorKey, Reading } from './types'
 
 const statuses = (s: AppState) => Object.fromEntries(INDICATOR_ORDER.map((k) => [k, judge(s, LENA, k).status]))
@@ -103,6 +105,90 @@ describe('fake logic', () => {
     const s = initialState()
     for (const day of [20, 40, 60, 80, 90, 110]) {
       expect(attention({ ...s, day }, LENA), `day ${day}`).toEqual([])
+    }
+  })
+})
+
+describe('limits follow the mission phase (NASA bed-rest data, docs/research/phase-limits.md)', () => {
+  const at = (day: number): AppState => ({ ...calm(), day })
+  const twice = (s: AppState, k: IndicatorKey, v: number, v2?: number) => {
+    add(s, k, s.day + 0.32, v, v2)
+    add(s, k, s.day + 0.33, v, v2)
+  }
+
+  it('a blood pressure that is low against Earth’s limits but usual for this person in flight is not an alarm', () => {
+    // Lena is 120/72 before flight; in the demo her pressure settles about 9/6 lower in flight, and the app learns that.
+    const s = at(100)
+    twice(s, 'bp', 100, 55)
+    expect(judge(s, LENA, 'bp').status).toBe('ok')
+  })
+
+  it('the same reading before flight is an alarm', () => {
+    const s = at(-5)
+    twice(s, 'bp', 100, 55)
+    expect(judge(s, LENA, 'bp').status).toBe('caution')
+  })
+
+  it('a high heart rate in the first days back on Earth is not an alarm (+11.7 bpm is usual, NASA bed rest)', () => {
+    const s = at(LANDING_DAY + 2)
+    twice(s, 'hr', 80)
+    expect(judge(s, LENA, 'hr').status).toBe('ok')
+  })
+
+  it('the same heart rate in the middle of the flight is an alarm', () => {
+    const s = at(100)
+    twice(s, 'hr', 80)
+    expect(judge(s, LENA, 'hr').status).toBe('caution')
+  })
+
+  it('limits are wider while the body adapts after landing, and normal again once it has', () => {
+    const early = at(LANDING_DAY + 2)
+    twice(early, 'hr', 90)
+    expect(judge(early, LENA, 'hr').status).toBe('ok')
+    const later = at(LANDING_DAY + 20)
+    twice(later, 'hr', 90)
+    expect(judge(later, LENA, 'hr').status).toBe('caution')
+  })
+
+  it('the dashboard plots and the indicator chart draw the same caution line the judge uses', () => {
+    for (const day of [-5, 100, LANDING_DAY + 2]) {
+      const s = at(day)
+      for (const k of ['hr', 'temp'] as const) {
+        const b = baselines(s, LENA, k)
+        const plot = metrics(s, LENA).find((x) => x['key'] === k)!.caution
+        expect(plot, `${k} day ${day}`).toBeCloseTo(chartGuide(k, b).limits[0].v, 6)
+        expect(classify(k, { v: plot + 0.01 }, b).level, `${k} day ${day}`).toBe('caution')
+        expect(classify(k, { v: plot - 0.01 }, b).level, `${k} day ${day}`).toBe('ok')
+      }
+    }
+  })
+
+  it('danger values never move with the phase', () => {
+    for (const day of [-5, 5, 100, 300, LANDING_DAY + 2]) {
+      const s = at(day)
+      add(s, 'spo2', day + 0.32, 89)
+      expect(judge(s, LENA, 'spo2').status, `SpO2 89 on day ${day}`).toBe('warning')
+      add(s, 'rr', day + 0.34, 31)
+      expect(judge(s, LENA, 'rr').status, `breathing 31 on day ${day}`).toBe('warning')
+      twice(s, 'hr', 121)
+      expect(judge(s, LENA, 'hr').status, `heart rate 121 on day ${day}`).toBe('warning')
+    }
+  })
+
+  it('an upper blood pressure under 90 is flagged in every phase, whatever the person’s normal', () => {
+    for (const day of [100, 300]) {
+      const s = at(day)
+      twice(s, 'bp', 89, 62)
+      expect(judge(s, LENA, 'bp').status, `day ${day}`).toBe('caution')
+    }
+  })
+
+  it('no vital sign is flagged on in-range days on Mars or on the way home', () => {
+    // The mission radiation total is left out: on a Mars mission it is expected to climb toward the career limit.
+    const s = initialState()
+    for (const day of [300, 500, 800]) {
+      const items = attention({ ...s, day, place: day < 713 ? 'surface' : 'spacecraft' }, LENA).filter((x) => x.key !== 'radiation')
+      expect(items, `day ${day}`).toEqual([])
     }
   })
 })

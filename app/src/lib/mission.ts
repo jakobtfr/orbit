@@ -32,9 +32,14 @@ export function phaseFor(day: number): Phase {
   return PHASES.find((p) => day < p.end) ?? PHASES[PHASES.length - 1]
 }
 
-/** Radiation dose per day, in mSv: deep space while travelling, lower on the surface of Mars. */
+/**
+ * Radiation dose per day, in mSv, for the demo. In transit the spacecraft meets NASA's design limit
+ * of 1.3 mSv a day in free space (NASA OCHMO standards overview, 2021); 1.1 is an illustrative shielded value.
+ * Curiosity measured 1.84 inside its lightly shielded cruise stage, which a crew vehicle may not exceed.
+ * On the surface of Mars, Curiosity measured 0.64 ± 0.12 (Hassler et al. 2014).
+ */
 export function doseRate(day: number): number {
   const p = phaseFor(day).key
   if (day < 0 || p === 'home') return 0
-  return p === 'surface' ? 0.67 : 1.8
+  return p === 'surface' ? 0.67 : 1.1
 }

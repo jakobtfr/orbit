@@ -107,9 +107,13 @@ export function Indicator() {
               )}
             </div>
           </div>
-          {k === 'temp' && (
+          {b.normal && (
             <p className="body-sm note">
-              Body temperature is expected to run about 1 °C above the before-flight value in flight. It is judged against the last 7 days of readings.
+              Your normal in this phase ({b.normal.label}{b.normal.adapting ? ', body still adapting, so limits are wider' : ''}):{' '}
+              {b.normal.value.toFixed(def.decimals)}
+              {k === 'bp' && b.normal2 ? `/${b.normal2.value.toFixed(0)}` : ''} {def.unit}. That is your before-flight value,{' '}
+              {signed(b.normal.shift, def.decimals)} expected for this phase, and {signed(b.normal.offset, def.decimals)} your own
+              {b.normal.learned ? ' (learned from your readings)' : ''}. Source ({b.normal.evidence}): {b.normal.source}
             </p>
           )}
         </section>

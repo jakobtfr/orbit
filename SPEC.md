@@ -8,7 +8,7 @@ Written 2026-11-14, rewritten the same day to match the app as built. What the a
 
 ## The one idea
 
-ORBIT judges each reading against the astronaut's own normal, not Earth's. The app shows this twice: in the product, where indicator charts draw Earth's limit next to the personal one, and as evidence, where real NASA bed-rest data is replayed through both rule sets (25.5% of days with an alarm under Earth limits, 5.9% under personal rules). Every screen should support that idea or get out of its way.
+ORBIT judges each reading against the astronaut's own normal, not Earth's. The app shows this twice: in the product, where indicator charts draw Earth's limit next to the personal one, and as evidence, where real NASA bed-rest data is replayed through both rule sets (with the same two-day rule, 13.5% of days with an alarm under Earth limits, 5.9% under personal rules). Every screen should support that idea or get out of its way.
 
 ## Scope
 
@@ -122,13 +122,14 @@ Private to the astronaut: mood (1 to 5), energy, an optional journal note, a 60-
 The evidence screen. Built on real, unaltered NASA UTMB bed-rest data.
 
 1. Title "Earth's normal or yours?" and one paragraph on bed rest as a stand-in for weightlessness.
-2. **All volunteers:** two tiles, Earth limits 25.5% and ORBIT 5.9% of days with an alarm, with alarms per person in 180 days.
-3. **One volunteer, day by day:** two featured cases and a list of all 29.
-   - *Normal runs high* (UTMB-01): blood pressure 132/80 before bed rest, on Earth's line. Earth 54 alarms, ORBIT 1.
-   - *Slow heart-rate rise* (UTMB-40): resting pulse drifts from 55 to about 75. Earth 1 alarm, ORBIT 10.
-4. **Player:** play/pause and a day slider; two alarm lanes with counters; a "today" panel showing each vital, the Earth verdict, and the personal verdict, including "Repeat reading" when a value is over the personal limit only once.
-5. **Chart** of one vital at a time with Earth's limit, the volunteer's own normal, and their personal limit.
-6. The rules, the source DOI, and the limit of the evidence: fewer false alarms, not proof that real problems are caught.
+2. **All volunteers:** two tiles with the same two-day rule on both sides, Earth limits 13.5% and ORBIT 5.9% of days with an alarm, with alarms per person in 180 days, and a table of every way of counting (single days 25.5% and 16.5%; stricter Earth 140/90: 5.4%).
+3. **Does ORBIT miss real problems?** Planted problems added to the real readings (`lib/missRate.ts`, [`miss-rate.md`](docs/research/miss-rate.md)). A table of 6 problems, caught share for Earth limits and ORBIT with the same two-day rule: fever +1 °C 8% vs 94%, heart rate +20 bpm 20% vs 93%, slow drift 14% vs 71%, small BP rise 50% vs 26%, larger BP rise 90% vs 69%, BP drop 0% vs 0%. A note says where ORBIT does worse and that drops are not tested.
+4. **One volunteer, day by day:** two featured cases and a list of all 29.
+   - *Normal runs high* (UTMB-01): blood pressure 132/80 before bed rest, on Earth's line. Earth 30 alarms on two days in a row (54 on single days), ORBIT 1.
+   - *Slow heart-rate rise* (UTMB-40): resting pulse drifts from 55 to about 75. Earth 0 alarms on two days in a row (1 on single days), ORBIT 10.
+5. **Player:** play/pause and a day slider; two alarm lanes with counters; a "today" panel showing each vital, the Earth verdict, and the personal verdict, including "Repeat reading" when a value is over the personal limit only once.
+6. **Chart** of one vital at a time with Earth's limit, the volunteer's own normal, and their personal limit.
+7. The rules, the source DOI, and the limit of the evidence: bed rest is a ground stand-in, and planted problems are not real illness.
 
 ### Call the doctor
 
@@ -208,7 +209,7 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 | Saving a reading | Added to the record and judged at once. |
 | Finishing a check-in | Logged symptoms mark their region; the check-in shows as done for the day. |
 | Spaceflight risks | `lib/risks.ts` maps all 17 risks named by NASA's Human Research Program (https://www.nasa.gov/hrp/risks/) to what ORBIT measures or asks: indicators, check-in symptoms, or the private mood and crew answers. There is no risks screen. A next action names the risk its finding bears on, the doctor is told which risks have a finding behind them, and two low crew answers in a row give a private note at the end of the check-in. Decompression sickness, injury during suit work, and injury at launch and landing rest on check-in symptoms only. Hearing maps to no HRP risk. |
-| Replay | `lib/replay.ts`: Earth cutoffs on any single day against personal rules on two days in a row. Tests reproduce 25.5% and 5.9%. |
+| Replay | `lib/replay.ts`: Earth cutoffs and personal rules, each on single days and on two days in a row. Tests reproduce 13.5% vs 5.9% (same rule), 25.5% vs 16.5% (single days), and 5.4% for 140/90. |
 
 ## States every screen must handle
 
@@ -222,7 +223,7 @@ Lena's readings run daily from 30 days before launch to the end of the mission. 
 ## Done when
 
 - [x] The Dashboard shows the bed-rest comparison in one card and links to Replay.
-- [x] Replay reproduces 25.5% and 5.9% from the raw data, checked by tests.
+- [x] Replay reproduces 13.5% vs 5.9% with the same two-day rule, plus the single-day and 140/90 figures, from the raw data, checked by tests.
 - [x] Indicator charts show Earth's limit next to the personal one for heart rate, blood pressure, and temperature.
 - [x] Lena's 38.0 °C shows In range (SH2).
 - [x] The doctor opens from every screen in one tap and starts with a read of today's results.

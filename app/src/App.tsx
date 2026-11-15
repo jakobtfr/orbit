@@ -4,6 +4,7 @@ import { MentalHealth } from './screens/MentalHealth'
 import { Shell } from './components/Shell'
 import { useStore } from './lib/store'
 import { Body } from './screens/Body'
+import { Family } from './screens/Family'
 import { CheckIn } from './screens/CheckIn'
 import { Indicator, Symptoms } from './screens/Indicator'
 import { Measure } from './screens/Measure'
@@ -28,6 +29,7 @@ export function App() {
           <Route path="/measurements" element={<Measurements />} />
           <Route path="/deep-data" element={<Navigate to="/measurements" replace />} />
           <Route path="/mental-health" element={<MentalHealth />} />
+          <Route path="/family" element={<Family />} />
           <Route path="/reference/*" element={<Navigate to="/resources" replace />} />
           <Route path="/body/:pid" element={<Body />} />
           <Route path="/body/:pid/muscle/:muscleId" element={<Muscle />} />

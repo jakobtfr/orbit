@@ -2,16 +2,19 @@ import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { phaseFor } from '../lib/mission'
 import { CallProvider, useCall } from '../lib/call'
+import { FamilyProvider, useFamily } from '../lib/familyStore'
 import { useStore } from '../lib/store'
 import { Doctor } from '../screens/Doctor'
+import { FamilyCall } from '../screens/FamilyCall'
 
 export function Shell() {
-  return <CallProvider><ShellFrame /></CallProvider>
+  return <CallProvider><FamilyProvider><ShellFrame /></FamilyProvider></CallProvider>
 }
 
 function ShellFrame() {
   const { state, viewer } = useStore()
   const { call, openCall, closeCall } = useCall()
+  const { calling, closeFamilyCall } = useFamily()
   const { pathname } = useLocation()
   const mainRef = useRef<HTMLElement>(null)
   const phase = phaseFor(state.day)
@@ -36,9 +39,11 @@ function ShellFrame() {
         <NavLink to="/measurements"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3v14h14M6 12l3-4 3 2 4-6" /></svg>Measurements</NavLink>
         <NavLink to="/resources"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 5c-2-1.5-4.500-2-7-2v12c2.500 0 5 .5 7 2 2-1.500 4.500-2 7-2V3c-2.500 0-5 .5-7 2Zm0 0v12" /></svg>Resources</NavLink>
         <NavLink to="/mental-health"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17S2 12 2 7a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5-8 10-8 10Z" /></svg>My Personal Diary</NavLink>
+        <NavLink to="/family"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.500A2.500 2.500 0 0 1 5.500 3h9A2.500 2.500 0 0 1 17 5.500v6a2.500 2.500 0 0 1-2.500 2.500H9l-4 3v-3.100A2.500 2.500 0 0 1 3 11.500Z" /></svg>Family</NavLink>
       </nav>
       <main className="main" ref={mainRef}><Outlet /></main>
       {call && <Doctor about={call.about} onClose={closeCall} />}
+      {calling && !call && <FamilyCall key={calling} messageId={calling} onClose={closeFamilyCall} />}
     </div>
   </div>
 }

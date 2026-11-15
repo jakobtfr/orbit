@@ -1,0 +1,39 @@
+/* The family call, the Family page, and the incoming-call card. */
+
+.family-ai { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: var(--radius-full); background: #ffd60a; color: #000; font: 700 11px/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+.family-from { margin-top: -8px; color: var(--text-muted); font-size: 12px; }
+.family-call .doctor-avatar.family-avatar { background: linear-gradient(160deg, #5e4b8b, #b0577a); color: #fff; font: 600 34px/1 var(--font-sans); }
+.family-call.is-orbit { border-color: var(--status-warning); }
+.family-label { align-self: center; padding: 3px 10px; border-radius: var(--radius-full); font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+.family-label.is-recorded { background: rgba(176, 87, 122, 0.22); color: #f0a8c4; }
+.family-label.is-link { background: rgba(255, 214, 10, 0.16); color: #ffd60a; }
+.family-label.is-health { background: rgba(74, 163, 255, 0.16); color: var(--accent); }
+.family-ring { align-self: stretch; display: flex; gap: 10px; }
+.family-ring .btn { flex: 1; justify-content: center; min-height: 44px; }
+.family-next button { box-shadow: inset 0 0 0 1px rgba(240, 168, 196, 0.5); }
+
+.family-incoming { position: fixed; right: 20px; bottom: 20px; z-index: 55; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 40px); padding: 14px 16px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 18px; background: #1c1c1f; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7); animation: family-in 0.4s ease-out; }
+.family-incoming > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.family-incoming strong { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 14px; }
+.family-incoming > div > span { color: var(--text-muted); font-size: 12px; }
+@keyframes family-in { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.family-face { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(160deg, #5e4b8b, #b0577a); color: #fff; font: 600 14px/1 var(--font-sans); }
+.family-face.is-you { background: var(--bg-raised); }
+.family-sub { max-width: 68ch; margin-top: 8px; color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
+.family-page .planet-panel { max-width: 920px; }
+.family-list { display: flex; flex-direction: column; gap: 14px; list-style: none; }
+.family-list li { display: flex; align-items: center; gap: 14px; }
+.family-list li > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.family-list strong { color: var(--text-primary); font-size: 15px; }
+.family-list li > div > span { color: var(--text-muted); font-size: 13px; line-height: 1.45; }
+.family-empty { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+.family-switch { flex: none; position: relative; width: 44px; height: 26px; border-radius: 13px; background: var(--bg-raised); cursor: pointer; transition: background var(--duration-fast) ease-out; }
+.family-switch i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform var(--duration-fast) ease-out; }
+.family-switch.is-on { background: var(--status-ok); }
+.family-switch.is-on i { transform: translateX(18px); }
+.family-rules { display: flex; flex-direction: column; gap: 8px; padding-left: 18px; color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+.family-rules b { color: var(--text-primary); font-weight: 600; }
+.family-log { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; list-style: none; color: var(--text-primary); font-size: 14px; line-height: 1.45; }
+.family-log li span { display: block; color: var(--text-muted); font-size: 11px; }
+.family-log li.is-you { padding-left: 14px; border-left: 2px solid var(--accent); }

@@ -1,0 +1,76 @@
+import { IncomingFamilyCall } from '../components/IncomingFamilyCall'
+import { FAMILY, MESSAGES, arrived, memberOf, offDuty, recordedLabel, signalDelayMin } from '../lib/family'
+import { useFamily } from '../lib/familyStore'
+import { now } from '../lib/judge'
+import { useStore } from '../lib/store'
+import '../family.css'
+
+function Switch({ on, label, onChange }: { on: boolean; label: string; onChange: (to: boolean) => void }) {
+  return <button className={`family-switch ${on ? 'is-on' : ''}`} role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)}><i /></button>
+}
+
+const letters = (name: string) => name.split(' ').map((w) => w[0]).join('')
+
+/** Family calls: who opted in on both sides, today's messages from Earth, and the private conversation. */
+export function Family() {
+  const { state, viewer } = useStore()
+  const { optIn, setOptIn, log, clearLog, kept, openFamilyCall } = useFamily()
+  const inbox = arrived(state, MESSAGES, optIn)
+  const delay = Math.round(signalDelayMin(state.day))
+  const free = offDuty(now(state))
+  const first = viewer.name.split(' ')[0]
+  return <div className="planet-page family-page">
+    <header className="planet-page-title"><div><p className="eyebrow">MESSAGES FROM EARTH</p><h1>Family</h1><p className="family-sub">Every family call is AI. Today a signal takes {delay} min one way, so nobody can talk to you live. Your people record a message each day, and ORBIT plays it as a call in your off-duty time.</p></div><span className="privacy-label">Private · on this device</span></header>
+
+    <section className="planet-panel">
+      <header><h2>Today's messages</h2><span>{free ? 'You are off duty now' : 'Calls wait until you are off duty'}</span></header>
+      {!optIn.astronaut && <p className="family-empty">You have opted out. No message is shown or played until you opt in again.</p>}
+      {optIn.astronaut && !inbox.length && <p className="family-empty">No message has arrived yet today.</p>}
+      <ul className="family-list">
+        {inbox.map((m) => { const who = memberOf(m); return <li key={m.id}>
+          <span className="family-face" aria-hidden="true">{letters(who.name)}</span>
+          <div><strong>{who.name}</strong><span>{who.relation} · {recordedLabel(state, m).replace('Message from Earth, ', '')} · {m.parts.length} parts</span></div>
+          <button className="btn btn-primary" disabled={!free} onClick={() => openFamilyCall(m.id)}>Play as a call</button>
+        </li> })}
+      </ul>
+    </section>
+
+    <section className="planet-panel">
+      <header><h2>Who has opted in</h2><span>Either side can stop at any time</span></header>
+      <ul className="family-list">
+        <li>
+          <span className="family-face is-you" aria-hidden="true">{first[0]}</span>
+          <div><strong>Your opt-in</strong><span>{first}, you agreed to receive recorded messages as AI calls and you know that no call is live. ORBIT may pass on one health prompt per call, in its own fixed words.</span></div>
+          <Switch on={optIn.astronaut} label="Your opt-in to family calls" onChange={(to) => setOptIn({ ...optIn, astronaut: to })} />
+        </li>
+        {FAMILY.map((f) => <li key={f.id}>
+          <span className="family-face" aria-hidden="true">{letters(f.name)}</span>
+          <div><strong>{f.name}</strong><span>{f.relation} · {f.consent} Since {f.since}.</span></div>
+          <Switch on={!!optIn.people[f.id]} label={`${f.name}'s opt-in`} onChange={(to) => setOptIn({ ...optIn, people: { ...optIn.people, [f.id]: to } })} />
+        </li>)}
+      </ul>
+    </section>
+
+    <section className="planet-panel">
+      <header><h2>What is real and what is AI</h2></header>
+      <ul className="family-rules">
+        <li><b>Recorded on Earth.</b> The person's own words, played as they recorded them. ORBIT never rewrites them.</li>
+        <li><b>AI voice.</b> AI-generated speech that links the recordings. It never speaks about your health and never claims to be the person.</li>
+        <li><b>ORBIT.</b> Health prompts are ORBIT's fixed rules, word for word, in AI-generated speech. A language model never writes them.</li>
+        <li><b>A reading counts, not "I am fine".</b> A reading you say in a call is saved to your health record and judged again.</li>
+        <li><b>Urgent words end the call.</b> Chest pain, trouble breathing and the like go straight to the medical lead.</li>
+        <li><b>Demo.</b> The people and their messages here are invented.</li>
+      </ul>
+    </section>
+
+    <section className="planet-panel">
+      <header><h2>Your private conversation</h2><span>{kept === 'device' ? 'Kept encrypted on this device, apart from your health record' : kept === 'session' ? 'No private storage in this browser: kept for this session only, apart from your health record' : 'Kept encrypted on this device, apart from your health record'}</span></header>
+      {!log.length && <p className="family-empty">Nothing yet. What you and your people say in a call is kept here. It is never added to your readings, and the medical lead cannot see it.</p>}
+      <ul className="family-log">
+        {log.slice(-12).map((l, n) => <li key={n} className={`is-${l.from}`}><span>{l.from === 'you' ? 'You' : l.from === 'recorded' ? `${FAMILY.find((f) => f.id === l.with)?.name.split(' ')[0] ?? 'Earth'} · recorded` : 'AI voice'}</span>{l.text}</li>)}
+      </ul>
+      {!!log.length && <button className="btn btn-secondary" onClick={clearLog}>Delete this conversation</button>}
+    </section>
+    <IncomingFamilyCall />
+  </div>
+}

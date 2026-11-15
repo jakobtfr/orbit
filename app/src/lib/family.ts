@@ -1,6 +1,6 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
-import { aboutHealth, chatReply } from './familyChat'
+import { HONEST, aboutHealth, asksReal, chatReply } from './familyChat'
 import { GUIDE, chipsFor, guidedReply } from './familyGuide'
 import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
 import { actionFor, attention, checkedInToday, judge, now } from './judge'
@@ -308,6 +308,8 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
   // Only now, after urgent words, readings, symptoms and the reading ORBIT still wants, may a scripted line answer.
   // In the preview, anything about health goes to ORBIT's fixed rules, so that no model and no preset answers it.
   if (ctx.talkFreely && aboutHealth(said)) return { kind: 'symptom', segments: [{ kind: 'health', label: 'ORBIT', text: reply(state, person, said).text }] }
+  // Asked who is speaking, the call answers itself, with the same fixed honest line every time.
+  if (ctx.talkFreely && asksReal(said)) return { kind: 'preview', segments: [{ kind: 'preview', label: 'Scripted preview', text: HONEST }] }
   // A suggestion of the guided conversation, tapped, typed or said, gets its written reply in the person's rendered voice.
   const guided = ctx.talkFreely ? guidedReply(said, ctx.member) : undefined
   if (guided) return { kind: 'preview', next: chipsFor(ctx.member, guided.next), segments: [{ kind: 'preview', label: 'Scripted preview', text: guided.text, audio: guided.audio }] }

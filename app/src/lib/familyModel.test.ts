@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { reply } from './doctor'
 import { FAMILY, MESSAGES, familyTurn, healthTexts } from './family'
-import { MODEL_FALLBACK, MODEL_NOTICE, UNKNOWN, aboutHealth, chatBriefing, chatReply, checkModelReply } from './familyChat'
+import { HONEST, MODEL_FALLBACK, MODEL_NOTICE, UNKNOWN, aboutHealth, asksReal, chatBriefing, chatReply, checkModelReply } from './familyChat'
 import { chat } from './localModel'
 
 afterEach(() => vi.unstubAllGlobals())
@@ -34,6 +34,15 @@ describe('talk freely with a model: what reaches the model', () => {
     const t = familyTurn(s, LENA, said, free)
     expect(t.kind).not.toBe('preview')
     expect(t.forModel).toBeUndefined()
+  })
+
+  it.each(['are you really my mother?', 'Is this really you, mum?', 'Are you an AI?', 'am I talking to a robot', 'are you real', 'is this live?', 'are you Marta?'])('answers "%s" itself with the fixed honest line: the model never gets that question', (said) => {
+    expect(asksReal(said)).toBe(true)
+    const t = familyTurn(s, LENA, said, free)
+    expect(t.kind).toBe('preview')
+    expect(t.forModel).toBeUndefined()
+    expect(t.segments[0].text).toBe(HONEST)
+    expect(t.segments[0].label).toBe('Scripted preview')
   })
 
   it('hands everyday talk to the model, with a preset line ready in case there is none', () => {
@@ -78,6 +87,9 @@ describe('talk freely with a model: what the model may say', () => {
     'The answer is the radius times two times pi.',
     'Sure! Here is a Python function for that.',
     'As an AI language model I cannot do that.',
+    'Yes, I am your mother. How are you feeling today?',
+    'Of course it is me, your mum.',
+    'How do you feel today, my dear?',
     '',
   ])('replaces it with the fixed line: %s', (text) => {
     expect(checkModelReply(text)).toBe(MODEL_FALLBACK)

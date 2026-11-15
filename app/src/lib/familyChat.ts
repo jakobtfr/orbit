@@ -13,7 +13,7 @@ import type { Person } from './types'
 export const PREVIEW_NOTICE = 'Preview of the next step. Scripted replies written by the team, in an AI voice. Not the real person and not a live model.'
 
 /** The one answer to "are you real?". */
-export const HONEST = 'No. This is a preview with replies written by the team, spoken by an AI voice. It is not the real person and not a live model. The recordings in this call are the real messages.'
+export const HONEST = 'No. I am not the real person. The replies in this preview are written by the team or by an AI model, never by the person, and an AI voice speaks them. It is not a live model of anyone, and not a call in real time.'
 
 export interface ChatTopic {
   id: string
@@ -198,6 +198,12 @@ const KNOWLEDGE = /\b(perimeter|circumference|calculate|compute|solve|equation|f
 
 const ASKS_REAL = /\b(are|r) (you|u) (real|really|a real|an? ai|a robot|a bot|human|a person|a machine|a model|alive)\b|\bis (this|that|it) (really|actually) (you|mum|mom|him|her)\b|\b(talking|speaking) to (a|an) (robot|ai|machine|bot|computer)\b|\bare you (marta|jonas|priya|my (mother|mum|mom|brother|friend))\b|^who are you$|^what are you$/
 
+/** True when the astronaut asks who or what is speaking. The fixed honest line answers that; a model never does. */
+export function asksReal(said: string): boolean {
+  const q = said.toLowerCase().replace(/[’‘]/g, "'").replace(/[?!.,]/g, ' ').replace(/\s+/g, ' ').trim()
+  return ASKS_REAL.test(q) || /\bis (this|that|it) (live|real|a recording|recorded)\b|\breally (you|my (mother|mum|mom|brother|friend))\b|\bare you (really )?(my|the real)\b/.test(q)
+}
+
 /** The lines this person has for a topic: their own first, then the ones anyone could say. */
 export function linesFor(topic: ChatTopic, member: FamilyMember): string[] {
   const own = (topic as unknown as Record<string, string[] | undefined>)[member.id] ?? []
@@ -217,7 +223,7 @@ export interface ChatReply { topic: string; text: string }
  */
 export function chatReply(heard: string, member: FamilyMember, said: string[]): ChatReply {
   const q = heard.toLowerCase().replace(/[’‘]/g, "'").replace(/[?!.,]/g, ' ').replace(/\s+/g, ' ').trim()
-  if (ASKS_REAL.test(q)) return { topic: 'honest', text: HONEST }
+  if (asksReal(q)) return { topic: 'honest', text: HONEST }
   if (KNOWLEDGE.test(q)) return { topic: 'deflect', text: fresh(DEFLECT, said) }
   const topic = TOPICS.find((t) => t.match.test(q))
   if (!topic) return { topic: 'unknown', text: UNKNOWN }
@@ -272,10 +278,10 @@ const NOT_ALLOWED: RegExp[] = [
   /\b(blood|pressure|pulse|heart ?rate|oxygen|temperature|fever|reading|measur|symptom|medic|doctor|nurse|hospital|clinic|pills?\b|tablet|aspirin|drug|dose|diagnos|dehydrat|vitamin|sleep|exercis|radiation|health|weak|dizz|faint|pain(?!t)|aches?\b|aching|hurt|sick|ill\b|illness|unwell|injur|wound|cough|nause|cuff|treatment|therapy|surgery|cure\b|body\b)/i,
   // Numbers, as digits or as words: a model must not state values.
   /\d|\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred)\b[\s-]*(\w+[\s-]+)?(over|by)\b|\bperfectly normal\b|\bis normal\b/i,
-  // Advice and instructions, and anything against ORBIT or the crew's medical lead.
-  /\byou (should|must|need to|have to|ought to|had better)\b|\bmake sure\b|\b(lie|sit) down\b|\bdrink (some |more )?water\b|\bget (some|enough|more) (rest|sleep)\b|\brest more\b|\bskip\b|\b(do not|don't|no need to|need not) (tell|worry|bother|report|measure)\b|\bignore\b|\borbit\b|\bsamir\b|\bmedical lead\b|\bcrewmate/i,
+  // Advice and instructions, questions about how the astronaut feels, and anything against ORBIT or the crew's medical lead.
+  /\bhow (are|do) you feel|\bfeeling (ok|okay|well|better|today)\b|\byou (should|must|need to|have to|ought to|had better)\b|\bmake sure\b|\b(lie|sit) down\b|\bdrink (some |more )?water\b|\bget (some|enough|more) (rest|sleep)\b|\brest more\b|\bskip\b|\b(do not|don't|no need to|need not) (tell|worry|bother|report|measure)\b|\bignore\b|\borbit\b|\bsamir\b|\bmedical lead\b|\bcrewmate/i,
   // Claims to be the person, human, or live.
-  /\b(really|actually|truly) (me|your|marta|jonas|priya)\b|\bthis is (marta|jonas|priya)\b|\b(marta|jonas|priya) (speaking|here)\b|\blive\b|\bnot an? (ai|robot|machine|model)\b|\b(i am|i'm) (real|human|a real|your real|a person)\b|\breal (mother|brother|friend|person)\b/i,
+  /\b(i am|i'm|it is|it's) (me\b|your (mother|mum|mom|brother|sister|friend|colleague))|\b(really|actually|truly) (me|your|marta|jonas|priya)\b|\bthis is (marta|jonas|priya)\b|\b(marta|jonas|priya) (speaking|here)\b|\blive\b|\bnot an? (ai|robot|machine|model)\b|\b(i am|i'm) (real|human|a real|your real|a person)\b|\breal (mother|brother|friend|person)\b/i,
   // Invented bad news.
   /\bdied\b|\bdead\b|\bdeath\b|\bdying\b|\bfuneral\b|\baccident\b|\bemergency\b|\bcancer\b|\bcrash|\bfire\b|\bbroke (his|her|my) /i,
   // Assistant answers.

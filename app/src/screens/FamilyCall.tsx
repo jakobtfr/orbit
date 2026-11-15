@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Mark } from '../components/Shell'
+import { BROWSER_MODEL, LOAD_LABEL, LOAD_NOTE, browserChat, canRunInBrowser, loadBrowserModel } from '../lib/browserModel'
 import { useCall } from '../lib/call'
 import { speakable } from '../lib/doctor'
 import { MESSAGES, arrived, callScript, familyTurn, memberOf, recordedLabel, signalDelayMin, type Segment, type Topic } from '../lib/family'
@@ -65,7 +66,12 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   /** The "talk freely" preview: scripted replies in place of the next recording. Off until the astronaut turns it on. */
   const [talkFreely, setTalkFreely] = useState(false)
   /** The language model on this device, when one is running. It writes the preview's replies; without it the preset lines are used. */
-  const [model, setModel] = useState<string | null>(null)
+  const [ollama, setOllama] = useState<string | null>(null)
+  /** The model in the browser, for where nothing is installed: not asked for, loading, ready, or failed. */
+  const [inBrowser, setInBrowser] = useState<'off' | 'loading' | 'ready' | 'failed'>('off')
+  const [loaded, setLoaded] = useState('')
+  /** The model that writes the preview's replies: the one on the device, else the one loaded in the browser. */
+  const model = ollama ?? (inBrowser === 'ready' ? BROWSER_MODEL.name : null)
   /** The preview's talk so far, for the model: what was said and what it answered. */
   const talk = useRef<ChatMessage[]>([])
   /** What the guided conversation offers to say next; before the first reply, everything this person can answer. */
@@ -93,7 +99,10 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     load()
     synth?.addEventListener('voiceschanged', load)
     fetch(`${import.meta.env.BASE_URL}family/voice.json`).then((r) => (r.ok ? r.json() : {})).then((m) => { rendered.current = m as Record<string, string> }).catch(() => {})
-    findModel().then((m) => { if (alive.current && m) { setModel(m); warm(m) } })
+    // `localStorage['orbit-no-ollama'] = '1'` leaves the model on the device aside, to try the browser model on a machine that has both.
+    let aside = false
+    try { aside = window.localStorage.getItem('orbit-no-ollama') === '1' } catch { /* storage blocked */ }
+    if (!aside) findModel().then((m) => { if (alive.current && m) { setOllama(m); warm(m) } })
     return () => {
       alive.current = false
       run.current++
@@ -232,7 +241,11 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
       let full = ''
       const preset = turn.segments[0]
       const asked: ChatMessage = { role: 'user', content: text }
-      chat(model, [{ role: 'system', content: chatBriefing(member, viewer, message) }, ...talk.current.slice(-8), asked], (piece) => { full += piece }, AbortSignal.timeout(20000), 0.7, { think: false, maxTokens: 90 })
+      const prompt: ChatMessage[] = [{ role: 'system', content: chatBriefing(member, viewer, message) }, ...talk.current.slice(-8), asked]
+      const answer = ollama
+        ? chat(ollama, prompt, (piece) => { full += piece }, AbortSignal.timeout(20000), 0.7, { think: false, maxTokens: 90 })
+        : browserChat(prompt).then((whole) => { full = whole })
+      answer
         .then(() => true, () => false)
         .then((ok) => {
           if (run.current !== mine || !alive.current) return
@@ -271,6 +284,13 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     setSaved('')
     addLines([{ day: state.day, with: who.id, from: 'recorded', text: m.parts[0].text }])
     void play([{ kind: 'recorded', label: 'Recorded on Earth', text: m.parts[0].text, audio: m.parts[0].audio, standIn: m.parts[0].standIn }])
+  }
+
+  const loadInBrowser = () => {
+    setInBrowser('loading')
+    setLoaded('Starting…')
+    loadBrowserModel((share, text) => { if (alive.current) setLoaded(`${Math.round(share * 100)}%${/(\d+)MB fetched/.test(text) ? ` · ${/(\d+)MB fetched/.exec(text)![1]} MB` : ''}`) })
+      .then(() => { if (alive.current) setInBrowser('ready') }, () => { if (alive.current) setInBrowser('failed') })
   }
 
   const submit = (e: FormEvent) => {
@@ -344,7 +364,10 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
         {!ringing && rolePlay && (
           <div className={`family-chat-preview ${talkFreely ? 'is-on' : ''}`}>
             <button role="switch" aria-checked={talkFreely} onClick={() => setTalkFreely((on) => !on)}>{talkFreely ? 'Talk freely is on' : 'Talk freely (preview)'}</button>
-            {talkFreely && <p role="note">{GUIDE_NOTICE} {model ? `Anything else you type is answered by an AI model on this device (${model}) in ${first}'s character.` : 'Anything else you type gets an honest "not yet".'} Health goes to ORBIT's fixed rules.</p>}
+            {talkFreely && <p role="note">{GUIDE_NOTICE} {model ? `Anything else you type is answered by an AI model on this ${ollama ? 'device' : 'laptop, in the browser'} (${model}) in ${first}'s character.` : 'Anything else you type gets an honest "not yet".'} Health goes to ORBIT's fixed rules.</p>}
+            {talkFreely && !ollama && inBrowser === 'off' && canRunInBrowser() && <><button className="family-chat-load" onClick={loadInBrowser}>{LOAD_LABEL}</button><p role="note" className="family-chat-quiet">{LOAD_NOTE}</p></>}
+            {talkFreely && inBrowser === 'loading' && <p role="status" className="family-chat-quiet">Loading {BROWSER_MODEL.name}: {loaded}</p>}
+            {talkFreely && inBrowser === 'failed' && <p role="alert" className="family-chat-quiet">The model could not be loaded in this browser. The suggestions still work.</p>}
           </div>
         )}
 

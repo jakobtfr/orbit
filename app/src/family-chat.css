@@ -11,3 +11,8 @@
 .family-call:has(.family-chat-preview.is-on) .doctor-avatar { width: 56px; height: 56px; font-size: 18px; }
 .family-call:has(.family-chat-preview.is-on) .doctor-face { margin-top: 0; gap: 6px; }
 .family-call:has(.family-chat-preview.is-on) .doctor-fine { display: none; }
+
+/* Loading a model into the browser, for the demo on the live site. */
+.family-chat-preview button.family-chat-load { box-shadow: inset 0 0 0 1px var(--accent); color: var(--accent); }
+.family-chat-preview button.family-chat-load:hover { background: rgba(74, 163, 255, 0.12); }
+.family-chat-preview p.family-chat-quiet { box-shadow: none; padding: 0 6px; color: var(--text-muted); text-align: center; }

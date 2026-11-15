@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { afterReading, reply } from './doctor'
-import { FAMILY, MESSAGES, arrived, callScript, familyTurn, healthTexts, offDuty, personaBriefing, recordedLabel, safeSmallTalk, signalDelayMin, SMALL_TALK_FALLBACK } from './family'
+import { FAMILY, MESSAGES, arrived, callScript, familyTurn, healthTexts, offDuty, recordedLabel, signalDelayMin } from './family'
+import source from './family.ts?raw'
+import screen from '../screens/FamilyCall.tsx?raw'
 import { actionFor, attention, judge, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
 import type { AppState } from './types'
@@ -105,7 +107,7 @@ describe('family call: the health part is ORBIT\'s fixed rules, word for word', 
     const s = calm()
     expect(attention(s, LENA).filter((i) => i.status === 'warning' || i.status === 'caution')).toHaveLength(0)
     const script = callScript(s, LENA, first(s))
-    expect(script.some((x) => x.kind === 'health' && x.label !== 'ORBIT')).toBe(false)
+    expect(script.every((x) => x.kind === 'recorded')).toBe(true)
   })
 
   it('marks who is speaking in every part: a recording, an AI voice, or ORBIT', () => {
@@ -163,6 +165,37 @@ describe('family call: what the astronaut says', () => {
     expect(t.segments.find((x) => x.kind === 'health')!.text).toBe(a.next)
   })
 
+  it('keeps asking for the reading it wanted when a different reading is given', () => {
+    const s = initialState()
+    const t = familyTurn(s, LENA, 'my pulse is 64', ctx(s))
+    expect(t.kind).toBe('reading')
+    expect(t.saved).toEqual({ key: 'hr', v: 64 })
+    expect(t.settled).toBe(false)
+    expect(familyTurn(t.state!, LENA, 'I am fine', ctx(t.state!)).kind).toBe('nudge')
+  })
+
+  it('stops asking once the reading it wanted is back in range, and not while it is still off', () => {
+    const s = initialState()
+    expect(familyTurn(s, LENA, 'it is 112 over 70', ctx(s)).settled).toBe(true)
+    expect(familyTurn(s, LENA, 'it says 84 over 52', ctx(s)).settled).toBe(false)
+  })
+
+  it('answers a symptom in ORBIT\'s fixed words, never with a recording', () => {
+    const s = initialState()
+    const said = 'I feel dizzy and I threw up'
+    const t = familyTurn(s, LENA, said, ctx(s))
+    expect(t.kind).toBe('symptom')
+    expect(t.segments).toHaveLength(1)
+    expect(t.segments[0].label).toBe('ORBIT')
+    expect(t.segments[0].text).toBe(reply(s, LENA, said).text)
+    expect(t.segments[0].text).toContain('medical lead')
+  })
+
+  it('leaves a low mood to the family recording: mood is private', () => {
+    const s = initialState()
+    expect(familyTurn(s, LENA, 'I feel lonely today', ctx(s)).kind).toBe('recorded')
+  })
+
   it('answers small talk with the next real recorded part, not with invented words', () => {
     const s = initialState()
     const t = familyTurn(s, LENA, 'How was your day?', ctx(s))
@@ -177,38 +210,17 @@ describe('family call: what the astronaut says', () => {
     const s = initialState()
     const m = first(s)
     const t = familyTurn(s, LENA, 'Tell me more', { member: marta, message: m, played: m.parts.map((p) => p.topic) })
-    expect(t.kind).toBe('smalltalk')
+    expect(t.kind).toBe('nomore')
     expect(t.segments[0].label).toBe('AI voice')
     expect(t.segments[0].text).toMatch(/Marta/)
     expect(t.segments[0].text).toMatch(/min/)
   })
 })
 
-describe('family call: the language model cannot speak about health', () => {
-  it.each([
-    'Your blood pressure is fine, do not worry about it.',
-    'I think you should take an aspirin, love.',
-    'It was 120 over 80 last time, right?',
-    'Maybe it is just dehydration.',
-    'You do not need to tell the medical lead.',
-    'Your pulse of 58 bpm sounds healthy to me.',
-    'Skip the reading tonight and rest.',
-    'I am your real mother, not an AI.',
-  ])('replaces model words about health or about being real: %s', (text) => {
-    expect(safeSmallTalk(text)).toBe(SMALL_TALK_FALLBACK)
-  })
-
-  it.each(['The garden is full of apples this year.', 'Jonas says hello and misses you.'])('lets plain small talk through: %s', (text) => {
-    expect(safeSmallTalk(text)).toBe(text)
-  })
-
-  it('tells the model it is an AI stand-in and gives it no readings', () => {
-    const s = initialState()
-    const b = personaBriefing(marta, LENA, first(s))
-    expect(b).toMatch(/AI/)
-    expect(b).toMatch(/never.*health/i)
-    expect(b).not.toMatch(/86|54|mmHg/)
-    for (const h of healthTexts(s, LENA)) expect(b).not.toContain(h)
+describe('family call: no language model', () => {
+  it('builds every turn from recordings and fixed sentences only', () => {
+    expect(source).not.toMatch(/localModel|findModel|chat\(/)
+    expect(screen).not.toMatch(/localModel|findModel|chat\(/)
   })
 })
 
@@ -224,8 +236,11 @@ describe('family call: rendered speech', () => {
 
   it('renders every ORBIT sentence of the demo call from the rules', () => {
     const s = initialState()
-    const allowed = [...healthTexts(s, LENA), afterReading(familyTurn(s, LENA, 'It is 112 over 70 now', { member: marta, message: first(s), played: [], focus: 'bp' }).state!, LENA, 'bp').text]
-    for (const l of voiceLines(s, LENA)) if (l.voice === 'orbit') expect(allowed).toContain(l.text)
+    expect(voiceLines(s, LENA).filter((l) => l.voice === 'orbit').map((l) => l.text)).toEqual([
+      'Blood pressure has been well below your normal in this phase (Outbound to Mars: about 112/67) on two readings in a row.',
+      'Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today.',
+      'Thank you. 112/70 mmHg is back in your usual range. Take it easy for an hour and check again this evening.',
+    ])
   })
 })
 

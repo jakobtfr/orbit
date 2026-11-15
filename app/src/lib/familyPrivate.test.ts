@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { LENA, initialState } from '../data/demo'
 import { FAMILY, MESSAGES, familyTurn } from './family'
 import { makeKey, privateLines, seal, unseal } from './familyPrivate'
+import { startOptIn } from './familyStore'
 
 const ctx = { member: FAMILY[0], message: MESSAGES[0], played: ['hello' as const], focus: 'bp' as const }
 
@@ -49,5 +50,25 @@ describe('private family conversation', () => {
     const s = initialState()
     const turn = familyTurn(s, LENA, 'my chest hurts', ctx)
     expect(privateLines(s, ctx.member, 'my chest hurts', turn)).toEqual([])
+  })
+
+  it('keeps a symptom out of the private log: it belongs to the health side', () => {
+    const s = initialState()
+    const turn = familyTurn(s, LENA, 'I feel dizzy', ctx)
+    expect(privateLines(s, ctx.member, 'I feel dizzy', turn)).toEqual([])
+  })
+})
+
+describe('opt-in while the stored choice is not known', () => {
+  it('shows nothing until the stored choice has been read', () => {
+    expect(startOptIn('loading').astronaut).toBe(false)
+  })
+
+  it('stays off when the stored choice cannot be read', () => {
+    expect(startOptIn('failed').astronaut).toBe(false)
+  })
+
+  it('uses the demo opt-in where the browser has no storage at all', () => {
+    expect(startOptIn('none').astronaut).toBe(true)
   })
 })

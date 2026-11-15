@@ -24,7 +24,7 @@ export function Family() {
 
     <section className="planet-panel">
       <header><h2>Today's messages</h2><span>{free ? 'You are off duty now' : 'Calls wait until you are off duty'}</span></header>
-      {!optIn.astronaut && <p className="family-empty">You have opted out. No message is shown or played until you opt in again.</p>}
+      {!optIn.astronaut && kept !== 'loading' && <p className="family-empty">You have opted out. No message is shown or played until you opt in again.</p>}
       {optIn.astronaut && !inbox.length && <p className="family-empty">No message has arrived yet today.</p>}
       <ul className="family-list">
         {inbox.map((m) => { const who = memberOf(m); return <li key={m.id}>
@@ -55,10 +55,11 @@ export function Family() {
       <header><h2>What is real and what is AI</h2></header>
       <ul className="family-rules">
         <li><b>Recorded on Earth.</b> The person's own words, played as they recorded them. ORBIT never rewrites them.</li>
-        <li><b>AI voice.</b> AI-generated speech that links the recordings. It never speaks about your health and never claims to be the person.</li>
-        <li><b>ORBIT.</b> Health prompts are ORBIT's fixed rules, word for word, in AI-generated speech. A language model never writes them.</li>
+        <li><b>AI voice.</b> AI-generated speech that says a few fixed linking sentences. No language model takes part in a family call, so nothing is invented in your people's name.</li>
+        <li><b>ORBIT.</b> Health prompts and answers to a symptom are ORBIT's fixed rules, word for word, in AI-generated speech.</li>
         <li><b>A reading counts, not "I am fine".</b> A reading you say in a call is saved to your health record and judged again.</li>
         <li><b>Urgent words end the call.</b> Chest pain, trouble breathing and the like go straight to the medical lead.</li>
+        <li><b>Private.</b> What you and your people say is stored encrypted on this device, apart from your health record. Readings, symptoms and urgent words go to the health side and are not kept in it.</li>
         <li><b>Demo.</b> The people and their messages here are invented. Their voices are AI-generated stand-ins for real recordings, made with the open model Kokoro-82M, and each audio file says so in its metadata.</li>
       </ul>
     </section>

@@ -17,7 +17,7 @@ export interface PrivateLine {
 
 /** What one turn of a call adds to the private log. */
 export function privateLines(state: AppState, member: FamilyMember, said: string, turn: Turn): PrivateLine[] {
-  if (turn.kind === 'reading' || turn.kind === 'escalate') return []
+  if (turn.kind === 'reading' || turn.kind === 'escalate' || turn.kind === 'symptom') return []
   const base = { day: state.day, with: member.id }
   const out: PrivateLine[] = [{ ...base, from: 'you', text: said }]
   for (const seg of turn.segments) {
@@ -86,12 +86,19 @@ async function put(id: string, value: unknown): Promise<void> {
   })
 }
 
-async function deviceKey(): Promise<CryptoKey> {
-  const have = await get<CryptoKey>('key')
-  if (have) return have
-  const made = await makeKey()
-  await put('key', made)
-  return made
+let keyOnce: Promise<CryptoKey> | undefined
+
+/** The device's key. It is looked up or made once, so two writes at the same moment can never make two keys. */
+function deviceKey(): Promise<CryptoKey> {
+  keyOnce ??= (async () => {
+    const have = await get<CryptoKey>('key')
+    if (have) return have
+    const made = await makeKey()
+    await put('key', made)
+    return made
+  })()
+  keyOnce.catch(() => { keyOnce = undefined })
+  return keyOnce
 }
 
 /** Reads one private value, or the fallback when nothing is stored or storage is unavailable. */

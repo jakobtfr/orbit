@@ -2,11 +2,10 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Mark } from '../components/Shell'
 import { useCall } from '../lib/call'
 import { speakable } from '../lib/doctor'
-import { MESSAGES, arrived, callScript, familyTurn, memberOf, personaBriefing, recordedLabel, safeSmallTalk, signalDelayMin, type Segment, type Topic } from '../lib/family'
+import { MESSAGES, arrived, callScript, familyTurn, memberOf, recordedLabel, signalDelayMin, type Segment, type Topic } from '../lib/family'
 import { privateLines } from '../lib/familyPrivate'
 import { useFamily } from '../lib/familyStore'
 import { INDICATORS, formatValue } from '../lib/indicators'
-import { chat, findModel } from '../lib/localModel'
 import { useStore } from '../lib/store'
 import type { IndicatorKey } from '../lib/types'
 import { doctorVoice, rankVoices } from '../lib/voices'
@@ -69,7 +68,6 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   const voices = useRef<SpeechSynthesisVoice[]>([])
   /** Pre-rendered speech for fixed sentences, by their text. */
   const rendered = useRef<Record<string, string>>({})
-  const model = useRef<string | null>(null)
   const mutedNow = useRef(false)
   const sendRef = useRef<(text: string) => void>(() => {})
   const alive = useRef(true)
@@ -81,7 +79,6 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     load()
     synth?.addEventListener('voiceschanged', load)
     fetch(`${import.meta.env.BASE_URL}family/voice.json`).then((r) => (r.ok ? r.json() : {})).then((m) => { rendered.current = m as Record<string, string> }).catch(() => {})
-    findModel().then((m) => { model.current = m })
     return () => {
       alive.current = false
       run.current++
@@ -154,11 +151,14 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
     }
     const file = seg.audio ?? rendered.current[seg.text]
     if (!file) { bySynth(); return }
+    // A file that cannot be played reports it twice, as an error and as a failed play: fall back once.
+    let fellBack = false
+    const fallBack = () => { if (!done && !fellBack) { fellBack = true; bySynth() } }
     const a = new Audio(`${import.meta.env.BASE_URL}${file}`)
     audio.current = a
     a.onended = finish
-    a.onerror = () => { if (!done) bySynth() }
-    a.play().catch(() => { if (!done) bySynth() })
+    a.onerror = fallBack
+    a.play().catch(fallBack)
   })
 
   const play = async (segments: Segment[], then: 'listen' | 'stop' = 'listen') => {
@@ -202,24 +202,9 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
       const { key: indicator } = turn.saved
       dispatch({ type: 'reading', personId: viewer.id, key: indicator, reading: turn.reading })
       setSaved(`Saved to your health record: ${INDICATORS[indicator].name} ${formatValue(indicator, turn.saved)} ${INDICATORS[indicator].unit}`)
-      setFocus(undefined)
+      if (turn.settled) setFocus(undefined)
     }
     if (turn.topic) setPlayed((p) => [...p, turn.topic!])
-    const using = model.current
-    if (turn.kind === 'smalltalk' && using) {
-      // Only when nothing recorded is left does the language model say a sentence, and it is checked before it is shown.
-      let full = ''
-      const mine = ++run.current
-      setPhase('playing')
-      chat(using, [{ role: 'system', content: personaBriefing(member, viewer, message) }, { role: 'user', content: text }], (piece) => { full += piece }, AbortSignal.timeout(12000), 0.7)
-        .catch(() => {})
-        .then(() => {
-          if (run.current !== mine || !alive.current) return
-          const own = safeSmallTalk(full.replace(/<think>[\s\S]*?(<\/think>|$)/g, ''))
-          void play([{ kind: 'link', label: 'AI voice', text: own }, ...turn.segments])
-        })
-      return
-    }
     void play(turn.segments)
   }
   useEffect(() => { sendRef.current = send })
@@ -273,7 +258,7 @@ export function FamilyCall({ messageId, onClose }: { messageId: string; onClose:
   const status = ringing ? 'Connecting…' : phase === 'playing' ? (shown?.label === 'Recorded on Earth' ? 'Playing the recording' : 'Speaking') : phase === 'listening' ? 'Listening' : muted ? 'You are muted' : 'Your turn'
   const left = message.parts.filter((p) => !played.includes(p.topic))
   const chips = ringing || !rolePlay || phase === 'playing' ? [] : [
-    ...(focus ? [{ label: 'It is 112 over 70', say: 'It is 112 over 70 now' }, { label: 'I am fine', say: 'I am fine' }] : []),
+    ...(focus ? [{ label: 'Demo: say 112 over 70', say: 'It is 112 over 70 now' }, { label: 'I am fine', say: 'I am fine' }] : []),
     ...(left.some((p) => p.topic === 'day') ? [{ label: 'How was your day?', say: 'How was your day?' }] : []),
     ...(left.some((p) => p.topic === 'story') ? [{ label: 'Tell me a story', say: 'Tell me a story' }] : []),
     ...(left.length && !left.some((p) => p.topic === 'day' || p.topic === 'story') ? [{ label: 'Go on', say: 'Go on' }] : []),

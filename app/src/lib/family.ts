@@ -1,7 +1,7 @@
 import { CREW } from '../data/demo'
 import { age } from './format'
-import { afterReading, heardReading, isUrgent, reply, speakable } from './doctor'
-import { actionFor, attention, now } from './judge'
+import { afterReading, heardReading, isComplaint, isUrgent, reply, speakable } from './doctor'
+import { actionFor, attention, judge, now } from './judge'
 import { ARRIVAL_DAY } from './mission'
 import type { AppState, IndicatorKey, Person, Reading } from './types'
 
@@ -11,7 +11,7 @@ import type { AppState, IndicatorKey, Person, Reading } from './types'
  *
  * Three voices, always labelled: the person's real recording, an AI voice that only links the
  * recordings, and ORBIT. Every health sentence is ORBIT's: it is taken word for word from the fixed
- * rules in judge.ts. The language model never writes one.
+ * rules in judge.ts. No language model takes part in a family call: every word is a recording or a fixed sentence.
  */
 
 export interface FamilyMember {
@@ -194,7 +194,7 @@ export function callScript(state: AppState, person: Person, message: EarthMessag
 }
 
 export interface Turn {
-  kind: 'escalate' | 'reading' | 'nudge' | 'recorded' | 'smalltalk'
+  kind: 'escalate' | 'reading' | 'symptom' | 'nudge' | 'recorded' | 'nomore'
   segments: Segment[]
   /** The role-play is over: the call shows ORBIT only and points to a person. */
   endsRolePlay?: boolean
@@ -202,6 +202,8 @@ export interface Turn {
   state?: AppState
   reading?: Reading
   saved?: { key: IndicatorKey; v: number; v2?: number }
+  /** True when the reading the call asked for was given and is back in range, so the call stops asking. */
+  settled?: boolean
   /** The recorded part that was played. */
   topic?: Topic
 }
@@ -235,7 +237,7 @@ function medicalLead(): string {
   return CREW.find((c) => /medical lead/i.test(c.role))?.name ?? 'the medical lead'
 }
 
-/** What happens after the astronaut says something in a family call. Nothing here comes from a language model. */
+/** What happens after the astronaut says something in a family call. Every word is a recording or a fixed sentence. */
 export function familyTurn(state: AppState, person: Person, said: string, ctx: CallContext): Turn {
   if (isUrgent(said)) {
     return { kind: 'escalate', endsRolePlay: true, segments: [{ kind: 'health', label: 'ORBIT', text: reply(state, person, said).text }] }
@@ -250,9 +252,12 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
       state: next,
       reading,
       saved: { key: heard.key, v: heard.v, ...(heard.v2 !== undefined ? { v2: heard.v2 } : {}) },
+      settled: heard.key === ctx.focus && judge(next, person, heard.key).status === 'ok',
       segments: [{ kind: 'health', label: 'ORBIT', text: afterReading(next, person, heard.key).text, key: heard.key }],
     }
   }
+  // A symptom is ORBIT's to answer, in the same fixed words the doctor call uses. It is never answered with a recording.
+  if (isComplaint(said)) return { kind: 'symptom', segments: [{ kind: 'health', label: 'ORBIT', text: reply(state, person, said).text }] }
   const f = finding(state, person)
   if (f && ctx.focus && FINE.test(said.toLowerCase().trim())) {
     return {
@@ -265,7 +270,7 @@ export function familyTurn(state: AppState, person: Person, said: string, ctx: C
   }
   const part = pickPart(said, ctx.message, ctx.played)
   if (part) return { kind: 'recorded', topic: part.topic, segments: [{ kind: 'recorded', label: 'Recorded on Earth', text: part.text, audio: part.audio, standIn: part.standIn }] }
-  return { kind: 'smalltalk', segments: [{ kind: 'link', label: 'AI voice', text: noMore(state, ctx.member) }] }
+  return { kind: 'nomore', segments: [{ kind: 'link', label: 'AI voice', text: noMore(state, ctx.member) }] }
 }
 
 export const NUDGE = 'Good to hear. ORBIT goes by the reading, not by how you feel, so it asks again.'
@@ -274,34 +279,6 @@ export const NUDGE = 'Good to hear. ORBIT goes by the reading, not by how you fe
 export function noMore(state: AppState, member: FamilyMember): string {
   const delay = Math.max(1, Math.round(signalDelayMin(state.day)))
   return `That is all ${firstName(member.name)} recorded today. What you just said is saved as your reply and reaches Earth in about ${delay} min.`
-}
-
-/* ---------- the language model, when one is running ---------- */
-
-export const SMALL_TALK_FALLBACK = 'I only have what was recorded today. Say anything you like: it goes to Earth as your reply.'
-
-/** Words a family voice must never say on its own: anything about health, and any claim to be the real person. */
-const HEALTH_WORDS =
-  /\d|blood|pressure|pulse|heart|bpm|oxygen|temperature|fever|reading|measure|symptom|dizz|faint|pain|ache|hurt|sick|ill\b|medic|doctor|pill|aspirin|tablet|drug|dose|diagnos|dehydrat|rest\b|sleep|exercise|radiation|healthy|health|worry about it|medical|treat|cure|\bnot an? ai\b|\bi am (your )?real\b|\bi'?m (your )?real\b|\breally (me|your)\b/i
-
-/** Lets a model's small talk through only when it says nothing about health and does not claim to be real. */
-export function safeSmallTalk(text: string): string {
-  const clean = text.replace(/\[\[[^\]]*\]\]?/g, '').replace(/[*_#`]/g, '').trim()
-  return clean && !HEALTH_WORDS.test(clean) ? clean : SMALL_TALK_FALLBACK
-}
-
-/**
- * What the on-device language model is told. It gets the recorded words and nothing about the
- * astronaut's health: no readings, no findings. Its answer still goes through safeSmallTalk.
- */
-export function personaBriefing(member: FamilyMember, person: Person, message: EarthMessage): string {
-  return [
-    `You are an AI stand-in in ORBIT's family call. ${firstName(person.name)}, an astronaut far from Earth, is listening to today's recorded message from ${member.name} (${member.relation.toLowerCase()}). You are not ${firstName(member.name)} and you never claim to be: if asked, say you are an AI that links the recordings.`,
-    `Today ${firstName(member.name)} recorded: ${message.parts.map((p) => `"${p.text}"`).join(' ')}`,
-    `Your only job: one short, warm sentence, 20 words at most, that reacts to what ${firstName(person.name)} just said, using only things from the recording above. Do not invent news, memories, or promises.`,
-    'You never speak about health, the body, readings, medicine, rest, or sleep, and you never give advice. ORBIT says those parts itself. If they bring up health, say only that ORBIT will answer that.',
-    `If something sounds serious, say only: tell ${medicalLead()} now.`,
-  ].join('\n\n')
 }
 
 /* ---------- speech rendered ahead of time ---------- */
@@ -317,7 +294,7 @@ export interface VoiceLine { file: string; voice: string; text: string; say: str
 export function voiceLines(state: AppState, person: Person): VoiceLine[] {
   const out: VoiceLine[] = []
   for (const m of MESSAGES) for (const p of m.parts) if (p.audio) out.push({ file: p.audio, voice: m.from, text: p.text, say: speakable(p.text) })
-  const fixed: [string, string][] = [['ai', LINK.handOver], ['ai', LINK.ask], ['ai', NUDGE], ['ai', SMALL_TALK_FALLBACK], ...FAMILY.map((f): [string, string] => ['ai', noMore(state, f)])]
+  const fixed: [string, string][] = [['ai', LINK.handOver], ['ai', LINK.ask], ['ai', NUDGE], ...FAMILY.map((f): [string, string] => ['ai', noMore(state, f)])]
   const f = finding(state, person)
   if (f) {
     fixed.push(['orbit', f.action.observed], ['orbit', f.action.next])

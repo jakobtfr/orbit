@@ -76,7 +76,7 @@ All other values shown for the demo astronaut, Lena Brandt, are scripted. The fu
 
 The team used Claude (Anthropic), an AI coding assistant, to help write and refactor the app code, the data export script, and the tests, to search and summarise published sources, and to draft documentation. The team chose the challenge, framed the problem, and made the product decisions. Every figure shown in the app is recomputed from the source data by automated tests. No images or video were generated with AI.
 
-**AI-generated audio.** All 21 voice files of the family call (`app/public/family/*.m4a`) are AI-generated speech: the demo family members (invented people), the linking voice, and ORBIT's rule sentences. They were rendered on our own machine with the open model [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) (Apache 2.0) by `app/scripts/render_family_voice.py`, using Kokoro's synthetic preset voices, not copies of any person. Each file says so in its metadata, and the app labels every voice on screen. The idea of the family call is the team's own.
+**AI-generated audio.** All 20 voice files of the family call (`app/public/family/*.m4a`) are AI-generated speech: the demo family members (invented people), the linking voice, and ORBIT's rule sentences. They were rendered on our own machine with the open model [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) (Apache 2.0) by `app/scripts/render_family_voice.py`, using Kokoro's synthetic preset voices, not copies of any person. Each file says so in its metadata, and the app labels every voice on screen. The idea of the family call is the team's own.
 
 ## Repository
 

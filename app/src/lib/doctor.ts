@@ -252,6 +252,13 @@ const COMPLAINTS: Complaint[] = [
   { match: /\b(sad|lonely|anxious|stressed|depressed|homesick|low mood|feel(ing)? (down|low))\b/, name: 'a low mood', keys: [], advice: 'That is a normal thing to feel this far from home, and it matters as much as any reading. Your diary is private to you, and a quiet talk with a crewmate often helps.' },
 ]
 
+/** True when the person describes a symptom that is not urgent and not about mood. Mood stays private. */
+export function isComplaint(said: string): boolean {
+  const q = said.toLowerCase().replace(/[’‘]/g, "'").trim()
+  const c = COMPLAINTS.find((x) => x.match.test(q))
+  return !!c && c.name !== 'a low mood'
+}
+
 /** Answers one thing the person said or typed. */
 export function reply(state: AppState, person: Person, said: string): DoctorReply {
   const q = said.toLowerCase().replace(/[’‘]/g, "'").trim()

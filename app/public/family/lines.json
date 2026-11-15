@@ -86,41 +86,35 @@
  {
   "file": "family/ai-04.m4a",
   "voice": "ai",
-  "text": "I only have what was recorded today. Say anything you like: it goes to Earth as your reply.",
-  "say": "I only have what was recorded today. Say anything you like: it goes to Earth as your reply."
- },
- {
-  "file": "family/ai-05.m4a",
-  "voice": "ai",
   "text": "That is all Marta recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.",
   "say": "That is all Marta recorded today. What you just said is saved as your reply and reaches Earth in about 5 minutes."
  },
  {
-  "file": "family/ai-06.m4a",
+  "file": "family/ai-05.m4a",
   "voice": "ai",
   "text": "That is all Jonas recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.",
   "say": "That is all Jonas recorded today. What you just said is saved as your reply and reaches Earth in about 5 minutes."
  },
  {
-  "file": "family/ai-07.m4a",
+  "file": "family/ai-06.m4a",
   "voice": "ai",
   "text": "That is all Priya recorded today. What you just said is saved as your reply and reaches Earth in about 5 min.",
   "say": "That is all Priya recorded today. What you just said is saved as your reply and reaches Earth in about 5 minutes."
  },
  {
-  "file": "family/orbit-08.m4a",
+  "file": "family/orbit-07.m4a",
   "voice": "orbit",
   "text": "Blood pressure has been well below your normal in this phase (Outbound to Mars: about 112/67) on two readings in a row.",
   "say": "Blood pressure has been well below your normal in this phase (Outbound to Mars: about 112 over 67) on two readings in a row."
  },
  {
-  "file": "family/orbit-09.m4a",
+  "file": "family/orbit-08.m4a",
   "voice": "orbit",
   "text": "Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today.",
   "say": "Sit or lie down, drink water, and repeat the reading after 5 minutes. Tell the medical lead today."
  },
  {
-  "file": "family/orbit-10.m4a",
+  "file": "family/orbit-09.m4a",
   "voice": "orbit",
   "text": "Thank you. 112/70 mmHg is back in your usual range. Take it easy for an hour and check again this evening.",
   "say": "Thank you. 112 over 70 millimetres of mercury is back in your usual range. Take it easy for an hour and check again this evening."
